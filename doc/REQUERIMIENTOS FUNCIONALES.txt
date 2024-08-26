@@ -20,6 +20,7 @@ Atender tickets de usuarios
 Cerrar tickets de usuarios
 
 ADMIN: (+ lo anterior)
+Gestionar Usuarios
 Modificar tablas (fixed)
 Exportar datos
 Ver estadísticas de atención

@@ -24,7 +24,7 @@ public class Usuario {
     private String correo;
 
     @ManyToOne
-    @JoinColumn(name = "id_tipo_usuario")
+    @JoinColumn(name = "id_rol_usuario")
     private RolUsuario rolUsuario;
 
     @OneToMany(mappedBy = "usuario")
