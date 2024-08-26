@@ -1,0 +1,4 @@
+-tipo usuario ahora es rol usuario
+-tipoincidencia cambia a calsificacionincidencia, igual con servicio
+
+se creará una tabla nueva solo para archivos.

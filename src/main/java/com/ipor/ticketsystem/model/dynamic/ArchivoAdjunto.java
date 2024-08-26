@@ -1,24 +1,28 @@
-package com.ipor.ticketsystem.model.fixed;
+package com.ipor.ticketsystem.model.dynamic;
 
-import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class FaseTicket {
+public class ArchivoAdjunto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nombre;
 
-    @OneToMany(mappedBy = "faseTicket")
-    private List<Ticket> listaTickets;
+    @Lob
+    private byte[] archivo;
+
+    private String tipoContenido;
+
+    @ManyToOne
+    @JoinColumn(name = "id_ticket", nullable = false)
+    private Ticket ticket;
 }

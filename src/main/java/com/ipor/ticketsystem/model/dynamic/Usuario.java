@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,9 +21,23 @@ public class Usuario {
     private String username;
     private String password;
     private String nombre;
+    private String correo;
 
     @ManyToOne
-    @JoinColumn(name = "id_tipoUsuario")
+    @JoinColumn(name = "id_tipo_usuario")
     private RolUsuario rolUsuario;
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<Servicio> listaServicios;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Ticket> listaTickets;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Recepcion> listaRecepciones;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<HistorialTicket> listaHistorial;
+
 
 }
