@@ -1,0 +1,28 @@
+REQUERIMIENMTOS FUNCIONALES
+El sistema permite...
+
+GENERAL:
+Ingresar con usuario y contraseña
+Agregar archivos adjuntos en los tickets
+Ordenar los tickets según fecha
+
+USUARIO:
+Crear tickets
+Editar sus tickets
+Cancelar sus tickets
+Ver sus tickets creados
+Ver el estado de sus tickets
+
+SOPORTE: (+ lo anterior)
+Recibir tickets de usuarios
+Ver lista de tickets
+Atender tickets de usuarios
+Cerrar tickets de usuarios
+
+ADMIN: (+ lo anterior)
+Modificar tablas (fixed)
+Exportar datos
+Ver estadísticas de atención
+
+
+
