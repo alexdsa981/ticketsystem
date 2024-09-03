@@ -1,29 +1,38 @@
 REQUERIMIENMTOS FUNCIONALES
 El sistema permite...
 
+
+OBS:
+Tickets por instalacion no serán contados para reportes de tiempo de atencion
+Evio de solo 1 archivo
+datos usuario: usuario, contraseña, rol
+
 GENERAL:
-Ingresar con usuario y contraseña
+Ingresar con usuario y contraseña(encriptado)
 Agregar archivos adjuntos en los tickets
 Ordenar los tickets según fecha
+Hora de ticket (hora servidor)
+Contabilizar tiempo de resolucion de ticket
+
 
 USUARIO:
-Crear tickets
-Editar sus tickets
-Cancelar sus tickets
+Crear tickets (mensaje de confirmacion)
+Clasificar tickets
 Ver sus tickets creados
 Ver el estado de sus tickets
 
+
 SOPORTE: (+ lo anterior)
-Recibir tickets de usuarios
 Ver lista de tickets
-Atender tickets de usuarios
-Cerrar tickets de usuarios
+Recibir tickets de usuarios y Clasficacion de recepción por nivel de urgencia
+Enviar mensaje de confirmación de recibo de ticket
+Cerrar ticket y clasificacion de atención de ticket
+Filtrar tickets (Fecha de creacion / urgencia / tipo)
+
 
 ADMIN: (+ lo anterior)
 Gestionar Usuarios
 Modificar tablas (fixed)
-Exportar datos
-Ver estadísticas de atención
-
+Indicadores
 
 
