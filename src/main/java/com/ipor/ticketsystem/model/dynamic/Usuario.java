@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,6 @@ public class Usuario {
     private String username;
     private String password;
     private String nombre;
-    private String correo;
 
     @ManyToOne
     @JoinColumn(name = "id_rol_usuario")
@@ -36,8 +36,14 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Recepcion> listaRecepciones;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<HistorialTicket> listaHistorial;
+    public void encriptarPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
+    }
+    public boolean verificarPassword(String rawPassword, String encodedPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 
 
 }

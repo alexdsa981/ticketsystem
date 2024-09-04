@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.model.dynamic;
 
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
+import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,7 +47,5 @@ public class Ticket {
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Recepcion recepcion;
 
-    @OneToMany(mappedBy = "ticket")
-    private List<HistorialTicket> listaHistorial;
 
 }

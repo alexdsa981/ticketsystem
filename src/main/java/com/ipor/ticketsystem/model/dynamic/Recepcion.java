@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.dynamic;
 
+import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,8 @@ public class Recepcion {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_clasificacion_urgencia")
+    private ClasificacionUrgencia clasificacionUrgencia;
 }
