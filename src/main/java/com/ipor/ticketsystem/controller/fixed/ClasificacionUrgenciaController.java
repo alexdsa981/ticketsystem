@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/clasificaciones-urgencia")
+@RequestMapping("/api/clasificacion-urgencia")
 public class ClasificacionUrgenciaController {
 
     private final ClasificacionUrgenciaRepository clasificacionUrgenciaRepository;

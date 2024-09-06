@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/fases-tickets")
+@RequestMapping("/api/fase-ticket")
 public class FaseTicketController {
 
     private final FaseTicketRepository faseTicketRepository;

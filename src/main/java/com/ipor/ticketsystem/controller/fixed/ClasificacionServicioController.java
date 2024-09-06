@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/clasificaciones-servicio")
+@RequestMapping("/api/clasificacion-servicio")
 public class ClasificacionServicioController {
 
     private final ClasificacionServicioRepository clasificacionServicioRepository;
