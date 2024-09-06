@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -30,7 +28,7 @@ public class Servicio {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name= "id_clasificacion_servicio")
+    @JoinColumn(name= "id_clasificacion_atencion")
     private ClasificacionServicio clasificacionServicio;
 
     @OneToOne
