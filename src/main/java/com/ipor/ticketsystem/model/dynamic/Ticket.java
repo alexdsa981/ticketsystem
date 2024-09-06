@@ -45,5 +45,10 @@ public class Ticket {
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Recepcion recepcion;
 
-
+    // Método para establecer fecha y hora actuales antes de persistir
+    @PrePersist
+    public void prePersist() {
+        this.fecha = LocalDate.now();
+        this.hora = LocalTime.now();
+    }
 }
