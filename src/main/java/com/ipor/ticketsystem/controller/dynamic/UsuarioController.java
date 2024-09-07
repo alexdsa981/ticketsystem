@@ -87,22 +87,5 @@ public class UsuarioController {
         usuarioRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    // Lógica de inicio de sesión
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(loginRequest.getUsername());
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            // Verificar la contraseña
-            if (usuario.verificarPassword(loginRequest.getPassword(), usuario.getPassword())) {
-                // Generar un token o simplemente retornar una respuesta exitosa
-                return ResponseEntity.ok("Login exitoso");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-        }
-    }
 }
 
