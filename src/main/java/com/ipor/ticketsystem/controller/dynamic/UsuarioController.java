@@ -1,12 +1,10 @@
 package com.ipor.ticketsystem.controller.dynamic;
 
-import com.ipor.ticketsystem.dto.LoginRequest;
 import com.ipor.ticketsystem.dto.dynamic.UsuarioRecord;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
