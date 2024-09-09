@@ -34,21 +34,6 @@ public class LoginController {
         this.rolUsuarioRepository = rolUsuarioRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody LoginEntrada loginEntrada) {
-//        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(loginEntrada.getUsername());
-//        if (usuarioOpt.isPresent()) {
-//            Usuario usuario = usuarioOpt.get();
-//            if (usuario.verificarPassword(loginEntrada.getPassword(), usuario.getPassword())) {
-//                return ResponseEntity.ok("Login exitoso");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(" Contraseña incorrecta");
-//            }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-//        }
-//    }
     @PostMapping("/login")
     public ResponseEntity<AuthRespuesta> login(@RequestBody LoginEntrada loginEntrada) {
         try {

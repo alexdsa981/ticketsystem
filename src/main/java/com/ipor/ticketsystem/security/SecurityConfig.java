@@ -56,9 +56,19 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // Todos pueden logearse, sin necesidad de autorización "token"
                         .requestMatchers("/api/login/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("Admin", "Usuario", "Soporte")
+                        // Permitir a los administradores realizar todas las operaciones en la ruta /api/**
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("Admin")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("Admin")
+                        // Permitir a los usuarios crear y ver tickets
+                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasRole("Usuario")
+                        .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasRole("Usuario")
+
+
+
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 
