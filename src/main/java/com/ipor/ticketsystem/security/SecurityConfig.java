@@ -59,15 +59,14 @@ public class SecurityConfig {
                         // Todos pueden logearse, sin necesidad de autorización "token"
                         .requestMatchers("/api/login/**").permitAll()
                         // Permitir a los administradores realizar todas las operaciones en la ruta /api/**
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("Admin")
-                        // Permitir a los usuarios crear y ver tickets
-                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasRole("Usuario")
-                        .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasRole("Usuario")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("Admin")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("Admin")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("Admin")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("Admin")
 
-
+                        //permitir a los usuarios crear tickets y ver los suyos
+//                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyAuthority("Usuario")
+//                        .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasAnyAuthority("Usuario")
 
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());

@@ -1,8 +1,6 @@
 package com.ipor.ticketsystem.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -38,12 +36,19 @@ public class JwtTokenProvider {
     }
 
     //metodo para validar el token
-    public Boolean validarToken (String token){
+    public Boolean validarToken(String token) {
         try {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
-        }catch (Exception e){
-            throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o es incorrecto");
+        } catch (ExpiredJwtException ex) {
+            throw new AuthenticationCredentialsNotFoundException("El token ha expirado", ex);
+        } catch (MalformedJwtException ex) {
+            throw new AuthenticationCredentialsNotFoundException("Token JWT mal formado: " + token, ex);
+        } catch (SignatureException ex) {
+            throw new AuthenticationCredentialsNotFoundException("Fallo en la firma del token JWT", ex);
+        } catch (IllegalArgumentException ex) {
+            throw new AuthenticationCredentialsNotFoundException("El token JWT está vacío o es incorrecto", ex);
         }
     }
+
 }
