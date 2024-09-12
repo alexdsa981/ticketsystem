@@ -56,23 +56,27 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Todos pueden logearse, sin necesidad de autorización "token"
+                        // Permitir a todos loguearse
                         .requestMatchers("/api/login/**").permitAll()
+
+                        //poner roles más especificos primero para no sobreponer los permisos globales de los admin
+                        // Permitir a los usuarios crear tickets y ver los suyos
+                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
+                        .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
+
                         // Permitir a los administradores realizar todas las operaciones en la ruta /api/**
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("Admin")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("Admin")
 
-                        //permitir a los usuarios crear tickets y ver los suyos
-//                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyAuthority("Usuario")
-//                        .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasAnyAuthority("Usuario")
-
+                        // Cualquier otra solicitud debe estar autenticada
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
 }

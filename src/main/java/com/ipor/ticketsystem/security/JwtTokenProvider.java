@@ -23,6 +23,7 @@ public class JwtTokenProvider {
                 .setExpiration(expiracionToken)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
                 .compact();
+        System.out.println("token generado: " + token);
         return token;
     }
 
@@ -32,22 +33,24 @@ public class JwtTokenProvider {
                 .setSigningKey(ConstantesSeguridad.JWT_FIRMA)
                 .parseClaimsJws(token)
                 .getBody();
+        System.out.println("token de obtener usuario por token: " + token);
         return claims.getSubject();
     }
 
     //metodo para validar el token
     public Boolean validarToken(String token) {
+        System.out.println("token antes de validacion: " + token);
         try {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            throw new AuthenticationCredentialsNotFoundException("El token ha expirado", ex);
+            throw new AuthenticationCredentialsNotFoundException("El token ha expirado "+ token, ex);
         } catch (MalformedJwtException ex) {
             throw new AuthenticationCredentialsNotFoundException("Token JWT mal formado: " + token, ex);
         } catch (SignatureException ex) {
-            throw new AuthenticationCredentialsNotFoundException("Fallo en la firma del token JWT", ex);
+            throw new AuthenticationCredentialsNotFoundException("Fallo en la firma del token JWT "+ token, ex);
         } catch (IllegalArgumentException ex) {
-            throw new AuthenticationCredentialsNotFoundException("El token JWT está vacío o es incorrecto", ex);
+            throw new AuthenticationCredentialsNotFoundException("El token JWT está vacío o es incorrecto "+ token, ex);
         }
     }
 

@@ -61,7 +61,6 @@ public class TicketController {
     public ResponseEntity<TicketRecord> createTicket(@RequestBody TicketRecord ticketRecord) {
         Ticket ticket = new Ticket();
         ticket.setDescripcion(ticketRecord.descripcion());
-
         // Establecer usuario logueado
         String username = obtenerUsernameDelToken();
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -91,6 +90,7 @@ public class TicketController {
         if (!ticketRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        System.out.println(ticketRecord.clasificacionIncidenciaId()+ " " +ticketRecord.faseTicketId());
         Ticket ticket = ticketRepository.findById(id).orElseThrow();
         ticket.setDescripcion(ticketRecord.descripcion());
         ticket.setClasificacionIncidencia(clasificacionIncidenciaRepository.findById(ticketRecord.clasificacionIncidenciaId()).orElseThrow());
