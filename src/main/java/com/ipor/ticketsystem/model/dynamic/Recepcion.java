@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,4 +34,11 @@ public class Recepcion {
     @ManyToOne
     @JoinColumn(name = "id_clasificacion_urgencia")
     private ClasificacionUrgencia clasificacionUrgencia;
+
+    // Método para establecer fecha y hora antes de persistir
+    @PrePersist
+    public void prePersist() {
+        this.fecha = LocalDate.now();
+        this.hora = LocalTime.now();
+    }
 }

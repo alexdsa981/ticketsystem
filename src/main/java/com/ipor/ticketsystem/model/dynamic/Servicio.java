@@ -1,5 +1,4 @@
 package com.ipor.ticketsystem.model.dynamic;
-
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +13,6 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Entity
 public class Servicio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +33,10 @@ public class Servicio {
     @JoinColumn(name = "id_ticket")
     private Ticket ticket;
 
+
+    @PrePersist
+    public void prePersist() {
+        this.fecha = LocalDate.now();
+        this.hora = LocalTime.now();
+    }
 }
