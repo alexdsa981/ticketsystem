@@ -58,15 +58,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Permitir a todos loguearse
                         .requestMatchers("/api/login/**").permitAll()
-
+                        //paginas front
+                        .requestMatchers("/inicio/**").permitAll()
+                        .requestMatchers("/hola/**").permitAll()
+                        .requestMatchers("/prueba/**").permitAll()
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos
                         .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
                         .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
 
                         //permitir a los usuarios subir y ver sus archivos adjuntos
-                        .requestMatchers(HttpMethod.POST, "/api/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte")
-                        .requestMatchers(HttpMethod.GET, "/api/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte")
+                        .requestMatchers(HttpMethod.POST, "/api/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte", "Usuario")
+                        .requestMatchers(HttpMethod.GET, "/api/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte", "Usuario")
 
                         //permitir a soporte recepcionar y atender tickets
                         .requestMatchers(HttpMethod.POST, "/api/recepciones/**").hasAnyAuthority("Admin", "Soporte")

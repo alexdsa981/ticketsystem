@@ -26,7 +26,10 @@ public class ArchivoAdjuntoController {
         this.ticketRepository = ticketRepository;
     }
 
-    // Crear un nuevo archivo adjunto
+    // Crear un nuevo archivo adjunto, se debe codificar el archivo en base64,
+    // en la base de datos se pasará automaticamente a hex y al llamar en consulta
+    // se transformará denuevo a base64, entonces si se decodifica el texto base 64,
+    // dará el archivo que se ha subido
     @PostMapping
     public ResponseEntity<ArchivoAdjuntoRecord> createArchivoAdjunto(@RequestBody ArchivoAdjuntoRecord archivoAdjuntoRecord) {
         ArchivoAdjunto archivoAdjunto = new ArchivoAdjunto();
