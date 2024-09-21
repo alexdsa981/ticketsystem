@@ -6,6 +6,7 @@ import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -35,22 +37,25 @@ public class LoginController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
     @PostMapping("/login")
-    public ResponseEntity<AuthRespuesta> login(@RequestBody LoginEntrada loginEntrada) {
+    public ResponseEntity<AuthRespuesta> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginEntrada.getUsername(), loginEntrada.getPassword()));
+                    new UsernamePasswordAuthenticationToken(username, password));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String token = jwtTokenProvider.generarToken(authentication);
 
+            // Aquí puedes redirigir a otra página una vez autenticado
+            response.sendRedirect("/prueba");
+
             return ResponseEntity.ok(new AuthRespuesta(token));
         } catch (BadCredentialsException e) {
+            response.sendRedirect("/login");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (Exception e) {
+            response.sendRedirect("/login");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }

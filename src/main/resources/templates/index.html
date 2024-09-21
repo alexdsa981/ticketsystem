@@ -1,12 +1,43 @@
 <!doctype html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ejemplo Web</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/index.css">
+  <title>HelpDesk - Login</title>
 </head>
+
 <body>
-<h1> Hola desde ejemplo web </h1>
+
+  <main>
+
+    <section>
+      <form action="/api/login" method="POST">
+        <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+          <div class="contenido-login">
+            <div class="form-outline mb-4">
+              <label class="form-label" for="username">Username</label>
+              <input type="text" id="username" name="username" class="form-control" />
+            </div>
+        
+            <label class="form-label" for="password">Contraseña</label>
+            <div class="form-outline mb-4">
+              <input type="password" id="password" name="password" class="form-control" />
+            </div>
+            
+            <div class="contenedor-boton">
+              <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+            </div>
+          </div>
+        </div>
+      </form>      
+    </section>
+
+  </main>
 
 </body>
+
 </html>

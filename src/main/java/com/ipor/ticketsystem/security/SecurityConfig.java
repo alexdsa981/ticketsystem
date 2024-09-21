@@ -56,10 +56,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/").permitAll()
                         // Permitir a todos loguearse
                         .requestMatchers("/api/login/**").permitAll()
                         //paginas front
-                        .requestMatchers("/inicio/**").permitAll()
+                        .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/hola/**").permitAll()
                         .requestMatchers("/prueba/**").permitAll()
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
@@ -82,6 +83,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("Admin")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("Admin")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("Admin")
+                        .requestMatchers("/api/usuarios/**").hasAuthority("Admin")
+
 
                         // Cualquier otra solicitud debe estar autenticada
                         .anyRequest().authenticated())

@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
-    @GetMapping("/inicio")
+    @GetMapping("/")
+    public String redirectToInicio() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
     public String redirigePaginaInicio() {
         // Redirige a index.html que está en static
         return "index";
