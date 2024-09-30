@@ -6,6 +6,8 @@ import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +38,9 @@ public class LoginController {
         this.rolUsuarioRepository = rolUsuarioRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
     @PostMapping("/login")
-    public ResponseEntity<AuthRespuesta> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
@@ -46,16 +49,55 @@ public class LoginController {
 
             String token = jwtTokenProvider.generarToken(authentication);
 
-            // Aquí puedes redirigir a otra página una vez autenticado
-            response.sendRedirect("/prueba");
+            // Crear una cookie para almacenar el token JWT
+            Cookie jwtCookie = new Cookie("JWT", token);
+            jwtCookie.setHttpOnly(true); // Para evitar el acceso desde JavaScript
+            jwtCookie.setMaxAge(60 * 60 * 12); // Duración del token en segundos (12 horas en este caso)
+            jwtCookie.setPath("/"); // Hacer accesible la cookie en toda la aplicación
+            response.addCookie(jwtCookie);
 
-            return ResponseEntity.ok(new AuthRespuesta(token));
+            // Redirigir a la página principal o donde desees
+            response.sendRedirect("/inicio");
+
+            return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
             response.sendRedirect("/login");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             response.sendRedirect("/login");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) throws IOException {
+        // Eliminar la cookie del token JWT
+        Cookie jwtCookie = new Cookie("JWT", null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setMaxAge(0); // Esto elimina la cookie
+        jwtCookie.setPath("/");
+        response.addCookie(jwtCookie);
+
+        // Redirigir al login u otra página
+        response.sendRedirect("/login");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @GetMapping("/login")
+    public String redirigePaginaInicio(HttpServletRequest request, HttpServletResponse response) {
+        // Verificar si el token existe en las cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JWT") && jwtTokenProvider.validarToken(cookie.getValue())) {
+                    // Redirigir al usuario a la página principal si ya está autenticado
+                    return "redirect:/login";
+                }
+            }
+        }
+        // Mostrar la página de login si no hay token válido
+        return "index";
+    }
+
 }

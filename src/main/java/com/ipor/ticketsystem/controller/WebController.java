@@ -13,19 +13,17 @@ public class WebController {
     }
 
     @GetMapping("/login")
-    public String redirigePaginaInicio() {
+    public String redirigePaginaLogin() {
         // Redirige a index.html que está en static
         return "index";
     }
-    @GetMapping("/hola")
-    public String RedirigePaginaInicio(){
+
+    @GetMapping("/inicio")
+    public String redirigePaginaInicio() {
+        // Redirige a index.html que está en static
         return "inicio";
     }
 
-    @GetMapping("/hola")
-    public String RedirigePaginaHola(){
-        return "hola";
-    }
     @GetMapping("/prueba")
     public String RedirigePaginaPrueba(@RequestParam(name="nombre", required = false, defaultValue = "default")
                                        String nombre, Model model){

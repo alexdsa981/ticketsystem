@@ -2,6 +2,7 @@ package com.ipor.ticketsystem.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
 
-    private String obtenerTokenDeSolicitud(HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText((bearerToken)) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());
+//    private String obtenerTokenDeSolicitud(HttpServletRequest request){
+//        String bearerToken = request.getHeader("Authorization");
+//        if (StringUtils.hasText((bearerToken)) && bearerToken.startsWith("Bearer ")){
+//            return bearerToken.substring(7, bearerToken.length());
+//        }
+//        return null;
+//    }
+private String obtenerTokenDeSolicitud(HttpServletRequest request){
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("JWT")) {
+                return cookie.getValue();
+            }
         }
-        return null;
     }
+    return null;
+}
+
+
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
