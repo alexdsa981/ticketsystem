@@ -17,6 +17,10 @@ public class WebController {
         // Redirige a index.html que está en static
         return "index";
     }
+    @GetMapping("/hola")
+    public String RedirigePaginaInicio(){
+        return "inicio";
+    }
 
     @GetMapping("/hola")
     public String RedirigePaginaHola(){

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/app/usuarios")
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;

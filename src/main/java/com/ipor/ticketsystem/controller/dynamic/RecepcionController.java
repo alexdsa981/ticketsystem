@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/recepciones")
+@RequestMapping("/app/recepciones")
 public class RecepcionController {
 
     private final RecepcionRepository recepcionRepository;

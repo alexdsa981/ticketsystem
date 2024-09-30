@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/app/roles")
 public class RolUsuarioController {
 
     private final RolUsuarioRepository rolUsuarioRepository;

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/archivosAdjuntos")
+@RequestMapping("/app/archivosAdjuntos")
 public class ArchivoAdjuntoController {
 
     private final ArchivoAdjuntoRepository archivoAdjuntoRepository;

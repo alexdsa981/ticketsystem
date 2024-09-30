@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/app/tickets")
 public class TicketController {
 
     private final TicketRepository ticketRepository;
