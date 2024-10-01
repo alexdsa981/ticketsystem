@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,26 +26,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
 
-//    private String obtenerTokenDeSolicitud(HttpServletRequest request){
-//        String bearerToken = request.getHeader("Authorization");
-//        if (StringUtils.hasText((bearerToken)) && bearerToken.startsWith("Bearer ")){
-//            return bearerToken.substring(7, bearerToken.length());
-//        }
-//        return null;
-//    }
-private String obtenerTokenDeSolicitud(HttpServletRequest request){
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) {
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("JWT")) {
-                return cookie.getValue();
+    private String obtenerTokenDeSolicitud(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JWT")) {
+                    return cookie.getValue();
+                }
             }
         }
+        return null;
     }
-    return null;
-}
-
-
 
 
     @Override
@@ -53,17 +45,24 @@ private String obtenerTokenDeSolicitud(HttpServletRequest request){
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = obtenerTokenDeSolicitud(request);
-        if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token)){
+        if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token, request, response)) {
             String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
             UserDetails userDetails = customUsersDetailsService.loadUserByUsername(username);
-            List <String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            if (userRoles.contains("Usuario") || userRoles.contains("Soporte") || userRoles.contains("Admin")){
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
-        filterChain.doFilter(request,response);
+            List<String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
+            if (userRoles.contains("Usuario") || userRoles.contains("Soporte") || userRoles.contains("Admin")) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } else {
+                // Aquí se maneja el redireccionamiento en caso de que el token sea inválido o haya expirado
+                response.sendRedirect("/login"); // Cambia "/login" a la URL de tu página de inicio de sesión
+                return; // Salimos del método después de redirigir
+            }
+
+        }
+
+        filterChain.doFilter(request, response);
     }
+
 }

@@ -61,9 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/app/login/**").permitAll()
                         //paginas front
                         .requestMatchers("/login/**").permitAll()
-                        .requestMatchers("/inicio/**").permitAll()
-                        .requestMatchers("/hola/**").permitAll()
-                        .requestMatchers("/prueba/**").permitAll()
+                        .requestMatchers("/inicio/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos
                         .requestMatchers(HttpMethod.POST, "/app/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")

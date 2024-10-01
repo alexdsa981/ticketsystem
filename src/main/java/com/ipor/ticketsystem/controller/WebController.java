@@ -1,5 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.service.TicketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
+    @Autowired
+    TicketService ticketService;
+    @Autowired
+    TicketController ticketController;
+
     @GetMapping("/")
     public String redirectToInicio() {
         return "redirect:/login";
@@ -18,17 +25,11 @@ public class WebController {
         return "index";
     }
 
+    // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
-    public String redirigePaginaInicio() {
-        // Redirige a index.html que está en static
-        return "inicio";
+    public String redirigePaginaInicio(Model model) {
+        ticketController.retornaTicketsPropiosAInicio(model); // Llama al método que agrega tickets
+        return "inicio"; // Redirige a la vista 'inicio.html'
     }
 
-    @GetMapping("/prueba")
-    public String RedirigePaginaPrueba(@RequestParam(name="nombre", required = false, defaultValue = "default")
-                                       String nombre, Model model){
-        //clave valor "nombre" se utilizará en la pagina de destino prueba y colocará el String nombre
-        model.addAttribute("nombre", nombre);
-        return "prueba";
-    }
 }

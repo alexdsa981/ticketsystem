@@ -1,6 +1,5 @@
 package com.ipor.ticketsystem.model.fixed;
 
-import com.ipor.ticketsystem.dto.fixed.RolUsuarioRecord;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;

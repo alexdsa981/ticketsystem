@@ -1,13 +1,10 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.dto.auth.AuthRespuesta;
-import com.ipor.ticketsystem.dto.auth.LoginEntrada;
-import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
+import com.ipor.ticketsystem.security.ConstantesSeguridad;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/app")
@@ -52,7 +48,7 @@ public class LoginController {
             // Crear una cookie para almacenar el token JWT
             Cookie jwtCookie = new Cookie("JWT", token);
             jwtCookie.setHttpOnly(true); // Para evitar el acceso desde JavaScript
-            jwtCookie.setMaxAge(60 * 60 * 12); // Duración del token en segundos (12 horas en este caso)
+            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN)/1000); //12horas
             jwtCookie.setPath("/"); // Hacer accesible la cookie en toda la aplicación
             response.addCookie(jwtCookie);
 
@@ -84,20 +80,5 @@ public class LoginController {
     }
 
 
-    @GetMapping("/login")
-    public String redirigePaginaInicio(HttpServletRequest request, HttpServletResponse response) {
-        // Verificar si el token existe en las cookies
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("JWT") && jwtTokenProvider.validarToken(cookie.getValue())) {
-                    // Redirigir al usuario a la página principal si ya está autenticado
-                    return "redirect:/login";
-                }
-            }
-        }
-        // Mostrar la página de login si no hay token válido
-        return "index";
-    }
 
 }
