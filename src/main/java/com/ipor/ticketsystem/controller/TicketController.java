@@ -12,7 +12,7 @@ public class TicketController {
 
     // Método para agregar los tickets al modelo
     public Model retornaTicketsPropiosAInicio(Model model) {
-        return model.addAttribute("tickets", ticketService.getAllTickets());
+        return model.addAttribute("MyTickets", ticketService.getMyTickets());
     }
 
 

@@ -13,10 +13,18 @@ public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+    @Autowired
+    private WebService webService;
 
     // Método para obtener todos los tickets
     public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
+    }
+
+    // Método para obtener tickets propios
+    public List<Ticket> getMyTickets(){
+        Long idUsuario = webService.RetornarIDdeUsuario();
+        return ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario,1L);
     }
 
 }

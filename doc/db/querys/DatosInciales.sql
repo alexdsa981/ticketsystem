@@ -14,13 +14,13 @@ INSERT INTO dbo.usuario (nombre, password, username, id_rol_usuario) VALUES
 
 -- Inserción de fases
 INSERT INTO dbo.fase_ticket (nombre) VALUES
-    ('Recepcionado'),
+    ('Enviado'),
     ('Recepcionado - En Proceso'),
-    ('Cerrado');
+    ('Cerrado - Atendido');
 
 -- Inserción de clasificaciones de servicio
 INSERT INTO dbo.clasificacion_servicio (nombre) VALUES
-    ('Solucionado'),
+    ('Incidencia resuelta'),
     ('Falta de equipos'),
     ('Delegado a proveedor'),
     ('Escalado a soporte técnico'),
@@ -28,9 +28,9 @@ INSERT INTO dbo.clasificacion_servicio (nombre) VALUES
 
 -- Inserción de niveles de urgencia
 INSERT INTO dbo.clasificacion_urgencia (nombre) VALUES
-    ('Alta'),
+    ('Baja'),
     ('Media'),
-    ('Baja');
+    ('Alta');
 
 -- Inserción de clasificaciones de incidencia
 INSERT INTO dbo.clasificacion_incidencia (nombre) VALUES
