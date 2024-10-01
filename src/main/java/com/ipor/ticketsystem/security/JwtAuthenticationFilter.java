@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = obtenerTokenDeSolicitud(request);
-        if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token, request, response)) {
+        if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token)) {
             String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
             UserDetails userDetails = customUsersDetailsService.loadUserByUsername(username);
             List<String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
@@ -54,10 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } else {
-                // Aquí se maneja el redireccionamiento en caso de que el token sea inválido o haya expirado
-                response.sendRedirect("/login"); // Cambia "/login" a la URL de tu página de inicio de sesión
-                return; // Salimos del método después de redirigir
             }
 
         }

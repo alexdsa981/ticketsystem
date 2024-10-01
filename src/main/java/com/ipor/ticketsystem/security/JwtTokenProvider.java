@@ -41,28 +41,19 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public Boolean validarToken(String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Boolean validarToken(String token){
         System.out.println("token antes de validacion: " + token);
         try {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            // Eliminar la cookie del token
-            Cookie cookie = new Cookie("JWT", null);
-            cookie.setPath("/"); // o el path que uses para la cookie
-            cookie.setMaxAge(0); // Esto elimina la cookie
-            response.addCookie(cookie);
 
-            response.sendRedirect("/login");
             throw new AuthenticationCredentialsNotFoundException("El token ha expirado: " + token, ex);
         } catch (MalformedJwtException ex) {
-            response.sendRedirect("/login");
             throw new AuthenticationCredentialsNotFoundException("Token JWT mal formado: " + token, ex);
         } catch (SignatureException ex) {
-            response.sendRedirect("/login");
             throw new AuthenticationCredentialsNotFoundException("Fallo en la firma del token JWT: " + token, ex);
         } catch (IllegalArgumentException ex) {
-            response.sendRedirect("/login");
             throw new AuthenticationCredentialsNotFoundException("El token JWT está vacío o es incorrecto: " + token, ex);
         }
     }
