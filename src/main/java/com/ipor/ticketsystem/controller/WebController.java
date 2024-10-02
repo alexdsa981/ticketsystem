@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
@@ -30,7 +29,7 @@ public class WebController {
     // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
-        ticketController.retornaTicketsPropiosAInicio(model); // Llama al método que agrega tickets
+        ticketController.retornaTicketsPropiosYDatosInicialesAInicio(model); // Llama al método que agrega tickets
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
 

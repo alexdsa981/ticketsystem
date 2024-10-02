@@ -36,41 +36,33 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Ticket</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
-                                  placeholder="Describe el problema." required></textarea>
+                <form action="app/crearTicket" method="POST">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Ticket</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="urgencia" class="form-label">Urgencia</label>
-                        <select class="form-select" id="urgencia" name="urgencia" required>
-                            <option selected disabled value="">Selecciona la urgencia</option>
-                            <option value="baja">Baja</option>
-                            <option value="media">Media</option>
-                            <option value="alta">Alta</option>
-                        </select>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
+                                      placeholder="Describe el problema." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clasificacion" class="form-label">Clasificación de Incidencia</label>
+                            <select class="form-select" id="clasificacion" name="clasificacion" required>
+                                <option selected disabled value="">Selecciona la clasificación</option>
+                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+
                     </div>
-                    <div class="mb-3">
-                        <label for="clasificacion" class="form-label">Clasificación de Incidencia</label>
-                        <select class="form-select" id="clasificacion" name="clasificacion" required>
-                            <option selected disabled value="">Selecciona la clasificación</option>
-                            <option value="hardware">Hardware</option>
-                            <option value="software">Software</option>
-                            <option value="redes">Redes</option>
-                            <option value="otro">Otro</option>
-                        </select>
+                    <div class="modal-footer">
+                        <p class="text-warning">Este Ticket no podrá ser eliminado ni modificado</p>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Crear Ticket</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <p class="text-warning">Este Ticket no podrá ser eliminado ni modificado</p>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Crear Ticket</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
