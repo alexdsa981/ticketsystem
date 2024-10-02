@@ -36,7 +36,7 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="app/crearTicket" method="POST">
+                <form action="/app/tickets/crearTicket" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Ticket</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -55,14 +55,19 @@
                                 <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
-
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label">Subir Archivo (opcional)</label>
+                            <input class="form-control" type="file" id="archivo" name="archivo">
+                        </div>
                     </div>
+
                     <div class="modal-footer">
                         <p class="text-warning">Este Ticket no podrá ser eliminado ni modificado</p>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Crear Ticket</button>
+                        <button type="submit" class="btn btn-primary">Crear Ticket</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

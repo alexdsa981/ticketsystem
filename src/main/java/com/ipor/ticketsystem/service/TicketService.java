@@ -61,4 +61,15 @@ public class TicketService {
         return clasificacionIncidenciaRepository.findAll();
     }
 
+    //obtener clasificacion incidencia por id
+    public ClasificacionIncidencia ObtenerClasificacionIncidenciaPorID(Long id){
+        return clasificacionIncidenciaRepository.findById(id).get();
+    }
+    //guardar ticket y archivo adjunto en el repositorio
+    public void saveTicket(Ticket ticket){
+        ticketRepository.save(ticket);
+    }
+    public void saveAdjunto(ArchivoAdjunto archivoAdjunto){
+        archivoAdjuntoRepository.save(archivoAdjunto);
+    }
 }
