@@ -36,13 +36,13 @@ public class SecurityConfig {
 
     //este bean se va a encargar de verificar la informacion de los usuarios que se logearan en nuestra app
     @Bean
-    AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     //este bean incorporará el filtro de seguridad de json web token que creamos en nuestra clase anterior
     @Bean
-    JwtAuthenticationFilter jwtAuthenticationFilter(){
+    JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
 
@@ -60,6 +60,7 @@ public class SecurityConfig {
                         // Permitir a todos loguearse
                         .requestMatchers("/app/login/**").permitAll()
                         //paginas front
+                        .requestMatchers("/fragment-expression/**").permitAll()
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/inicio/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte

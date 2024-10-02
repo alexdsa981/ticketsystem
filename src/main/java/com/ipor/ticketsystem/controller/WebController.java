@@ -14,11 +14,13 @@ public class WebController {
     @Autowired
     TicketController ticketController;
 
+    //redirige / a /login
     @GetMapping("/")
     public String redirectToInicio() {
         return "redirect:/login";
     }
 
+    //abre index.html en /login
     @GetMapping("/login")
     public String redirigePaginaLogin() {
         // Redirige a index.html que está en static
@@ -30,6 +32,12 @@ public class WebController {
     public String redirigePaginaInicio(Model model) {
         ticketController.retornaTicketsPropiosAInicio(model); // Llama al método que agrega tickets
         return "inicio"; // Redirige a la vista 'inicio.html'
+    }
+
+    //Metodo para manejar fragment expression
+    @GetMapping("/fragment-expression")
+    public String fragmentExpression(){
+        return  "fragment-expression";
     }
 
 }

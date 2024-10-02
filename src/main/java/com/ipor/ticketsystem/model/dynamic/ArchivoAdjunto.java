@@ -21,6 +21,7 @@ public class ArchivoAdjunto {
     private byte[] archivo;
 
     private String tipoContenido;
+    private Double pesoContenido;
 
     @ManyToOne
     @JoinColumn(name = "id_ticket", nullable = false)

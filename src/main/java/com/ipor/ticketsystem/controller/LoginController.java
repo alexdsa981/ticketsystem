@@ -54,7 +54,7 @@ public class LoginController {
 
             // Redirigir a la página principal o donde desees
             response.sendRedirect("/inicio");
-
+            System.out.println("logeado correctamente");
             return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
             response.sendRedirect("/login");
@@ -73,6 +73,8 @@ public class LoginController {
         jwtCookie.setMaxAge(0); // Esto elimina la cookie
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
+
+        System.out.println("limpia cookies");
 
         // Redirigir al login u otra página
         response.sendRedirect("/login");
