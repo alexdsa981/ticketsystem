@@ -59,9 +59,11 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         // Permitir a todos loguearse
                         .requestMatchers("/app/login/**").permitAll()
+                        .requestMatchers("/app/logout/**").permitAll()
                         //paginas front
                         .requestMatchers("/fragment-expression/**").permitAll()
                         .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/error/**").permitAll()
                         .requestMatchers("/inicio/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos

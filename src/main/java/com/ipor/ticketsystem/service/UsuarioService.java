@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WebService {
+public class UsuarioService {
     @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
@@ -22,6 +22,9 @@ public class WebService {
         Usuario usuario = usuarioRepository.findByUsername(username).get();
         System.out.println();
         return usuario.getId();
+    }
+    public Usuario RetornarUsuarioPorId(Long id){
+        return usuarioRepository.findById(id).get();
     }
 
 

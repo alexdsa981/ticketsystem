@@ -32,7 +32,14 @@ public class WebController {
         ticketController.retornaTicketsPropiosYDatosInicialesAInicio(model); // Llama al método que agrega tickets
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
-
+    @GetMapping("/TicketsEnProceso")
+    public String redirigePaginaTicketsEnProceso(){
+        return  "enProceso";
+    }
+    @GetMapping("/TicketsAtendidos")
+    public String redirigePaginaTicketsAtendidos(){
+        return  "atendidos";
+    }
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
     public String fragmentExpression(){

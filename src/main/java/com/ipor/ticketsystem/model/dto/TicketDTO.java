@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -21,8 +22,12 @@ public class TicketDTO {
     private Long id;
     private LocalDate fecha;
     private LocalTime hora;
+    private String fechaFormateada;
+    private String horaFormateada;
     private String descripcion;
     private Usuario usuario;
+    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm");
     private ClasificacionIncidencia clasificacionIncidencia;
     private FaseTicket faseTicket;
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
@@ -30,11 +35,22 @@ public class TicketDTO {
     public TicketDTO(Ticket ticket, List<ArchivoAdjunto> adjuntos) {
         this.id = ticket.getId();
         this.fecha = ticket.getFecha();
+        this.fechaFormateada = getFechaConFormato();
         this.hora = ticket.getHora();
+        this.horaFormateada = getHoraConFormato();
         this.descripcion = ticket.getDescripcion();
         this.usuario = ticket.getUsuario();
         this.clasificacionIncidencia = ticket.getClasificacionIncidencia();
         this.faseTicket = ticket.getFaseTicket();
         this.listaArchivosAdjuntos = adjuntos;
+    }
+    // Método para formatear la fecha como cadena
+    public String getFechaConFormato() {
+        return this.fecha.format(FORMATO_FECHA);
+    }
+
+    // Método para formatear la hora como cadena
+    public String getHoraConFormato() {
+        return this.hora.format(FORMATO_HORA);
     }
 }

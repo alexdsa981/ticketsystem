@@ -93,13 +93,13 @@
             <td th:text="${ticket.descripcion}">Descripción</td>
             <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
             <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-            <td th:text="${ticket.fecha}">Fecha</td>
-            <td th:text="${ticket.hora}">Hora</td>
+            <td th:text="${ticket.fechaFormateada}">Fecha</td>
+            <td th:text="${ticket.horaFormateada}">Hora</td>
             <td>
                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                 <ul>
                     <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                        <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.pesoContenido}">mb</span>
+                        <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                     </li>
                 </ul>
             </td>
@@ -129,13 +129,13 @@
             <td th:text="${ticket.descripcion}">Descripción</td>
             <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
             <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-            <td th:text="${ticket.fecha}">Fecha</td>
-            <td th:text="${ticket.hora}">Hora</td>
+            <td th:text="${ticket.fechaFormateada}">Fecha</td>
+            <td th:text="${ticket.horaFormateada}">Hora</td>
             <td>
                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                 <ul>
                     <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                        <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.pesoContenido}">mb</span>
+                        <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                     </li>
                 </ul>
             </td>
