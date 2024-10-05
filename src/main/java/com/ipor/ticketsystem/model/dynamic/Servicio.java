@@ -34,6 +34,7 @@ public class Servicio {
     private Ticket ticket;
 
 
+
     @PrePersist
     public void prePersist() {
         this.fecha = LocalDate.now();

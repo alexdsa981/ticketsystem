@@ -31,7 +31,7 @@ public class TicketController {
     UsuarioService usuarioService;
 
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
-    public Model retornaTicketsPropiosYDatosInicialesAInicio(Model model) {
+    public Model retornaTicketsPropiosYDatosInicialesAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         model.addAttribute("MyTickets", MisTicketsDTO);
         List<TicketDTO> AllTicketsDTO = ticketService.getAllTickets();
@@ -92,7 +92,7 @@ public class TicketController {
     @GetMapping("/adjunto/descargar/{id}")
     public ResponseEntity<Resource> descargarArchivo(@PathVariable Long id) {
         // Obtener el archivo adjunto por su ID desde el servicio
-        ArchivoAdjunto archivoAdjunto = ticketService.obtenerArchivoPorId(id);
+        ArchivoAdjunto archivoAdjunto = ticketService.getArchivoPorId(id);
 
         // Crear un recurso basado en los bytes del archivo
         Resource recurso = new ByteArrayResource(archivoAdjunto.getArchivo());

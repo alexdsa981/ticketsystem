@@ -13,6 +13,34 @@
 </header>
 <main>
 
+    <!--MIS TICKETS-->
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Atendido Por:</th>
+            <th>Descripción</th>
+            <th>Clasificación</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterar sobre los tickets con un solo bucle th:each -->
+        <tr th:each="atendido, iter: ${AllAtendidos}">
+            <td th:text="${iter.count}">#</td>
+            <td th:text="${atendido.usuario.nombre}">Atendido por:</td>
+            <td th:text="${atendido.descripcion}">Descripción</td>
+            <td th:text="${atendido.clasificacionServicio.nombre}">Clasificación</td>
+            <td th:text="${atendido.fechaFormateada}">Fecha</td>
+            <td th:text="${atendido.horaFormateada}">Hora</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
 </main>
 
 

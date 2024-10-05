@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
     @Autowired
-    TicketService ticketService;
-    @Autowired
     TicketController ticketController;
+    @Autowired
+    AtencionController atencionController;
 
     //redirige / a /login
     @GetMapping("/")
@@ -29,17 +29,26 @@ public class WebController {
     // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
-        ticketController.retornaTicketsPropiosYDatosInicialesAInicio(model); // Llama al método que agrega tickets
+        ticketController.retornaTicketsPropiosYDatosInicialesAVista(model); // Llama al método que agrega tickets
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
     @GetMapping("/TicketsEnProceso")
-    public String redirigePaginaTicketsEnProceso(){
+    public String redirigePaginaTicketsEnProceso(Model model){
+        atencionController.retornaTicketsEnProcesoAVista(model);
         return  "enProceso";
     }
     @GetMapping("/TicketsAtendidos")
-    public String redirigePaginaTicketsAtendidos(){
+    public String redirigePaginaTicketsAtendidos(Model model){
+        atencionController.retornaTicketsAtendidosAVista(model);
         return  "atendidos";
     }
+
+
+
+
+
+
+
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
     public String fragmentExpression(){

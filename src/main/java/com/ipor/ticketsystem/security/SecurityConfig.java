@@ -57,13 +57,15 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
-                        // Permitir a todos loguearse
+                        // Funcionalidades de la app permitidas a todos sin loguearse
                         .requestMatchers("/app/login/**").permitAll()
                         .requestMatchers("/app/logout/**").permitAll()
-                        //paginas front
+                        //paginas front permitidas sin logearse
                         .requestMatchers("/fragment-expression/**").permitAll()
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/error/**").permitAll()
+                        //todas las paginas pueden ser accedidas por cualquier usuario logeado, usar el ejemplo de abajo para
+                        //usuarios con roles especificos, en este caso puden entrar los 3:
                         .requestMatchers("/inicio/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos

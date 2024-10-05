@@ -68,7 +68,7 @@ public class TicketService {
         return archivoAdjuntoRepository.BuscarPorIdTicket(TicketId);
     }
     //obtener archivo adjunto por ID
-    public ArchivoAdjunto obtenerArchivoPorId(Long id) {
+    public ArchivoAdjunto getArchivoPorId(Long id) {
         return archivoAdjuntoRepository.findById(id)
                 .get();
     }
