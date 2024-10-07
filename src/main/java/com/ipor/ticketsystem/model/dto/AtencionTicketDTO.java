@@ -1,25 +1,28 @@
 package com.ipor.ticketsystem.model.dto;
 
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
-import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
+import com.ipor.ticketsystem.service.TicketService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class AtencionTicketDTO {
     private Long id;
-    private Usuario usuarioAtencion;
-    private Usuario usuarioTicket;
+    private Usuario usuario;
+
+    private TicketDTO ticket;
+    private List<ArchivoAdjunto> adjuntosTicket;
 
     private ClasificacionUrgencia clasificacionUrgencia;
     private ClasificacionServicio clasificacionServicio;
@@ -36,9 +39,10 @@ public class AtencionTicketDTO {
 
 
 
-    public AtencionTicketDTO(Recepcion recepcion){
+    public AtencionTicketDTO(Recepcion recepcion, TicketService ticketService){
         this.id = recepcion.getId();
-        this.usuarioAtencion = recepcion.getUsuario();
+        this.ticket = new TicketDTO(recepcion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(recepcion.getTicket().getId()));
+        this.usuario = recepcion.getUsuario();
         this.clasificacionUrgencia=recepcion.getClasificacionUrgencia();
         this.mensaje = recepcion.getMensaje();
         this.fecha = recepcion.getFecha();
@@ -47,9 +51,10 @@ public class AtencionTicketDTO {
         this.horaFormateada = getHoraConFormato();
 
     }
-    public AtencionTicketDTO(Servicio servicio){
+    public AtencionTicketDTO(Servicio servicio, TicketService ticketService){
         this.id = servicio.getId();
-        this.usuarioAtencion = servicio.getUsuario();
+        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
+        this.usuario = servicio.getUsuario();
         this.clasificacionServicio = servicio.getClasificacionServicio();
         this.descripcion = servicio.getDescripcion();
         this.fecha = servicio.getFecha();

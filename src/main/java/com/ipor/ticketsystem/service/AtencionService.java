@@ -6,7 +6,6 @@ import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
-import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AtencionService {
@@ -35,10 +33,10 @@ public class AtencionService {
 
     //metodo para retornar todos los tickets en proceso:
     public List<AtencionTicketDTO> getListaRecepcionados() {
-        List<Recepcion> listaRecepcionados = recepcionRepository.findAll();
+        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketFaseID2();
         List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion);
+            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
             listaRecepcionadosDTO.add(recepcionadoDTO);
         }
         return listaRecepcionadosDTO;
@@ -46,10 +44,10 @@ public class AtencionService {
 
     //metodo para retornar Mis tickets en proceso:
     public List<AtencionTicketDTO> getMyListaRecepcionados() {
-        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByUsuarioId(usuarioService.RetornarIDdeUsuarioLogeado());
+        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.RetornarIDdeUsuarioLogeado());
         List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion);
+            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
             listaRecepcionadosDTO.add(recepcionadoDTO);
         }
         return listaRecepcionadosDTO;
@@ -60,7 +58,7 @@ public class AtencionService {
         List<Servicio> listaAtendidos = servicioRepository.findAll();
         List<AtencionTicketDTO> listaAtendidosDTO = new ArrayList<>();
         for (Servicio servicio : listaAtendidos) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(servicio);
+            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(servicio, ticketService);
             listaAtendidosDTO.add(recepcionadoDTO);
         }
         return listaAtendidosDTO;
@@ -70,7 +68,7 @@ public class AtencionService {
     public void updateFaseTicket(Long idTicket, Long idFaseTicket) {
         // Buscar el ticket existente por ID
         Ticket ticketExistente = ticketService.getObtenerTicketPorID(idTicket);
-        ticketExistente.setFaseTicket(ticketService.getFaseTicketPorID(2L));
+        ticketExistente.setFaseTicket(ticketService.getFaseTicketPorID(idFaseTicket));
         ticketService.guardarTicketEnBaseDeDatos(ticketExistente);
     }
 

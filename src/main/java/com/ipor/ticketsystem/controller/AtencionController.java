@@ -3,7 +3,9 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
+import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
+import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.AtencionService;
 import com.ipor.ticketsystem.service.TicketService;
@@ -52,6 +54,12 @@ public class AtencionController {
         model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
         return  model;
     }
+    //metodo para enviar Lista de clasificaciones urgencia a Inicio
+    public Model retornaListaClasificacionesServicio(Model model){
+        List<ClasificacionServicio> listaServicios = atencionService.obtenerListaClasificacionServicio();
+        model.addAttribute("Lista_clasificacion_servicio", listaServicios);
+        return  model;
+    }
 
 
 
@@ -79,5 +87,28 @@ public class AtencionController {
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
 
+    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
+    @PostMapping("/atencion/{id}")
+    public ResponseEntity<String> atenderTicket(
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("clasificacion_servicio") Long IDclasificacion_servicio,
+            @PathVariable Long id,
+            HttpServletResponse response) throws IOException {
+
+        //cambiar fase de ticket
+        atencionService.updateFaseTicket(id, 3L);
+        // Lógica para crear la recepcion
+        Servicio servicio = new Servicio();
+        servicio.setDescripcion(descripcion);
+        servicio.setClasificacionServicio(atencionService.obtenerClasificacionServicioPorId(IDclasificacion_servicio));
+        servicio.setTicket(ticketService.getObtenerTicketPorID(id));
+        servicio.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        servicio.setHora(servicio.getHora());
+        servicio.setFecha(servicio.getFecha());
+        atencionService.saveServicio(servicio);
+
+        response.sendRedirect("/TicketsEnProceso");
+        return ResponseEntity.ok("Ticket atendido correctamente");
+    }
 
 }

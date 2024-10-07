@@ -79,11 +79,11 @@
         <thead class="table-dark">
         <tr>
             <th>N°</th>
+            <th>Fecha</th>
+            <th>Hora</th>
             <th>Descripción</th>
             <th>Clasificación</th>
             <th>Fase</th>
-            <th>Fecha</th>
-            <th>Hora</th>
             <th>Archivos Adjuntos</th>
         </tr>
         </thead>
@@ -91,11 +91,11 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="ticket, iter: ${MyTickets}">
             <td th:text="${iter.count}">#</td>
+            <td th:text="${ticket.fechaFormateada}">Fecha</td>
+            <td th:text="${ticket.horaFormateada}">Hora</td>
             <td th:text="${ticket.descripcion}">Descripción</td>
             <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
             <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-            <td th:text="${ticket.fechaFormateada}">Fecha</td>
-            <td th:text="${ticket.horaFormateada}">Hora</td>
             <td>
                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                 <ul>
@@ -115,11 +115,12 @@
     <thead class="table-dark">
     <tr>
         <th>N°</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Usuario</th>
         <th>Descripción</th>
         <th>Clasificación</th>
         <th>Fase</th>
-        <th>Fecha</th>
-        <th>Hora</th>
         <th>Archivos Adjuntos</th>
         <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
     </tr>
@@ -128,16 +129,17 @@
     <!-- Iterar sobre los tickets con un solo bucle th:each -->
     <tr th:each="ticket, iter: ${AllTickets}">
         <td th:text="${iter.count}">#</td>
+        <td th:text="${ticket.fechaFormateada}">Fecha</td>
+        <td th:text="${ticket.horaFormateada}">Hora</td>
+        <td th:text="${ticket.usuario.nombre}">Usuario</td>
         <td th:text="${ticket.descripcion}">Descripción</td>
         <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
         <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-        <td th:text="${ticket.fechaFormateada}">Fecha</td>
-        <td th:text="${ticket.horaFormateada}">Hora</td>
         <td>
             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
             <ul>
                 <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                    <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                    <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                 </li>
             </ul>
         </td>
@@ -147,6 +149,7 @@
             <button type="button" class="btn btn-primary"
                     data-bs-toggle="modal" data-bs-target="#recepcionModal"
                     th:data-ticket-id="${ticket.id}"
+                    th:data-ticket-usuario="${ticket.usuario.nombre}"
                     th:data-ticket-descripcion="${ticket.descripcion}"
                     th:data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
                     th:data-ticket-fase="${ticket.faseTicket.nombre}"
@@ -172,6 +175,7 @@
 
                 <div class="modal-body">
                     <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
+                    <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
                     <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
                     <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
                     <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span></p>
@@ -210,6 +214,7 @@
 
         // Extraer información del ticket desde los atributos data-*
         const ticketId = button.getAttribute('data-ticket-id');
+        const ticketUsuario = button.getAttribute('data-ticket-usuario');
         const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
         const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
         const ticketFase = button.getAttribute('data-ticket-fase');
@@ -218,6 +223,7 @@
 
         // Actualizar los elementos del modal con la información del ticket
         document.getElementById('modalTicketId').textContent = ticketId;
+        document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
         document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
         document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
         document.getElementById('modalTicketFecha').textContent = ticketFecha;

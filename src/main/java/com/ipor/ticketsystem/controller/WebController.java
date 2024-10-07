@@ -36,6 +36,8 @@ public class WebController {
     @GetMapping("/TicketsEnProceso")
     public String redirigePaginaTicketsEnProceso(Model model){
         atencionController.retornaTicketsEnProcesoAVista(model);
+        atencionController.retornaListaClasificacionesServicio(model);
+
         return  "enProceso";
     }
     @GetMapping("/TicketsAtendidos")
