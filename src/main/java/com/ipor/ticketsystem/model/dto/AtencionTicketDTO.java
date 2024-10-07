@@ -18,7 +18,8 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class AtencionTicketDTO {
     private Long id;
-    private Usuario usuario;
+    private Usuario usuarioAtencion;
+    private Usuario usuarioTicket;
 
     private ClasificacionUrgencia clasificacionUrgencia;
     private ClasificacionServicio clasificacionServicio;
@@ -37,7 +38,7 @@ public class AtencionTicketDTO {
 
     public AtencionTicketDTO(Recepcion recepcion){
         this.id = recepcion.getId();
-        this.usuario = recepcion.getUsuario();
+        this.usuarioAtencion = recepcion.getUsuario();
         this.clasificacionUrgencia=recepcion.getClasificacionUrgencia();
         this.mensaje = recepcion.getMensaje();
         this.fecha = recepcion.getFecha();
@@ -48,7 +49,7 @@ public class AtencionTicketDTO {
     }
     public AtencionTicketDTO(Servicio servicio){
         this.id = servicio.getId();
-        this.usuario = servicio.getUsuario();
+        this.usuarioAtencion = servicio.getUsuario();
         this.clasificacionServicio = servicio.getClasificacionServicio();
         this.descripcion = servicio.getDescripcion();
         this.fecha = servicio.getFecha();

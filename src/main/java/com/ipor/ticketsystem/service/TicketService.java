@@ -29,21 +29,22 @@ public class TicketService {
     private ClasificacionIncidenciaRepository clasificacionIncidenciaRepository;
     @Autowired
     private FaseTicketRepository faseTicketRepository;
+
     // Método para obtener todos los tickets, además junta los tickets y sus archivos adjuntos en TicketDTO
-    public List<TicketDTO> getAllTickets() {
-        List<Ticket> Tickets = ticketRepository.findAll();
-        List<TicketDTO> MisTicketsDTO = new ArrayList<>();
+    public List<TicketDTO> getAllTicketsSinRecepcionar() {
+        List<Ticket> Tickets = ticketRepository.findByFaseTicketId(1);
+        List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : Tickets) {
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket);
-            MisTicketsDTO.add(ticketDTO);
+            ListaTicketsDTO.add(ticketDTO);
         }
-        return MisTicketsDTO;
+        return ListaTicketsDTO;
     }
 
     // Método para obtener tickets propios, además junta los tickets y sus archivos adjuntos en TicketDTO
     public List<TicketDTO> getMyTickets() {
-        Long idUsuario = usuarioService.RetornarIDdeUsuario();
+        Long idUsuario = usuarioService.RetornarIDdeUsuarioLogeado();
         List<Ticket> MisTickets = ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario, 1L);
         List<TicketDTO> MisTicketsDTO = new ArrayList<>();
         for (Ticket ticket : MisTickets) {
@@ -56,10 +57,11 @@ public class TicketService {
     }
 
     //guardar ticket y archivo adjunto en el repositorio
-    public void saveTicket(Ticket ticket){
+    public void saveTicket(Ticket ticket) {
         ticketRepository.save(ticket);
     }
-    public void saveAdjunto(ArchivoAdjunto archivoAdjunto){
+
+    public void saveAdjunto(ArchivoAdjunto archivoAdjunto) {
         archivoAdjuntoRepository.save(archivoAdjunto);
     }
 
@@ -67,6 +69,7 @@ public class TicketService {
     public List<ArchivoAdjunto> getArchivosAdjuntosDeTicketPorTicketID(Long TicketId) {
         return archivoAdjuntoRepository.BuscarPorIdTicket(TicketId);
     }
+
     //obtener archivo adjunto por ID
     public ArchivoAdjunto getArchivoPorId(Long id) {
         return archivoAdjuntoRepository.findById(id)
@@ -74,20 +77,28 @@ public class TicketService {
     }
 
 
+    public Ticket getObtenerTicketPorID(Long id) {
+        return ticketRepository.findById(id).get();
+    }
+
+    public void guardarTicketEnBaseDeDatos(Ticket ticket) {
+        ticketRepository.save(ticket);
+    }
 
     //obtener todos los tipos de incidencia
-    public List<ClasificacionIncidencia> getObtenerTodosLosTiposDeIncidencia(){
+    public List<ClasificacionIncidencia> getObtenerTodosLosTiposDeIncidencia() {
         return clasificacionIncidenciaRepository.findAll();
     }
 
     //obtener clasificacion incidencia por id
-    public ClasificacionIncidencia getClasificacionIncidenciaPorID(Long id){
+    public ClasificacionIncidencia getClasificacionIncidenciaPorID(Long id) {
         return clasificacionIncidenciaRepository.findById(id).get();
     }
 
     //obtener fase por id
-    public FaseTicket getFaseTicketPorID(Long id){
+    public FaseTicket getFaseTicketPorID(Long id) {
         return faseTicketRepository.findById(id).get();
     }
+
 
 }

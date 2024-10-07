@@ -34,7 +34,7 @@ public class TicketController {
     public Model retornaTicketsPropiosYDatosInicialesAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         model.addAttribute("MyTickets", MisTicketsDTO);
-        List<TicketDTO> AllTicketsDTO = ticketService.getAllTickets();
+        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
         model.addAttribute("AllTickets", AllTicketsDTO);
         List<ClasificacionIncidencia> ListaTiposIncidencia = ticketService.getObtenerTodosLosTiposDeIncidencia();
         model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
@@ -49,17 +49,16 @@ public class TicketController {
             @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             HttpServletResponse response) throws IOException {
 
-        // Lógica para crear el ticket (esto es un ejemplo)
+        // Lógica para crear el ticket
         Ticket ticket = new Ticket();
         ticket.setDescripcion(descripcion);
-        ClasificacionIncidencia clasificacionIncidencia = new ClasificacionIncidencia();
-        clasificacionIncidencia = ticketService.getClasificacionIncidenciaPorID(clasificacion);
+        ClasificacionIncidencia clasificacionIncidencia = ticketService.getClasificacionIncidenciaPorID(clasificacion);
         ticket.setClasificacionIncidencia(clasificacionIncidencia);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
-        ticket.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuario()));
+        ticket.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
         ticket.setFecha(ticket.getFecha());
         ticket.setHora(ticket.getHora());
-        // Otras propiedades del ticket...
+
         ticketService.saveTicket(ticket);
 
 

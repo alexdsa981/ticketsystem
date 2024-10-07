@@ -18,6 +18,7 @@ public class Recepcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "VARCHAR(MAX)")
     private String mensaje;
 
     private LocalDate fecha;

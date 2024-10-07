@@ -19,6 +19,8 @@ public class Servicio {
 
     private LocalDate fecha;
     private LocalTime hora;
+
+    @Column(columnDefinition = "VARCHAR(MAX)")
     private String descripcion;
 
     @ManyToOne

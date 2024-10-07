@@ -1,13 +1,25 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
+import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
+import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.AtencionService;
+import com.ipor.ticketsystem.service.TicketService;
+import com.ipor.ticketsystem.service.UsuarioService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -15,10 +27,17 @@ import java.util.List;
 public class AtencionController {
     @Autowired
     AtencionService atencionService;
+    @Autowired
+    TicketService ticketService;
+    @Autowired
+    UsuarioService usuarioService;
+
     //metodo para enviar todos los tickets en proceso a "enProceso"
     public Model retornaTicketsEnProcesoAVista(Model model) {
         List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
         model.addAttribute("AllRecepcionados", AllRecepcionados);
+        List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
+        model.addAttribute("MyRecepcionados", MyRecepcionados);
         return  model;
     }
     //metodo para enviar todos los tickets atendidos a "atendidos"
@@ -27,4 +46,38 @@ public class AtencionController {
         model.addAttribute("AllAtendidos", AllAtendidos);
         return  model;
     }
+    //metodo para enviar Lista de clasificaciones urgencia a Inicio
+    public Model retornaListaClasificacionesUrgencia(Model model){
+        List<ClasificacionUrgencia> listaUrgencias = atencionService.obtenerListaClasificacionUrgencia();
+        model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
+        return  model;
+    }
+
+
+
+    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
+    @PostMapping("/recepcion/{id}")
+    public ResponseEntity<String> recepcionarTicket(
+            @RequestParam("mensaje") String mensaje,
+            @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
+            @PathVariable Long id,
+            HttpServletResponse response) throws IOException {
+
+        //cambiar fase de ticket
+        atencionService.updateFaseTicket(id, 2L);
+        // Lógica para crear la recepcion
+        Recepcion recepcion = new Recepcion();
+        recepcion.setMensaje(mensaje);
+        recepcion.setClasificacionUrgencia(atencionService.obtenerClasificacionUrgenciaPorId(IDclasificacion_urgencia));
+        recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
+        recepcion.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        recepcion.setHora(recepcion.getHora());
+        recepcion.setFecha(recepcion.getFecha());
+        atencionService.saveRecepcion(recepcion);
+
+        response.sendRedirect("/inicio");
+        return ResponseEntity.ok("Ticket recepcionado correctamente");
+    }
+
+
 }

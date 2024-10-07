@@ -29,7 +29,8 @@ public class WebController {
     // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
-        ticketController.retornaTicketsPropiosYDatosInicialesAVista(model); // Llama al método que agrega tickets
+        ticketController.retornaTicketsPropiosYDatosInicialesAVista(model); // Llama al método que agrega tickets y datos iniciales relacionados a tickets
+        atencionController.retornaListaClasificacionesUrgencia(model);
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
     @GetMapping("/TicketsEnProceso")

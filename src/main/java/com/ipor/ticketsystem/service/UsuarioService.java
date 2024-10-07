@@ -16,7 +16,7 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public Long RetornarIDdeUsuario(){
+    public Long RetornarIDdeUsuarioLogeado(){
         String token = jwtAuthenticationFilter.tokenActual;
         String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
         Usuario usuario = usuarioRepository.findByUsername(username).get();

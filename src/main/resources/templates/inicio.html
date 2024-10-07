@@ -109,42 +109,127 @@
     </table>
 
 
-<!-- Autorizar solo a usuarios con rol Soporte o Admin -->
-<sec:authorize access="hasAnyRole('ROLE_Soporte', 'ROLE_Admin')">
-    <h1>TODOS LOS TICKETS</h1>
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>N°</th>
-            <th>Descripción</th>
-            <th>Clasificación</th>
-            <th>Fase</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Archivos Adjuntos</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Iterar sobre los tickets con un solo bucle th:each -->
-        <tr th:each="ticket, iter: ${AllTickets}">
-            <td th:text="${iter.count}">#</td>
-            <td th:text="${ticket.descripcion}">Descripción</td>
-            <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
-            <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-            <td th:text="${ticket.fechaFormateada}">Fecha</td>
-            <td th:text="${ticket.horaFormateada}">Hora</td>
-            <td>
-                <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
-                <ul>
-                    <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                        <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</sec:authorize>
+
+<h1>TODOS LOS TICKETS</h1>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>N°</th>
+        <th>Descripción</th>
+        <th>Clasificación</th>
+        <th>Fase</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Archivos Adjuntos</th>
+        <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterar sobre los tickets con un solo bucle th:each -->
+    <tr th:each="ticket, iter: ${AllTickets}">
+        <td th:text="${iter.count}">#</td>
+        <td th:text="${ticket.descripcion}">Descripción</td>
+        <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
+        <td th:text="${ticket.faseTicket.nombre}">Fase</td>
+        <td th:text="${ticket.fechaFormateada}">Fecha</td>
+        <td th:text="${ticket.horaFormateada}">Hora</td>
+        <td>
+            <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+            <ul>
+                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                    <a href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                </li>
+            </ul>
+        </td>
+        <!-- Nueva columna con el botón para abrir el modal de recepción -->
+        <td>
+            <!-- Botón de recepción que abre el modal -->
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                    th:data-ticket-id="${ticket.id}"
+                    th:data-ticket-descripcion="${ticket.descripcion}"
+                    th:data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
+                    th:data-ticket-fase="${ticket.faseTicket.nombre}"
+                    th:data-ticket-fecha="${ticket.fechaFormateada}"
+                    th:data-ticket-hora="${ticket.horaFormateada}">
+                Recepción
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- Modal Genérico para Recepción -->
+<div class="modal fade" id="recepcionModal" tabindex="-1" aria-labelledby="recepcionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="recepcionForm" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recepcionModalLabel">Recepción del Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
+                    <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
+                    <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
+                    <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span></p>
+                    <p><strong>Hora:</strong> <span id="modalTicketHora"></span></p>
+
+                    <!-- Campo adicional para comentarios de recepción o cambios -->
+                    <div class="mb-3">
+                        <label for="comentariosRecepcion" class="form-label">Comentarios de Recepción</label>
+                        <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
+                                  placeholder="Agrega algún comentario sobre la recepción del ticket..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clasificacionUrgencia" class="form-label">Clasificación de Urgencia</label>
+                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia" required>
+                            <option selected disabled value="">Selecciona Urgencia</option>
+                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Recepción</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
+    const recepcionModal = document.getElementById('recepcionModal');
+    recepcionModal.addEventListener('show.bs.modal', function (event) {
+        // Botón que disparó el modal
+        const button = event.relatedTarget;
+
+        // Extraer información del ticket desde los atributos data-*
+        const ticketId = button.getAttribute('data-ticket-id');
+        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+        const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
+        const ticketFase = button.getAttribute('data-ticket-fase');
+        const ticketFecha = button.getAttribute('data-ticket-fecha');
+        const ticketHora = button.getAttribute('data-ticket-hora');
+
+        // Actualizar los elementos del modal con la información del ticket
+        document.getElementById('modalTicketId').textContent = ticketId;
+        document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
+        document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
+        document.getElementById('modalTicketFecha').textContent = ticketFecha;
+        document.getElementById('modalTicketHora').textContent = ticketHora;
+
+        // Actualizar la acción del formulario para que envíe el ticket correspondiente
+        const form = document.getElementById('recepcionForm');
+        form.setAttribute('action', `/app/tickets/recepcion/${ticketId}`);
+    });
+</script>
+
+
 
 
 

@@ -12,7 +12,35 @@
 <header th:replace="~{common/header :: header}">
 </header>
 <main>
+    <h1>MIS RECEPCIONADOS</h1>
+    <!--Todos los Recepcionados-->
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Recepcionado Por:</th>
+            <th>Mensaje</th>
+            <th>Urgencia</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterar sobre los tickets con un solo bucle th:each -->
+        <tr th:each="recepcionado, iter: ${MyRecepcionados}">
+            <td th:text="${iter.count}">#</td>
+            <td th:text="${recepcionado.usuario.nombre}">Recepcionado por:</td>
+            <td th:text="${recepcionado.mensaje}">Descripcion de Recepción</td>
+            <td th:text="${recepcionado.clasificacionUrgencia.nombre}">Urgencia</td>
+            <td th:text="${recepcionado.fechaFormateada}">Fecha</td>
+            <td th:text="${recepcionado.horaFormateada}">Hora</td>
+        </tr>
+        </tbody>
+    </table>
 
+
+
+    <h1>TODAS LAS RECEPCIONES</h1>
     <!--Todos los Recepcionados-->
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
@@ -30,7 +58,7 @@
         <tr th:each="recepcionado, iter: ${AllRecepcionados}">
             <td th:text="${iter.count}">#</td>
             <td th:text="${recepcionado.usuario.nombre}">Recepcionado por:</td>
-            <td th:text="${recepcionado.mensaje}">Mensaje</td>
+            <td th:text="${recepcionado.mensaje}">Descripcion de Recepción</td>
             <td th:text="${recepcionado.clasificacionUrgencia.nombre}">Urgencia</td>
             <td th:text="${recepcionado.fechaFormateada}">Fecha</td>
             <td th:text="${recepcionado.horaFormateada}">Hora</td>

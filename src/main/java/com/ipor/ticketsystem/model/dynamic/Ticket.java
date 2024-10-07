@@ -22,6 +22,7 @@ public class Ticket {
 
     private LocalDate fecha;
     private LocalTime hora;
+    @Column(columnDefinition = "VARCHAR(MAX)")
     private String descripcion;
 
     @ManyToOne

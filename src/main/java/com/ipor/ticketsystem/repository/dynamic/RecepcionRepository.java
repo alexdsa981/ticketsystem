@@ -3,9 +3,13 @@ package com.ipor.ticketsystem.repository.dynamic;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface RecepcionRepository extends JpaRepository<Recepcion, Long> {
+    @Query(value = "SELECT r.* FROM recepcion r INNER JOIN ticket t ON r.id_ticket = t.id WHERE t.id_usuario = :idUsuario", nativeQuery = true)
+    List<Recepcion> findAllByUsuarioId(@Param("idUsuario") Long idUsuario);
 
-    @Query("SELECT COUNT(r) > 0 FROM Recepcion r WHERE r.ticket.id = :ticketId")
-    boolean existsByTicketId(Long ticketId);
+
 }
