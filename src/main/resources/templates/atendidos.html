@@ -29,8 +29,8 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="atendido, iter: ${MyAtendidos}">
             <td th:text="${iter.count}">#</td>
-            <td th:text="${atendido.fechaFormateada}">Fecha</td>
-            <td th:text="${atendido.horaFormateada}">Hora</td>
+            <td th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
+            <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
             <td th:text="${atendido.ticket.descripcion}">Descripción de Incidencia</td>
             <td th:text="${atendido.descripcion}">Descripción</td>
             <td th:text="${atendido.clasificacionServicio.nombre}">Clasificación</td>
@@ -60,12 +60,12 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="atendido, iter: ${AllAtendidos}">
             <td th:text="${iter.count}">#</td>
-            <td th:text="${atendido.fechaFormateada}">Fecha</td>
-            <td th:text="${atendido.horaFormateada}">Hora</td>
-            <td th:text="${atendido.usuario.nombre}">Usuario Receptor</td>
+            <td th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
+            <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
+            <td th:text="${atendido.servicioHistorial.usuario.nombre}">Usuario Receptor</td>
             <td th:text="${atendido.ticket.usuario.nombre}">Usuario Emisor</td>
             <td th:text="${atendido.ticket.descripcion}">Descripción de Incidencia</td>
-            <td th:text="${atendido.descripcion}">Descripción de Atención</td>
+            <td th:text="${atendido.servicioHistorial.descripcion}">Descripción de Atención</td>
             <td>
                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                 <ul>
@@ -74,13 +74,21 @@
                     </li>
                 </ul>
             </td>
-            <td th:text="${atendido.clasificacionServicio.nombre}">Clasificación de atención</td>
+            <td th:text="${atendido.servicioHistorial.clasificacionServicio.nombre}">Clasificación de atención</td>
 
             <td>
                 <!-- Botón de recepción que abre el modal -->
                 <button type="button" class="btn btn-primary"
                         data-bs-toggle="modal"
-                        data-bs-target="#atencionModal">
+                        data-bs-target="#atencionModal"
+                        th:data-ticket-id="${atendido.ticket.id}"
+                        th:data-ticket-usuario="${atendido.ticket.usuario.nombre}"
+                        th:data-ticket-descripcion="${atendido.ticket.descripcion}"
+                        th:data-ticket-clasificacion="${atendido.ticket.clasificacionIncidencia.nombre}"
+                        th:data-ticket-fase="${atendido.ticket.faseTicket.nombre}"
+                        th:data-ticket-fecha="${atendido.ticket.fechaFormateadaRecepcion}"
+                        th:data-ticket-hora="${atendido.ticket.horaFormateadaRecepcion}">
+                >
                     Ver detalle Ticket
                 </button>
             </td>
@@ -88,6 +96,73 @@
         </tbody>
     </table>
 
+
+
+    <div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="atencionForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atencionModalLabel">Atender Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
+                        <p><strong>Usuario Atendido:</strong> <span id="modalTicketUsuario"></span></p>
+                        <p><strong>Descripción de Incidencia:</strong> <span id="modalTicketDescripcion"></span></p>
+                        <p><strong>Clasificación de Incidencia:</strong> <span id="modalTicketClasificacion"></span></p>
+                        <p><strong>Fecha de Emisión:</strong> <span id="modalTicketFecha"></span></p>
+                        <p><strong>Hora de Emisión:</strong> <span id="modalTicketHora"></span></p>
+
+                        <p><strong>Usuario Receptor:</strong> <span id="modalRecepcionUsuario"></span></p>
+                        <p><strong>Mensaje de Recepción:</strong> <span id="modalRecepcionMensaje"></span></p>
+                        <p><strong>Clasificación de Urgencia:</strong> <span id="modalRecepcionUrgencia"></span></p>
+                        <p><strong>Fecha de Recepción:</strong> <span id="modalRecepcionFecha"></span></p>
+                        <p><strong>Hora de Recepción:</strong> <span id="modalRecepcionHora"></span></p>
+
+                        <p><strong>Usuario Cierre:</strong> <span id="modalAtencionUsuario"></span></p>
+                        <p><strong>Descripción de Atención:</strong> <span id="modalAtencionDescripcion"></span></p>
+                        <p><strong>Clasificación de Atención:</strong> <span id="modalAtencionClasificacion"></span></p>
+                        <p><strong>Fecha de Cierre:</strong> <span id="modalAtencionFechaHora"></span></p>
+                        <p><strong>Hora de Cierre:</strong> <span id="modalAtencionHora"></span></p>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
+        const atencionModal = document.getElementById('atencionModal');
+        atencionModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que disparó el modal
+            const button = event.relatedTarget;
+
+            // Extraer información del ticket desde los atributos data-*
+            const ticketId = button.getAttribute('data-ticket-id');
+            const ticketUsuario = button.getAttribute('data-ticket-usuario');
+            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
+            const ticketFase = button.getAttribute('data-ticket-fase');
+            const ticketFecha = button.getAttribute('data-ticket-fecha');
+            const ticketHora = button.getAttribute('data-ticket-hora');
+
+            // Actualizar los elementos del modal con la información del ticket
+            document.getElementById('modalTicketId').textContent = ticketId;
+            document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
+            document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
+            document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
+            document.getElementById('modalTicketFecha').textContent = ticketFecha;
+            document.getElementById('modalTicketHora').textContent = ticketHora;
+
+        });
+    </script>
 
 </main>
 

@@ -44,7 +44,7 @@ public class AtencionController {
     }
     //metodo para enviar todos los tickets atendidos a "atendidos"
     public Model retornaTicketsAtendidosAVista(Model model) {
-        List<AtencionTicketDTO> AllAtendidos = atencionService.getListaAtendidos();
+        List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
         model.addAttribute("AllAtendidos", AllAtendidos);
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
         model.addAttribute("MyAtendidos", MyAtendidos);

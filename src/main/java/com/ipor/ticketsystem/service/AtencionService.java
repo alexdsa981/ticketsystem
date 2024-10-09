@@ -58,8 +58,8 @@ public class AtencionService {
         List<Servicio> listaAtendidos = servicioRepository.findAllByTicketFaseID3();
         List<AtencionTicketDTO> listaAtendidosDTO = new ArrayList<>();
         for (Servicio servicio : listaAtendidos) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(servicio, ticketService);
-            listaAtendidosDTO.add(recepcionadoDTO);
+            AtencionTicketDTO atendidoDTO = new AtencionTicketDTO(servicio, ticketService);
+            listaAtendidosDTO.add(atendidoDTO);
         }
         return listaAtendidosDTO;
     }
@@ -75,6 +75,18 @@ public class AtencionService {
         return listaServiciosDTO;
     }
 
+    //metodo para retornar historial de atencion:
+    public List<AtencionTicketDTO> getListaHistorialAtencion() {
+        List<Servicio> listaAtendidos = servicioRepository.findAllByTicketFaseID3();
+        List<AtencionTicketDTO> listaServiciosDTO = new ArrayList<>();
+
+        for (Servicio servicio : listaAtendidos) {
+            Recepcion recepcion = recepcionRepository.findByTicketId(servicio.getTicket().getId());
+            AtencionTicketDTO servicioDTO = new AtencionTicketDTO(servicio, recepcion,ticketService);
+            listaServiciosDTO.add(servicioDTO);
+        }
+        return listaServiciosDTO;
+    }
 
     //cambiar fase de ticket para recepcion o atención
     public void updateFaseTicket(Long idTicket, Long idFaseTicket) {

@@ -30,8 +30,8 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="recepcionado, iter: ${MyRecepcionados}">
             <td th:text="${iter.count}">#</td>
-            <td th:text="${recepcionado.fechaFormateada}">Fecha</td>
-            <td th:text="${recepcionado.horaFormateada}">Hora</td>
+            <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
+            <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
             <td th:text="${recepcionado.ticket.descripcion}">Descripción de Incidencia</td>
             <td th:text="${recepcionado.mensaje}">Mensaje de Recepción</td>
 
@@ -62,8 +62,8 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="recepcionado, iter: ${AllRecepcionados}">
             <td th:text="${iter.count}">#</td>
-            <td th:text="${recepcionado.fechaFormateada}">Fecha</td>
-            <td th:text="${recepcionado.horaFormateada}">Hora</td>
+            <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
+            <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
             <td th:text="${recepcionado.usuario.nombre}">Usuario Receptor</td>
             <td th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
             <td th:text="${recepcionado.ticket.descripcion}">Descripción de Incidencia</td>
@@ -87,8 +87,8 @@
                         th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
                         th:data-ticket-clasificacion="${recepcionado.ticket.clasificacionIncidencia.nombre}"
                         th:data-ticket-fase="${recepcionado.ticket.faseTicket.nombre}"
-                        th:data-ticket-fecha="${recepcionado.ticket.fechaFormateada}"
-                        th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
+                        th:data-ticket-fecha="${recepcionado.ticket.fechaFormateadaRecepcion}"
+                        th:data-ticket-hora="${recepcionado.ticket.horaFormateadaRecepcion}">
                     Atender Ticket
                 </button>
             </td>

@@ -32,10 +32,15 @@ public class AtencionTicketDTO {
 
     private LocalDate fecha;
     private LocalTime hora;
-    private String fechaFormateada;
-    private String horaFormateada;
+    private String fechaFormateadaRecepcion;
+    private String horaFormateadaRecepcion;
+    private String fechaFormateadaServicio;
+    private String horaFormateadaServicio;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm");
+
+    private Recepcion recepcionHistorial;
+    private Servicio servicioHistorial;
 
 
 
@@ -46,9 +51,9 @@ public class AtencionTicketDTO {
         this.clasificacionUrgencia=recepcion.getClasificacionUrgencia();
         this.mensaje = recepcion.getMensaje();
         this.fecha = recepcion.getFecha();
-        this.fechaFormateada = getFechaConFormato();
+        this.fechaFormateadaRecepcion = ConvertirFechaConFormato(this.fecha);
         this.hora = recepcion.getHora();
-        this.horaFormateada = getHoraConFormato();
+        this.horaFormateadaRecepcion = ConvertirHoraConFormato(this.hora);
 
     }
     public AtencionTicketDTO(Servicio servicio, TicketService ticketService){
@@ -58,19 +63,38 @@ public class AtencionTicketDTO {
         this.clasificacionServicio = servicio.getClasificacionServicio();
         this.descripcion = servicio.getDescripcion();
         this.fecha = servicio.getFecha();
-        this.fechaFormateada = getFechaConFormato();
+        this.fechaFormateadaServicio = ConvertirFechaConFormato(this.fecha);
         this.hora = servicio.getHora();
-        this.horaFormateada = getHoraConFormato();
+        this.horaFormateadaServicio = ConvertirHoraConFormato(this.hora);
+
+    }
+    public AtencionTicketDTO(Servicio servicio, Recepcion recepcion, TicketService ticketService){
+        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
+        this.recepcionHistorial = recepcion;
+        this.servicioHistorial = servicio;
+
+        this.fechaFormateadaRecepcion = ConvertirFechaConFormato(this.recepcionHistorial.getFecha());
+        this.horaFormateadaRecepcion = ConvertirHoraConFormato(this.recepcionHistorial.getHora());
+
+        this.fechaFormateadaServicio = ConvertirFechaConFormato(this.servicioHistorial.getFecha());
+        this.horaFormateadaServicio = ConvertirHoraConFormato(this.servicioHistorial.getHora());
+
+
 
     }
 
+
     // Método para formatear la fecha como cadena
-    public String getFechaConFormato() {
-        return this.fecha.format(FORMATO_FECHA);
+    public String ConvertirFechaConFormato(LocalDate localDate) {
+
+        return localDate.format(FORMATO_FECHA);
     }
 
     // Método para formatear la hora como cadena
-    public String getHoraConFormato() {
-        return this.hora.format(FORMATO_HORA);
+    public String ConvertirHoraConFormato(LocalTime localTime) {
+
+        return localTime.format(FORMATO_HORA);
     }
+
+
 }
