@@ -37,7 +37,8 @@ public class AtencionTicketDTO {
     private String fechaFormateadaServicio;
     private String horaFormateadaServicio;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm a");
+
 
     private Recepcion recepcionHistorial;
     private Servicio servicioHistorial;

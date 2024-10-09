@@ -27,7 +27,7 @@ public class TicketDTO {
     private String descripcion;
     private Usuario usuario;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("hh:mm a");
     private ClasificacionIncidencia clasificacionIncidencia;
     private FaseTicket faseTicket;
     private List<ArchivoAdjunto> listaArchivosAdjuntos;

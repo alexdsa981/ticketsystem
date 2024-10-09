@@ -86,9 +86,21 @@
                         th:data-ticket-descripcion="${atendido.ticket.descripcion}"
                         th:data-ticket-clasificacion="${atendido.ticket.clasificacionIncidencia.nombre}"
                         th:data-ticket-fase="${atendido.ticket.faseTicket.nombre}"
-                        th:data-ticket-fecha="${atendido.ticket.fechaFormateadaRecepcion}"
-                        th:data-ticket-hora="${atendido.ticket.horaFormateadaRecepcion}">
-                >
+                        th:data-ticket-fecha="${atendido.ticket.fechaFormateada}"
+                        th:data-ticket-hora="${atendido.ticket.horaFormateada}"
+
+                        th:data-recepcion-usuario="${atendido.recepcionHistorial.usuario.nombre}"
+                        th:data-recepcion-mensaje="${atendido.recepcionHistorial.mensaje}"
+                        th:data-recepcion-clasificacion="${atendido.recepcionHistorial.clasificacionUrgencia.nombre}"
+                        th:data-recepcion-fecha="${atendido.fechaFormateadaRecepcion}"
+                        th:data-recepcion-hora="${atendido.horaFormateadaRecepcion}"
+
+                        th:data-servicio-usuario="${atendido.servicioHistorial.usuario.nombre}"
+                        th:data-servicio-descripcion="${atendido.servicioHistorial.descripcion}"
+                        th:data-servicio-clasificacion="${atendido.servicioHistorial.clasificacionServicio.nombre}"
+                        th:data-servicio-fecha="${atendido.fechaFormateadaServicio}"
+                        th:data-servicio-hora="${atendido.horaFormateadaServicio}">
+
                     Ver detalle Ticket
                 </button>
             </td>
@@ -108,26 +120,74 @@
                     </div>
 
                     <div class="modal-body">
-                        <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
-                        <p><strong>Usuario Atendido:</strong> <span id="modalTicketUsuario"></span></p>
-                        <p><strong>Descripción de Incidencia:</strong> <span id="modalTicketDescripcion"></span></p>
-                        <p><strong>Clasificación de Incidencia:</strong> <span id="modalTicketClasificacion"></span></p>
-                        <p><strong>Fecha de Emisión:</strong> <span id="modalTicketFecha"></span></p>
-                        <p><strong>Hora de Emisión:</strong> <span id="modalTicketHora"></span></p>
+                        <!-- Sección del Ticket -->
+                        <h5 class="mb-3 text-primary">Detalles del Ticket</h5>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <th>ID del Ticket:</th>
+                                <td><span id="modalTicketId"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Usuario Atendido:</th>
+                                <td><span id="modalTicketUsuario"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Descripción de Incidencia:</th>
+                                <td><span id="modalTicketDescripcion"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Clasificación de Incidencia:</th>
+                                <td><span id="modalTicketClasificacion"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Fecha y Hora de Emisión:</th>
+                                <td><span id="modalTicketFecha"></span> | <span id="modalTicketHora"></span></td>
+                            </tr>
+                        </table>
 
-                        <p><strong>Usuario Receptor:</strong> <span id="modalRecepcionUsuario"></span></p>
-                        <p><strong>Mensaje de Recepción:</strong> <span id="modalRecepcionMensaje"></span></p>
-                        <p><strong>Clasificación de Urgencia:</strong> <span id="modalRecepcionUrgencia"></span></p>
-                        <p><strong>Fecha de Recepción:</strong> <span id="modalRecepcionFecha"></span></p>
-                        <p><strong>Hora de Recepción:</strong> <span id="modalRecepcionHora"></span></p>
+                        <!-- Sección de Recepción -->
+                        <h5 class="mb-3 text-primary">Detalles de Recepción</h5>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <th>Usuario Receptor:</th>
+                                <td><span id="modalRecepcionUsuario"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Mensaje de Recepción:</th>
+                                <td><span id="modalRecepcionMensaje"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Clasificación de Urgencia:</th>
+                                <td><span id="modalRecepcionClasificacion"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Fecha y Hora de Recepción:</th>
+                                <td><span id="modalRecepcionFecha"></span> | <span id="modalRecepcionHora"></span></td>
+                            </tr>
+                        </table>
 
-                        <p><strong>Usuario Cierre:</strong> <span id="modalAtencionUsuario"></span></p>
-                        <p><strong>Descripción de Atención:</strong> <span id="modalAtencionDescripcion"></span></p>
-                        <p><strong>Clasificación de Atención:</strong> <span id="modalAtencionClasificacion"></span></p>
-                        <p><strong>Fecha de Cierre:</strong> <span id="modalAtencionFechaHora"></span></p>
-                        <p><strong>Hora de Cierre:</strong> <span id="modalAtencionHora"></span></p>
-
+                        <!-- Sección de Servicio -->
+                        <h5 class="mb-3 text-primary">Detalles de Servicio</h5>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <th>Usuario de Servicio:</th>
+                                <td><span id="modalServicioUsuario"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Descripción de Servicio:</th>
+                                <td><span id="modalServicioDescripcion"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Clasificación de Servicio:</th>
+                                <td><span id="modalServicioClasificacion"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Fecha y Hora de Servicio:</th>
+                                <td><span id="modalServicioFecha"></span> | <span id="modalServicioHora"></span></td>
+                            </tr>
+                        </table>
                     </div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -153,6 +213,18 @@
             const ticketFecha = button.getAttribute('data-ticket-fecha');
             const ticketHora = button.getAttribute('data-ticket-hora');
 
+            const recepcionUsuario = button.getAttribute('data-recepcion-usuario');
+            const recepcionMensaje = button.getAttribute('data-recepcion-mensaje');
+            const recepcionClasificacion = button.getAttribute('data-recepcion-clasificacion');
+            const recepcionFecha = button.getAttribute('data-recepcion-fecha');
+            const recepcionHora = button.getAttribute('data-recepcion-hora');
+
+            const servicioUsuario = button.getAttribute('data-servicio-usuario');
+            const servicioDescripcion = button.getAttribute('data-servicio-descripcion');
+            const servicioClasificacion = button.getAttribute('data-servicio-clasificacion');
+            const servicioFecha = button.getAttribute('data-servicio-fecha');
+            const servicioHora = button.getAttribute('data-servicio-hora');
+
             // Actualizar los elementos del modal con la información del ticket
             document.getElementById('modalTicketId').textContent = ticketId;
             document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
@@ -161,6 +233,19 @@
             document.getElementById('modalTicketFecha').textContent = ticketFecha;
             document.getElementById('modalTicketHora').textContent = ticketHora;
 
+            // Actualizar los elementos del modal con la información de recepción
+            document.getElementById('modalRecepcionUsuario').textContent = recepcionUsuario;
+            document.getElementById('modalRecepcionMensaje').textContent = recepcionMensaje;
+            document.getElementById('modalRecepcionClasificacion').textContent = recepcionClasificacion;
+            document.getElementById('modalRecepcionFecha').textContent = recepcionFecha;
+            document.getElementById('modalRecepcionHora').textContent = recepcionHora;
+
+            // Actualizar los elementos del modal con la información de servicio
+            document.getElementById('modalServicioUsuario').textContent = servicioUsuario;
+            document.getElementById('modalServicioDescripcion').textContent = servicioDescripcion;
+            document.getElementById('modalServicioClasificacion').textContent = servicioClasificacion;
+            document.getElementById('modalServicioFecha').textContent = servicioFecha;
+            document.getElementById('modalServicioHora').textContent = servicioHora;
         });
     </script>
 
