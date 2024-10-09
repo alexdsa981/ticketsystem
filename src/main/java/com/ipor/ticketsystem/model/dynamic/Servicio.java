@@ -28,7 +28,7 @@ public class Servicio {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name= "id_clasificacion_atencion")
+    @JoinColumn(name= "id_clasificacion_servicio")
     private ClasificacionServicio clasificacionServicio;
 
     @OneToOne

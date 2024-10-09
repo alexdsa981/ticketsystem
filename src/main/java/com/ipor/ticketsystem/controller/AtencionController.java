@@ -46,6 +46,8 @@ public class AtencionController {
     public Model retornaTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> AllAtendidos = atencionService.getListaAtendidos();
         model.addAttribute("AllAtendidos", AllAtendidos);
+        List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
+        model.addAttribute("MyAtendidos", MyAtendidos);
         return  model;
     }
     //metodo para enviar Lista de clasificaciones urgencia a Inicio

@@ -55,7 +55,7 @@ public class AtencionService {
 
     //metodo para retornar todos los tickets atendidos:
     public List<AtencionTicketDTO> getListaAtendidos() {
-        List<Servicio> listaAtendidos = servicioRepository.findAll();
+        List<Servicio> listaAtendidos = servicioRepository.findAllByTicketFaseID3();
         List<AtencionTicketDTO> listaAtendidosDTO = new ArrayList<>();
         for (Servicio servicio : listaAtendidos) {
             AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(servicio, ticketService);
@@ -63,6 +63,18 @@ public class AtencionService {
         }
         return listaAtendidosDTO;
     }
+
+    //metodo para retornar Mis tickets atendidos:
+    public List<AtencionTicketDTO> getMyListaAtendidos() {
+        List<Servicio> listaServicios = servicioRepository.findAllByTicketUsuarioId(usuarioService.RetornarIDdeUsuarioLogeado());
+        List<AtencionTicketDTO> listaServiciosDTO = new ArrayList<>();
+        for (Servicio servicio : listaServicios) {
+            AtencionTicketDTO servicioDTO = new AtencionTicketDTO(servicio, ticketService);
+            listaServiciosDTO.add(servicioDTO);
+        }
+        return listaServiciosDTO;
+    }
+
 
     //cambiar fase de ticket para recepcion o atención
     public void updateFaseTicket(Long idTicket, Long idFaseTicket) {
