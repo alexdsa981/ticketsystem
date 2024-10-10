@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Help - Desk Clasificadores</title>
+</head>
+<body>
+<div th:replace="~{common/header :: header}">
+    <!--si se usa th:insert, este se colocará dentro de este div-->
+</div>
+
+
+<h1>TODOS LOS CLASIFICADORES DE INCIDENCIA</h1>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>N°</th>
+        <th>Nombre Incidencia</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="clasificador, iter: ${incidencias}">
+        <td th:text="${iter.count}">#</td>
+        <td th:text="${clasificador.nombre}">Nombre</td>
+        <td>
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#incidenciaModal"
+                    th:data-incidencia-id="${clasificador.id}"
+                    th:data-incidencia-nombre="${clasificador.nombre}"
+                    onclick="openIncidenciaModal(this)">
+                Editar
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Modal para Clasificador de Incidencia -->
+<div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="incidenciaModalLabel">Editar Clasificador de Incidencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="incidenciaForm" method="post">
+                    <input type="hidden" id="incidenciaId" name="id" />
+                    <div class="mb-3">
+                        <label for="incidenciaNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="incidenciaNombre" name="nombre" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<h1>TODOS LOS CLASIFICADORES DE SERVICIO</h1>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>N°</th>
+        <th>Nombre Servicio</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="clasificador, iter: ${servicios}">
+        <td th:text="${iter.count}">#</td>
+        <td th:text="${clasificador.nombre}">Nombre</td>
+        <td>
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#servicioModal"
+                    th:data-servicio-id="${clasificador.id}"
+                    th:data-servicio-nombre="${clasificador.nombre}"
+                    onclick="openServicioModal(this)">
+                Editar
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Modal para Clasificador de Servicio -->
+<div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="servicioModalLabel">Editar Clasificador de Servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="servicioForm" method="post">
+                    <input type="hidden" id="servicioId" name="id" />
+                    <div class="mb-3">
+                        <label for="servicioNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="servicioNombre" name="nombre" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<h1>TODOS LOS CLASIFICADORES DE URGENCIA</h1>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>N°</th>
+        <th>Nombre Urgencia</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="clasificador, iter: ${urgencias}">
+        <td th:text="${iter.count}">#</td>
+        <td th:text="${clasificador.nombre}">Nombre</td>
+        <td>
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#urgenciaModal"
+                    th:data-urgencia-id="${clasificador.id}"
+                    th:data-urgencia-nombre="${clasificador.nombre}"
+                    onclick="openUrgenciaModal(this)">
+                Editar
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Modal para Clasificador de Urgencia -->
+<div class="modal fade" id="urgenciaModal" tabindex="-1" aria-labelledby="urgenciaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="urgenciaModalLabel">Editar Clasificador de Urgencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="urgenciaForm" method="post">
+                    <input type="hidden" id="urgenciaId" name="id" />
+                    <div class="mb-3">
+                        <label for="urgenciaNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="urgenciaNombre" name="nombre" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openIncidenciaModal(button) {
+        var id = button.getAttribute("data-incidencia-id");
+        var nombre = button.getAttribute("data-incidencia-nombre");
+
+        document.getElementById("incidenciaId").value = id;
+        document.getElementById("incidenciaNombre").value = nombre;
+
+        // Configurar la acción del formulario
+        const form = document.getElementById('incidenciaForm');
+        form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
+    }
+
+    function openServicioModal(button) {
+        var id = button.getAttribute("data-servicio-id");
+        var nombre = button.getAttribute("data-servicio-nombre");
+
+        document.getElementById("servicioId").value = id;
+        document.getElementById("servicioNombre").value = nombre;
+
+        // Configurar la acción del formulario
+        const form = document.getElementById('servicioForm');
+        form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
+    }
+
+    function openUrgenciaModal(button) {
+        var id = button.getAttribute("data-urgencia-id");
+        var nombre = button.getAttribute("data-urgencia-nombre");
+
+        document.getElementById("urgenciaId").value = id;
+        document.getElementById("urgenciaNombre").value = nombre;
+
+        // Configurar la acción del formulario
+        const form = document.getElementById('urgenciaForm');
+        form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
+    }
+
+</script>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

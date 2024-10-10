@@ -16,7 +16,8 @@ public class WebController {
     AtencionController atencionController;
     @Autowired
     UsuariosCRUDController usuariosCRUDController;
-
+    @Autowired
+    ClasificadoresCRUDController clasificadoresCRUDController;
     //redirige / a /login
     @GetMapping("/")
     public String redirectToInicio() {
@@ -65,7 +66,11 @@ public class WebController {
         usuariosCRUDController.listarRoles(model);
         return  "usuarios";
     }
-
+    @GetMapping("/Clasificadores")
+    public String redirigePaginaClasiicadores(Model model){
+        clasificadoresCRUDController.listarClasificadores(model);
+        return  "clasificadores";
+    }
 
 
 

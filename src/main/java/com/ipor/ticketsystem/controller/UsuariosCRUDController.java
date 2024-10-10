@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
-@RequestMapping("/usuarios")
+@RequestMapping("/app/usuarios")
 public class UsuariosCRUDController {
 
     @Autowired
@@ -54,31 +55,29 @@ public class UsuariosCRUDController {
     }
 
 
-    // Guardar un nuevo usuario
-    @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute("usuario") Usuario usuario) {
-        usuarioService.guardarUsuario(usuario);
-        return "redirect:/usuarios";
-    }
-
-    // Mostrar el formulario para editar un usuario existente
-    @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditarUsuario(@PathVariable Long id, Model model) {
-        Usuario usuario = usuarioService.RetornarUsuarioPorId(id);
-        model.addAttribute("usuario", usuario);
-        return "usuarios/formulario"; // Nombre de la vista de Thymeleaf para editar un usuario
-    }
     // Actualizar un usuario existente
     @PostMapping("/actualizar/{id}")
-    public String actualizarUsuario(@PathVariable Long id, @ModelAttribute("usuario") Usuario usuario) {
+    public String actualizarUsuario(@PathVariable Long id,
+                                    @RequestParam("username") String username,
+                                    @RequestParam("password") String password,
+                                    @RequestParam("nombre") String nombre,
+                                    @RequestParam("rol") Long rolId
+                                    ) {
+        Usuario usuario = new Usuario();
+        usuario.setUsername(username);
+        usuario.setPassword(password);
+        usuario.setNombre(nombre);
+        usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
         usuarioService.actualizarUsuario(id, usuario);
-        return "redirect:/usuarios";
+        return "redirect:/Usuarios";
     }
 
     // Eliminar un usuario
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
-        usuarioService.eliminarUsuario(id);
+        if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
+            usuarioService.eliminarUsuario(id);
+        }
         return "redirect:/usuarios";
     }
 }

@@ -29,7 +29,7 @@
 
             <!-- Cuerpo de la Modal con el Formulario -->
             <div class="modal-body">
-                <form action="/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
+                <form action="app/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -61,6 +61,17 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+<!-- Tabla de usuarios -->
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>
@@ -82,10 +93,17 @@
         <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
         <!-- Columna con los botones de acción -->
         <td>
-            <!-- Botón para editar el usuario -->
-            <a class="btn btn-warning" th:href="@{'/usuarios/editar/' + ${usuario.id}}">
+            <!-- Botón para editar el usuario, usar data-* atributos -->
+            <button type="button" class="btn btn-warning"
+                    data-bs-toggle="modal" data-bs-target="#editUserModal"
+                    th:data-usuario-id="${usuario.id}"
+                    th:data-usuario-username="${usuario.username}"
+                    th:data-usuario-password="${usuario.password}"
+                    th:data-usuario-nombre="${usuario.nombre}"
+                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
                 Editar
-            </a>
+            </button>
+
             <!-- Botón para eliminar el usuario -->
             <a class="btn btn-danger" th:href="@{'/usuarios/eliminar/' + ${usuario.id}}"
                onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
@@ -95,6 +113,94 @@
     </tr>
     </tbody>
 </table>
+
+<!-- Modal para editar usuario -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Encabezado del modal -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Cuerpo del modal con el formulario -->
+            <div class="modal-body">
+                <!-- Quitar th:action y usar una acción estática -->
+                <form id="editUserForm" method="post">
+                    <div class="mb-3">
+                        <label for="usernameEdit" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="usernameEdit" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordEdit" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="passwordEdit" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreEdit" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreEdit" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+
+
+
+
+                        <div class="mb-3">
+                            <label for="rolEdit" class="form-label">Asignar Rol</label>
+                            <select class="form-select" id="rolEdit" name="rol" required>
+                                <option selected disabled value="">Selecciona Rol</option>
+                                <option th:each="rol : ${ListaRoles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                            </select>
+                        </div>
+
+
+
+
+                    </div>
+
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script JavaScript para manejar el modal -->
+<script>
+    // Al abrir el modal, actualizar su contenido con los datos del usuario seleccionado
+    const editUserModal = document.getElementById('editUserModal');
+    editUserModal.addEventListener('show.bs.modal', function (event) {
+        // Botón que disparó el modal
+        const button = event.relatedTarget;
+
+        // Extraer información del usuario desde los atributos data-*
+        const usuarioId = button.getAttribute('data-usuario-id');
+        const usuarioUsername = button.getAttribute('data-usuario-username');
+        const usuarioPassword = button.getAttribute('data-usuario-password');
+        const usuarioNombre = button.getAttribute('data-usuario-nombre');
+        const usuarioRol = button.getAttribute('data-usuario-rol');
+
+        // Actualizar los elementos del modal con la información del usuario
+        document.getElementById('usernameEdit').value = usuarioUsername;
+        document.getElementById('passwordEdit').value = usuarioPassword;
+        document.getElementById('nombreEdit').value = usuarioNombre;
+
+        // Seleccionar el rol correcto en el select
+        const rolSelect = document.getElementById('rolEdit');
+        Array.from(rolSelect.options).forEach(option => {
+            option.selected = option.text === usuarioRol;
+        });
+
+        // Actualizar la acción del formulario para que envíe el usuario correspondiente
+        const form = document.getElementById('editUserForm');
+        form.setAttribute('action', `/app/usuarios/actualizar/${usuarioId}`);
+    });
+
+</script>
 
 
 
