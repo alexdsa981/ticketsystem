@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.security;
 
+import com.ipor.ticketsystem.service.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         System.out.println(authException.getMessage());
         System.out.println(Arrays.toString(authException.getStackTrace()));
         // Eliminar la cookie del token JWT
-        Cookie jwtCookie = new Cookie("JWT", null);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setMaxAge(0); // Esto elimina la cookie
-        jwtCookie.setPath("/");
-        response.addCookie(jwtCookie);
+        CookieUtil.removeJwtCookie(response);
         System.out.println("limpia cookies en entry point");
         //enviar al login si se existe una exepcion
         response.sendRedirect("/login");

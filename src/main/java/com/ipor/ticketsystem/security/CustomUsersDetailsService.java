@@ -3,6 +3,8 @@ package com.ipor.ticketsystem.security;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
+import com.ipor.ticketsystem.service.CookieUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomUsersDetailsService implements UserDetailsService {
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final HttpServletResponse response; // Añadido
 
     @Autowired
-    public CustomUsersDetailsService(UsuarioRepository usuarioRepository) {
+    public CustomUsersDetailsService(UsuarioRepository usuarioRepository, HttpServletResponse response) {
         this.usuarioRepository = usuarioRepository;
+        this.response = response; // Inicializado
     }
 
     //se crea una lista de autoridades por medio de una lista de roles
@@ -35,9 +39,15 @@ public class CustomUsersDetailsService implements UserDetailsService {
     //obtenemos un usuario con todos sus datos por medio de su username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    CookieUtil.removeJwtCookie(response); // Limpiar cookie al no encontrar usuario
+                    return new UsernameNotFoundException("User not found");
+                });
+
         Collection<RolUsuario> roles = Collections.singletonList(usuario.getRolUsuario());
         return new User(usuario.getUsername(), usuario.getPassword(), mapAuthority(roles));
     }
-
 }
+
+
