@@ -14,6 +14,39 @@
 
 
 <h1>TODOS LOS CLASIFICADORES DE INCIDENCIA</h1>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
+    Nuevo
+</button>
+<!-- Modal -->
+<div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/incidencia/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nombra la Nueva Clasificación de Incidencia</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreincidencia" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreincidencia" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>
@@ -72,6 +105,39 @@
 
 
 <h1>TODOS LOS CLASIFICADORES DE SERVICIO</h1>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newServicioModal">
+    Nuevo
+</button>
+<div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de Servicio</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreservicio" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>
@@ -125,6 +191,37 @@
 
 
 <h1>TODOS LOS CLASIFICADORES DE URGENCIA</h1>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
+    Nuevo
+</button>
+<div class="modal fade" id="newUrgenciaModal" tabindex="-1" aria-labelledby="newUrgenciaModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/urgencia/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="newUrgenciaModalLabel">Nombra la Nueva Clasificación de Urgencia</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreurgencia" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreurgencia" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>

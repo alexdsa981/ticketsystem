@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="https://thymeleaf.org">
+<html lang="en" xmlns:th="https://thymeleaf.org">
 <head>
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
@@ -40,22 +39,36 @@
                             <li><a class="dropdown-item" href="/Clasificadores">Clasificadores</a></li>
                         </ul>
                     </li>
+                    <li>
+                        <p th:text="'Usuario: ' + ${nombreUsuario}" style="color: white; margin-bottom:0px">Bienvenido: nombre</p>
+                        <p style="color: white; margin-bottom:0px">Hora actual: <span id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
+                        <script>
+                            function actualizarHora() {
+                                const ahora = new Date(); // Obtiene la fecha y hora actual del cliente
+                                const horas = String(ahora.getHours()).padStart(2, '0'); // Obtiene las horas y añade un 0 al inicio si es necesario
+                                const minutos = String(ahora.getMinutes()).padStart(2, '0'); // Obtiene los minutos
+                                const segundos = String(ahora.getSeconds()).padStart(2, '0'); // Obtiene los segundos
+
+                                // Actualiza el contenido del span con la hora formateada
+                                document.getElementById('horaActual').textContent = `${horas}:${minutos}:${segundos}`;
+                            }
+
+                            // Actualiza la hora cada segundo
+                            setInterval(actualizarHora, 1000);
+                        </script>
+                    </li>
+
+                </ul>
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <form action="/app/logout" method="POST">
                             <button type="submit" class="btn btn-warning">Cerrar Sesión</button>
                         </form>
                     </li>
                 </ul>
-                <!--
-                    <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-                -->
             </div>
         </div>
     </nav>
 </header>
-
 </body>
 </html>
