@@ -37,6 +37,7 @@ public class Ticket {
     @JoinColumn(name = "id_fase_ticket")
     private FaseTicket faseTicket;
 
+
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
 

@@ -43,33 +43,49 @@ public class WebController {
     // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
-        ticketController.retornaTicketsPropiosYDatosInicialesAVista(model); // Llama al método que agrega tickets y datos iniciales relacionados a tickets
-        atencionController.retornaListaClasificacionesUrgencia(model);
+        ticketController.retornaTicketsPropiosAVista(model);
+        ticketController.retornaListaClasificacionIncidencia(model);
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
     @GetMapping("/TicketsEnProceso")
     public String redirigePaginaTicketsEnProceso(Model model){
-        atencionController.retornaTicketsEnProcesoAVista(model);
-        atencionController.retornaListaClasificacionesServicio(model);
-
+        atencionController.retornaMisTicketsEnProcesoAVista(model);
         return  "enProceso";
     }
     @GetMapping("/TicketsAtendidos")
-    public String redirigePaginaTicketsAtendidos(Model model){
-        atencionController.retornaTicketsAtendidosAVista(model);
+    public String redirigePaginaMisTicketsAtendidos(Model model){
+        atencionController.retornaMisTicketsAtendidosAVista(model);
         return  "atendidos";
     }
 
-    @GetMapping("/Usuarios")
+    @GetMapping("/admin/Usuarios")
     public String redirigePaginaUsuarios(Model model){
         usuariosCRUDController.listarUsuarios(model);
         usuariosCRUDController.listarRoles(model);
-        return  "usuarios";
+        return  "admin/usuarios";
     }
-    @GetMapping("/Clasificadores")
+    @GetMapping("/admin/Clasificadores")
     public String redirigePaginaClasiicadores(Model model){
         clasificadoresCRUDController.listarClasificadores(model);
-        return  "clasificadores";
+        return  "admin/clasificadores";
+    }
+
+    @GetMapping("/soporte/Recibidos")
+    public String redirigePaginaTicketsRecibidos(Model model){
+        ticketController.retornaTicketRecibidosAVista(model);
+        atencionController.retornaListaClasificacionesUrgencia(model);
+        return  "/soporte/ticketsRecibidos";
+    }
+    @GetMapping("/soporte/Recepcionados")
+    public String redirigePaginaTicketsRecepcionados(Model model){
+        atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
+        atencionController.retornaListaClasificacionesServicio(model);
+        return  "soporte/ticketsRecepcionados";
+    }
+    @GetMapping("/soporte/Atendidos")
+    public String redirigePaginaTicketsAtendidos(Model model){
+        atencionController.retornaTodosLosTicketsAtendidosAVista(model);
+        return  "soporte/ticketsAtendidos";
     }
 
 

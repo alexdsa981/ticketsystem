@@ -13,6 +13,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +30,27 @@ public class TicketController {
     TicketService ticketService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
-    public Model retornaTicketsPropiosYDatosInicialesAVista(Model model) {
+    public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         model.addAttribute("MyTickets", MisTicketsDTO);
-        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
-        model.addAttribute("AllTickets", AllTicketsDTO);
+        return model;
+    }
+
+    public Model retornaListaClasificacionIncidencia(Model model) {
         List<ClasificacionIncidencia> ListaTiposIncidencia = ticketService.getObtenerTodosLosTiposDeIncidencia();
         model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
+        return model;
+    }
 
+
+
+    public Model retornaTicketRecibidosAVista(Model model) {
+        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
+        model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
     }
 
@@ -84,6 +96,9 @@ public class TicketController {
             }
 
         }
+        // Enviar notificación de nuevo ticket a través de WebSocket
+        messagingTemplate.convertAndSend("/topic/tickets", ticket);
+
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");
     }

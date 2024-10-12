@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.fixed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class ClasificacionIncidencia {
 
     private String nombre;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "clasificacionIncidencia")
     private List<Ticket> listaTickets;
 }

@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.dynamic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,12 +29,15 @@ public class Usuario {
     @JoinColumn(name = "id_rol_usuario")
     private RolUsuario rolUsuario;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Servicio> listaServicios;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<Ticket> listaTickets;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<Recepcion> listaRecepciones;
 

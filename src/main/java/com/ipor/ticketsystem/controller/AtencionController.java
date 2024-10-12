@@ -35,21 +35,33 @@ public class AtencionController {
     UsuarioService usuarioService;
 
     //metodo para enviar todos los tickets en proceso a "enProceso"
-    public Model retornaTicketsEnProcesoAVista(Model model) {
-        List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
-        model.addAttribute("AllRecepcionados", AllRecepcionados);
+    public Model retornaMisTicketsEnProcesoAVista(Model model) {
         List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return  model;
     }
+    public Model retornaTodosLosTicketsEnProcesoAVista(Model model) {
+        List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
+        model.addAttribute("AllRecepcionados", AllRecepcionados);
+        return  model;
+    }
+
     //metodo para enviar todos los tickets atendidos a "atendidos"
-    public Model retornaTicketsAtendidosAVista(Model model) {
-        List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
-        model.addAttribute("AllAtendidos", AllAtendidos);
+    public Model retornaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
         model.addAttribute("MyAtendidos", MyAtendidos);
         return  model;
     }
+    public Model retornaTodosLosTicketsAtendidosAVista(Model model) {
+        List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
+        model.addAttribute("AllAtendidos", AllAtendidos);
+        return  model;
+    }
+
+
+
+
+
     //metodo para enviar Lista de clasificaciones urgencia a Inicio
     public Model retornaListaClasificacionesUrgencia(Model model){
         List<ClasificacionUrgencia> listaUrgencias = atencionService.obtenerListaClasificacionUrgencia();
@@ -85,7 +97,7 @@ public class AtencionController {
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
 
-        response.sendRedirect("/inicio");
+        response.sendRedirect("/soporte/Recibidos");
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
 
@@ -109,7 +121,7 @@ public class AtencionController {
         servicio.setFecha(servicio.getFecha());
         atencionService.saveServicio(servicio);
 
-        response.sendRedirect("/TicketsEnProceso");
+        response.sendRedirect("/soporte/Recepcionados");
         return ResponseEntity.ok("Ticket atendido correctamente");
     }
 

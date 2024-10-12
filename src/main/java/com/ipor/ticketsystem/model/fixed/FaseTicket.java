@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.fixed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class FaseTicket {
 
     private String nombre;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "faseTicket")
     private List<Ticket> listaTickets;
 }

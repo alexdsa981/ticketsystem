@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="shortcut icon" href="#">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/header.css}" />
+
+
+    <title>HelpDesk - Inicio</title>
+
+    <style>
+        ul{
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<header th:replace="~{common/header :: header}">
+</header>
+
+<h1>TODOS LOS TICKETS</h1>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>N°</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Usuario</th>
+        <th>Descripción</th>
+        <th>Clasificación</th>
+        <th>Fase</th>
+        <th>Archivos Adjuntos</th>
+        <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterar sobre los tickets con un solo bucle th:each -->
+    <tr th:each="ticket, iter: ${AllTickets}">
+        <td th:text="${iter.count}">#</td>
+        <td th:text="${ticket.fechaFormateada}">Fecha</td>
+        <td th:text="${ticket.horaFormateada}">Hora</td>
+        <td th:text="${ticket.usuario.nombre}">Usuario</td>
+        <td th:text="${ticket.descripcion}">Descripción</td>
+        <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
+        <td th:text="${ticket.faseTicket.nombre}">Fase</td>
+        <td>
+            <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+            <ul>
+                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                    <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                </li>
+            </ul>
+        </td>
+        <!-- Nueva columna con el botón para abrir el modal de recepción -->
+        <td>
+            <!-- Botón de recepción que abre el modal -->
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                    th:data-ticket-id="${ticket.id}"
+                    th:data-ticket-usuario="${ticket.usuario.nombre}"
+                    th:data-ticket-descripcion="${ticket.descripcion}"
+                    th:data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
+                    th:data-ticket-fase="${ticket.faseTicket.nombre}"
+                    th:data-ticket-fecha="${ticket.fechaFormateada}"
+                    th:data-ticket-hora="${ticket.horaFormateada}">
+                Recepción
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- Modal Genérico para Recepción -->
+<div class="modal fade" id="recepcionModal" tabindex="-1" aria-labelledby="recepcionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="recepcionForm" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recepcionModalLabel">Recepción del Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
+                    <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
+                    <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
+                    <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
+                    <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span id="modalTicketHora"></span></p>
+
+
+                    <!-- Campo adicional para comentarios de recepción o cambios -->
+                    <div class="mb-3">
+                        <label for="comentariosRecepcion" class="form-label">Comentarios de Recepción</label>
+                        <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
+                                  placeholder="Agrega algún comentario sobre la recepción del ticket..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clasificacionUrgencia" class="form-label">Clasificación de Urgencia</label>
+                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia" required>
+                            <option selected disabled value="">Selecciona Urgencia</option>
+                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Recepción</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
+    const recepcionModal = document.getElementById('recepcionModal');
+    recepcionModal.addEventListener('show.bs.modal', function (event) {
+        // Botón que disparó el modal
+        const button = event.relatedTarget;
+
+        // Extraer información del ticket desde los atributos data-*
+        const ticketId = button.getAttribute('data-ticket-id');
+        const ticketUsuario = button.getAttribute('data-ticket-usuario');
+        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+        const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
+        const ticketFase = button.getAttribute('data-ticket-fase');
+        const ticketFecha = button.getAttribute('data-ticket-fecha');
+        const ticketHora = button.getAttribute('data-ticket-hora');
+
+        // Actualizar los elementos del modal con la información del ticket
+        document.getElementById('modalTicketId').textContent = ticketId;
+        document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
+        document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
+        document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
+        document.getElementById('modalTicketFecha').textContent = ticketFecha;
+        document.getElementById('modalTicketHora').textContent = ticketHora;
+
+        // Actualizar la acción del formulario para que envíe el ticket correspondiente
+        const form = document.getElementById('recepcionForm');
+        form.setAttribute('action', `/app/tickets/recepcion/${ticketId}`);
+    });
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+    // Conectar al WebSocket
+    var socket = new SockJS('/ws');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Conectado: ' + frame);
+
+        // Suscribirse a la ruta del tópico donde se enviarán los tickets
+        stompClient.subscribe('/topic/tickets', function (ticket) {
+            // Cuando llegue un nuevo ticket, lo añades a la tabla
+            mostrarNuevoTicket(JSON.parse(ticket.body));
+        });
+    });
+
+    // Función para agregar un nuevo ticket a la tabla
+    function mostrarNuevoTicket(ticket) {
+        var tableBody = document.querySelector('table tbody');
+
+        var newRow = document.createElement('tr');
+
+        newRow.innerHTML = `
+            <td>${tableBody.rows.length + 1}</td>
+            <td>${ticket.fechaFormateada}</td>
+            <td>${ticket.horaFormateada}</td>
+            <td>${ticket.usuario.nombre}</td>
+            <td>${ticket.descripcion}</td>
+            <td>${ticket.clasificacionIncidencia.nombre}</td>
+            <td>${ticket.faseTicket.nombre}</td>
+            <td>
+                <ul>
+                    ${ticket.listaArchivosAdjuntos.map(adjunto => `
+                        <li><a href="app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - ${adjunto.pesoContenido}kb</li>
+                    `).join('')}
+                </ul>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                        data-ticket-id="${ticket.id}"
+                        data-ticket-usuario="${ticket.usuario.nombre}"
+                        data-ticket-descripcion="${ticket.descripcion}"
+                        data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
+                        data-ticket-fase="${ticket.faseTicket.nombre}"
+                        data-ticket-fecha="${ticket.fechaFormateada}"
+                        data-ticket-hora="${ticket.horaFormateada}">
+                    Recepción
+                </button>
+            </td>
+        `;
+
+        tableBody.appendChild(newRow);
+    }
+</script>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+</body>
+</html>

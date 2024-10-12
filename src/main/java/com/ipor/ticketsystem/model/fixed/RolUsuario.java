@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.fixed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class RolUsuario {
     private Long id;
     private String nombre;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rolUsuario")
     private Set<Usuario> listaUsuarios;
 
