@@ -30,9 +30,6 @@ public class TicketController {
     TicketService ticketService;
     @Autowired
     UsuarioService usuarioService;
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
     public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
@@ -97,7 +94,6 @@ public class TicketController {
 
         }
         // Enviar notificación de nuevo ticket a través de WebSocket
-        messagingTemplate.convertAndSend("/topic/tickets", ticket);
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");

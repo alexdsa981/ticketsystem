@@ -157,62 +157,42 @@
 
 
 
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <div id="messageArea"></div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario:</label>
+                <input type="text" class="form-control" id="username" placeholder="Introduce tu nombre">
+            </div>
 
+            <div class="mb-3">
+                <label for="messageInput" class="form-label">Mensaje:</label>
+                <input type="text" class="form-control" id="messageInput" placeholder="Introduce tu mensaje">
+            </div>
+            <button onclick="sendMessage()" class="btn btn-primary mt-3">Send</button>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    let socket = new WebSocket("ws://localhost:8080/ws/ticket");
 
-<script>
-    // Conectar al WebSocket
-    var socket = new SockJS('/ws');
-    var stompClient = Stomp.over(socket);
+    socket.onmessage = function(event) {
+        let messageArea = document.getElementById("messageArea");
+        messageArea.innerHTML += '<p>' + event.data + '</p>';
+    };
 
-    stompClient.connect({}, function (frame) {
-        console.log('Conectado: ' + frame);
+    function sendMessage() {
+        let username = document.getElementById("username").value;
+        let messageInput = document.getElementById("messageInput");
 
-        // Suscribirse a la ruta del tópico donde se enviarán los tickets
-        stompClient.subscribe('/topic/tickets', function (ticket) {
-            // Cuando llegue un nuevo ticket, lo añades a la tabla
-            mostrarNuevoTicket(JSON.parse(ticket.body));
-        });
-    });
-
-    // Función para agregar un nuevo ticket a la tabla
-    function mostrarNuevoTicket(ticket) {
-        var tableBody = document.querySelector('table tbody');
-
-        var newRow = document.createElement('tr');
-
-        newRow.innerHTML = `
-            <td>${tableBody.rows.length + 1}</td>
-            <td>${ticket.fechaFormateada}</td>
-            <td>${ticket.horaFormateada}</td>
-            <td>${ticket.usuario.nombre}</td>
-            <td>${ticket.descripcion}</td>
-            <td>${ticket.clasificacionIncidencia.nombre}</td>
-            <td>${ticket.faseTicket.nombre}</td>
-            <td>
-                <ul>
-                    ${ticket.listaArchivosAdjuntos.map(adjunto => `
-                        <li><a href="app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - ${adjunto.pesoContenido}kb</li>
-                    `).join('')}
-                </ul>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary"
-                        data-bs-toggle="modal" data-bs-target="#recepcionModal"
-                        data-ticket-id="${ticket.id}"
-                        data-ticket-usuario="${ticket.usuario.nombre}"
-                        data-ticket-descripcion="${ticket.descripcion}"
-                        data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
-                        data-ticket-fase="${ticket.faseTicket.nombre}"
-                        data-ticket-fecha="${ticket.fechaFormateada}"
-                        data-ticket-hora="${ticket.horaFormateada}">
-                    Recepción
-                </button>
-            </td>
-        `;
-
-        tableBody.appendChild(newRow);
+        let fullMessage = username + ": " + messageInput.value;
+        socket.send(fullMessage);
+        messageInput.value = '';
     }
 </script>
+
+
 
 
 
