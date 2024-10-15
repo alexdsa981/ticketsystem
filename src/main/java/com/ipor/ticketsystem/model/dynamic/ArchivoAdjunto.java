@@ -1,11 +1,13 @@
 package com.ipor.ticketsystem.model.dynamic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.DecimalFormat;
+import java.util.Base64;
 
 @Getter
 @Setter
@@ -25,6 +27,7 @@ public class ArchivoAdjunto {
     private String tipoContenido;
     private Double pesoContenido;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_ticket", nullable = false)
     private Ticket ticket;
@@ -43,4 +46,5 @@ public class ArchivoAdjunto {
         }
 
     }
+
 }

@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dto.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
@@ -31,6 +32,9 @@ public class TicketController {
     TicketService ticketService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
+
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
     public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
@@ -95,6 +99,9 @@ public class TicketController {
 
         }
         TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+        // Enviar el ticket creado a través de WebSocket
+        messagingTemplate.convertAndSend("/topic/tickets", ticketRecordWS);
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");
