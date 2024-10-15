@@ -65,28 +65,13 @@ public class SecurityConfig {
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/error/**").permitAll()
                         //todas las paginas pueden ser accedidas por cualquier usuario logeado, usar el ejemplo de abajo para
-                        //usuarios con roles especificos, en este caso puden entrar los 3:
-                        .requestMatchers("/inicio/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
+                        //paginas front que requieren autorización, el resto de paginas pueden ser accedidas por todos, por ejemplo usuario
+                        //puede ingresar a todas las pagians menos las que tengan /soporte/ o /admin/
+                        .requestMatchers("/soporte/**").hasAnyAuthority("Admin", "Soporte")
+                        .requestMatchers("/admin/**").hasAuthority("Admin")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos
-                        .requestMatchers(HttpMethod.POST, "/app/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
-                        .requestMatchers(HttpMethod.GET, "/app/tickets/**").hasAnyAuthority("Usuario", "Admin", "Soporte")
 
-                        //permitir a los usuarios subir y ver sus archivos adjuntos
-                        .requestMatchers(HttpMethod.POST, "/app/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte", "Usuario")
-                        .requestMatchers(HttpMethod.GET, "/app/archivosAdjuntos/**").hasAnyAuthority("Admin", "Soporte", "Usuario")
-
-                        //permitir a soporte recepcionar y atender tickets
-                        .requestMatchers(HttpMethod.POST, "/app/recepciones/**").hasAnyAuthority("Admin", "Soporte")
-                        .requestMatchers(HttpMethod.GET, "/app/recepciones/**").hasAnyAuthority("Admin", "Soporte")
-                        .requestMatchers(HttpMethod.POST, "/app/servicios/**").hasAnyAuthority("Admin", "Soporte")
-                        .requestMatchers(HttpMethod.GET, "/app/servicios/**").hasAnyAuthority("Admin", "Soporte")
-
-                        // Permitir a los administradores realizar todas las operaciones en la ruta /app/**
-                        .requestMatchers(HttpMethod.GET, "/app/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.POST, "/app/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/app/**").hasAuthority("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/app/**").hasAuthority("Admin")
                         .requestMatchers("/app/usuarios/**").hasAuthority("Admin")
 
 

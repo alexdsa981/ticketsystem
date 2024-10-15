@@ -7,10 +7,10 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
-    private  TicketHandler ticketHandler;
+    private ChatHandler chatHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(ticketHandler, "/ws/ticket");
+        registry.addHandler(chatHandler, "/ws/ticket");
     }
 }

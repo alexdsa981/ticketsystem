@@ -89,7 +89,7 @@
         <!--mostrar contenido solo con roles-->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId> <!-- Asegúrate de usar la versión compatible -->
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
 

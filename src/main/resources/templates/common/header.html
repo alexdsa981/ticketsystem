@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://thymeleaf.org">
+<html lang="en" xmlns:th="https://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/TicketsAtendidos">Tickets Atendidos</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
                             Soporte
@@ -43,7 +43,7 @@
                             <li><a class="dropdown-item" href="/soporte/Atendidos">Tickets Atendidos</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
                             Admin Tools

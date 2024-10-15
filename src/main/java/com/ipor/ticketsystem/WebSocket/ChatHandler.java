@@ -1,7 +1,5 @@
 package com.ipor.ticketsystem.WebSocket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -11,7 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-public class TicketHandler extends TextWebSocketHandler {
+public class ChatHandler extends TextWebSocketHandler {
 
     private final CopyOnWriteArrayList<WebSocketSession> sessions = new CopyOnWriteArrayList<WebSocketSession>();
 
