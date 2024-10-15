@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class TicketController {
         ticketService.saveTicket(ticket);
 
 
-
+        List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
         // Si el archivo no es nulo y no está vacío, guardarlo
         if (archivo != null && !archivo.isEmpty()) {
             try {
@@ -81,7 +82,7 @@ public class TicketController {
                 archivoAdjunto.setTipoContenido(archivo.getContentType());
                 archivoAdjunto.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
                 archivoAdjunto.setTicket(ticket);  // Asignar el ticket recién creado
-
+                listaArchivosAdjuntos.add(archivoAdjunto);
                 // Guardar el archivo en la base de datos
                 ticketService.saveAdjunto(archivoAdjunto);
 
@@ -93,7 +94,7 @@ public class TicketController {
             }
 
         }
-        // Enviar notificación de nuevo ticket a través de WebSocket
+        TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");
