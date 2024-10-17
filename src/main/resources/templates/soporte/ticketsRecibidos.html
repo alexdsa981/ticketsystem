@@ -24,7 +24,7 @@
 </header>
 
 <h1>TODOS LOS TICKETS</h1>
-<table class="table table-striped table-bordered">
+<table id="ticketTable" class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>
         <th>N°</th>
@@ -38,7 +38,7 @@
         <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
     </tr>
     </thead>
-    <tbody>
+    <tbody id="ticketTableBody">
     <!-- Iterar sobre los tickets con un solo bucle th:each -->
     <tr th:each="ticket, iter: ${AllTickets}">
         <td th:text="${iter.count}">#</td>
@@ -52,7 +52,7 @@
             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
             <ul>
                 <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                    <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                    <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}"  href="#" th:text="${adjunto.nombre}">Archivo</a> - <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                 </li>
             </ul>
         </td>
@@ -150,10 +150,120 @@
 
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("Permiso de notificación concedido.");
+            } else {
+                console.log("Permiso de notificación denegado.");
+            }
+        });
+    }
+});
+
+
+
+    // Crear una conexión WebSocket
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    // Conectar al servidor
+    stompClient.connect({}, (frame) => {
+        console.log('Conectado: ' + frame);
+
+        // Suscribirse al tópico donde se enviarán los TicketRecordWS
+        stompClient.subscribe('/topic/tickets', (message) => {
+            // Aquí recibes el mensaje
+            const ticketRecord = JSON.parse(message.body);
+            // Llamar a una función para manejar el ticket recibido
+            manejarTicket(ticketRecord);
+            // Llamar a una función enviar una notificación
+            mostrarNotificacion(ticketRecord);
+
+        });
+    });
+
+    // Contador basado en la cantidad de tickets cargados inicialmente
+    let ticketCounter = document.querySelectorAll('#ticketTableBody tr').length + 1;
+
+    // Función para manejar el ticket recibido
+    function manejarTicket(ticketRecord) {
+        console.log('Ticket recibido:', ticketRecord);
+
+        // Obtener el cuerpo de la tabla donde se agregarán las filas
+        const ticketTableBody = document.getElementById('ticketTableBody');
+
+        // Crear una nueva fila
+        const newRow = document.createElement('tr');
+
+        // Generar las celdas de la fila con los datos del ticket
+        newRow.innerHTML = `
+            <td>${ticketCounter++}</td>
+            <td>${ticketRecord.fechaFormateada}</td>
+            <td>${ticketRecord.horaFormateada}</td>
+            <td>${ticketRecord.nombreUsuario}</td>
+            <td>${ticketRecord.descripcion}</td>
+            <td>${ticketRecord.nombreClasificacionIncidencia}</td>
+            <td>${ticketRecord.nombreFaseTicket}</td>
+            <td>
+                <ul>
+                    ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                        <li>
+                            <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                            ${adjunto.pesoContenido} mb
+                        </li>
+                    `).join('')}
+                </ul>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                        data-ticket-id="${ticketRecord.id}"
+                        data-ticket-usuario="${ticketRecord.nombreUsuario}"
+                        data-ticket-descripcion="${ticketRecord.descripcion}"
+                        data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
+                        data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                        data-ticket-fecha="${ticketRecord.fechaFormateada}"
+                        data-ticket-hora="${ticketRecord.horaFormateada}">
+                    Recepción
+                </button>
+            </td>
+        `;
+
+        // Agregar la nueva fila al cuerpo de la tabla
+        ticketTableBody.appendChild(newRow);
+    }
+
+function mostrarNotificacion(ticketRecord) {
+    console.log('Intentando mostrar notificación...'); // Agregado para verificar que se llame a la función
+    if (Notification.permission === "granted") {
+        // Crear una notificación con los detalles del ticket
+        const notification = new Notification("Nuevo Ticket Recibido", {
+            body: `Usuario: ${ticketRecord.nombreUsuario}\nClasificación: ${ticketRecord.nombreClasificacionIncidencia}\nDescripción: ${ticketRecord.descripcion}`,
+            icon: '/images/msystem.png',  // Opcional: añade un ícono si lo deseas
+        });
+
+        notification.onclick = function() {
+            window.focus();
+        };
+
+        console.log('Notificación mostrada.');
+    } else {
+        console.log('Permiso de notificación no concedido.');
+    }
+}
+
+</script>
 
 
 
 
+
+
+
+<!--
 <textarea id="ticketOutput" rows="10" cols="50" readonly></textarea>
 <script>
     // Crear una conexión WebSocket
@@ -185,7 +295,7 @@
     }
 </script>
 
-
+-->
 
 
 

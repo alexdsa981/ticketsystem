@@ -33,17 +33,19 @@ public record TicketRecordWS(
 
     // Clase interna para representar los detalles del archivo adjunto
     public static record ArchivoAdjuntoDTO(
+            Long id,
             String nombre,
             String archivoBase64,
             String tipoContenido,
-            Double pesoContenido
+            String pesoContenido
     ) {
         public ArchivoAdjuntoDTO(ArchivoAdjunto adjunto) {
             this(
+                    adjunto.getId(),
                     adjunto.getNombre(),
                     Base64.getEncoder().encodeToString(adjunto.getArchivo()),
                     adjunto.getTipoContenido(),
-                    adjunto.getPesoContenido()
+                    adjunto.getPesoEnMegabytes()
             );
         }
     }
