@@ -1,8 +1,53 @@
-td{
-    font-size: 14px;
+table {
+    width: auto; /* Permite que la tabla ajuste su ancho al contenido */
+    border-collapse: collapse; /* Para un aspecto más limpio */
+    table-layout: auto; /* Permite que las columnas se ajusten al contenido */
+}
+th, td {
+    border: 1px solid #ccc; /* Para que la celda sea visible */
+    padding: 10px; /* Espaciado interno */
+    text-align: left; /* Alineación del texto */
+    max-width: 200px; /* Ancho máximo para forzar el ajuste de texto */
+    word-wrap: break-word; /* Permite que el texto largo se rompa */
+    overflow-wrap: break-word; /* Soporte adicional para romper palabras largas */
+}
+td {
+    font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+}
+.descripcionTD{
+    max-width: 350px
 }
 ul{
     list-style-type: none;
     padding: 0;
     margin: 0;
+}
+
+.custom-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+}
+
+.custom-notification.show {
+    display: block; /* Mostrar la notificación cuando se añade la clase 'show' */
+    animation: fadein 2s, fadeout 0.5s 6.5s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeout {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }

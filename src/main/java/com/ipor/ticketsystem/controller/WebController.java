@@ -18,6 +18,7 @@ public class WebController {
     UsuariosCRUDController usuariosCRUDController;
     @Autowired
     ClasificadoresCRUDController clasificadoresCRUDController;
+
     //redirige / a /login
     @GetMapping("/")
     public String redirectToInicio() {
@@ -45,58 +46,69 @@ public class WebController {
     public String redirigePaginaInicio(Model model) {
         ticketController.retornaTicketsPropiosAVista(model);
         ticketController.retornaListaClasificacionIncidencia(model);
+        model.addAttribute("Titulo", "HelpDesk - Inicio");
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
+
     @GetMapping("/TicketsEnProceso")
-    public String redirigePaginaTicketsEnProceso(Model model){
+    public String redirigePaginaTicketsEnProceso(Model model) {
         atencionController.retornaMisTicketsEnProcesoAVista(model);
-        return  "enProceso";
+        model.addAttribute("Titulo", "HelpDesk - En Proceso");
+        return "enProceso";
     }
+
     @GetMapping("/TicketsAtendidos")
-    public String redirigePaginaMisTicketsAtendidos(Model model){
+    public String redirigePaginaMisTicketsAtendidos(Model model) {
         atencionController.retornaMisTicketsAtendidosAVista(model);
-        return  "atendidos";
+        model.addAttribute("Titulo", "HelpDesk - Atendidos");
+        return "atendidos";
     }
 
     @GetMapping("/admin/Usuarios")
-    public String redirigePaginaUsuarios(Model model){
+    public String redirigePaginaUsuarios(Model model) {
         usuariosCRUDController.listarUsuarios(model);
         usuariosCRUDController.listarRoles(model);
-        return  "admin/usuarios";
+        model.addAttribute("Titulo", "HelpDesk - Usuarios");
+
+        return "admin/usuarios";
     }
+
     @GetMapping("/admin/Clasificadores")
-    public String redirigePaginaClasiicadores(Model model){
+    public String redirigePaginaClasiicadores(Model model) {
         clasificadoresCRUDController.listarClasificadores(model);
-        return  "admin/clasificadores";
+        model.addAttribute("Titulo", "HelpDesk - Clasificadores");
+        return "admin/clasificadores";
     }
 
     @GetMapping("/soporte/Recibidos")
-    public String redirigePaginaTicketsRecibidos(Model model){
+    public String redirigePaginaTicketsRecibidos(Model model) {
         ticketController.retornaTicketRecibidosAVista(model);
         atencionController.retornaListaClasificacionesUrgencia(model);
-        return  "/soporte/ticketsRecibidos";
+        model.addAttribute("Titulo", "HelpDesk - Recibidos");
+        return "/soporte/ticketsRecibidos";
     }
+
     @GetMapping("/soporte/Recepcionados")
-    public String redirigePaginaTicketsRecepcionados(Model model){
+    public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
         atencionController.retornaListaClasificacionesServicio(model);
-        return  "soporte/ticketsRecepcionados";
+        model.addAttribute("Titulo", "HelpDesk - Recepcionados");
+        return "soporte/ticketsRecepcionados";
     }
+
     @GetMapping("/soporte/Atendidos")
-    public String redirigePaginaTicketsAtendidos(Model model){
+    public String redirigePaginaTicketsAtendidos(Model model) {
         atencionController.retornaTodosLosTicketsAtendidosAVista(model);
-        return  "soporte/ticketsAtendidos";
+        model.addAttribute("Titulo", "HelpDesk - Cerrados");
+        return "soporte/ticketsAtendidos";
     }
-
-
-
-
 
 
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
-    public String fragmentExpression(){
-        return  "fragment-expression";
+    public String fragmentExpression() {
+
+        return "fragment-expression";
     }
 
 }

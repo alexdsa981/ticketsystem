@@ -64,6 +64,9 @@ public class SecurityConfig {
                         .requestMatchers("/fragment-expression/**").permitAll()
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/error/**").permitAll()
+                        //permiso para todos
+                        .requestMatchers("/app/usuarios/rol").permitAll()
+                        .requestMatchers("/common/**").permitAll()
                         //todas las paginas pueden ser accedidas por cualquier usuario logeado, usar el ejemplo de abajo para
                         //paginas front que requieren autorización, el resto de paginas pueden ser accedidas por todos, por ejemplo usuario
                         //puede ingresar a todas las pagians menos las que tengan /soporte/ o /admin/

@@ -79,4 +79,8 @@ public class UsuarioService {
     public RolUsuario retornarRolPorId(Long id){
         return rolUsuarioRepository.findById(id).get();
     }
+
+    public Usuario findByUsername(String username){
+        return usuarioRepository.findByUsername(username).get();
+    }
 }
