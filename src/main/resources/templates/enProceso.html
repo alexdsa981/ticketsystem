@@ -17,7 +17,7 @@
             <th>Hora</th>
             <th>Descripción de Incidencia</th>
             <th>Mensaje Recepción</th>
-
+            <th>Fase</th>
         </tr>
         </thead>
         <tbody>
@@ -26,9 +26,12 @@
             <td th:text="${iter.count}">#</td>
             <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
             <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
-            <td th:text="${recepcionado.ticket.descripcion}">Descripción de Incidencia</td>
+            <td>
+                <span class="nombreClasificacionIncidencia" th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                <span th:text="${recepcionado.ticket.descripcion}"></span><br>
+            </td>
             <td th:text="${recepcionado.mensaje}">Mensaje de Recepción</td>
-
+            <td th:text="${recepcionado.ticket.faseTicket.nombre}">Fase</td>
         </tr>
         </tbody>
     </table>

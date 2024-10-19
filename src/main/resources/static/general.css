@@ -4,15 +4,15 @@ table {
     table-layout: auto; /* Permite que las columnas se ajusten al contenido */
 }
 th, td {
-    border: 1px solid #ccc; /* Para que la celda sea visible */
-    padding: 10px; /* Espaciado interno */
-    text-align: left; /* Alineación del texto */
     max-width: 200px; /* Ancho máximo para forzar el ajuste de texto */
     word-wrap: break-word; /* Permite que el texto largo se rompa */
     overflow-wrap: break-word; /* Soporte adicional para romper palabras largas */
 }
 td {
     font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+}
+td .nombreClasificacionIncidencia{
+    font-weight: bold;
 }
 .descripcionTD{
     max-width: 350px
@@ -51,3 +51,4 @@ ul{
     from { opacity: 1; }
     to { opacity: 0; }
 }
+

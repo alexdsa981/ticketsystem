@@ -18,8 +18,6 @@
         <th>Hora</th>
         <th>Usuario</th>
         <th class="descripcionTD">Descripción</th>
-        <th>Clasificación</th>
-        <th>Fase</th>
         <th>Archivos Adjuntos</th>
         <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
     </tr>
@@ -31,9 +29,10 @@
         <td th:text="${ticket.fechaFormateada}">Fecha</td>
         <td th:text="${ticket.horaFormateada}">Hora</td>
         <td th:text="${ticket.usuario.nombre}">Usuario</td>
-        <td th:text="${ticket.descripcion}" class="descripcionTD">Descripción</td>
-        <td th:text="${ticket.clasificacionIncidencia.nombre}">Clasificación</td>
-        <td th:text="${ticket.faseTicket.nombre}">Fase</td>
+        <td>
+            <span class="nombreClasificacionIncidencia" th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+            <span th:text="${ticket.descripcion}"></span><br>
+        </td>
         <td>
             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
             <ul>
@@ -77,8 +76,8 @@
                 <div class="modal-body">
                     <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
                     <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
-                    <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
                     <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
+                    <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
                     <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span id="modalTicketHora"></span>
                     </p>
 
