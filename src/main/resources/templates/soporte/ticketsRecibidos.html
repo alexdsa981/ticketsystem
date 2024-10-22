@@ -9,7 +9,20 @@
 <header th:replace="~{common/header :: header}">
 </header>
 
-<h1>TODOS LOS TICKETS</h1>
+<div class="filter-container">
+    <label for="usuarioFilter">Usuario:</label>
+    <input type="text" id="usuarioFilter" placeholder="Buscar por usuario">
+
+    <label for="fechaFilter">Fecha:</label>
+    <input type="date" id="fechaFilter">
+
+    <label for="clasificacionFilter">Clasificación:</label>
+    <input type="text" id="clasificacionFilter" placeholder="Buscar por clasificación">
+
+    <button id="filterButton">Filtrar</button>
+    <button id="clearFilterButton">Eliminar Filtrado</button>
+</div>
+
 <table id="ticketTable" class="table table-striped table-bordered">
     <thead class="table-dark">
     <tr>
@@ -19,11 +32,10 @@
         <th>Usuario</th>
         <th class="descripcionTD">Descripción</th>
         <th>Archivos Adjuntos</th>
-        <th>Acciones</th> <!-- Nueva columna para el botón de acciones -->
+        <th>Acciones</th>
     </tr>
     </thead>
     <tbody id="ticketTableBody">
-    <!-- Iterar sobre los tickets con un solo bucle th:each -->
     <tr th:each="ticket, iter: ${AllTickets}">
         <td th:text="${iter.count}">#</td>
         <td th:text="${ticket.fechaFormateada}">Fecha</td>
@@ -34,7 +46,6 @@
             <span th:text="${ticket.descripcion}"></span><br>
         </td>
         <td>
-            <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
             <ul>
                 <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
                     <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
@@ -43,9 +54,7 @@
                 </li>
             </ul>
         </td>
-        <!-- Nueva columna con el botón para abrir el modal de recepción -->
         <td>
-            <!-- Botón de recepción que abre el modal -->
             <button type="button" class="btn btn-primary"
                     data-bs-toggle="modal" data-bs-target="#recepcionModal"
                     th:data-ticket-id="${ticket.id}"
@@ -61,6 +70,51 @@
     </tr>
     </tbody>
 </table>
+<script>
+    document.getElementById('filterButton').addEventListener('click', function() {
+        const usuarioFilter = document.getElementById('usuarioFilter').value.toLowerCase();
+        const fechaFilter = document.getElementById('fechaFilter').value;
+        const clasificacionFilter = document.getElementById('clasificacionFilter').value.toLowerCase();
+
+        const formattedFechaFilter = fechaFilter ? fechaFilter.split('-').reverse().join('/') : '';
+
+        const tableBody = document.getElementById('ticketTableBody');
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const usuarioCell = row.cells[3].textContent.toLowerCase();
+            const fechaCell = row.cells[1].textContent;
+            const clasificacionCell = row.cells[4].textContent.toLowerCase();
+
+            const matchesUsuario = usuarioFilter === '' || usuarioCell.includes(usuarioFilter);
+            const matchesFecha = formattedFechaFilter === '' || fechaCell === formattedFechaFilter;
+            const matchesClasificacion = clasificacionFilter === '' || clasificacionCell.includes(clasificacionFilter);
+
+            if (matchesUsuario && matchesFecha && matchesClasificacion) {
+                row.style.display = ''; // Muestra la fila
+            } else {
+                row.style.display = 'none'; // Oculta la fila
+            }
+        }
+    });
+
+    // Lógica para el botón de eliminar filtrado
+    document.getElementById('clearFilterButton').addEventListener('click', function() {
+        // Restablece los campos de filtro
+        document.getElementById('usuarioFilter').value = '';
+        document.getElementById('fechaFilter').value = '';
+        document.getElementById('clasificacionFilter').value = '';
+
+        // Muestra todas las filas de la tabla
+        const tableBody = document.getElementById('ticketTableBody');
+        const rows = tableBody.getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].style.display = ''; // Muestra todas las filas
+        }
+    });
+
+</script>
 
 
 <!-- Modal Genérico para Recepción -->
