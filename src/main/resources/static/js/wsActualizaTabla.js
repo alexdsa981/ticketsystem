@@ -18,32 +18,34 @@ export function ActualizaTablaRecibidos(ticketRecord) {
             <td>${ticketRecord.fechaFormateada}</td>
             <td>${ticketRecord.horaFormateada}</td>
             <td>${ticketRecord.nombreUsuario}</td>
-            <td>${ticketRecord.descripcion}</td>
-            <td>${ticketRecord.nombreClasificacionIncidencia}</td>
-            <td>${ticketRecord.nombreFaseTicket}</td>
-            <td>
-                <ul>
-                    ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
-                        <li>
-                            <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
-                            ${adjunto.pesoContenido} mb
-                        </li>
-                    `).join('')}
-                </ul>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary"
-                        data-bs-toggle="modal" data-bs-target="#recepcionModal"
-                        data-ticket-id="${ticketRecord.id}"
-                        data-ticket-usuario="${ticketRecord.nombreUsuario}"
-                        data-ticket-descripcion="${ticketRecord.descripcion}"
-                        data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
-                        data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                        data-ticket-fecha="${ticketRecord.fechaFormateada}"
-                        data-ticket-hora="${ticketRecord.horaFormateada}">
-                    Recepción
-                </button>
-            </td>
+        <td>
+            <span class="nombreClasificacionIncidencia">${ticketRecord.nombreClasificacionIncidencia}:<br></span>
+            <span>${ticketRecord.descripcion}</span><br>
+        </td>
+
+        <td>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        ${adjunto.pesoContenido} mb
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                    data-ticket-id="${ticketRecord.id}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
+                    data-ticket-descripcion="${ticketRecord.descripcion}"
+                    data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
+                    data-ticket-hora="${ticketRecord.horaFormateada}">
+                Recepción
+            </button>
+        </td>
         `;
 
         // Agregar la nueva fila al cuerpo de la tabla

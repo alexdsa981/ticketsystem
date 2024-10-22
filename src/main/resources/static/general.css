@@ -39,8 +39,9 @@ ul{
 
 .custom-notification.show {
     display: block; /* Mostrar la notificación cuando se añade la clase 'show' */
-    animation: fadein 2s, fadeout 0.5s 6.5s;
+    animation: fadein 0.5s, fadeout 1s 6.5s; /* fadein dura 0.5s, fadeout comienza tras 6.5s y dura 0.5s */
 }
+
 
 @keyframes fadein {
     from { opacity: 0; }
