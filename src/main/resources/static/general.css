@@ -59,14 +59,32 @@ ul{
     position: sticky;
     top: 0;
     background-color: white;
-    box-shadow: 0 -10px 5px rgba(0, 0, 0, 1), 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra negra arriba y abajo */
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1), 0 1px 5px rgba(0, 0, 0, 0.3); /* Sombra negra arriba y abajo */
 
 }
 .scroll-table{
     height: calc(100vh - 200px);
     overflow-y:auto;
 }
-/**/
+/* TBODY con scroll */
+
+/*PAGINACION*/
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#pagination button {
+    margin: 0; /* Sin margen */
+}
+
+#pagination button.active {
+    background-color: #007bff; /* Color de fondo para el botón activo */
+    color: white; /* Color del texto para el botón activo */
+}
+
+/*PAGINACION*/
 
 /*COLUMNAS DE TABLAS*/
 .n-table {
