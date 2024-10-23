@@ -53,6 +53,18 @@ ul{
 
 
 
+
+/* TBODY con scroll */
+.table thead{
+    position: sticky;
+    top: 0;
+}
+.scroll-table{
+    height: calc(100vh - 200px);
+    overflow-y:auto;
+}
+
+
 /*COLUMNAS DE TABLAS*/
 .n-table {
     width: 5%; /* Un número limitado de filas, no necesita mucho espacio */
