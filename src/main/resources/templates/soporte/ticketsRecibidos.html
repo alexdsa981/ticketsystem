@@ -9,67 +9,121 @@
 <header th:replace="~{common/header :: header}">
 </header>
 
-<div class="filter-container">
-    <label for="usuarioFilter">Usuario:</label>
-    <input type="text" id="usuarioFilter" placeholder="Buscar por usuario">
 
-    <label for="fechaFilter">Fecha:</label>
-    <input type="date" id="fechaFilter">
 
-    <label for="clasificacionFilter">Clasificación:</label>
-    <input type="text" id="clasificacionFilter" placeholder="Buscar por clasificación">
 
-    <button id="filterButton">Filtrar</button>
-    <button id="clearFilterButton">Eliminar Filtrado</button>
+<div class="container-fluid">
+    <!-- Encabezado con título y botones -->
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Tickets Recibidos</h2>
+        <!-- Contenedor para los dos botones alineados a la derecha -->
+        <div>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
+                Filtrar
+            </button>
+            <button id="clearFilterButton" class="btn btn-secondary">Eliminar Filtrado</button>
+        </div>
+    </div>
+
+    <!-- Tabla de tickets con mayor tamaño -->
+    <div class="table-responsive">
+        <table id="ticketTable" class="table table-bordered table-hover w-100">
+            <thead class="table-dark">
+            <tr>
+                <th class="n-table">N°</th>
+                <th class="fecha-table">Fecha</th>
+                <th class="hora-table">Hora</th>
+                <th class="usuario-table">Usuario</th>
+                <th class="descripcion-table">Descripción</th>
+                <th class="adjunto-table">Archivos Adjuntos</th>
+                <th class="acciones-table">Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="ticketTableBody">
+            <tr th:each="ticket, iter: ${AllTickets}">
+                <td th:text="${iter.count}">#</td>
+                <td th:text="${ticket.fechaFormateada}">Fecha</td>
+                <td th:text="${ticket.horaFormateada}">Hora</td>
+                <td th:text="${ticket.usuario.nombre}">Usuario</td>
+                <td>
+                    <span class="nombreClasificacionIncidencia" th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                    <span th:text="${ticket.descripcion}"></span><br>
+                </td>
+                <td>
+                    <ul>
+                        <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                            <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                               th:text="${adjunto.nombre}">Archivo</a> - <span
+                                th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary"
+                            data-bs-toggle="modal" data-bs-target="#recepcionModal"
+                            th:data-ticket-id="${ticket.id}"
+                            th:data-ticket-usuario="${ticket.usuario.nombre}"
+                            th:data-ticket-descripcion="${ticket.descripcion}"
+                            th:data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
+                            th:data-ticket-fase="${ticket.faseTicket.nombre}"
+                            th:data-ticket-fecha="${ticket.fechaFormateada}"
+                            th:data-ticket-hora="${ticket.horaFormateada}">
+                        Recepción
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<table id="ticketTable" class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Usuario</th>
-        <th class="descripcionTD">Descripción</th>
-        <th>Archivos Adjuntos</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody id="ticketTableBody">
-    <tr th:each="ticket, iter: ${AllTickets}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${ticket.fechaFormateada}">Fecha</td>
-        <td th:text="${ticket.horaFormateada}">Hora</td>
-        <td th:text="${ticket.usuario.nombre}">Usuario</td>
-        <td>
-            <span class="nombreClasificacionIncidencia" th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-            <span th:text="${ticket.descripcion}"></span><br>
-        </td>
-        <td>
-            <ul>
-                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                    <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
-                       th:text="${adjunto.nombre}">Archivo</a> - <span
-                        th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                </li>
-            </ul>
-        </td>
-        <td>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#recepcionModal"
-                    th:data-ticket-id="${ticket.id}"
-                    th:data-ticket-usuario="${ticket.usuario.nombre}"
-                    th:data-ticket-descripcion="${ticket.descripcion}"
-                    th:data-ticket-clasificacion="${ticket.clasificacionIncidencia.nombre}"
-                    th:data-ticket-fase="${ticket.faseTicket.nombre}"
-                    th:data-ticket-fecha="${ticket.fechaFormateada}"
-                    th:data-ticket-hora="${ticket.horaFormateada}">
-                Recepción
-            </button>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">Filtrar Incidencias</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Filtros dentro del modal -->
+                <div class="container">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-12">
+                            <label for="usuarioFilter" class="form-label">Usuario:</label>
+                            <input type="text" id="usuarioFilter" class="form-control" placeholder="Buscar por usuario">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="fechaFilter" class="form-label">Fecha:</label>
+                            <input type="date" id="fechaFilter" class="form-control">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="clasificacionFilter" class="form-label">Clasificación:</label>
+                            <select class="form-select" id="clasificacionFilter" name="clasificacion_urgencia" required>
+                                <option selected disabled value="">Selecciona Incidencia</option>
+                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.nombre}" th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="filterButton" class="btn btn-primary">Filtrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <script>
     document.getElementById('filterButton').addEventListener('click', function() {
         const usuarioFilter = document.getElementById('usuarioFilter').value.toLowerCase();

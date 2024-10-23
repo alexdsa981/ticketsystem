@@ -4,7 +4,6 @@ table {
     table-layout: auto; /* Permite que las columnas se ajusten al contenido */
 }
 th, td {
-    max-width: 200px; /* Ancho máximo para forzar el ajuste de texto */
     word-wrap: break-word; /* Permite que el texto largo se rompa */
     overflow-wrap: break-word; /* Soporte adicional para romper palabras largas */
 }
@@ -14,9 +13,7 @@ td {
 td .nombreClasificacionIncidencia{
     font-weight: bold;
 }
-.descripcionTD{
-    max-width: 350px
-}
+
 ul{
     list-style-type: none;
     padding: 0;
@@ -57,3 +54,30 @@ ul{
 
 
 /*COLUMNAS DE TABLAS*/
+.n-table {
+    width: 5%; /* Un número limitado de filas, no necesita mucho espacio */
+}
+
+.fecha-table {
+    width: 15%; /* La fecha no suele ser muy larga, pero necesita espacio */
+}
+
+.hora-table {
+    width: 10%; /* Similar a la fecha, el formato de hora es corto */
+}
+
+.usuario-table {
+    width: 20%; /* Dependiendo del nombre, puede ser necesario más espacio */
+}
+
+.descripcion-table {
+    width: 30%; /* La descripción puede ser más larga, así que se le da más espacio */
+}
+
+.adjunto-table {
+    width: 10%; /* Dependiendo de cómo manejes los archivos, puede ser un icono o un texto */
+}
+
+.acciones-table {
+    width: 10%; /* Generalmente contendrá botones o enlaces de acción */
+}
