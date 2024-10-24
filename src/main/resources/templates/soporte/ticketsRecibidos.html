@@ -16,10 +16,14 @@
         <h2>Tickets Recibidos</h2>
         <!-- Contenedor para los dos botones alineados a la derecha -->
         <div>
-            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
+            <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="bi bi-filter"></i>
                 Filtrar
             </button>
-            <button id="clearFilterButton" class="btn btn-secondary">Eliminar Filtrado</button>
+            <button id="clearFilterButton" class="btn btn-outline-dark ">
+                <i class="bi bi-x"></i>
+                Eliminar Filtrado
+            </button>
         </div>
     </div>
 
@@ -33,7 +37,7 @@
                 <th class="usuario-table">Usuario</th>
                 <th class="descripcion-table">Descripción</th>
                 <th class="adjunto-table">Archivos Adjuntos</th>
-                <th class="acciones-table">Acciones</th>
+                <th class="acciones-table">Recepcionar</th>
             </tr>
             </thead>
             <tbody id="ticketTableBody">
@@ -56,7 +60,7 @@
                         </li>
                     </ul>
                 </td>
-                <td>
+                <td class="td-accion">
                     <button type="button" class="btn btn-primary"
                             data-bs-toggle="modal" data-bs-target="#recepcionModal"
                             th:data-ticket-id="${ticket.id}"
@@ -66,7 +70,7 @@
                             th:data-ticket-fase="${ticket.faseTicket.nombre}"
                             th:data-ticket-fecha="${ticket.fechaFormateada}"
                             th:data-ticket-hora="${ticket.horaFormateada}">
-                        Recepción
+                        <i class="bi bi-pencil-square"></i>
                     </button>
                 </td>
             </tr>
@@ -85,7 +89,7 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal FILTRO -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

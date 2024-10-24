@@ -39,7 +39,7 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                     data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                     data-ticket-fecha="${ticketRecord.fechaFormateada}"
                     data-ticket-hora="${ticketRecord.horaFormateada}">
-                Recepción
+                    <i class="bi bi-pencil-square"></i>
             </button>
         </td>
     `;

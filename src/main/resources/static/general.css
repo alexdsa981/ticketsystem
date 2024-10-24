@@ -116,9 +116,7 @@ ul{
 }
 
 
-
-
-/**/
+/*FONDO PARA NUEVO TICKET*/
 /* Fondo verde suave para nuevos tickets */
 .nuevo-ticket {
     background-color: #d4edda !important; /* Verde suave con prioridad */
@@ -130,4 +128,10 @@ ul{
     background-color: #ffffff !important; /* Blanco con prioridad */
 }
 
+/**/
+
+/*COLOR TD ACCION*/
+.td-accion{
+    background-color: #d4d4d4;
+}
 /**/

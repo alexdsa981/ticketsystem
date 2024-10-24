@@ -93,6 +93,8 @@ public class WebController {
     public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
         atencionController.retornaListaClasificacionesServicio(model);
+        ticketController.retornaListaClasificacionIncidencia(model);
+        atencionController.retornaListaClasificacionesUrgencia(model);
         model.addAttribute("Titulo", "HelpDesk - Recepcionados");
         return "soporte/ticketsRecepcionados";
     }
