@@ -114,3 +114,20 @@ ul{
 .acciones-table {
     width: 10%; /* Generalmente contendrá botones o enlaces de acción */
 }
+
+
+
+
+/**/
+/* Fondo verde suave para nuevos tickets */
+.nuevo-ticket {
+    background-color: #d4edda !important; /* Verde suave con prioridad */
+    transition: background-color 0.5s ease !important;
+}
+
+/* Estilo cuando el fondo es blanco */
+.fondo-blanco {
+    background-color: #ffffff !important; /* Blanco con prioridad */
+}
+
+/**/
