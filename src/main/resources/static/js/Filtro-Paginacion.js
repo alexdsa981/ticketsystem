@@ -50,13 +50,16 @@ function getValueOrDefault(elementId) {
 // Filtrar registros y actualizar paginación
 document.getElementById('filterButton').addEventListener('click', function () {
     // Obtener los valores de los filtros
-    const usuarioFilter = getValueOrDefault('usuarioFilter');
+    const usuarioReceptorFilter = getValueOrDefault('usuarioReceptorFilter');
     const usuarioEmisorFilter = getValueOrDefault('usuarioEmisorFilter');
+    const usuarioAtencionFilter = getValueOrDefault('usuarioAtencionFilter');
+
     const fechaFilter = document.getElementById('fechaFilter') ? document.getElementById('fechaFilter').value : '';
     const formattedFechaFilter = fechaFilter ? fechaFilter.split('-').reverse().join('/') : '';
 
     const clasificacionFilter = getValueOrDefault('clasificacionFilter');
     const urgenciaFilter = getValueOrDefault('urgenciaFilter');
+    const clasificacionServicioFilter = getValueOrDefault('clasificacionServicioFilter');
 
     filteredRows = []; // Reiniciar el array de filas filtradas
     const tableBody = document.getElementById('ticketTableBody');
@@ -66,21 +69,25 @@ document.getElementById('filterButton').addEventListener('click', function () {
         const row = rows[i];
 
         // Selecciona las celdas por clase
-        const usuarioCell = row.querySelector('.usuario-receptor') ? row.querySelector('.usuario-receptor').textContent.toLowerCase() : '';
+        const usuarioReceptorCell = row.querySelector('.usuario-receptor') ? row.querySelector('.usuario-receptor').textContent.toLowerCase() : '';
+        const usuarioAtencionCell = row.querySelector('.usuario-atencion') ? row.querySelector('.usuario-atencion').textContent.toLowerCase() : '';
         const usuarioEmisorCell = row.querySelector('.usuario-emisor') ? row.querySelector('.usuario-emisor').textContent.toLowerCase() : '';
         const fechaCell = row.querySelector('.fecha') ? row.querySelector('.fecha').textContent : '';
         const clasificacionCell = row.querySelector('.clasificacion') ? row.querySelector('.clasificacion').textContent.toLowerCase() : '';
         const urgenciaCell = row.querySelector('.urgencia') ? row.querySelector('.urgencia').textContent.toLowerCase() : '';
+        const clasificacionServicioCell = row.querySelector('.clasificacion-servicio') ? row.querySelector('.clasificacion-servicio').textContent.toLowerCase() : '';
 
         // Comparar con los filtros
-        const matchesUsuario = usuarioFilter === '' || usuarioCell.includes(usuarioFilter);
+        const matchesUsuarioReceptor = usuarioReceptorFilter === '' || usuarioReceptorCell.includes(usuarioReceptorFilter);
         const matchesUsuarioEmisor = usuarioEmisorFilter === '' || usuarioEmisorCell.includes(usuarioEmisorFilter);
+        const matchesUsuarioAtencion = usuarioAtencionFilter === '' || usuarioAtencionCell.includes(usuarioAtencionFilter);
         const matchesFecha = formattedFechaFilter === '' || fechaCell === formattedFechaFilter;
         const matchesClasificacion = clasificacionFilter === '' || clasificacionCell.includes(clasificacionFilter);
         const matchesUrgencia = urgenciaFilter === '' || urgenciaCell.includes(urgenciaFilter);
+        const matchesClasificacionServicio = clasificacionServicioFilter === '' || clasificacionServicioCell.includes(clasificacionServicioFilter);
 
         // Mostrar u ocultar fila
-        if (matchesUsuario && matchesUsuarioEmisor && matchesFecha && matchesClasificacion && matchesUrgencia) {
+        if (matchesUsuarioReceptor && matchesUsuarioEmisor && matchesUsuarioAtencion && matchesFecha && matchesClasificacion && matchesUrgencia && matchesClasificacionServicio) {
             row.style.display = ''; // Muestra la fila
             filteredRows.push(row); // Añadir a las filas filtradas
         } else {
@@ -100,11 +107,14 @@ document.getElementById('filterButton').addEventListener('click', function () {
     document.getElementById('clearFilterButton').addEventListener('click', function () {
         // Restablece los campos de filtro
         // Comprobar si los elementos existen antes de vaciar sus valores
-        if (document.getElementById('usuarioFilter')) {
-            document.getElementById('usuarioFilter').value = '';
+        if (document.getElementById('usuarioReceptorFilter')) {
+            document.getElementById('usuarioReceptorFilter').value = '';
         }
         if (document.getElementById('usuarioEmisorFilter')) {
             document.getElementById('usuarioEmisorFilter').value = '';
+        }
+        if (document.getElementById('usuarioAtencionFilter')) {
+            document.getElementById('usuarioAtencionFilter').value = '';
         }
         if (document.getElementById('fechaFilter')) {
             document.getElementById('fechaFilter').value = '';
@@ -115,7 +125,9 @@ document.getElementById('filterButton').addEventListener('click', function () {
         if (document.getElementById('urgenciaFilter')) {
             document.getElementById('urgenciaFilter').value = '';
         }
-
+        if (document.getElementById('clasificacionServicioFilter')) {
+            document.getElementById('clasificacionServicioFilter').value = '';
+        }
 
         // Muestra todas las filas de la tabla
         const tableBody = document.getElementById('ticketTableBody');

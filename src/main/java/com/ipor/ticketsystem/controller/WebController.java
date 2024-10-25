@@ -102,6 +102,9 @@ public class WebController {
     @GetMapping("/soporte/Atendidos")
     public String redirigePaginaTicketsAtendidos(Model model) {
         atencionController.retornaTodosLosTicketsAtendidosAVista(model);
+        atencionController.retornaListaClasificacionesServicio(model);
+        ticketController.retornaListaClasificacionIncidencia(model);
+        atencionController.retornaListaClasificacionesUrgencia(model);
         model.addAttribute("Titulo", "HelpDesk - Cerrados");
         return "soporte/ticketsAtendidos";
     }
