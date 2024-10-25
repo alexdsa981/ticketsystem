@@ -34,7 +34,7 @@
                 <th class="n-table">N°</th>
                 <th class="fecha-table">Fecha</th>
                 <th class="hora-table">Hora</th>
-                <th class="usuario-table">Usuario</th>
+                <th class="usuario-table">Usuario Emisor</th>
                 <th class="descripcion-table">Descripción</th>
                 <th class="adjunto-table">Archivos Adjuntos</th>
                 <th class="acciones-table">Recepcionar</th>
@@ -43,11 +43,11 @@
             <tbody id="ticketTableBody">
             <tr th:each="ticket, iter: ${AllTickets}">
                 <td th:text="${iter.count}">#</td>
-                <td th:text="${ticket.fechaFormateada}">Fecha</td>
+                <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
                 <td th:text="${ticket.horaFormateada}">Hora</td>
-                <td th:text="${ticket.usuario.nombre}">Usuario</td>
+                <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
                 <td>
-                    <span class="nombreClasificacionIncidencia"
+                    <span class="nombreClasificacionIncidencia clasificacion"
                           th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                     <span th:text="${ticket.descripcion}"></span><br>
                 </td>
@@ -102,8 +102,8 @@
                 <div class="container">
                     <div class="row g-3 align-items-center">
                         <div class="col-md-12">
-                            <label for="usuarioFilter" class="form-label">Usuario:</label>
-                            <input type="text" id="usuarioFilter" class="form-control" placeholder="Buscar por usuario">
+                            <label for="usuarioEmisorFilter" class="form-label">Usuario:</label>
+                            <input type="text" id="usuarioEmisorFilter" class="form-control" placeholder="Buscar por usuario">
                         </div>
 
                         <div class="col-md-12">
@@ -133,7 +133,7 @@
 
 
 
-<!-- Modal Genérico para Recepción -->
+<!-- Modal para Recepción -->
 <div class="modal fade" id="recepcionModal" tabindex="-1" aria-labelledby="recepcionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -45,12 +45,12 @@
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
             <tr th:each="recepcionado, iter: ${AllRecepcionados}">
                 <td th:text="${iter.count}">#</td>
-                <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
+                <td class="fecha" th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
                 <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
-                <td th:text="${recepcionado.usuario.nombre}">Usuario Receptor</td>
-                <td th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
+                <td class="usuario-receptor" th:text="${recepcionado.usuario.nombre}">Usuario Receptor</td>
+                <td class="usuario-emisor" th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
                 <td>
-                <span class="nombreClasificacionIncidencia"
+                <span class="nombreClasificacionIncidencia clasificacion"
                       th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                     <span th:text="${recepcionado.ticket.descripcion}"></span><br>
                 </td>
@@ -64,7 +64,7 @@
                         </li>
                     </ul>
                 </td>
-                <td th:text="${recepcionado.clasificacionUrgencia.nombre}">Urgencia</td>
+                <td class="urgencia" th:text="${recepcionado.clasificacionUrgencia.nombre}">Urgencia</td>
 
                 <td class="td-accion">
                     <!-- Botón de recepción que abre el modal -->

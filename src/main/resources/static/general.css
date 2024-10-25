@@ -88,11 +88,11 @@ ul{
 
 /*COLUMNAS DE TABLAS*/
 .n-table {
-    width: 5%; /* Un número limitado de filas, no necesita mucho espacio */
+    width: 1px; /* Un número limitado de filas, no necesita mucho espacio */
 }
 
 .fecha-table {
-    width: 15%; /* La fecha no suele ser muy larga, pero necesita espacio */
+    width: 10%; /* La fecha no suele ser muy larga, pero necesita espacio */
 }
 
 .hora-table {
@@ -100,7 +100,7 @@ ul{
 }
 
 .usuario-table {
-    width: 20%; /* Dependiendo del nombre, puede ser necesario más espacio */
+    width: 15%; /* Dependiendo del nombre, puede ser necesario más espacio */
 }
 
 .descripcion-table {
@@ -112,7 +112,7 @@ ul{
 }
 
 .acciones-table {
-    width: 10%; /* Generalmente contendrá botones o enlaces de acción */
+    width: 15%; /* Generalmente contendrá botones o enlaces de acción */
 }
 
 
