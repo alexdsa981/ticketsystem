@@ -20,6 +20,16 @@ ul{
     margin: 0;
 }
 
+tbody {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2), -4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra a la izquierda y derecha */
+    border-radius: 16px;
+}
+
+
+
+
+
+
 .custom-notification {
     position: fixed;
     bottom: 20px;
@@ -53,13 +63,12 @@ ul{
 
 
 
-
 /* TBODY con scroll */
 .table thead{
     position: sticky;
     top: 0;
     background-color: white;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1), 0 1px 5px rgba(0, 0, 0, 0.3); /* Sombra negra arriba y abajo */
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1); /* Sombra negra arriba y abajo */
 
 }
 .scroll-table{

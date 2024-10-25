@@ -23,7 +23,7 @@
 
             <!-- Cuerpo de la Modal con el Formulario -->
             <div class="modal-body">
-                <form action="app/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
+                <form action="/app/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -99,7 +99,7 @@
             </button>
 
             <!-- Botón para eliminar el usuario -->
-            <a class="btn btn-danger" th:href="@{'/usuarios/eliminar/' + ${usuario.id}}"
+            <a class="btn btn-danger" th:href="@{'/app/usuarios/eliminar/' + ${usuario.id}}"
                onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
                 Eliminar
             </a>

@@ -53,7 +53,7 @@ public class UsuariosCRUDController {
         usuario.setPassword(password);
         usuario.setUsername(username);
         usuarioService.guardarUsuario(usuario);
-        response.sendRedirect("/Usuarios");
+        response.sendRedirect("/admin/Usuarios");
         return ResponseEntity.ok("Usuario creado correctamente");
     }
 
@@ -72,7 +72,7 @@ public class UsuariosCRUDController {
         usuario.setNombre(nombre);
         usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
         usuarioService.actualizarUsuario(id, usuario);
-        return "redirect:/Usuarios";
+        return "redirect:/admin/Usuarios";
     }
 
     // Eliminar un usuario
@@ -81,7 +81,7 @@ public class UsuariosCRUDController {
         if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
             usuarioService.eliminarUsuario(id);
         }
-        return "redirect:/usuarios";
+        return "redirect:/admin/Usuarios";
     }
 
     @GetMapping("/rol")
