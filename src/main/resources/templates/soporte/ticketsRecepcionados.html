@@ -10,7 +10,7 @@
 
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center">
-            <h2>Tickets Recepcionados</h2>
+            <h2>SOPORTE / Tickets Recepcionados</h2>
             <!-- Contenedor para los dos botones alineados a la derecha -->
             <div>
                 <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
@@ -54,7 +54,7 @@
                         <td>
                             <span class="nombreClasificacionIncidencia clasificacion"
                                 th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                            <span th:text="${recepcionado.ticket.descripcion}"></span><br>
+                            <span th:text="${#strings.length(recepcionado.ticket.descripcion) > 150 ? recepcionado.ticket.descripcion.substring(0, 150) + '...' : recepcionado.ticket.descripcion}"></span><br>
                         </td>
                         <td>
                             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->

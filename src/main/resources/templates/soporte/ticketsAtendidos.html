@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <!-- Encabezado con título y botones -->
             <div class="d-flex justify-content-between align-items-center">
-                <h2>Tickets Recibidos</h2>
+                <h2>SOPORTE / Tickets Atendidos - Cerrados</h2>
                 <!-- Contenedor para los dos botones alineados a la derecha -->
                 <div>
                     <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
@@ -27,7 +27,7 @@
             </div>
             <div class="scroll-table">
                 <!--Todos los Atendidos-->
-                <table id="ticketTable" class="table table-striped table-bordered">
+                <table id="ticketTable" class="table table-bordered table-hover w-100">
                     <thead class="table-dark">
                         <tr>
                             <th class="n-table">N°</th>
@@ -36,10 +36,11 @@
                             <th class="usuario-table">Soporte</th>
                             <th class="usuario-table">Emisor</th>
                             <th class="descripcion-table">Descripción de Incidencia</th>
+                            <th>Urgencia</th>
                             <th class="descripcion-table">Descripción Atención</th>
                             <th class="adjunto-table">Adjuntos</th>
                             <th>Clasificación</th>
-                            <th class="acciones-table">Acciones</th>
+                            <th class="acciones-table">Historial</th>
                         </tr>
                     </thead>
                     <tbody id="ticketTableBody">
@@ -53,10 +54,12 @@
                             <td>
                                 <span class="nombreClasificacionIncidencia clasificacion"
                                     th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                                <span th:text="${atendido.ticket.descripcion}"></span><br>
+                                <span th:text="${#strings.length(atendido.ticket.descripcion) > 150 ? atendido.ticket.descripcion.substring(0, 150) + '...' : atendido.ticket.descripcion}"></span>
                             </td>
-                            <td th:text="${atendido.ticket.}"></td>
-                            <td th:text="${atendido.servicioHistorial.descripcion}">Descripción de Atención</td>
+                            <td class="urgencia" th:text="${atendido.recepcionHistorial.clasificacionUrgencia.nombre}">Clasificacion Urgencia</td>
+                            <td th:text="${#strings.length(atendido.servicioHistorial.descripcion) > 150 ? atendido.servicioHistorial.descripcion.substring(0, 150) + '...' : atendido.servicioHistorial.descripcion}">
+                                Descripción de Atención
+                            </td>
                             <td>
                                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                                 <ul>
@@ -91,7 +94,7 @@
                                     th:data-servicio-fecha="${atendido.fechaFormateadaServicio}"
                                     th:data-servicio-hora="${atendido.horaFormateadaServicio}">
 
-                                    Ver detalle Ticket
+                                    <i class="bi bi-clock-history"></i>
                                 </button>
                             </td>
                         </tr>
@@ -178,7 +181,7 @@
                 <div class="modal-content">
                     <form id="atencionForm" method="POST">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="atencionModalLabel">Atender Ticket</h5>
+                            <h5 class="modal-title" id="atencionModalLabel">Historial de Ticket</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 

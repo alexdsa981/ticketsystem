@@ -6,13 +6,173 @@
 <div th:replace="~{common/header :: header}">
     <!--si se usa th:insert, este se colocará dentro de este div-->
 </div>
+<h2>ADMIN / Clasificadores</h2>
+<div class="container-fluid  border shadow p-3 mb-5 bg-body rounded">
+    <div class="row">
+        <!-- Clasificadores de Incidencia -->
+        <div class="col-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Clasificadores Incidencia</h5>
+                <button style="margin-bottom:10px"  type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
+                    Nuevo
+                </button>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Incidencia</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${incidencias}">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td>
+                        <button type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#incidenciaModal"
+                                th:data-incidencia-id="${clasificador.id}"
+                                th:data-incidencia-nombre="${clasificador.nombre}"
+                                onclick="openIncidenciaModal(this)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Clasificadores de Servicio -->
+        <div class="col-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Clasificadores Servicio</h5>
+                <button style="margin-bottom:10px"  type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newServicioModal">
+                    Nuevo
+                </button>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Servicio</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${servicios}">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td>
+                        <button type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#servicioModal"
+                                th:data-servicio-id="${clasificador.id}"
+                                th:data-servicio-nombre="${clasificador.nombre}"
+                                onclick="openServicioModal(this)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Clasificadores de Urgencia -->
+        <div class="col-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Clasificadores Urgencia</h5>
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
+                    Nuevo
+                </button>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Urgencia</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${urgencias}">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td>
+                        <button type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#urgenciaModal"
+                                th:data-urgencia-id="${clasificador.id}"
+                                th:data-urgencia-nombre="${clasificador.nombre}"
+                                onclick="openUrgenciaModal(this)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
-<h1>TODOS LOS CLASIFICADORES DE INCIDENCIA</h1>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
-    Nuevo
-</button>
+
+<div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de Servicio</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreservicio" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="newUrgenciaModal" tabindex="-1" aria-labelledby="newUrgenciaModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/urgencia/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="newUrgenciaModalLabel">Nombra la Nueva Clasificación de Urgencia</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreurgencia" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreurgencia" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal" aria-hidden="true">
     <div class="modal-dialog">
@@ -42,30 +202,6 @@
 
 
 
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Nombre Incidencia</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="clasificador, iter: ${incidencias}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${clasificador.nombre}">Nombre</td>
-        <td>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#incidenciaModal"
-                    th:data-incidencia-id="${clasificador.id}"
-                    th:data-incidencia-nombre="${clasificador.nombre}"
-                    onclick="openIncidenciaModal(this)">
-                Editar
-            </button>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
 <!-- Modal para Clasificador de Incidencia -->
 <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
@@ -95,69 +231,6 @@
 
 
 
-
-
-
-
-<h1>TODOS LOS CLASIFICADORES DE SERVICIO</h1>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newServicioModal">
-    Nuevo
-</button>
-<div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de Servicio</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreservicio" name="nombre" required>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
-
-
-
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Nombre Servicio</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="clasificador, iter: ${servicios}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${clasificador.nombre}">Nombre</td>
-        <td>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#servicioModal"
-                    th:data-servicio-id="${clasificador.id}"
-                    th:data-servicio-nombre="${clasificador.nombre}"
-                    onclick="openServicioModal(this)">
-                Editar
-            </button>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
 <!-- Modal para Clasificador de Servicio -->
 <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -181,66 +254,6 @@
 </div>
 
 
-
-
-
-
-<h1>TODOS LOS CLASIFICADORES DE URGENCIA</h1>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
-    Nuevo
-</button>
-<div class="modal fade" id="newUrgenciaModal" tabindex="-1" aria-labelledby="newUrgenciaModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/urgencia/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newUrgenciaModalLabel">Nombra la Nueva Clasificación de Urgencia</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreurgencia" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreurgencia" name="nombre" required>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
-
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Nombre Urgencia</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="clasificador, iter: ${urgencias}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${clasificador.nombre}">Nombre</td>
-        <td>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#urgenciaModal"
-                    th:data-urgencia-id="${clasificador.id}"
-                    th:data-urgencia-nombre="${clasificador.nombre}"
-                    onclick="openUrgenciaModal(this)">
-                Editar
-            </button>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
 <!-- Modal para Clasificador de Urgencia -->
 <div class="modal fade" id="urgenciaModal" tabindex="-1" aria-labelledby="urgenciaModalLabel" aria-hidden="true">

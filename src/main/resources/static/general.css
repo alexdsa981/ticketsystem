@@ -9,6 +9,8 @@ th, td {
 }
 td {
     font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+    text-align: justify;
+    
 }
 td .nombreClasificacionIncidencia{
     font-weight: bold;
@@ -20,7 +22,7 @@ ul{
     margin: 0;
 }
 
-tbody {
+.scroll-table tbody {
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2), -4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra a la izquierda y derecha */
     border-radius: 16px;
 }

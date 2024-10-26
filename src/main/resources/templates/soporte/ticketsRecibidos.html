@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <!-- Encabezado con título y botones -->
         <div class="d-flex justify-content-between align-items-center">
-            <h2>Tickets Recibidos</h2>
+            <h2>SOPORTE / Tickets Recibidos</h2>
             <!-- Contenedor para los dos botones alineados a la derecha -->
             <div>
                 <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
@@ -50,7 +50,7 @@
                         <td>
                             <span class="nombreClasificacionIncidencia clasificacion"
                                 th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                            <span th:text="${ticket.descripcion}"></span><br>
+                            <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span><br>
                         </td>
                         <td>
                             <ul>
