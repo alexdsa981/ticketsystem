@@ -6,11 +6,60 @@
 <body>
 <div th:replace="~{common/header :: header}">
 </div>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>ADMIN / Usuarios</h2>
+        <!-- Contenedor para los dos botones alineados a la derecha -->
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
+            <i class="bi bi-plus-lg"></i> Nuevo Usuario
+        </button>
+    </div>
+    <!-- Tabla de usuarios -->
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Username</th>
+            <th>Contraseña</th>
+            <th>Nombre</th>
+            <th>Rol</th>
+            <th>Acciones</th> <!-- Nueva columna para los botones CRUD -->
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterar sobre los usuarios con un solo bucle th:each -->
+        <tr th:each="usuario, iter: ${ListaUsuarios}">
+            <td th:text="${iter.count}">#</td>
+            <td th:text="${usuario.username}">Username</td>
+            <td th:text="${usuario.password}">Contraseña</td>
+            <td th:text="${usuario.nombre}">Nombre</td>
+            <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+            <!-- Columna con los botones de acción -->
+            <td>
+                <!-- Botón para editar el usuario, usar data-* atributos -->
+                <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#editUserModal"
+                        th:data-usuario-id="${usuario.id}"
+                        th:data-usuario-username="${usuario.username}"
+                        th:data-usuario-password="${usuario.password}"
+                        th:data-usuario-nombre="${usuario.nombre}"
+                        th:data-usuario-rol="${usuario.rolUsuario.nombre}">
+                    Editar
+                </button>
 
-<h2>ADMIN / Usuarios</h2>
-<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
-    <i class="bi bi-plus-lg"></i> Nuevo Usuario
-</button>
+                <!-- Botón para eliminar el usuario -->
+                <a class="btn btn-danger" th:href="@{'/app/usuarios/eliminar/' + ${usuario.id}}"
+                   onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
 <!-- Ventana Modal para agregar un nuevo usuario -->
 <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -56,57 +105,6 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-<!-- Tabla de usuarios -->
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Username</th>
-        <th>Contraseña</th>
-        <th>Nombre</th>
-        <th>Rol</th>
-        <th>Acciones</th> <!-- Nueva columna para los botones CRUD -->
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterar sobre los usuarios con un solo bucle th:each -->
-    <tr th:each="usuario, iter: ${ListaUsuarios}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${usuario.username}">Username</td>
-        <td th:text="${usuario.password}">Contraseña</td>
-        <td th:text="${usuario.nombre}">Nombre</td>
-        <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
-        <!-- Columna con los botones de acción -->
-        <td>
-            <!-- Botón para editar el usuario, usar data-* atributos -->
-            <button type="button" class="btn btn-warning"
-                    data-bs-toggle="modal" data-bs-target="#editUserModal"
-                    th:data-usuario-id="${usuario.id}"
-                    th:data-usuario-username="${usuario.username}"
-                    th:data-usuario-password="${usuario.password}"
-                    th:data-usuario-nombre="${usuario.nombre}"
-                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
-                Editar
-            </button>
-
-            <!-- Botón para eliminar el usuario -->
-            <a class="btn btn-danger" th:href="@{'/app/usuarios/eliminar/' + ${usuario.id}}"
-               onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
-                Eliminar
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
 <!-- Modal para editar usuario -->
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">

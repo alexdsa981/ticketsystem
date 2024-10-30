@@ -42,6 +42,7 @@ public class TicketController {
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
     public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
+        Collections.reverse(MisTicketsDTO);
         model.addAttribute("MyTickets", MisTicketsDTO);
         return model;
     }

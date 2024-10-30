@@ -6,38 +6,39 @@
 <header th:replace="~{common/header :: header}">
 </header>
 <main>
-
-    <!--MIS TICKETS-->
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>N°</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Descripción de Incidencia</th>
-            <th>Descripción Atención</th>
-            <th>Fase</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Iterar sobre los tickets con un solo bucle th:each -->
-        <tr th:each="atendido, iter: ${MyAtendidos}">
-            <td th:text="${iter.count}">#</td>
-            <td th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
-            <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
-            <td>
-                <span class="nombreClasificacionIncidencia" th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                <span th:text="${atendido.ticket.descripcion}"></span><br>
-            </td>
-            <td>
-                <span class="nombreClasificacionIncidencia" th:utext="${atendido.clasificacionServicio.nombre + ':<br>'}"></span>
-                <span th:text="${atendido.descripcion}"></span><br>
-            </td>
-            <td th:text="${atendido.ticket.faseTicket.nombre}">Fase</td>
-        </tr>
-        </tbody>
-    </table>
-
+    <div class="container-fluid">
+        <h2>USUARIO / Tickets Atendidos - Cerrados</h2>
+        <!--MIS TICKETS-->
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>N°</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Descripción de Incidencia</th>
+                <th>Descripción Atención</th>
+                <th>Fase</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterar sobre los tickets con un solo bucle th:each -->
+            <tr th:each="atendido, iter: ${MyAtendidos}">
+                <td th:text="${iter.count}">#</td>
+                <td th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
+                <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
+                <td>
+                    <span class="nombreClasificacionIncidencia" th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                    <span th:text="${atendido.ticket.descripcion}"></span><br>
+                </td>
+                <td>
+                    <span class="nombreClasificacionIncidencia" th:utext="${atendido.clasificacionServicio.nombre + ':<br>'}"></span>
+                    <span th:text="${atendido.descripcion}"></span><br>
+                </td>
+                <td th:text="${atendido.ticket.faseTicket.nombre}">Fase</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </main>
 
 

@@ -26,18 +26,20 @@
 <body>
 
 <main>
-    <section>
-        <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <section style="text-align: center;">
+        <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+
             <form action="/app/login" method="POST" class="login-container">
-                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+                <img style="width:50px;" src="/images/msystem.png" alt="logo">
+                <h3 class="text-center mb-4">Iniciar Sesión</h3>
                 <div class="form-outline mb-4">
                     <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" required/>
+                    <input type="text" id="username" name="username" class="form-control" required />
                 </div>
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" class="form-control" required/>
+                    <input type="password" id="password" name="password" class="form-control" required />
                 </div>
 
                 <div class="text-center">
@@ -46,6 +48,7 @@
             </form>
         </div>
     </section>
+
 </main>
 
 <!-- jQuery (opcional, necesario para componentes de Bootstrap que lo requieran) -->

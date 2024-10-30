@@ -10,12 +10,56 @@
 <header th:replace="~{common/header :: header}">
 </header>
 
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>USUARIO / Tickets Enviados</h2>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="bi bi-plus-lg"></i> Nuevo Ticket
+        </button>
+    </div>
+    <!--MIS TICKETS-->
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th class="descripcionTD">Descripción</th>
+            <th>Archivos Adjuntos</th>
+            <th>Fase</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterar sobre los tickets con un solo bucle th:each -->
+        <tr th:each="ticket, iter: ${MyTickets}">
+            <td th:text="${iter.count}">#</td>
+            <td th:text="${ticket.fechaFormateada}">Fecha</td>
+            <td th:text="${ticket.horaFormateada}">Hora</td>
+            <td>
+            <span class="nombreClasificacionIncidencia"
+                  th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                <span th:text="${ticket.descripcion}"></span><br>
+            </td>
+
+            <td>
+                <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+                <ul>
+                    <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                        <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#"
+                           th:text="${adjunto.nombre}">Archivo</a> - <span
+                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                    </li>
+                </ul>
+            </td>
+            <td th:text="${ticket.faseTicket.nombre}">Fase</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Nuevo Ticket
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -59,44 +103,7 @@
 </div>
 
 
-<!--MIS TICKETS-->
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>N°</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th class="descripcionTD">Descripción</th>
-        <th>Archivos Adjuntos</th>
-        <th>Fase</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterar sobre los tickets con un solo bucle th:each -->
-    <tr th:each="ticket, iter: ${MyTickets}">
-        <td th:text="${iter.count}">#</td>
-        <td th:text="${ticket.fechaFormateada}">Fecha</td>
-        <td th:text="${ticket.horaFormateada}">Hora</td>
-        <td>
-            <span class="nombreClasificacionIncidencia"
-                  th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-            <span th:text="${ticket.descripcion}"></span><br>
-        </td>
 
-        <td>
-            <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
-            <ul>
-                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                    <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#"
-                       th:text="${adjunto.nombre}">Archivo</a> - <span
-                        th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                </li>
-            </ul>
-        </td>
-        <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-    </tr>
-    </tbody>
-</table>
 
 <div id="customNotification" class="custom-notification" style="display: none;">
     <p id="notificationMessage"></p>

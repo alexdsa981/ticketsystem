@@ -38,6 +38,7 @@ public class AtencionController {
     //metodo para enviar todos los tickets en proceso a "enProceso"
     public Model retornaMisTicketsEnProcesoAVista(Model model) {
         List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
+        Collections.reverse(MyRecepcionados);
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return  model;
     }
@@ -51,11 +52,13 @@ public class AtencionController {
     //metodo para enviar todos los tickets atendidos a "atendidos"
     public Model retornaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
+        Collections.reverse(MyAtendidos);
         model.addAttribute("MyAtendidos", MyAtendidos);
         return  model;
     }
     public Model retornaTodosLosTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
+        Collections.reverse(AllAtendidos);
         model.addAttribute("AllAtendidos", AllAtendidos);
         return  model;
     }
