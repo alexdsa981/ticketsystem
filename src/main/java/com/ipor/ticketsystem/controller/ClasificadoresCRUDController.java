@@ -46,6 +46,7 @@ public class ClasificadoresCRUDController {
             HttpServletResponse response) throws IOException {
         ClasificacionIncidencia clasificacionIncidencia = new ClasificacionIncidencia();
         clasificacionIncidencia.setNombre(nombre);
+        clasificacionIncidencia.setIsActive(Boolean.TRUE);
         clasificadoresService.saveCIncidencia(clasificacionIncidencia);
         response.sendRedirect("/admin/Clasificadores");
         return ResponseEntity.ok("Clasificación Incidencia creado correctamente");
@@ -58,6 +59,7 @@ public class ClasificadoresCRUDController {
     ) {
         ClasificacionIncidencia clasificacionIncidencia = new ClasificacionIncidencia();
         clasificacionIncidencia.setNombre(nombre);
+        clasificacionIncidencia.setIsActive(Boolean.TRUE);
         clasificadoresService.actualizarIncidencia(id, clasificacionIncidencia);
         return "redirect:/admin/Clasificadores";
     }
@@ -73,6 +75,7 @@ public class ClasificadoresCRUDController {
             HttpServletResponse response) throws IOException {
         ClasificacionServicio clasificacionServicio = new ClasificacionServicio();
         clasificacionServicio.setNombre(nombre);
+        clasificacionServicio.setIsActive(Boolean.TRUE);
         clasificadoresService.saveCServicio(clasificacionServicio);
         response.sendRedirect("/admin/Clasificadores");
         return ResponseEntity.ok("Clasificación Servicio creado correctamente");
@@ -85,6 +88,7 @@ public class ClasificadoresCRUDController {
     ) {
         ClasificacionServicio clasificacionServicio = new ClasificacionServicio();
         clasificacionServicio.setNombre(nombre);
+        clasificacionServicio.setIsActive(Boolean.TRUE);
         clasificadoresService.actualizarServicio(id, clasificacionServicio);
         return "redirect:/admin/Clasificadores";
     }
@@ -101,6 +105,7 @@ public class ClasificadoresCRUDController {
             HttpServletResponse response) throws IOException {
         ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
         clasificacionUrgencia.setNombre(nombre);
+        clasificacionUrgencia.setIsActive(Boolean.TRUE);
         clasificadoresService.saveCUrgencia(clasificacionUrgencia);
         response.sendRedirect("/admin/Clasificadores");
         return ResponseEntity.ok("Clasificación Urgencia creado correctamente");
@@ -113,6 +118,7 @@ public class ClasificadoresCRUDController {
     ) {
         ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
         clasificacionUrgencia.setNombre(nombre);
+        clasificacionUrgencia.setIsActive(Boolean.TRUE);
         clasificadoresService.actualizarUrgencia(id, clasificacionUrgencia);
         return "redirect:/admin/Clasificadores";
     }

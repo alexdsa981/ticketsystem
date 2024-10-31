@@ -52,6 +52,7 @@ public class UsuariosCRUDController {
         usuario.setNombre(nombre);
         usuario.setPassword(password);
         usuario.setUsername(username);
+        usuario.setIsActive(Boolean.TRUE);
         usuarioService.guardarUsuario(usuario);
         response.sendRedirect("/admin/Usuarios");
         return ResponseEntity.ok("Usuario creado correctamente");
@@ -71,6 +72,7 @@ public class UsuariosCRUDController {
         usuario.setPassword(password);
         usuario.setNombre(nombre);
         usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
+        usuario.setIsActive(Boolean.TRUE);
         usuarioService.actualizarUsuario(id, usuario);
         return "redirect:/admin/Usuarios";
     }

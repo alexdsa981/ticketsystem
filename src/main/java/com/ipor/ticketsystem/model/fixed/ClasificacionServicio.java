@@ -19,7 +19,7 @@ public class ClasificacionServicio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-
+    private Boolean isActive;
     @JsonIgnore
     @OneToMany(mappedBy = "clasificacionServicio")
     private Set<Servicio> listaServicios;

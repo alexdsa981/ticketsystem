@@ -24,7 +24,7 @@ public class Usuario {
     private String username;
     private String password;
     private String nombre;
-
+    private Boolean isActive;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_rol_usuario")

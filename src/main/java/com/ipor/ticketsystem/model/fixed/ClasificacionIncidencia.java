@@ -18,7 +18,7 @@ public class ClasificacionIncidencia {
     private Long id;
 
     private String nombre;
-
+    private Boolean isActive;
     @JsonIgnore
     @OneToMany(mappedBy = "clasificacionIncidencia")
     private List<Ticket> listaTickets;
