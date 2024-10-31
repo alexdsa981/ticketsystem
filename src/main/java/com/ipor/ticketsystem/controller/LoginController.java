@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.ConstantesSeguridad;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/app")
@@ -37,6 +39,14 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
+        // Verificar si el usuario existe y está activo
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+
+        if (usuarioOpt.isEmpty() || !usuarioOpt.get().getIsActive()) {
+            response.sendRedirect("/login");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
@@ -47,12 +57,12 @@ public class LoginController {
 
             // Crear una cookie para almacenar el token JWT
             Cookie jwtCookie = new Cookie("JWT", token);
-            jwtCookie.setHttpOnly(true); // Para evitar el acceso desde JavaScript
-            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN)/1000); //12horas
-            jwtCookie.setPath("/"); // Hacer accesible la cookie en toda la aplicación
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
+            jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
 
-            // Redirigir a la página principal o donde desees
+            // Redirigir a la página principal
             response.sendRedirect("/inicio");
             System.out.println("logeado correctamente");
             return ResponseEntity.ok().build();
@@ -64,6 +74,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) throws IOException {

@@ -47,8 +47,8 @@ public class TicketController {
         return model;
     }
 
-    public Model retornaListaClasificacionIncidencia(Model model) {
-        List<ClasificacionIncidencia> ListaTiposIncidencia = ticketService.getObtenerTodosLosTiposDeIncidencia();
+    public Model retornaListaClasificacionIncidenciaActivos(Model model) {
+        List<ClasificacionIncidencia> ListaTiposIncidencia = ticketService.getObtenerTodosLosTiposDeIncidenciaActivos();
         model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
         return model;
     }

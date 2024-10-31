@@ -64,10 +64,6 @@ public class ClasificadoresCRUDController {
         return "redirect:/admin/Clasificadores";
     }
 
-
-
-
-
     //crear Clasificacion servicio nueva
     @PostMapping("/servicio/nuevo")
     public ResponseEntity<String> crearClasificacionServicio(
@@ -122,6 +118,53 @@ public class ClasificadoresCRUDController {
         clasificadoresService.actualizarUrgencia(id, clasificacionUrgencia);
         return "redirect:/admin/Clasificadores";
     }
+
+
+    // Desactivar Clasificación Incidencia
+    @GetMapping("/desactivar/incidencia/{id}")
+    public String desactivarIncidencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoIncidencia(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Activar Clasificación Incidencia
+    @GetMapping("/activar/incidencia/{id}")
+    public String activarIncidencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoIncidencia(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Desactivar Clasificación Servicio
+    @GetMapping("/desactivar/servicio/{id}")
+    public String desactivarServicio(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoServicio(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Activar Clasificación Servicio
+    @GetMapping("/activar/servicio/{id}")
+    public String activarServicio(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoServicio(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Desactivar Clasificación Urgencia
+    @GetMapping("/desactivar/urgencia/{id}")
+    public String desactivarUrgencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoUrgencia(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Activar Clasificación Urgencia
+    @GetMapping("/activar/urgencia/{id}")
+    public String activarUrgencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoUrgencia(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
+
+
+
+
 
 
 }

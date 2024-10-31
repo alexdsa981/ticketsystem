@@ -1,6 +1,5 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,7 +44,7 @@ public class WebController {
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
         ticketController.retornaTicketsPropiosAVista(model);
-        ticketController.retornaListaClasificacionIncidencia(model);
+        ticketController.retornaListaClasificacionIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk - Inicio");
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
@@ -83,8 +82,8 @@ public class WebController {
     @GetMapping("/soporte/Recibidos")
     public String redirigePaginaTicketsRecibidos(Model model) {
         ticketController.retornaTicketRecibidosAVista(model);
-        atencionController.retornaListaClasificacionesUrgencia(model);
-        ticketController.retornaListaClasificacionIncidencia(model);
+        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
+        ticketController.retornaListaClasificacionIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk - Recibidos");
         return "/soporte/ticketsRecibidos";
     }
@@ -92,9 +91,9 @@ public class WebController {
     @GetMapping("/soporte/Recepcionados")
     public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
-        atencionController.retornaListaClasificacionesServicio(model);
-        ticketController.retornaListaClasificacionIncidencia(model);
-        atencionController.retornaListaClasificacionesUrgencia(model);
+        atencionController.retornaListaClasificacionesServicioActivos(model);
+        ticketController.retornaListaClasificacionIncidenciaActivos(model);
+        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk - Recepcionados");
         return "soporte/ticketsRecepcionados";
     }
@@ -102,9 +101,9 @@ public class WebController {
     @GetMapping("/soporte/Atendidos")
     public String redirigePaginaTicketsAtendidos(Model model) {
         atencionController.retornaTodosLosTicketsAtendidosAVista(model);
-        atencionController.retornaListaClasificacionesServicio(model);
-        ticketController.retornaListaClasificacionIncidencia(model);
-        atencionController.retornaListaClasificacionesUrgencia(model);
+        atencionController.retornaListaClasificacionesServicioActivos(model);
+        ticketController.retornaListaClasificacionIncidenciaActivos(model);
+        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk - Cerrados");
         return "soporte/ticketsAtendidos";
     }

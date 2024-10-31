@@ -63,14 +63,33 @@ public class UsuarioService {
         return null; // O puedes lanzar una excepción personalizada si no existe
     }
 
-    // Eliminar un usuario por ID
-    public boolean eliminarUsuario(Long id) {
-        if (usuarioRepository.existsById(id)) {
-            usuarioRepository.deleteById(id);
-            return true;
+//    // Eliminar un usuario por ID
+//    public boolean eliminarUsuario(Long id) {
+//        if (usuarioRepository.existsById(id)) {
+//            usuarioRepository.deleteById(id);
+//            return true;
+//        }
+//        return false;
+//    }
+
+    public void desactivarUsuario(Long id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setIsActive(false);
+            usuarioRepository.save(usuario);
         }
-        return false; // O puedes lanzar una excepción personalizada si no existe
     }
+    public void activarUsuario(Long id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setIsActive(true); // Cambia el estado activo a 'true'
+            usuarioRepository.save(usuario); // Guarda el usuario actualizado
+        }
+    }
+
+
 
     //retorna todos los roles:
     public List<RolUsuario> retornaTodosLosRoles(){

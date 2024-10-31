@@ -15,7 +15,7 @@
         </button>
     </div>
     <!-- Tabla de usuarios -->
-    <table class="table table-striped table-bordered">
+    <table class="table table-bordered table-hover">
         <thead class="table-dark">
         <tr>
             <th>N°</th>
@@ -23,17 +23,20 @@
             <th>Contraseña</th>
             <th>Nombre</th>
             <th>Rol</th>
+            <th>Estado</th>
             <th>Acciones</th> <!-- Nueva columna para los botones CRUD -->
         </tr>
         </thead>
         <tbody>
         <!-- Iterar sobre los usuarios con un solo bucle th:each -->
-        <tr th:each="usuario, iter: ${ListaUsuarios}">
+        <tr th:each="usuario, iter: ${ListaUsuarios}"
+            th:classappend="${!usuario.isActive} ? 'row-desactivado' : ''">
             <td th:text="${iter.count}">#</td>
             <td th:text="${usuario.username}">Username</td>
             <td th:text="${usuario.password}">Contraseña</td>
             <td th:text="${usuario.nombre}">Nombre</td>
             <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+            <td th:text="${usuario.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
             <!-- Columna con los botones de acción -->
             <td>
                 <!-- Botón para editar el usuario, usar data-* atributos -->
@@ -47,15 +50,24 @@
                     Editar
                 </button>
 
-                <!-- Botón para eliminar el usuario -->
-                <a class="btn btn-danger" th:href="@{'/app/usuarios/eliminar/' + ${usuario.id}}"
-                   onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
-                    Eliminar
-                </a>
+                <!-- Botón para Activar o Desactivar el usuario según su estado -->
+                <th:block th:if="${usuario.isActive}">
+                    <a style="width: 120px;" class="btn btn-danger" th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
+                       onclick="return confirm('¿Estás seguro de desactivar este usuario?');">
+                        Desactivar
+                    </a>
+                </th:block>
+                <th:block th:if="${!usuario.isActive}">
+                    <a style="width: 120px;" class="btn btn-success" th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
+                       onclick="return confirm('¿Estás seguro de activar este usuario?');">
+                        Activar
+                    </a>
+                </th:block>
             </td>
         </tr>
         </tbody>
     </table>
+
 
 
 

@@ -68,4 +68,28 @@ public class ClasificadoresService {
 
 
 
+    public void cambiarEstadoIncidencia(Long id, boolean isActive) {
+        ClasificacionIncidencia incidencia = clasificacionIncidenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+        incidencia.setIsActive(isActive);
+        clasificacionIncidenciaRepository.save(incidencia);
+    }
+
+    public void cambiarEstadoServicio(Long id, boolean isActive) {
+        ClasificacionServicio servicio = clasificacionServicioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+        servicio.setIsActive(isActive);
+        clasificacionServicioRepository.save(servicio);
+    }
+
+    public void cambiarEstadoUrgencia(Long id, boolean isActive) {
+        ClasificacionUrgencia urgencia = clasificacionUrgenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Urgencia no encontrada"));
+        urgencia.setIsActive(isActive);
+        clasificacionUrgenciaRepository.save(urgencia);
+    }
+
+
+
+
 }

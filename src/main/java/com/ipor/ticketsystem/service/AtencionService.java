@@ -103,7 +103,7 @@ public class AtencionService {
     }
     //obtener clasificaciones urgencia
     public List<ClasificacionUrgencia> obtenerListaClasificacionUrgencia(){
-        return clasificacionUrgenciaRepository.findAll();
+        return clasificacionUrgenciaRepository.findByIsActiveTrue();
     }
 
     //obtener clasificacion servicio por id
@@ -112,7 +112,7 @@ public class AtencionService {
     }
     //obtener clasificaciones servicio
     public List<ClasificacionServicio> obtenerListaClasificacionServicio(){
-        return clasificacionServicioRepository.findAll();
+        return clasificacionServicioRepository.findByIsActiveTrue();
     }
 
     //guardar recepcion en base de datos

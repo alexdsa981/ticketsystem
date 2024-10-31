@@ -86,8 +86,8 @@ public class TicketService {
     }
 
     //obtener todos los tipos de incidencia
-    public List<ClasificacionIncidencia> getObtenerTodosLosTiposDeIncidencia() {
-        return clasificacionIncidenciaRepository.findAll();
+    public List<ClasificacionIncidencia> getObtenerTodosLosTiposDeIncidenciaActivos() {
+        return clasificacionIncidenciaRepository.findByIsActiveTrue();
     }
 
     //obtener clasificacion incidencia por id

@@ -77,14 +77,23 @@ public class UsuariosCRUDController {
         return "redirect:/admin/Usuarios";
     }
 
-    // Eliminar un usuario
-    @GetMapping("/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable Long id) {
+    // desactivar un usuario
+    @GetMapping("/desactivar/{id}")
+    public String desactivarUsuario(@PathVariable Long id) {
         if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
-            usuarioService.eliminarUsuario(id);
+            usuarioService.desactivarUsuario(id);
         }
         return "redirect:/admin/Usuarios";
     }
+    // activar un usuario
+    @GetMapping("/activar/{id}")
+    public String activarUsuario(@PathVariable Long id) {
+        if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
+            usuarioService.activarUsuario(id); // Llama al método para activar
+        }
+        return "redirect:/admin/Usuarios";
+    }
+
 
     @GetMapping("/rol")
     public ResponseEntity<String> obtenerRolUsuario() {

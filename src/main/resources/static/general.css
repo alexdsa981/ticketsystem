@@ -146,3 +146,9 @@ ul{
     background-color: #d4d4d4;
 }
 /**/
+
+/*FILA DESACTIVADO*/
+.row-desactivado td{
+    background-color: #fdeff0; /* Un color de fondo suave, como un rojo claro */
+    color: #721c24; /* Un color de texto oscuro */
+}

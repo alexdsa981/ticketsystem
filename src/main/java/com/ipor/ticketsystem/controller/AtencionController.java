@@ -1,10 +1,8 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
-import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.AtencionService;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,13 +65,13 @@ public class AtencionController {
 
 
     //metodo para enviar Lista de clasificaciones urgencia a Inicio
-    public Model retornaListaClasificacionesUrgencia(Model model){
+    public Model retornaListaClasificacionesUrgenciaActivos(Model model){
         List<ClasificacionUrgencia> listaUrgencias = atencionService.obtenerListaClasificacionUrgencia();
         model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
         return  model;
     }
     //metodo para enviar Lista de clasificaciones urgencia a Inicio
-    public Model retornaListaClasificacionesServicio(Model model){
+    public Model retornaListaClasificacionesServicioActivos(Model model){
         List<ClasificacionServicio> listaServicios = atencionService.obtenerListaClasificacionServicio();
         model.addAttribute("Lista_clasificacion_servicio", listaServicios);
         return  model;
