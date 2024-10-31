@@ -19,22 +19,24 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private LocalDate fecha;
+    @Column(nullable = false)
     private LocalTime hora;
-    @Column(columnDefinition = "VARCHAR(MAX)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+
     @ManyToOne
-    @JoinColumn(name = "id_clasificacion_incidencia")
+    @JoinColumn(name = "id_clasificacion_incidencia", nullable = false)
     private ClasificacionIncidencia clasificacionIncidencia;
 
     @ManyToOne
-    @JoinColumn(name = "id_fase_ticket")
+    @JoinColumn(name = "id_fase_ticket", nullable = false)
     private FaseTicket faseTicket;
 
 

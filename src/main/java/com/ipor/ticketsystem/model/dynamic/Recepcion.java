@@ -18,22 +18,23 @@ public class Recepcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(MAX)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
     private String mensaje;
-
+    @Column(nullable = false)
     private LocalDate fecha;
+    @Column(nullable = false)
     private LocalTime hora;
 
     @OneToOne
-    @JoinColumn(name = "id_ticket")
+    @JoinColumn(name = "id_ticket", nullable = false)
     private Ticket ticket;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "id_clasificacion_urgencia")
+    @JoinColumn(name = "id_clasificacion_urgencia", nullable = false)
     private ClasificacionUrgencia clasificacionUrgencia;
 
     // Método para establecer fecha y hora antes de persistir

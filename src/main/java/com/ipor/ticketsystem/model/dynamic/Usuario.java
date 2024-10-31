@@ -21,13 +21,19 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false)
     private Boolean isActive;
+
+
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "id_rol_usuario")
+    @JoinColumn(name = "id_rol_usuario", nullable = false)
     private RolUsuario rolUsuario;
 
     @JsonIgnore
