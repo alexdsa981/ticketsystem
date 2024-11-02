@@ -12,7 +12,7 @@
 <div class="container-fluid border shadow p-3 mb-5 bg-body rounded">
     <div class="row">
         <!-- Clasificadores de Incidencia -->
-        <div class="col-4">
+        <div class="col-12 col-md-12 col-lg-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Incidencia</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
@@ -35,7 +35,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary"
                                 data-bs-toggle="modal" data-bs-target="#incidenciaModal"
                                 th:data-incidencia-id="${clasificador.id}"
                                 th:data-incidencia-nombre="${clasificador.nombre}"
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Clasificadores de Servicio -->
-        <div class="col-4">
+        <div class="col-12 col-md-12 col-lg-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Servicio</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newServicioModal">
@@ -84,7 +84,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary"
                                 data-bs-toggle="modal" data-bs-target="#servicioModal"
                                 th:data-servicio-id="${clasificador.id}"
                                 th:data-servicio-nombre="${clasificador.nombre}"
@@ -110,7 +110,7 @@
         </div>
 
         <!-- Clasificadores de Urgencia -->
-        <div class="col-4">
+        <div class="col-12 col-md-12 col-lg-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Urgencia</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
@@ -133,7 +133,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary"
                                 data-bs-toggle="modal" data-bs-target="#urgenciaModal"
                                 th:data-urgencia-id="${clasificador.id}"
                                 th:data-urgencia-nombre="${clasificador.nombre}"

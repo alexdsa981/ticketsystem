@@ -29,7 +29,7 @@
         <div class="scroll-table">
             <table id="ticketTable" class="table table-bordered table-hover w-100">
                 <thead class="table-dark">
-                    <tr>
+                    <tr >
                         <th class="n-table">N°</th>
                         <th class="fecha-table">Fecha</th>
                         <th class="hora-table">Hora</th>
@@ -45,7 +45,9 @@
 
                 <tbody id="ticketTableBody">
                     <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                    <tr th:each="recepcionado, iter: ${AllRecepcionados}">
+                    <tr th:each="recepcionado, iter: ${AllRecepcionados}"
+                        th:class="${recepcionado.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
+                       (recepcionado.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
                         <td th:text="${iter.count}">#</td>
                         <td class="fecha" th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
                         <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>

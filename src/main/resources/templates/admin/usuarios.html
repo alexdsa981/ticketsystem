@@ -6,7 +6,7 @@
 <body>
 <div th:replace="~{common/header :: header}">
 </div>
-<div class="container-fluid">
+<div class="container">
     <div class="d-flex justify-content-between align-items-center">
         <h2>ADMIN / Usuarios</h2>
         <!-- Contenedor para los dos botones alineados a la derecha -->
@@ -20,7 +20,6 @@
         <tr>
             <th>N°</th>
             <th>Username</th>
-            <th>Contraseña</th>
             <th>Nombre</th>
             <th>Rol</th>
             <th>Estado</th>
@@ -33,7 +32,6 @@
             th:classappend="${!usuario.isActive} ? 'row-desactivado' : ''">
             <td th:text="${iter.count}">#</td>
             <td th:text="${usuario.username}">Username</td>
-            <td th:text="${usuario.password}">Contraseña</td>
             <td th:text="${usuario.nombre}">Nombre</td>
             <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
             <td th:text="${usuario.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
@@ -44,7 +42,6 @@
                         data-bs-toggle="modal" data-bs-target="#editUserModal"
                         th:data-usuario-id="${usuario.id}"
                         th:data-usuario-username="${usuario.username}"
-                        th:data-usuario-password="${usuario.password}"
                         th:data-usuario-nombre="${usuario.nombre}"
                         th:data-usuario-rol="${usuario.rolUsuario.nombre}">
                     Editar
@@ -136,8 +133,8 @@
                         <input type="text" class="form-control" id="usernameEdit" name="username" required>
                     </div>
                     <div class="mb-3">
-                        <label for="passwordEdit" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="passwordEdit" name="password" required>
+                        <label for="passwordEdit" class="form-label">Contraseña Nueva</label>
+                        <input type="text" placeholder="Completar campo si desea cambiar contraseña" class="form-control" id="passwordEdit" name="password">
                     </div>
                     <div class="mb-3">
                         <label for="nombreEdit" class="form-label">Nombre</label>
@@ -184,13 +181,13 @@
         // Extraer información del usuario desde los atributos data-*
         const usuarioId = button.getAttribute('data-usuario-id');
         const usuarioUsername = button.getAttribute('data-usuario-username');
-        const usuarioPassword = button.getAttribute('data-usuario-password');
+
         const usuarioNombre = button.getAttribute('data-usuario-nombre');
         const usuarioRol = button.getAttribute('data-usuario-rol');
 
         // Actualizar los elementos del modal con la información del usuario
         document.getElementById('usernameEdit').value = usuarioUsername;
-        document.getElementById('passwordEdit').value = usuarioPassword;
+
         document.getElementById('nombreEdit').value = usuarioNombre;
 
         // Seleccionar el rol correcto en el select

@@ -10,7 +10,7 @@
 
     <div class="container-fluid">
         <h2>USUARIO / Tickets Recepcionados</h2>
-        <table class="table table-hover table-bordered">
+        <table id="ticketTable" class="table table-hover table-bordered">
             <thead class="table-dark">
             <tr>
                 <th>N°</th>
@@ -21,7 +21,7 @@
                 <th>Fase</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="ticketTableBody">
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
             <tr th:each="recepcionado, iter: ${MyRecepcionados}">
                 <td th:text="${iter.count}">#</td>
@@ -36,6 +36,9 @@
             </tr>
             </tbody>
         </table>
+        <div id="noResultsMessage" class="alert alert-warning" style="display: none;">
+            No se ha encontrado ningún elemento.
+        </div>
     </div>
     <!--Mis tickets Recepcionados-->
 

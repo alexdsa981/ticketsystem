@@ -7,37 +7,91 @@
 </header>
 <main>
     <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
         <h2>USUARIO / Tickets Atendidos - Cerrados</h2>
+            <!-- Contenedor para los dos botones alineados a la derecha -->
+            <div>
+                <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
+                        data-bs-target="#filterModal">
+                    <i class="bi bi-filter"></i>
+                    Filtrar
+                </button>
+                <button id="clearFilterButton" class="btn btn-outline-dark ">
+                    <i class="bi bi-x"></i>
+                    Eliminar Filtrado
+                </button>
+            </div>
+        </div>
         <!--MIS TICKETS-->
-        <table class="table table-hover table-bordered">
-            <thead class="table-dark">
-            <tr>
-                <th>N°</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Descripción de Incidencia</th>
-                <th>Descripción Atención</th>
-                <th>Fase</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Iterar sobre los tickets con un solo bucle th:each -->
-            <tr th:each="atendido, iter: ${MyAtendidos}">
-                <td th:text="${iter.count}">#</td>
-                <td th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
-                <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
-                <td>
-                    <span class="nombreClasificacionIncidencia" th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                    <span th:text="${atendido.ticket.descripcion}"></span><br>
-                </td>
-                <td>
-                    <span class="nombreClasificacionIncidencia" th:utext="${atendido.clasificacionServicio.nombre + ':<br>'}"></span>
-                    <span th:text="${atendido.descripcion}"></span><br>
-                </td>
-                <td th:text="${atendido.ticket.faseTicket.nombre}">Fase</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="scroll-table">
+            <table id="ticketTable" class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Descripción de Incidencia</th>
+                    <th>Descripción Atención</th>
+                    <th>Fase</th>
+                </tr>
+                </thead>
+                <tbody id="ticketTableBody">
+                <!-- Iterar sobre los tickets con un solo bucle th:each -->
+                <tr th:each="atendido, iter: ${MyAtendidos}">
+                    <td th:text="${iter.count}">#</td>
+                    <td class="fecha" th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
+                    <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
+                    <td>
+                        <span class="nombreClasificacionIncidencia" th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                        <span th:text="${atendido.ticket.descripcion}"></span><br>
+                    </td>
+                    <td>
+                        <span class="nombreClasificacionIncidencia" th:utext="${atendido.clasificacionServicio.nombre + ':<br>'}"></span>
+                        <span th:text="${atendido.descripcion}"></span><br>
+                    </td>
+                    <td th:text="${atendido.ticket.faseTicket.nombre}">Fase</td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="noResultsMessage" class="alert alert-warning" style="display: none;">
+                No se ha encontrado ningún elemento.
+            </div>
+        </div>
+        <!-- Contenedor de paginación -->
+        <div id="pagination" class="mt-3 d-flex justify-content-center align-items-center">
+            <button id="prevPage" class="btn btn-secondary mx-1" disabled>&lt;</button>
+            <div id="paginationButtons" class="d-flex"></div>
+            <button id="nextPage" class="btn btn-secondary mx-1" disabled>&gt;</button>
+        </div>
+    </div>
+
+    <!-- Modal FILTRO -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filtrar mis Tickets</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filtros dentro del modal -->
+                    <div class="container">
+                        <div class="row g-3 align-items-center">
+
+
+                            <div class="col-md-12">
+                                <label for="fechaFilter" class="form-label">Fecha:</label>
+                                <input type="date" id="fechaFilter" class="form-control">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="filterButton" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

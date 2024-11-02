@@ -152,3 +152,10 @@ ul{
     background-color: #fdeff0; /* Un color de fondo suave, como un rojo claro */
     color: #721c24; /* Un color de texto oscuro */
 }
+/*RECEPCIONADO*/
+    .high-urgency td {
+        background-color: rgba(255, 245, 245, 0.897); /* Color rojo claro para alta urgencia */
+    }
+    .medium-urgency td {
+        background-color: rgba(255, 255, 245, 0.897); /* Color amarillo claro para media urgencia */
+    }

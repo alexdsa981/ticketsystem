@@ -69,7 +69,9 @@ public class UsuariosCRUDController {
                                     ) {
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
-        usuario.setPassword(password);
+        if (password != null){
+            usuario.setPassword(password);
+        }
         usuario.setNombre(nombre);
         usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
         usuario.setIsActive(Boolean.TRUE);
