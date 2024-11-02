@@ -1,14 +1,21 @@
 package com.ipor.ticketsystem.service;
 
+import com.ipor.ticketsystem.model.dynamic.Recepcion;
+import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
+import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
+import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
+import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.JwtAuthenticationFilter;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +29,10 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
     @Autowired
     RolUsuarioRepository rolUsuarioRepository;
+    @Autowired
+    TicketRepository ticketRepository;
+    @Autowired
+    FaseTicketRepository faseTicketRepository;
 
     public Long RetornarIDdeUsuarioLogeado(){
 
@@ -78,6 +89,26 @@ public class UsuarioService {
             Usuario usuario = usuarioOpt.get();
             usuario.setIsActive(false);
             usuarioRepository.save(usuario);
+
+            List<Ticket> listaTicketsFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(usuario.getId(), 1L);
+            List<Ticket> listaTicketsFase2 = ticketRepository.findByUsuarioIdAndFaseTicketId(usuario.getId(), 2L);
+
+            List<Ticket> listaTicketsADesactivar = new ArrayList<>();
+            listaTicketsADesactivar.addAll(listaTicketsFase1);
+            listaTicketsADesactivar.addAll(listaTicketsFase2);
+
+            FaseTicket faseDesactivado = faseTicketRepository.findByNombre("Desactivado");
+
+
+            for (Ticket ticket : listaTicketsADesactivar) {
+                ticket.setFaseTicket(faseDesactivado);
+            }
+            ticketRepository.saveAll(listaTicketsADesactivar);
+
+
+
+
+
         }
     }
     public void activarUsuario(Long id) {

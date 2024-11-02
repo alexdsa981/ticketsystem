@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ClasificacionServicioRepository extends JpaRepository<ClasificacionServicio, Long> {
     List<ClasificacionServicio> findByIsActiveTrue();
+    ClasificacionServicio findByNombre(String nombre);
 }
