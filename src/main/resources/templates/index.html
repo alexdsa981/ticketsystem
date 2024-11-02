@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <link rel="shortcut icon" href="#">
@@ -14,7 +14,7 @@
         }
 
         .login-container {
-          max-width: 400px; /* Ancho máximo del formulario */
+          width: 300px; /* Ancho máximo del formulario */
           background-color: #ffffff; /* Fondo blanco para el formulario */
           padding: 2rem; /* Espaciado interno */
           border-radius: 0.5rem; /* Bordes redondeados */
@@ -29,17 +29,33 @@
     <section style="text-align: center;">
         <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
 
-            <form action="/app/login" method="POST" class="login-container">
+            <form action="/app/login" method="POST" class="login-container" autocomplete="off">
                 <img style="width:50px;" src="/images/msystem.png" alt="logo">
-                <h3 class="text-center mb-4">Iniciar Sesión</h3>
+                <h3 class="text-center mb-2">Iniciar Sesión</h3>
+
+                <div class="container-fluid" style="max-width: 250px; font-size: 10px; text-align: center;">
+                    <div th:if="${error == 'inactive'}" style="color: red;">
+                        Tu usuario está desactivado. Por favor, contacta al administrador.
+                    </div>
+                    <div th:if="${error == 'badCredentials'}" style="color: red;">
+                        Usuario o contraseña incorrectos. Por favor, intenta de nuevo.
+                    </div>
+                    <div th:if="${error == 'unknown'}" style="color: red;">
+                        Ocurrió un error inesperado. Intenta de nuevo más tarde.
+                    </div>
+                </div>
+
+
+
+
                 <div class="form-outline mb-4">
                     <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" required />
+                    <input type="text" id="username" name="username" class="form-control" required autocomplete="off"/>
                 </div>
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" class="form-control" required />
+                    <input type="password" id="password" name="password" class="form-control" required autocomplete="off"/>
                 </div>
 
                 <div class="text-center">

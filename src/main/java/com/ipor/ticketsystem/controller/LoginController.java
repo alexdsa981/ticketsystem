@@ -15,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -39,11 +40,15 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
-        // Verificar si el usuario existe y está activo
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
-        if (usuarioOpt.isEmpty() || !usuarioOpt.get().getIsActive()) {
-            response.sendRedirect("/login");
+        if (usuarioOpt.isEmpty()) {
+            // Usuario no existe
+            response.sendRedirect("/login?error=badCredentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!usuarioOpt.get().getIsActive()) {
+            // Usuario desactivado
+            response.sendRedirect("/login?error=inactive");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -55,25 +60,26 @@ public class LoginController {
 
             String token = jwtTokenProvider.generarToken(authentication);
 
-            // Crear una cookie para almacenar el token JWT
             Cookie jwtCookie = new Cookie("JWT", token);
             jwtCookie.setHttpOnly(true);
             jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
             jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
 
-            // Redirigir a la página principal
             response.sendRedirect("/inicio");
             System.out.println("logeado correctamente");
             return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
-            response.sendRedirect("/login");
+            // Credenciales incorrectas
+            response.sendRedirect("/login?error=badCredentials");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            response.sendRedirect("/login");
+            // Otro error
+            response.sendRedirect("/login?error=unknown");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
     @PostMapping("/logout")

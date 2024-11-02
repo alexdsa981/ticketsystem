@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
@@ -17,6 +18,8 @@ public class WebController {
     UsuariosCRUDController usuariosCRUDController;
     @Autowired
     ClasificadoresCRUDController clasificadoresCRUDController;
+    @Autowired
+    LoginController loginController;
 
     //redirige / a /login
     @GetMapping("/")
@@ -26,7 +29,7 @@ public class WebController {
 
     //abre index.html en /login
     @GetMapping("/login")
-    public String redirigePaginaLogin() {
+    public String redirigePaginaLogin(@RequestParam(value = "error", required = false) String error, Model model) {
         // Obtén la autenticación actual
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -35,7 +38,7 @@ public class WebController {
                 !authentication.getPrincipal().equals("anonymousUser")) {
             return "redirect:/inicio"; // Redirige a la vista de inicio
         }
-
+        model.addAttribute("error", error);
         // Si no está autenticado, redirige a la vista de login (index.html en este caso)
         return "index";
     }
