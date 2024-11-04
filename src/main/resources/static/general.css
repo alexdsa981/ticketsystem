@@ -232,7 +232,6 @@ h2 {
     justify-content: space-between; /* Espacio entre el texto y el número */
 }
 .info-container {
-    display: flex; /* Usar flexbox para alinear ícono y número */
     align-items: center; /* Centrar verticalmente */
     justify-content: flex-end; /* Alinear a la derecha */
     margin-top: auto; /* Separar del texto */
