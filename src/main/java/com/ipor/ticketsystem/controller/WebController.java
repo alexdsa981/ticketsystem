@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebController {
     @Autowired
-    TicketController ticketController;
+    private TicketController ticketController;
     @Autowired
-    AtencionController atencionController;
+    private AtencionController atencionController;
     @Autowired
-    UsuariosCRUDController usuariosCRUDController;
+    private UsuariosCRUDController usuariosCRUDController;
     @Autowired
-    ClasificadoresCRUDController clasificadoresCRUDController;
+    private ClasificadoresCRUDController clasificadoresCRUDController;
     @Autowired
-    LoginController loginController;
+    private LoginController loginController;
 
     //redirige / a /login
     @GetMapping("/")
@@ -67,6 +67,10 @@ public class WebController {
     }
     @GetMapping("/admin/Dashboard")
     public String redirigePaginaDashboard(Model model) {
+        ticketController.RetornaNumeroTotalDeTickets(model);
+        atencionController.RetornaNumeroTotalDeRecepcionados(model);
+        atencionController.RetornaNumeroTotalDeAtendidos(model);
+        ticketController.RetornaNumeroTotalDeDesestimados(model);
         model.addAttribute("Titulo", "HelpDesk - Dashboard");
         return "admin/dashboard";
     }

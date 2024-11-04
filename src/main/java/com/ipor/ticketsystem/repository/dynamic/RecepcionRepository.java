@@ -17,5 +17,7 @@ public interface RecepcionRepository extends JpaRepository<Recepcion, Long> {
     @Query(value = "SELECT r.* FROM recepcion r WHERE r.id_ticket = :idTicket", nativeQuery = true)
     Recepcion findByTicketId(@Param("idTicket") Long idTicket);
 
+    //numero total
+    long count();
 
 }

@@ -6,6 +6,7 @@ import com.ipor.ticketsystem.model.dto.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
+import com.ipor.ticketsystem.service.DashboardService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.core.io.Resource;
@@ -38,6 +39,8 @@ public class TicketController {
     SimpMessagingTemplate messagingTemplate;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    DashboardService dashboardService;
 
     // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
     public Model retornaTicketsPropiosAVista(Model model) {
@@ -133,4 +136,14 @@ public class TicketController {
     }
 
 
+    public Model RetornaNumeroTotalDeTickets(Model model) {
+        Long ntotal = dashboardService.obtenerNTotalTickets();
+        model.addAttribute("ntotalTickets", ntotal);
+        return model;
+    }
+    public Model RetornaNumeroTotalDeDesestimados(Model model) {
+        Long ntotal = dashboardService.obtenerNTotalDesestimados();
+        model.addAttribute("ntotalDesestimados", ntotal);
+        return model;
+    }
 }

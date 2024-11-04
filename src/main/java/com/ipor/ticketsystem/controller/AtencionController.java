@@ -6,6 +6,7 @@ import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.AtencionService;
+import com.ipor.ticketsystem.service.DashboardService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,8 @@ public class AtencionController {
     TicketService ticketService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    DashboardService dashboardService;
 
     //metodo para enviar todos los tickets en proceso a "enProceso"
     public Model retornaMisTicketsEnProcesoAVista(Model model) {
@@ -126,4 +129,14 @@ public class AtencionController {
         return ResponseEntity.ok("Ticket atendido correctamente");
     }
 
+    public Model RetornaNumeroTotalDeRecepcionados(Model model) {
+        Long ntotal = dashboardService.obtenerNTotalRecepcionados();
+        model.addAttribute("ntotalRecepcionados", ntotal);
+        return model;
+    }
+    public Model RetornaNumeroTotalDeAtendidos(Model model) {
+        Long ntotal = dashboardService.obtenerNTotalAtendidos();
+        model.addAttribute("ntotalAtendidos", ntotal);
+        return model;
+    }
 }

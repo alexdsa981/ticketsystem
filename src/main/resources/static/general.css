@@ -226,7 +226,7 @@ h2 {
 
 .card {
     padding: 10px; /* Espaciado interno */
-    height: 80px; /* Altura fija para la tarjeta */
+    min-height: 80px; /* Altura fija para la tarjeta */
     display: flex;
     flex-direction: column; /* Colocar los elementos en columnas */
     justify-content: space-between; /* Espacio entre el texto y el número */

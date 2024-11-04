@@ -13,7 +13,7 @@
                     <div class="rounded bg-light text-dark card">
                         <p class="mb-0">Total: Tickets Recibidos</p>
                         <div class="info-container">
-                            <span class="h4 mb-0">100</span>
+                            <span th:text="${ntotalTickets}" class="h4 mb-0">100</span>
                             <i class="bi bi-ticket icon"></i>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                     <div class="rounded bg-info text-white card">
                         <p class="mb-0">Total: Recepciones Realizadas</p>
                         <div class="info-container">
-                            <span class="h4 mb-0">75</span>
+                            <span th:text="${ntotalRecepcionados}" class="h4 mb-0">100</span>
                             <i class="bi bi-check-circle icon"></i>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                     <div class="rounded bg-success text-white card">
                         <p class="mb-0">Total: Tickets Atendidos</p>
                         <div class="info-container">
-                            <span class="h4 mb-0">50</span>
+                            <span th:text="${ntotalAtendidos}" class="h4 mb-0">100</span>
                             <i class="bi bi-check2-circle icon"></i>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="rounded bg-secondary text-white card">
                         <p class="mb-0">Total: Tickets Desestimados</p>
                         <div class="info-container">
-                            <span class="h4 mb-0">25</span>
+                            <span th:text="${ntotalDesestimados}" class="h4 mb-0">100</span>
                             <i class="bi bi-x-circle icon"></i>
                         </div>
                     </div>

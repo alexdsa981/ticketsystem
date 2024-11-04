@@ -18,4 +18,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     @Query(value = "SELECT s.* FROM servicio s INNER JOIN ticket t ON s.id_ticket = t.id WHERE t.id_fase_ticket = 3", nativeQuery = true)
     List<Servicio> findAllByTicketFaseID3();
 
+    //numero total
+    long count();
+
 }

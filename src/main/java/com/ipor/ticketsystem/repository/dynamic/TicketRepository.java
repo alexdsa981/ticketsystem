@@ -10,4 +10,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByFaseTicketId(int faseId);
     //obtener tickets propios
     List<Ticket> findByUsuarioIdAndFaseTicketId(Long usuarioId, Long faseTicketId);
+
+    //numero total de ticket
+    long count();
+
+    long countByFaseTicketNombre(String nombre);
 }
