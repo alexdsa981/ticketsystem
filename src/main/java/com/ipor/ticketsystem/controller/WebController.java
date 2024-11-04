@@ -65,6 +65,11 @@ public class WebController {
         model.addAttribute("Titulo", "HelpDesk - Atendidos");
         return "atendidos";
     }
+    @GetMapping("/admin/Dashboard")
+    public String redirigePaginaDashboard(Model model) {
+        model.addAttribute("Titulo", "HelpDesk - Dashboard");
+        return "admin/dashboard";
+    }
 
     @GetMapping("/admin/Usuarios")
     public String redirigePaginaUsuarios(Model model) {

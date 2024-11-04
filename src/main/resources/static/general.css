@@ -1,28 +1,39 @@
 table {
-    width: auto; /* Permite que la tabla ajuste su ancho al contenido */
-    border-collapse: collapse; /* Para un aspecto más limpio */
-    table-layout: auto; /* Permite que las columnas se ajusten al contenido */
+    width: auto;
+    /* Permite que la tabla ajuste su ancho al contenido */
+    border-collapse: collapse;
+    /* Para un aspecto más limpio */
+    table-layout: auto;
+    /* Permite que las columnas se ajusten al contenido */
 }
-th, td {
-    word-wrap: break-word; /* Permite que el texto largo se rompa */
-    overflow-wrap: break-word; /* Soporte adicional para romper palabras largas */
-}
+
+th,
 td {
-    font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
-    
+    word-wrap: break-word;
+    /* Permite que el texto largo se rompa */
+    overflow-wrap: break-word;
+    /* Soporte adicional para romper palabras largas */
 }
-td .nombreClasificacionIncidencia{
+
+td {
+    font-size: 14px;
+    /* Ajusta el tamaño de la fuente según sea necesario */
+
+}
+
+td .nombreClasificacionIncidencia {
     font-weight: bold;
 }
 
-ul{
+ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
 .scroll-table tbody {
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2), -4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra a la izquierda y derecha */
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2), -4px 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra a la izquierda y derecha */
     border-radius: 16px;
 }
 
@@ -42,40 +53,56 @@ ul{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     font-size: 16px;
     z-index: 1000;
-    display: none; /* Oculto por defecto */
+    display: none;
+    /* Oculto por defecto */
 }
 
 .custom-notification.show {
-    display: block; /* Mostrar la notificación cuando se añade la clase 'show' */
-    animation: fadein 0.5s, fadeout 1s 6.5s; /* fadein dura 0.5s, fadeout comienza tras 6.5s y dura 0.5s */
+    display: block;
+    /* Mostrar la notificación cuando se añade la clase 'show' */
+    animation: fadein 0.5s, fadeout 1s 6.5s;
+    /* fadein dura 0.5s, fadeout comienza tras 6.5s y dura 0.5s */
 }
 
 
 @keyframes fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fadeout {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 
 
 
 /* TBODY con scroll */
-.table thead{
+.table thead {
     position: sticky;
     top: 0;
     background-color: white;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1); /* Sombra negra arriba y abajo */
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1);
+    /* Sombra negra arriba y abajo */
 
 }
-.scroll-table{
+
+.scroll-table {
     height: calc(100vh - 200px);
-    overflow-y:auto;
+    overflow-y: auto;
 }
+
 /* TBODY con scroll */
 
 /*PAGINACION*/
@@ -86,56 +113,68 @@ ul{
 }
 
 #pagination button {
-    margin: 0; /* Sin margen */
+    margin: 0;
+    /* Sin margen */
 }
 
 #pagination button.active {
-    background-color: #007bff; /* Color de fondo para el botón activo */
-    color: white; /* Color del texto para el botón activo */
+    background-color: #007bff;
+    /* Color de fondo para el botón activo */
+    color: white;
+    /* Color del texto para el botón activo */
 }
 
 /*PAGINACION*/
 
 /*COLUMNAS DE TABLAS*/
 .n-table {
-    width: 1px; /* Un número limitado de filas, no necesita mucho espacio */
+    width: 1px;
+    /* Un número limitado de filas, no necesita mucho espacio */
 }
 
 .fecha-table {
-    width: 10%; /* La fecha no suele ser muy larga, pero necesita espacio */
+    width: 10%;
+    /* La fecha no suele ser muy larga, pero necesita espacio */
 }
 
 .hora-table {
-    width: 10%; /* Similar a la fecha, el formato de hora es corto */
+    width: 10%;
+    /* Similar a la fecha, el formato de hora es corto */
 }
 
 .usuario-table {
-    width: 15%; /* Dependiendo del nombre, puede ser necesario más espacio */
+    width: 15%;
+    /* Dependiendo del nombre, puede ser necesario más espacio */
 }
 
 .descripcion-table {
-    width: 30%; /* La descripción puede ser más larga, así que se le da más espacio */
+    width: 30%;
+    /* La descripción puede ser más larga, así que se le da más espacio */
 }
 
 .adjunto-table {
-    width: 10%; /* Dependiendo de cómo manejes los archivos, puede ser un icono o un texto */
+    width: 10%;
+    /* Dependiendo de cómo manejes los archivos, puede ser un icono o un texto */
 }
 
 .acciones-table {
-    width: 15%; /* Generalmente contendrá botones o enlaces de acción */
+    width: 15%;
+    /* Generalmente contendrá botones o enlaces de acción */
 }
 
 
 /*FONDO PARA NUEVO TICKET*/
 /* Fondo verde suave para nuevos tickets */
 .nuevo-ticket {
-    background-color: #d4edda !important; /* Verde suave con prioridad */
+    background-color: #d4edda !important;
+    /* Verde suave con prioridad */
     transition: background-color 0.5s ease !important;
 }
 
 /* Estilo cuando el fondo es blanco */
 .fondo-blanco {
-    background-color: #ffffff !important; /* Blanco con prioridad */
+    background-color: #ffffff !important;
+    /* Blanco con prioridad */
 }
 
 /**/
@@ -144,21 +183,61 @@ h2 {
     margin-bottom: 10px;
     font-size: 24px;
 }
+
 /*COLOR TD ACCION*/
-.td-accion{
+.td-accion {
     background-color: #d4d4d4;
 }
+
 /**/
 
 /*FILA DESACTIVADO*/
-.row-desactivado td{
-    background-color: #fdeff0; /* Un color de fondo suave, como un rojo claro */
-    color: #721c24; /* Un color de texto oscuro */
+.row-desactivado td {
+    background-color: #fdeff0;
+    /* Un color de fondo suave, como un rojo claro */
+    color: #721c24;
+    /* Un color de texto oscuro */
 }
+
 /*RECEPCIONADO*/
-    .high-urgency td {
-        background-color: rgba(255, 245, 245, 0.897); /* Color rojo claro para alta urgencia */
-    }
-    .medium-urgency td {
-        background-color: rgba(255, 255, 245, 0.897); /* Color amarillo claro para media urgencia */
-    }
+.high-urgency td {
+    background-color: rgba(255, 245, 245, 0.897);
+    /* Color rojo claro para alta urgencia */
+}
+
+.medium-urgency td {
+    background-color: rgba(255, 255, 245, 0.897);
+    /* Color amarillo claro para media urgencia */
+}
+
+
+/*DASHBOARD ADMIN*/
+.btn-dashboard {
+    text-decoration: none; /* Elimina el subrayado del texto del botón */
+    transition: transform 0.5s; /* Solo aplica transición a la transformación */
+    display: block; /* Hace que el enlace abarque todo el área de la tarjeta */
+    width: 100%; /* Se asegura de que el enlace ocupe todo el ancho */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.btn-dashboard:hover {
+    transform: scale(1.05); /* Escala el botón al 105% de su tamaño al pasar el mouse */
+}
+
+.card {
+    padding: 10px; /* Espaciado interno */
+    height: 80px; /* Altura fija para la tarjeta */
+    display: flex;
+    flex-direction: column; /* Colocar los elementos en columnas */
+    justify-content: space-between; /* Espacio entre el texto y el número */
+}
+.info-container {
+    display: flex; /* Usar flexbox para alinear ícono y número */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: flex-end; /* Alinear a la derecha */
+    margin-top: auto; /* Separar del texto */
+}
+.icon {
+    font-size: 24px; /* Tamaño del ícono */
+    margin-left: 10px; /* Espaciado a la izquierda del ícono */
+}

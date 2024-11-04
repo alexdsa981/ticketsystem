@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{common/imports :: headImports}">
+
+</head>
+<body>
+<header th:replace="~{common/header :: header}"></header>
+<main>
+    <div class="container" style="margin-top: 10px">
+        <div class="row">
+            <div class="col-12 col-md-3 text-center mb-4">
+                <a href="/soporte/Recibidos" class="btn-dashboard">
+                    <div class="rounded bg-light text-dark card">
+                        <p class="mb-0">Total: Tickets Recibidos</p>
+                        <div class="info-container">
+                            <span class="h4 mb-0">100</span>
+                            <i class="bi bi-ticket icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-3 text-center mb-4">
+                <a href="/soporte/Recepcionados" class="btn-dashboard">
+                    <div class="rounded bg-info text-white card">
+                        <p class="mb-0">Total: Recepciones Realizadas</p>
+                        <div class="info-container">
+                            <span class="h4 mb-0">75</span>
+                            <i class="bi bi-check-circle icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-3 text-center mb-4">
+                <a href="/soporte/Atendidos" class="btn-dashboard">
+                    <div class="rounded bg-success text-white card">
+                        <p class="mb-0">Total: Tickets Atendidos</p>
+                        <div class="info-container">
+                            <span class="h4 mb-0">50</span>
+                            <i class="bi bi-check2-circle icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-3 text-center mb-4">
+                <a href="" class="btn-dashboard">
+                    <div class="rounded bg-secondary text-white card">
+                        <p class="mb-0">Total: Tickets Desestimados</p>
+                        <div class="info-container">
+                            <span class="h4 mb-0">25</span>
+                            <i class="bi bi-x-circle icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+</body>
+</html>
