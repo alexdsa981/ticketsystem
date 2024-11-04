@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TicketDTO {
     private Long id;
+    private String idFormateado;
     private LocalDate fecha;
     private LocalTime hora;
     private String fechaFormateada;
@@ -34,6 +35,7 @@ public class TicketDTO {
 
     public TicketDTO(Ticket ticket, List<ArchivoAdjunto> adjuntos) {
         this.id = ticket.getId();
+        this.idFormateado = getIdConFormato();
         this.fecha = ticket.getFecha();
         this.fechaFormateada = getFechaConFormato();
         this.hora = ticket.getHora();
@@ -44,6 +46,7 @@ public class TicketDTO {
         this.faseTicket = ticket.getFaseTicket();
         this.listaArchivosAdjuntos = adjuntos;
     }
+
     // Método para formatear la fecha como cadena
     public String getFechaConFormato() {
         return this.fecha.format(FORMATO_FECHA);
@@ -52,5 +55,10 @@ public class TicketDTO {
     // Método para formatear la hora como cadena
     public String getHoraConFormato() {
         return this.hora.format(FORMATO_HORA);
+    }
+
+    // Método para obtener el ID formateado
+    public String getIdConFormato() {
+        return this.fechaFormateada = String.format("TK-%04d", id);
     }
 }

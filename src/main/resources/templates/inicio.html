@@ -23,6 +23,7 @@
         <thead class="table-dark">
         <tr>
             <th>N°</th>
+            <th class="n-table">Código</th>
             <th>Fecha</th>
             <th>Hora</th>
             <th class="descripcionTD">Descripción</th>
@@ -34,6 +35,7 @@
         <!-- Iterar sobre los tickets con un solo bucle th:each -->
         <tr th:each="ticket, iter: ${MyTickets}">
             <td th:text="${iter.count}">#</td>
+            <td th:text="${ticket.idFormateado}">#</td>
             <td th:text="${ticket.fechaFormateada}">Fecha</td>
             <td th:text="${ticket.horaFormateada}">Hora</td>
             <td>

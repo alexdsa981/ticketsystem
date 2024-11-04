@@ -1,4 +1,18 @@
 
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    updateTicketCount();
+});
+
+function updateTicketCount() {
+    const ticketTableBody = document.getElementById('ticketTableBody');
+    const ticketCount = document.getElementById('ticketCount');
+    const totalTickets = ticketTableBody.querySelectorAll('tr').length;
+    ticketCount.textContent = totalTickets;
+}
+
 // Función para manejar el ticket recibido
 export function ActualizaTablaRecibidos(ticketRecord) {
     console.log('Ticket recibido:', ticketRecord);
@@ -72,4 +86,5 @@ export function ActualizaTablaRecibidos(ticketRecord) {
 
     // Llama a la función para actualizar las filas y la paginación
     updateFilteredRows();
+    updateTicketCount();
 }

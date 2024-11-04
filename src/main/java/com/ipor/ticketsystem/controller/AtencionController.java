@@ -41,7 +41,6 @@ public class AtencionController {
     }
     public Model retornaTodosLosTicketsEnProcesoAVista(Model model) {
         List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
-        Collections.reverse(AllRecepcionados);
         model.addAttribute("AllRecepcionados", AllRecepcionados);
         return  model;
     }
