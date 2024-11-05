@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{common/imports :: headImports}">
-
+    <title>Exportar Tickets</title>
 </head>
 <body>
 <header th:replace="~{common/header :: header}"></header>
@@ -42,13 +42,10 @@
                 </a>
             </div>
             <div class="col-12 col-md-3 text-center mb-4">
-                <a href="" class="btn-dashboard">
-                    <div class="rounded bg-secondary text-white card">
-                        <p class="mb-0">Total: Tickets Desestimados</p>
-                        <div class="info-container">
-                            <span th:text="${ntotalDesestimados}" class="h4 mb-0">100</span>
-                            <i class="bi bi-x-circle icon"></i>
-                        </div>
+                <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
+                    <div class="rounded bg-primary text-white card">
+                        <p class="mb-0">Exportar Tickets</p>
+                        <i class="bi bi-file-earmark-excel icon"></i>
                     </div>
                 </a>
             </div>
