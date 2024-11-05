@@ -7,11 +7,12 @@
 <header th:replace="~{common/header :: header}"></header>
 <main>
     <div class="container" style="margin-top: 10px">
+        <h2>Desde Siempre:</h2>
         <div class="row">
             <div class="col-12 col-md-3 text-center mb-4">
                 <a href="/soporte/Recibidos" class="btn-dashboard">
                     <div class="rounded bg-light text-dark card">
-                        <p class="mb-0">Total: Tickets Recibidos</p>
+                        <p class="mb-0">Total: Tickets Creados</p>
                         <div class="info-container">
                             <span th:text="${ntotalTickets}" class="h4 mb-0">100</span>
                             <i class="bi bi-ticket icon"></i>
@@ -51,6 +52,10 @@
             </div>
         </div>
     </div>
+
+
+
+
 </main>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>

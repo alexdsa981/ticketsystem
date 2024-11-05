@@ -1,4 +1,4 @@
-package com.ipor.ticketsystem.model.dto;
+package com.ipor.ticketsystem.model.dto.otros;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

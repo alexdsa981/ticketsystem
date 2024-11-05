@@ -2,7 +2,7 @@ package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.NotificationService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
-import com.ipor.ticketsystem.model.dto.TicketRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;

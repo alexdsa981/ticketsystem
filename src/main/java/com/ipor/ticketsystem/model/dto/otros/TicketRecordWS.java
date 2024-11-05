@@ -1,5 +1,6 @@
-package com.ipor.ticketsystem.model.dto;
+package com.ipor.ticketsystem.model.dto.otros;
 
+import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 
 import java.util.Base64;
