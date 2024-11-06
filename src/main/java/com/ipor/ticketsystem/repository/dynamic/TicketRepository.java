@@ -18,9 +18,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     long count();
     long countByFaseTicketNombre(String nombre);
 
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase(ft.nombre, COUNT(t)) " +
-            "FROM Ticket t JOIN t.faseTicket ft " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase(ft.nombre, " +
+            "COALESCE(COUNT(t), 0)) " +
+            "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft " +
             "GROUP BY ft.nombre " +
             "ORDER BY MIN(ft.id)")
     List<RecordConteoTickets_Fase> findTicketCountByFase();
+
 }

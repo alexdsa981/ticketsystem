@@ -66,8 +66,8 @@ public class WebController {
         return "atendidos";
     }
     @GetMapping("/admin/Dashboard")
-    public String redirigePaginaDashboard(Model model) {
-        model.addAttribute("Titulo", "HelpDesk - Dashboard");
+    public String redirigePaginaDashboardAdmin(Model model) {
+        model.addAttribute("Titulo", "HelpDesk - Admin/Dashboard");
         return "admin/dashboard";
     }
 
@@ -75,7 +75,7 @@ public class WebController {
     public String redirigePaginaUsuarios(Model model) {
         usuariosCRUDController.listarUsuarios(model);
         usuariosCRUDController.listarRoles(model);
-        model.addAttribute("Titulo", "HelpDesk - Usuarios");
+        model.addAttribute("Titulo", "HelpDesk - Admin/Gestion - Usuarios");
 
         return "admin/usuarios";
     }
@@ -83,7 +83,7 @@ public class WebController {
     @GetMapping("/admin/Clasificadores")
     public String redirigePaginaClasiicadores(Model model) {
         clasificadoresCRUDController.listarClasificadores(model);
-        model.addAttribute("Titulo", "HelpDesk - Clasificadores");
+        model.addAttribute("Titulo", "HelpDesk - Admin/Gestion - Clasificadores");
         return "admin/clasificadores";
     }
 
@@ -92,7 +92,7 @@ public class WebController {
         ticketController.retornaTicketRecibidosAVista(model);
         atencionController.retornaListaClasificacionesUrgenciaActivos(model);
         ticketController.retornaListaClasificacionIncidenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Recibidos");
+        model.addAttribute("Titulo", "HelpDesk - Soporte/Recibidos");
         return "/soporte/ticketsRecibidos";
     }
 
@@ -102,7 +102,7 @@ public class WebController {
         atencionController.retornaListaClasificacionesServicioActivos(model);
         ticketController.retornaListaClasificacionIncidenciaActivos(model);
         atencionController.retornaListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Recepcionados");
+        model.addAttribute("Titulo", "HelpDesk - Soporte/Recepcionados");
         return "soporte/ticketsRecepcionados";
     }
 
@@ -112,8 +112,13 @@ public class WebController {
         atencionController.retornaListaClasificacionesServicioActivos(model);
         ticketController.retornaListaClasificacionIncidenciaActivos(model);
         atencionController.retornaListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Cerrados");
+        model.addAttribute("Titulo", "HelpDesk - Soporte/Atendidos");
         return "soporte/ticketsAtendidos";
+    }
+    @GetMapping("/soporte/Dashboard")
+    public String redirigePaginaDashboardSoporte(Model model) {
+        model.addAttribute("Titulo", "HelpDesk - Soporte/Dashboard");
+        return "soporte/dashboard";
     }
 
 

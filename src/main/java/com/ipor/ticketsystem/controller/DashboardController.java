@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -29,7 +30,7 @@ public class DashboardController {
                 .map(RecordConteoTickets_Fase::nombre_fase)
                 .collect(Collectors.toList());
         List<Long> datos = conteoTickets.stream()
-                .map(RecordConteoTickets_Fase::contador)
+                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
                 .collect(Collectors.toList());
 
         // Crear la respuesta en formato JSON
@@ -40,6 +41,7 @@ public class DashboardController {
         // Devuelve la respuesta como JSON
         return ResponseEntity.ok(response);
     }
+
 
     // Endpoint para obtener el número total de tickets
     @GetMapping("/contador/total")
