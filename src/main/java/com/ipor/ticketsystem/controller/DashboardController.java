@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor;
 import com.ipor.ticketsystem.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +23,11 @@ public class DashboardController {
     @GetMapping("/grafico/EstadoActual")
     public ResponseEntity<Map<String, Object>> getGraficoData() {
         // Obtienes el conteo de tickets por fase
-        List<RecordConteoTickets_Fase> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
+        List<RecordConteoTicketxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
 
         // Mapear nombres de fase y conteos en listas separadas
         List<String> etiquetas = conteoTickets.stream()
-                .map(RecordConteoTickets_Fase::nombre_fase)
+                .map(RecordConteoTicketxFactor::nombre)
                 .collect(Collectors.toList());
         List<Long> datos = conteoTickets.stream()
                 .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L

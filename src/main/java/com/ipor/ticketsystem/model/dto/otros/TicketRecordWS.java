@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public record TicketRecordWS(
         Long id,
+        String idFormateado,
         String fechaFormateada,
         String horaFormateada,
         String descripcion,
@@ -20,6 +21,7 @@ public record TicketRecordWS(
     public TicketRecordWS(TicketDTO ticketDTO) {
         this(
                 ticketDTO.getId(),
+                ticketDTO.getIdFormateado(),
                 ticketDTO.getFechaFormateada(),
                 ticketDTO.getHoraFormateada(),
                 ticketDTO.getDescripcion(),

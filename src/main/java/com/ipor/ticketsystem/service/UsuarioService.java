@@ -96,17 +96,13 @@ public class UsuarioService {
             listaTicketsADesactivar.addAll(listaTicketsFase1);
             listaTicketsADesactivar.addAll(listaTicketsFase2);
 
-            FaseTicket faseDesactivado = faseTicketRepository.findByNombre("Desactivado");
+            FaseTicket faseDesactivado = faseTicketRepository.findByNombre("Desestimado");
 
 
             for (Ticket ticket : listaTicketsADesactivar) {
                 ticket.setFaseTicket(faseDesactivado);
             }
             ticketRepository.saveAll(listaTicketsADesactivar);
-
-
-
-
 
         }
     }

@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.repository.dynamic;
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +18,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     long count();
     long countByFaseTicketNombre(String nombre);
 
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase(ft.nombre, " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(ft.nombre, " +
             "COALESCE(COUNT(t), 0)) " +
             "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft " +
             "GROUP BY ft.nombre " +
             "ORDER BY MIN(ft.id)")
-    List<RecordConteoTickets_Fase> findTicketCountByFase();
+    List<RecordConteoTicketxFactor> findTicketCountByFase();
 
 }

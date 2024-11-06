@@ -35,6 +35,9 @@ export function ActualizaTablaRecibidos(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
+
+        <td>${ticketRecord.idFormateado}</td>
+
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>
         <td>${ticketRecord.nombreUsuario}</td>
@@ -47,7 +50,7 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                 ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
                     <li>
                         <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
-                        ${adjunto.pesoContenido} mb
+                        ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
             </ul>

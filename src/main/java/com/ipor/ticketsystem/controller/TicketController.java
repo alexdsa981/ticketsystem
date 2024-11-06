@@ -3,7 +3,6 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.NotificationService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/app/tickets")

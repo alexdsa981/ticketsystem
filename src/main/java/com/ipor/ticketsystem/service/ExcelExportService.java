@@ -48,7 +48,7 @@ public class ExcelExportService {
         String[] headers = {"ID Ticket", "Fase", "Fecha Ticket", "Hora Ticket", "Usuario Ticket", "Clasificación Incidencia",
                 "Fecha Recepción", "Hora Recepción", "Usuario Recepción", "Clasificación Urgencia",
                 "Fecha Servicio", "Hora Servicio", "Usuario Servicio", "Clasificación Servicio",
-                "Tiempo Espera Recepción", "Tiempo Espera Servicio"};
+                "Tiempo Espera Recepción (seg.)", "Tiempo Espera Servicio (seg.)"};
 
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
