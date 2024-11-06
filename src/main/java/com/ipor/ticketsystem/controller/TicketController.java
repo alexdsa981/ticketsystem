@@ -3,6 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.NotificationService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
@@ -23,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/app/tickets")
@@ -136,14 +135,7 @@ public class TicketController {
     }
 
 
-    public Model RetornaNumeroTotalDeTickets(Model model) {
-        Long ntotal = dashboardService.obtenerNTotalTickets();
-        model.addAttribute("ntotalTickets", ntotal);
-        return model;
-    }
-    public Model RetornaNumeroTotalDeDesestimados(Model model) {
-        Long ntotal = dashboardService.obtenerNTotalDesestimados();
-        model.addAttribute("ntotalDesestimados", ntotal);
-        return model;
-    }
+
+
+
 }

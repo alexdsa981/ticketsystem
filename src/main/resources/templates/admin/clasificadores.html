@@ -6,20 +6,20 @@
 <div th:replace="~{common/header :: header}">
     <!--si se usa th:insert, este se colocará dentro de este div-->
 </div>
-<div class="container-fluid">
+<div class="container" style="margin-bottom:10px;">
     <h2>ADMIN / Clasificadores</h2>
 </div>
-<div class="container-fluid border shadow p-2 mb-5 bg-body rounded">
-    <div class="row">
+<div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+    <div class="row justify-content-center">
         <!-- Clasificadores de Incidencia -->
-        <div class="col-12 col-md-6 col-xxl-4">
+        <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Incidencia</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
@@ -61,14 +61,14 @@
         </div>
 
         <!-- Clasificadores de Servicio -->
-        <div class="col-12 col-md-6 col-xxl-4">
+        <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Servicio</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newServicioModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
@@ -110,14 +110,14 @@
         </div>
 
         <!-- Clasificadores de Urgencia -->
-        <div class="col-12 col-md-6 col-xxl-4">
+        <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Urgencia</h5>
                 <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
@@ -159,6 +159,7 @@
         </div>
     </div>
 </div>
+
 
 
 

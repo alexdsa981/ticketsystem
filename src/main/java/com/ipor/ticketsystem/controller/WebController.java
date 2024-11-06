@@ -67,10 +67,6 @@ public class WebController {
     }
     @GetMapping("/admin/Dashboard")
     public String redirigePaginaDashboard(Model model) {
-        ticketController.RetornaNumeroTotalDeTickets(model);
-        atencionController.RetornaNumeroTotalDeRecepcionados(model);
-        atencionController.RetornaNumeroTotalDeAtendidos(model);
-        ticketController.RetornaNumeroTotalDeDesestimados(model);
         model.addAttribute("Titulo", "HelpDesk - Dashboard");
         return "admin/dashboard";
     }

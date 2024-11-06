@@ -105,7 +105,6 @@ public class UsuariosCRUDController {
             Usuario usuario = usuarioService.findByUsername(userDetails.getUsername());
 
             if (usuario != null && usuario.getRolUsuario().getId() == 2L) {
-                System.out.println("EL ROL DEL USUARIO EN USUARIOSCRUD ES: " + usuario.getRolUsuario().getNombre());
                 return ResponseEntity.ok("soporte");
             }
         }

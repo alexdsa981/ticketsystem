@@ -21,7 +21,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         System.out.println(Arrays.toString(authException.getStackTrace()));
         // Eliminar la cookie del token JWT
         CookieUtil.removeJwtCookie(response);
-        System.out.println("limpia cookies en entry point");
         //enviar al login si se existe una exepcion
         response.sendRedirect("/login");
     }

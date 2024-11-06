@@ -129,14 +129,4 @@ public class AtencionController {
         return ResponseEntity.ok("Ticket atendido correctamente");
     }
 
-    public Model RetornaNumeroTotalDeRecepcionados(Model model) {
-        Long ntotal = dashboardService.obtenerNTotalRecepcionados();
-        model.addAttribute("ntotalRecepcionados", ntotal);
-        return model;
-    }
-    public Model RetornaNumeroTotalDeAtendidos(Model model) {
-        Long ntotal = dashboardService.obtenerNTotalAtendidos();
-        model.addAttribute("ntotalAtendidos", ntotal);
-        return model;
-    }
 }

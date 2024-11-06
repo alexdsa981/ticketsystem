@@ -27,7 +27,6 @@ public class JwtTokenProvider {
                 .setExpiration(expiracionToken)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
                 .compact();
-        System.out.println("token generado: " + token);
         return token;
     }
 
@@ -37,12 +36,10 @@ public class JwtTokenProvider {
                 .setSigningKey(ConstantesSeguridad.JWT_FIRMA)
                 .parseClaimsJws(token)
                 .getBody();
-        System.out.println("token de obtener usuario por token: " + token);
         return claims.getSubject();
     }
 
     public Boolean validarToken(String token){
-        System.out.println("token antes de validacion: " + token);
         try {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;

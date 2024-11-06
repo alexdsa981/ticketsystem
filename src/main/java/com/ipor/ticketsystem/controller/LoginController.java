@@ -91,7 +91,6 @@ public class LoginController {
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
 
-        System.out.println("limpia cookies");
 
         // Redirigir al login u otra página
         response.sendRedirect("/login");

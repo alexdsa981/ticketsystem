@@ -1,11 +1,14 @@
 package com.ipor.ticketsystem.service;
 
 
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTickets_Fase;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DashboardService {
@@ -27,6 +30,9 @@ public class DashboardService {
     }
     public long obtenerNTotalDesestimados() {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
+    }
+    public List<RecordConteoTickets_Fase> obtenerConteoDeTicketsPorFase(){
+        return ticketRepository.findTicketCountByFase();
     }
 
 }

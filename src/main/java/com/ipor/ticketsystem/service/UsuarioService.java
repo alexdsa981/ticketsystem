@@ -39,7 +39,6 @@ public class UsuarioService {
         String token = jwtAuthenticationFilter.tokenActual;
         String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
         Usuario usuario = usuarioRepository.findByUsername(username).get();
-        System.out.println();
         return usuario.getId();
     }
     public Usuario RetornarUsuarioPorId(Long id){

@@ -3,8 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const noResultsMessage = document.getElementById('noResultsMessage');
 
     // Verifica si hay filas en el tbody de la tabla
+    if(ticketTableBody){
     const rows = ticketTableBody.getElementsByTagName('tr');
-    noResultsMessage.style.display = rows.length === 0 ? '' : 'none';
+        if(noResultsMessage){
+        noResultsMessage.style.display = rows.length === 0 ? '' : 'none';
+        }
+    }
+
 });
 
 

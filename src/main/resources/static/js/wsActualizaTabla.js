@@ -9,8 +9,17 @@ document.addEventListener("DOMContentLoaded", function() {
 function updateTicketCount() {
     const ticketTableBody = document.getElementById('ticketTableBody');
     const ticketCount = document.getElementById('ticketCount');
+    if(ticketTableBody){
     const totalTickets = ticketTableBody.querySelectorAll('tr').length;
+    if(ticketCount){
     ticketCount.textContent = totalTickets;
+    }
+
+    }
+
+
+
+
 }
 
 // Función para manejar el ticket recibido

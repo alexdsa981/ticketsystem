@@ -211,6 +211,11 @@ h2 {
 }
 
 
+/*CLASIFICADORES*/
+.contenedor-clasificadores button, .contenedor-clasificadores a{
+    font-size:14px;
+}
+
 /*DASHBOARD ADMIN*/
 .btn-dashboard {
     text-decoration: none; /* Elimina el subrayado del texto del botón */
