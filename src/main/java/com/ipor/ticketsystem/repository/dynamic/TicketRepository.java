@@ -25,4 +25,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "ORDER BY MIN(ft.id)")
     List<RecordConteoTicketxFactor> findTicketCountByFase();
 
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(ci.nombre, COUNT(t)) " +
+            "FROM Ticket t INNER JOIN t.clasificacionIncidencia ci " +
+            "GROUP BY ci.nombre")
+    List<RecordConteoTicketxFactor> findTicketCountByClasificacionIncidencia();
+
+
+
 }

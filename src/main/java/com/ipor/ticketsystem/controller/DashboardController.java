@@ -20,29 +20,6 @@ public class DashboardController {
     @Autowired
     DashboardService dashboardService;
 
-    @GetMapping("/grafico/EstadoActual")
-    public ResponseEntity<Map<String, Object>> getGraficoData() {
-        // Obtienes el conteo de tickets por fase
-        List<RecordConteoTicketxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
-
-        // Mapear nombres de fase y conteos en listas separadas
-        List<String> etiquetas = conteoTickets.stream()
-                .map(RecordConteoTicketxFactor::nombre)
-                .collect(Collectors.toList());
-        List<Long> datos = conteoTickets.stream()
-                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
-                .collect(Collectors.toList());
-
-        // Crear la respuesta en formato JSON
-        Map<String, Object> response = new HashMap<>();
-        response.put("etiquetas", etiquetas);
-        response.put("datos", datos);
-
-        // Devuelve la respuesta como JSON
-        return ResponseEntity.ok(response);
-    }
-
-
     // Endpoint para obtener el número total de tickets
     @GetMapping("/contador/total")
     public ResponseEntity<Long> getTotalTickets() {
@@ -69,6 +46,50 @@ public class DashboardController {
     public ResponseEntity<Long> getTotalAtendidos() {
         Long ntotal = dashboardService.obtenerNTotalAtendidos();
         return ResponseEntity.ok(ntotal);
+    }
+
+    @GetMapping("/grafico/EstadoActual")
+    public ResponseEntity<Map<String, Object>> getGraficoData() {
+        // Obtienes el conteo de tickets por fase
+        List<RecordConteoTicketxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
+
+        // Mapear nombres de fase y conteos en listas separadas
+        List<String> etiquetas = conteoTickets.stream()
+                .map(RecordConteoTicketxFactor::nombre)
+                .collect(Collectors.toList());
+        List<Long> datos = conteoTickets.stream()
+                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
+                .collect(Collectors.toList());
+
+        // Crear la respuesta en formato JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("etiquetas", etiquetas);
+        response.put("datos", datos);
+
+        // Devuelve la respuesta como JSON
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/grafico/TicketsporIncidencia")
+    public ResponseEntity<Map<String, Object>> getTxIGraficoData() {
+        // Obtienes el conteo de tickets por fase
+        List<RecordConteoTicketxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia();
+
+        // Mapear nombres de fase y conteos en listas separadas
+        List<String> etiquetas = conteoTickets.stream()
+                .map(RecordConteoTicketxFactor::nombre)
+                .collect(Collectors.toList());
+        List<Long> datos = conteoTickets.stream()
+                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
+                .collect(Collectors.toList());
+
+        // Crear la respuesta en formato JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("etiquetas", etiquetas);
+        response.put("datos", datos);
+
+        // Devuelve la respuesta como JSON
+        return ResponseEntity.ok(response);
     }
 
 }
