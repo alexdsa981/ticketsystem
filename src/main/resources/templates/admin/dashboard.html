@@ -1,298 +1,314 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:insert="~{common/imports :: headImports}">
     <title>Exportar Tickets</title>
 </head>
+
 <body>
-<header th:replace="~{common/header :: header}"></header>
-<main>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    <div class="container" style="margin-top: 10px">
-        <h2>ADMIN / Dashboard:</h2>
-        <p>Desde siempre:</p>
-        <div class="row">
-            <div class="col-12 col-md-3 text-center mb-4">
-                <a href="/soporte/Recibidos" class="btn-dashboard">
-                    <div class="rounded bg-light text-dark card">
-                        <p class="mb-0">Total: Tickets Creados</p>
-                        <div class="info-container">
-                            <span id="ntotalTickets" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-ticket icon"></i>
+    <header th:replace="~{common/header :: header}"></header>
+    <main>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+        <div class="container" style="margin-top: 10px">
+            <h2>ADMIN / Dashboard:</h2>
+            <div class="row">
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="/soporte/Recibidos" class="btn-dashboard">
+                        <div class="rounded bg-light text-dark card">
+                            <p class="mb-0">Total: Tickets Creados</p>
+                            <div class="info-container">
+                                <span id="ntotalTickets" class="h4 mb-0">0</span> <!-- ID agregado -->
+                                <i class="bi bi-ticket icon"></i>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-md-3 text-center mb-4">
-                <a href="/soporte/Recepcionados" class="btn-dashboard">
-                    <div class="rounded bg-info text-white card">
-                        <p class="mb-0">Total: Recepciones Realizadas</p>
-                        <div class="info-container">
-                            <span id="ntotalRecepcionados" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check-circle icon"></i>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="/soporte/Recepcionados" class="btn-dashboard">
+                        <div class="rounded bg-info text-white card">
+                            <p class="mb-0">Total: Recepciones Realizadas</p>
+                            <div class="info-container">
+                                <span id="ntotalRecepcionados" class="h4 mb-0">0</span> <!-- ID agregado -->
+                                <i class="bi bi-check-circle icon"></i>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-md-3 text-center mb-4">
-                <a href="/soporte/Atendidos" class="btn-dashboard">
-                    <div class="rounded bg-success text-white card">
-                        <p class="mb-0">Total: Tickets Atendidos</p>
-                        <div class="info-container">
-                            <span id="ntotalAtendidos" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check2-circle icon"></i>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="/soporte/Atendidos" class="btn-dashboard">
+                        <div class="rounded bg-success text-white card">
+                            <p class="mb-0">Total: Tickets Atendidos</p>
+                            <div class="info-container">
+                                <span id="ntotalAtendidos" class="h4 mb-0">0</span> <!-- ID agregado -->
+                                <i class="bi bi-check2-circle icon"></i>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-md-3 text-center mb-4">
-                <a href="" class="btn-dashboard">
-                    <div class="rounded bg-secondary text-white card">
-                        <p class="mb-0">Total: Tickets Desestimados</p>
-                        <div class="info-container">
-                            <span id="ntotalDesestimados" class="h4 mb-0">100</span> <!-- ID agregado -->
-                            <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="" class="btn-dashboard">
+                        <div class="rounded bg-secondary text-white card">
+                            <p class="mb-0">Total: Tickets Desestimados</p>
+                            <div class="info-container">
+                                <span id="ntotalDesestimados" class="h4 mb-0">100</span> <!-- ID agregado -->
+                                <i class="bi bi-trash"></i>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container text-center mt-4">
-        <div class="d-flex justify-content-center">
-            <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-            <canvas id="graficoTicketsxFase" style="max-width: 100%; height: 400px;"></canvas>
-        </div>
-    </div>
-
-
-    <div class="container mt-4"> <!-- mt-4 para margen superior -->
-        <div class="row justify-content-center"> <!-- Centra el contenido dentro de la fila -->
-            <div class="col-12 col-md-3 text-center mb-4">
-                <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
-                    <div class="rounded bg-primary text-white card">
-                        <p class="mb-0">Exportar Tickets</p>
-                        <i class="bi bi-file-earmark-excel icon"></i>
-                    </div>
-                </a>
+        <div class="container text-center">
+            <div class="d-flex justify-content-center">
+                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                <canvas id="graficoTicketsxFase" style="max-width: 100%; height: 400px;"></canvas>
             </div>
         </div>
-    </div>
+
+
+        <div class="container mt-4"> <!-- mt-4 para margen superior -->
+            <div class="row justify-content-center"> <!-- Centra el contenido dentro de la fila -->
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
+                        <div class="rounded bg-primary text-white card">
+                            <p class="mb-0">Exportar Tickets (Excel)</p>
+                            <i class="bi bi-file-earmark-excel icon"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
 
 
 
-    <script th:inline="javascript">
-        let graficoTickets = null;
-        // Variables para las etiquetas y los datos
-        var etiquetas = ["Creados", "Recepcionados", "Atendidos", "Desestimados"];
-        var datos = [0, 0, 0, 0];  // Inicialmente a 0 hasta que se obtengan los datos reales
+        <script th:inline="javascript">
+            let graficoTickets = null;
+            // Variables para las etiquetas y los datos
+            var etiquetas = ["Creados", "Recepcionados", "Atendidos", "Desestimados"];
+            var datos = [0, 0, 0, 0];  // Inicialmente a 0 hasta que se obtengan los datos reales
 
-        // Función para crear o actualizar el gráfico
-        function crearGrafico() {
-            const ctx = document.getElementById('graficoTicketsxFase').getContext('2d');
+            // Función para crear o actualizar el gráfico
+            function crearGrafico() {
+                const ctx = document.getElementById('graficoTicketsxFase').getContext('2d');
 
-            // Si el gráfico ya existe, actualizamos los datos
-            if (graficoTickets !== null) {
-                // Actualizamos los datos del gráfico con los valores actuales
-                graficoTickets.data.datasets[0].data = datos;
-                graficoTickets.update();  // Actualiza el gráfico sin destruirlo
-            } else {
-                // Si el gráfico no existe, lo creamos
-                graficoTickets = new Chart(ctx, {
-                    type: 'bar', // Cambia a 'pie' si prefieres un gráfico de pastel
-                    data: {
-                        labels: etiquetas,
-                        datasets: [{
-                            label: 'Historial de Tickets',
-                            data: datos,
-                            backgroundColor: [
-                                'rgba(169, 169, 169, 0.2)',  // gris para la primera barra
-                                'rgba(135, 206, 235, 0.2)',  // Celeste para la segunda barra
-                                'rgba(75, 192, 192, 0.2)',  // Verde para la tercera barra
-                                'rgba(169, 169, 169, 0.2)'  // Gris para la cuarta barra
-                            ],
-                            borderColor: [
-                                'rgba(169, 169, 169, 1)',  // gris
-                                'rgba(135, 206, 235, 1)',  // Amarillo
-                                'rgba(75, 192, 192, 1)',  // Verde
-                                'rgba(169, 169, 169, 1)'  // Gris
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,  // Evita que el gráfico se ajuste automáticamente
-                        maintainAspectRatio: false, // Evita que el gráfico mantenga la relación de aspecto
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function(value) {
-                                        return Number.isInteger(value) ? value : null;  // Muestra solo enteros
+                // Si el gráfico ya existe, actualizamos los datos
+                if (graficoTickets !== null) {
+                    // Actualizamos los datos del gráfico con los valores actuales
+                    graficoTickets.data.datasets[0].data = datos;
+                    graficoTickets.update();  // Actualiza el gráfico sin destruirlo
+                } else {
+                    // Si el gráfico no existe, lo creamos
+                    graficoTickets = new Chart(ctx, {
+                        type: 'bar', // Cambia a 'pie' si prefieres un gráfico de pastel
+                        data: {
+                            labels: etiquetas,
+                            datasets: [{
+                                label: 'Total',
+                                data: datos,
+                                backgroundColor: [
+                                    'rgba(169, 169, 169, 0.2)',  // gris para la primera barra
+                                    'rgba(135, 206, 235, 0.2)',  // Celeste para la segunda barra
+                                    'rgba(75, 192, 192, 0.2)',  // Verde para la tercera barra
+                                    'rgba(169, 169, 169, 0.2)'  // Gris para la cuarta barra
+                                ],
+                                borderColor: [
+                                    'rgba(169, 169, 169, 1)',  // gris
+                                    'rgba(135, 206, 235, 1)',  // Amarillo
+                                    'rgba(75, 192, 192, 1)',  // Verde
+                                    'rgba(169, 169, 169, 1)'  // Gris
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: false,  // Evita que el gráfico se ajuste automáticamente
+                            maintainAspectRatio: false, // Evita que el gráfico mantenga la relación de aspecto
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1,
+                                        callback: function (value) {
+                                            return Number.isInteger(value) ? value : null;  // Muestra solo enteros
+                                        }
                                     }
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Historial de Registros'
                                 }
                             }
                         }
-                    }
+                    });
+                }
+            }
+
+            // Función para obtener los datos de los contadores
+            function actualizarContadores() {
+                return Promise.all([
+                    fetch('/app/dashboard/contador/total').then(response => response.json()), // Total tickets
+                    fetch('/app/dashboard/contador/recepcionados').then(response => response.json()), // Recepcionados
+                    fetch('/app/dashboard/contador/atendidos').then(response => response.json()), // Atendidos
+                    fetch('/app/dashboard/contador/desestimados').then(response => response.json()) // Desestimados
+                ]).then(([total, recepcionados, atendidos, desestimados]) => {
+                    // Actualiza los contadores con los datos obtenidos
+                    document.getElementById("ntotalTickets").textContent = total;
+                    document.getElementById("ntotalRecepcionados").textContent = recepcionados;
+                    document.getElementById("ntotalAtendidos").textContent = atendidos;
+                    document.getElementById("ntotalDesestimados").textContent = desestimados;
+                    // Actualiza los datos del gráfico
+                    datos[0] = total;
+                    datos[1] = recepcionados;
+                    datos[2] = atendidos;
+                    datos[3] = desestimados;
+
+                    // Llama a la función para crear o actualizar el gráfico con los datos ya cargados
+                    crearGrafico();
+                }).catch(error => {
+                    console.error('Error al obtener los contadores:', error);
                 });
             }
-        }
 
-        // Función para obtener los datos de los contadores
-        function actualizarContadores() {
-            return Promise.all([
-                fetch('/app/dashboard/contador/total').then(response => response.json()), // Total tickets
-                fetch('/app/dashboard/contador/recepcionados').then(response => response.json()), // Recepcionados
-                fetch('/app/dashboard/contador/atendidos').then(response => response.json()), // Atendidos
-                fetch('/app/dashboard/contador/desestimados').then(response => response.json()) // Desestimados
-            ]).then(([total, recepcionados, atendidos, desestimados]) => {
-                // Actualiza los contadores con los datos obtenidos
-                document.getElementById("ntotalTickets").textContent = total;
-                document.getElementById("ntotalRecepcionados").textContent = recepcionados;
-                document.getElementById("ntotalAtendidos").textContent = atendidos;
-                document.getElementById("ntotalDesestimados").textContent = desestimados;
-                // Actualiza los datos del gráfico
-                datos[0] = total;
-                datos[1] = recepcionados;
-                datos[2] = atendidos;
-                datos[3] = desestimados;
+            // Llamamos a la función para actualizar los contadores y luego crear el gráfico
+            actualizarContadores();
 
-                // Llama a la función para crear o actualizar el gráfico con los datos ya cargados
-                crearGrafico();
-            }).catch(error => {
-                console.error('Error al obtener los contadores:', error);
-            });
-        }
+            // Actualiza los contadores cada 5 segundos (5000 milisegundos)
+            setInterval(actualizarContadores, 5000);
+        </script>
 
-        // Llamamos a la función para actualizar los contadores y luego crear el gráfico
-        actualizarContadores();
 
-        // Actualiza los contadores cada 5 segundos (5000 milisegundos)
-        setInterval(actualizarContadores, 5000);
-    </script>
 
-    <div class="container text-center mt-4">
-        <h3>Gráfico de Tickets por Incidencia</h3>
-        <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
-            <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
-            <div class="col-12 col-md-6 order-2 order-md-1">
-                <table class="table table-bordered table-hover" style="font-size:14px;">
-                    <thead>
-                    <tr>
-                        <th>Clasificación de Incidencia</th>
-                        <th>Conteo de Tickets</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tablaTicketsPorIncidencia">
-                    <!-- Filas se agregarán dinámicamente aquí -->
-                    </tbody>
-                </table>
-            </div>
-            <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
-            <div class="col-12 col-md-6 order-1 order-md-2">
-                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                <canvas id="graficoTicketsPorIncidencia" style="max-width: 100%; height: 400px;"></canvas>
+
+        <div class="container text-center mt-4">
+            <h3>Gráfico de Tickets por Incidencia</h3>
+            <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+                <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-2 order-md-1">
+                    <table class="table table-bordered table-hover" style="font-size:14px;">
+                        <thead>
+                        <tr>
+                            <th>Clasificación de Incidencia</th>
+                            <th>Conteo de Tickets</th>
+                            <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                        </tr>
+                        </thead>
+                        <tbody id="tablaTicketsPorIncidencia">
+                        <!-- Filas se agregarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-1 order-md-2">
+                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                    <canvas id="graficoTicketsPorIncidencia"
+                            style="max-width: 100%; height: 400px; margin-top:10px; margin-bottom:10px;"></canvas>
+                </div>
             </div>
         </div>
-    </div>
 
+        <script th:inline="javascript">
+            let graficoTicketsPorIncidencia = null;
+            let etiquetasTxI = []; // Inicialmente vacías hasta que se obtengan del servidor
+            let datosTxI = [];     // Datos vacíos hasta que se obtengan del servidor
 
+            // Función para actualizar la tabla con los datos actuales del gráfico
+            function actualizarTabla() {
+                const tablaBody = document.getElementById('tablaTicketsPorIncidencia');
+                tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
 
+                // Calcula el total de todos los tickets sumando los valores de datosTxI
+                const totalTickets = datosTxI.reduce((acc, count) => acc + count, 0);
 
-    <script th:inline="javascript">
-        let graficoTicketsPorIncidencia = null;
-        let etiquetasTxI = []; // Inicialmente vacías hasta que se obtengan del servidor
-        let datosTxI = [];     // Datos vacíos hasta que se obtengan del servidor
+                etiquetasTxI.forEach((etiqueta, index) => {
+                    const conteo = datosTxI[index];
+                    const porcentaje = totalTickets > 0 ? ((conteo / totalTickets) * 100).toFixed(2) : 0; // Calcula el porcentaje
 
-        // Función para actualizar la tabla con los datos actuales del gráfico
-        function actualizarTabla() {
-            const tablaBody = document.getElementById('tablaTicketsPorIncidencia');
-            tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
-
-            etiquetasTxI.forEach((etiqueta, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${etiqueta}</td>
-                    <td>${datosTxI[index]}</td>
-                `;
-                tablaBody.appendChild(row);
-            });
-        }
-
-        // Función para crear o actualizar el gráfico
-        function crearOActualizarGrafico() {
-            const ctx = document.getElementById('graficoTicketsPorIncidencia').getContext('2d');
-
-            if (graficoTicketsPorIncidencia) {
-                // Si el gráfico ya existe, actualizamos solo los datos
-                graficoTicketsPorIncidencia.data.labels = etiquetasTxI;
-                graficoTicketsPorIncidencia.data.datasets[0].data = datosTxI;
-                graficoTicketsPorIncidencia.update();
-            } else {
-                // Si el gráfico no existe, lo creamos
-                graficoTicketsPorIncidencia = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: etiquetasTxI,
-                        datasets: [{
-                            label: 'Tickets por Clasificación de Incidencia',
-                            data: datosTxI,
-                            backgroundColor: [
-                                'rgba(169, 169, 169, 0.2)',  // Gris
-                                'rgba(135, 206, 235, 0.2)',  // Celeste
-                                'rgba(75, 192, 192, 0.2)',   // Verde
-                                'rgba(255, 206, 86, 0.2)',   // Amarillo
-                                'rgba(153, 102, 255, 0.2)',  // Morado
-                                'rgba(255, 159, 64, 0.2)'    // Naranja
-                            ],
-                            borderColor: [
-                                'rgba(169, 169, 169, 1)',    // Gris
-                                'rgba(135, 206, 235, 1)',    // Celeste
-                                'rgba(75, 192, 192, 1)',     // Verde
-                                'rgba(255, 206, 86, 1)',     // Amarillo
-                                'rgba(153, 102, 255, 1)',    // Morado
-                                'rgba(255, 159, 64, 1)'      // Naranja
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top'
-                            },
-                            title: {
-                                display: true,
-                                text: 'Tickets por Clasificación de Incidencia'
-                            }
-                        }
-                    }
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${etiqueta}</td>
+                        <td>${conteo}</td>
+                        <td>${porcentaje}%</td> <!-- Nueva columna para el porcentaje -->
+                    `;
+                    tablaBody.appendChild(row);
                 });
             }
-        }
 
-        // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
-        function actualizarDatos() {
-            fetch('/app/dashboard/grafico/TicketsporIncidencia')
-                .then(response => response.json())
-                .then(data => {
-                    // Asigna los datos obtenidos del servidor
-                    etiquetasTxI = data.etiquetas || [];
-                    datosTxI = data.datos || [];
+            // Función para crear o actualizar el gráfico
+            function crearOActualizarGrafico() {
+                const ctx = document.getElementById('graficoTicketsPorIncidencia').getContext('2d');
 
-                    // Llama a las funciones para actualizar el gráfico y la tabla
-                    crearOActualizarGrafico();
-                    actualizarTabla();
-                })
-                .catch(error => console.error('Error al obtener los datos del gráfico:', error));
-        }
+                if (graficoTicketsPorIncidencia) {
+                    // Si el gráfico ya existe, actualizamos solo los datos
+                    graficoTicketsPorIncidencia.data.labels = etiquetasTxI;
+                    graficoTicketsPorIncidencia.data.datasets[0].data = datosTxI;
+                    graficoTicketsPorIncidencia.update();
+                } else {
+                    // Si el gráfico no existe, lo creamos
+                    graficoTicketsPorIncidencia = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: etiquetasTxI,
+                            datasets: [{
+                                label: 'Tickets por Clasificación de Incidencia',
+                                data: datosTxI,
+                                backgroundColor: [
+                                    'rgba(169, 169, 169, 0.2)',  // Gris
+                                    'rgba(135, 206, 235, 0.2)',  // Celeste
+                                    'rgba(75, 192, 192, 0.2)',   // Verde
+                                    'rgba(255, 206, 86, 0.2)',   // Amarillo
+                                    'rgba(153, 102, 255, 0.2)',  // Morado
+                                    'rgba(255, 159, 64, 0.2)'    // Naranja
+                                ],
+                                borderColor: [
+                                    'rgba(169, 169, 169, 1)',    // Gris
+                                    'rgba(135, 206, 235, 1)',    // Celeste
+                                    'rgba(75, 192, 192, 1)',     // Verde
+                                    'rgba(255, 206, 86, 1)',     // Amarillo
+                                    'rgba(153, 102, 255, 1)',    // Morado
+                                    'rgba(255, 159, 64, 1)'      // Naranja
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Tickets por Clasificación de Incidencia'
+                                }
+                            }
+                        }
+                    });
+                }
+            }
 
-        // Llamada inicial y configuración de la actualización periódica
-        actualizarDatos();
-        setInterval(actualizarDatos, 5000); // Actualiza cada 5 segundos
-    </script>
+            // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
+            function actualizarDatos() {
+                fetch('/app/dashboard/grafico/TicketsporIncidencia')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Asigna los datos obtenidos del servidor
+                        etiquetasTxI = data.etiquetas || [];
+                        datosTxI = data.datos || [];
+
+                        // Llama a las funciones para actualizar el gráfico y la tabla
+                        crearOActualizarGrafico();
+                        actualizarTabla();
+                    })
+                    .catch(error => console.error('Error al obtener los datos del gráfico:', error));
+            }
+
+            // Llamada inicial y configuración de la actualización periódica
+            actualizarDatos();
+            setInterval(actualizarDatos, 5000); // Actualiza cada 5 segundos
+        </script>
 
 
 
@@ -310,8 +326,8 @@
 
 
 
-
-</main>
-<div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+    </main>
+    <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>
+
 </html>

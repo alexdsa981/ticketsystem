@@ -15,7 +15,7 @@
             <div class="col-12 col-md-4 text-center mb-4">
                 <a href="/soporte/Recibidos" class="btn-dashboard">
                     <div class="rounded text-dark card" style="background-color: #f8d7da;">
-                        <p class="mb-0">Tickets Solicitados1</p>
+                        <p class="mb-0">Tickets Solicitados</p>
                         <div class="info-container">
                             <span id="nRecibidos" class="h4 mb-0">0</span> <!-- ID agregado -->
                             <i class="bi bi-ticket icon"></i>
@@ -143,7 +143,7 @@
                 })
                 .then(data => {
                     const etiquetas = data.etiquetas.slice(0, 3); // Tomamos las primeras 3 etiquetas
-                    etiquetas[0] = "Sin Recepcionar";
+                    etiquetas[0] = "Solicitados";
                     etiquetas[1] = "Recepcionado";
                     const datos = data.datos.slice(0, 3); // Tomamos los primeros 3 valores de datos
 
