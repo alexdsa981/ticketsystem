@@ -92,4 +92,26 @@ public class DashboardController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/grafico/TicketsporUrgencia")
+    public ResponseEntity<Map<String, Object>> getTxUGraficoData() {
+        // Obtienes el conteo de tickets por fase
+        List<RecordConteoTicketxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionUrgencia();
+
+        // Mapear nombres de fase y conteos en listas separadas
+        List<String> etiquetas = conteoTickets.stream()
+                .map(RecordConteoTicketxFactor::nombre)
+                .collect(Collectors.toList());
+        List<Long> datos = conteoTickets.stream()
+                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
+                .collect(Collectors.toList());
+
+        // Crear la respuesta en formato JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("etiquetas", etiquetas);
+        response.put("datos", datos);
+
+        // Devuelve la respuesta como JSON
+        return ResponseEntity.ok(response);
+    }
+
 }

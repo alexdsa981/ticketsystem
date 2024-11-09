@@ -30,6 +30,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "GROUP BY ci.nombre")
     List<RecordConteoTicketxFactor> findTicketCountByClasificacionIncidencia();
 
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(cu.nombre, COUNT(t)) " +
+            "FROM Ticket t " +
+            "INNER JOIN t.recepcion r " +
+            "INNER JOIN r.clasificacionUrgencia cu " +
+            "WHERE t.faseTicket.id = 3 " +
+            "GROUP BY cu.nombre")
+    List<RecordConteoTicketxFactor> findTicketCountByClasificacionUrgencia();
+
+
+
 
 
 }

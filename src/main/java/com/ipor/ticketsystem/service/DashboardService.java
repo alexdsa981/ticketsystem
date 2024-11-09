@@ -37,5 +37,7 @@ public class DashboardService {
     public List <RecordConteoTicketxFactor> obtenerConteoDeTicketsPorClasificacionIncidencia(){
         return ticketRepository.findTicketCountByClasificacionIncidencia();
     }
-
+    public List <RecordConteoTicketxFactor> obtenerConteoDeTicketsPorClasificacionUrgencia(){
+        return ticketRepository.findTicketCountByClasificacionUrgencia();
+    }
 }
