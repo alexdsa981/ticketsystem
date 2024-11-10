@@ -4,12 +4,13 @@
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
     <title>Header</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <header th:fragment="header">
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">TicketSystem</a>
+            <a class="navbar-brand" href="#" style="margin-right: 10px;">Help<span style="color: #ff6666;">Desk</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +46,10 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="/soporte/Atendidos">Tickets Atendidos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/soporte/Desestimados">Tickets Desestimados</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
@@ -64,9 +69,12 @@
                             <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <p th:text="'Usuario: ' + ${nombreUsuario}" style="color: white; margin-bottom:0px">Bienvenido: nombre</p>
-                        <p style="color: white; margin-bottom:0px">Hora actual: <span id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
+                    <li class="d-flex align-items-center" style="color:white;">
+                        <i class="bi bi-person-fill"></i><span style="margin-right:5px;">:</span>
+                        <p th:text="${nombreUsuario}" style="margin-bottom:0px"></p>
+                    </li>
+                    <li class="d-flex align-items-center" style="margin-left:15px;">
+                        <p style="color: white; margin-bottom:0px; font-size: 16px; font-weight:600;"><span id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
                         <script>
                             function actualizarHora() {
                                 const ahora = new Date(); // Obtiene la fecha y hora actual del cliente
@@ -82,7 +90,6 @@
                             setInterval(actualizarHora, 1000);
                         </script>
                     </li>
-
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">

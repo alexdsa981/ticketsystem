@@ -1,3 +1,8 @@
+/*HEADER*/
+.nav-link{
+    color: white;
+}
+
 table {
     width: auto;
     /* Permite que la tabla ajuste su ancho al contenido */
@@ -93,10 +98,12 @@ ul {
     position: sticky;
     top: 0;
     background-color: white;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 1);
-    /* Sombra negra arriba y abajo */
-
 }
+/*
+.table thead {
+    box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
+}
+*/
 
 .scroll-table {
     height: calc(100vh - 200px);
