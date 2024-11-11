@@ -1,6 +1,11 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.model.dynamic.Desestimacion;
+import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
+import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.service.AtencionService;
+import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,12 @@ import java.util.Objects;
 @RequestMapping("/app/usuarios")
 public class UsuariosCRUDController {
 
+    @Autowired
+    private TicketRepository ticketRepository;
+    @Autowired
+    private TicketService ticketService;
+    @Autowired
+    private AtencionService atencionService;
     @Autowired
     private UsuarioService usuarioService;
 
@@ -84,6 +95,57 @@ public class UsuariosCRUDController {
     public String desactivarUsuario(@PathVariable Long id) {
         if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
             usuarioService.desactivarUsuario(id);
+
+            List<Ticket>listaTicketsUsuarioFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 1L);
+            for (Ticket ticket : listaTicketsUsuarioFase1){
+                Desestimacion ticketDesestimado = new Desestimacion();
+                //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
+                ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
+                ticketDesestimado.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+                ticketDesestimado.setTicket(ticket);
+                ticketDesestimado.setDescripcion("Desestimado por desactivación de usuario: " + ticket.getUsuario().getNombre());
+                ticketDesestimado.setFecha(ticketDesestimado.getFecha());
+                ticketDesestimado.setHora(ticketDesestimado.getHora());
+                atencionService.saveDesestimacion(ticketDesestimado);
+                //CAMBIAR A NUMERO DEL ID FASE DESESTIMADO
+                ticket.setFaseTicket(ticketService.getFaseTicketPorID(4L));
+            }
+
+            List<Ticket>listaTicketsUsuarioFase2 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 2L);
+            for (Ticket ticket : listaTicketsUsuarioFase2){
+                Desestimacion ticketDesestimado = new Desestimacion();
+                //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
+                ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
+                ticketDesestimado.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+                ticketDesestimado.setTicket(ticket);
+                ticketDesestimado.setDescripcion("Desestimado por desactivación de usuario: " + ticket.getUsuario().getNombre());
+                ticketDesestimado.setFecha(ticketDesestimado.getFecha());
+                ticketDesestimado.setHora(ticketDesestimado.getHora());
+                atencionService.saveDesestimacion(ticketDesestimado);
+                //CAMBIAR A NUMERO DEL ID FASE DESESTIMADO
+                ticket.setFaseTicket(ticketService.getFaseTicketPorID(4L));
+                //ELIMINAR REGISTRO DE RECEPCION
+                atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(ticket.getId()));
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
         return "redirect:/admin/Usuarios";
     }

@@ -1,14 +1,17 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
+import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.AtencionService;
 import com.ipor.ticketsystem.service.DashboardService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -72,10 +75,16 @@ public class AtencionController {
         model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
         return  model;
     }
-    //metodo para enviar Lista de clasificaciones urgencia a Inicio
+    //metodo para enviar Lista de clasificaciones servicio a Inicio
     public Model retornaListaClasificacionesServicioActivos(Model model){
         List<ClasificacionServicio> listaServicios = atencionService.obtenerListaClasificacionServicio();
         model.addAttribute("Lista_clasificacion_servicio", listaServicios);
+        return  model;
+    }
+    //metodo para enviar Lista de clasificaciones urgencia a Inicio
+    public Model retornaListaClasificacionesDesestimacionActivos(Model model){
+        List<ClasificacionDesestimacion> listaDesestimacion = atencionService.obtenerListaClasificacionDesestimacion();
+        model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
         return  model;
     }
 
@@ -127,6 +136,41 @@ public class AtencionController {
 
         response.sendRedirect("/soporte/Recepcionados");
         return ResponseEntity.ok("Ticket atendido correctamente");
+    }
+
+    // Método para desestimar un ticket, crea una desestimación y cambia la fase del ticket:
+    @PostMapping("/desestimacion/{id}")
+    public ResponseEntity<String> desestimarTicket(
+            @RequestParam("mensaje") String mensaje,
+            @RequestParam("clasificacion_desestimacion") Long IDclasificacion_desestimacion,
+            @PathVariable Long id,
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+
+        // Cambiar fase del ticket
+        atencionService.updateFaseTicket(id, 4L);
+
+        // Lógica para crear la desestimación
+        Desestimacion desestimacion = new Desestimacion();
+        desestimacion.setDescripcion(mensaje);
+        desestimacion.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
+        desestimacion.setTicket(ticketService.getObtenerTicketPorID(id));
+        desestimacion.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        desestimacion.setHora(desestimacion.getHora());
+        desestimacion.setFecha(desestimacion.getFecha());
+        atencionService.saveDesestimacion(desestimacion);
+
+        if (atencionService.findRecepcionByTicketID(id) != null){
+            atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
+        }else{
+            System.out.println("no se ha encontrado recepcion");
+        }
+
+        // Redirigir a la URL actual
+        String referer = request.getHeader("Referer");
+        response.sendRedirect(referer != null ? referer : "/fallbackUrl");
+
+        return ResponseEntity.ok("Ticket desestimado correctamente");
     }
 
 }

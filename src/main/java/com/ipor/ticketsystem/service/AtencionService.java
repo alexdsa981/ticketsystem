@@ -1,15 +1,20 @@
 package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
+import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
+import com.ipor.ticketsystem.repository.fixed.ClasificacionDesestimacionRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +28,15 @@ public class AtencionService {
     @Autowired
     ServicioRepository servicioRepository;
     @Autowired
+    DesestimacionRepository desestimacionRepository;
+    @Autowired
     TicketService ticketService;
     @Autowired
     ClasificacionUrgenciaRepository clasificacionUrgenciaRepository;
     @Autowired
     ClasificacionServicioRepository clasificacionServicioRepository;
+    @Autowired
+    ClasificacionDesestimacionRepository clasificacionDesestimacionRepository;
     @Autowired
     UsuarioService usuarioService;
 
@@ -115,6 +124,16 @@ public class AtencionService {
         return clasificacionServicioRepository.findByIsActiveTrue();
     }
 
+    //obtener clasificacion desestimacion por id
+    public ClasificacionDesestimacion obtenerClasificacionDesestimacionPorId(Long id){
+        return clasificacionDesestimacionRepository.findById(id).get();
+    }
+    //obtener clasificaciones desestimacion
+    public List<ClasificacionDesestimacion> obtenerListaClasificacionDesestimacion(){
+        return clasificacionDesestimacionRepository.findByIsActiveTrue();
+    }
+
+
     //guardar recepcion en base de datos
     public void saveRecepcion(Recepcion recepcion){
         recepcionRepository.save(recepcion);
@@ -122,6 +141,18 @@ public class AtencionService {
     //guardar servicio en base de datos
     public void saveServicio(Servicio servicio){
         servicioRepository.save(servicio);
+    }
+    //guardar servicio en base de datos
+    public void saveDesestimacion(Desestimacion desestimacion){
+        desestimacionRepository.save(desestimacion);
+    }
+
+    public void deleteRecepcion(Recepcion recepcion){
+        recepcionRepository.deleteByTicketId(recepcion.getTicket().getId());
+        System.out.println("Service: " + recepcion.getTicket().getId());
+    }
+    public Recepcion findRecepcionByTicketID(Long TicketID){
+        return recepcionRepository.findByTicketId(TicketID);
     }
 
 }

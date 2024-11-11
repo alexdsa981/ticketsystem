@@ -91,7 +91,9 @@ public class WebController {
     public String redirigePaginaTicketsRecibidos(Model model) {
         ticketController.retornaTicketRecibidosAVista(model);
         atencionController.retornaListaClasificacionesUrgenciaActivos(model);
+        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
         ticketController.retornaListaClasificacionIncidenciaActivos(model);
+
         model.addAttribute("Titulo", "HelpDesk - Soporte/Recibidos");
         return "/soporte/ticketsRecibidos";
     }
@@ -101,6 +103,7 @@ public class WebController {
         atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
         atencionController.retornaListaClasificacionesServicioActivos(model);
         ticketController.retornaListaClasificacionIncidenciaActivos(model);
+        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
         atencionController.retornaListaClasificacionesUrgenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk - Soporte/Recepcionados");
         return "soporte/ticketsRecepcionados";

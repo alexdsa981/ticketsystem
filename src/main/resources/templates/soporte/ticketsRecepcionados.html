@@ -90,6 +90,17 @@
                                 th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
                                 <i class="bi bi-check2-square"></i>
                             </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#desestimacionModal" th:data-ticket-id="${recepcionado.ticket.id}"
+                                    th:data-ticket-usuario="${recepcionado.ticket.usuario.nombre}"
+                                    th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
+                                    th:data-ticket-clasificacion="${recepcionado.ticket.clasificacionIncidencia.nombre}"
+                                    th:data-ticket-fase="${recepcionado.ticket.faseTicket.nombre}"
+                                    th:data-ticket-fecha="${recepcionado.ticket.fechaFormateada}"
+                                    th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
+                                <i class="bi bi-trash"></i>
+
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -252,6 +263,79 @@
             </div>
         </div>
     </div>
+    <!-- Modal para Desestimación -->
+    <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="desestimacionForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="desestimacionModalLabel">Desestimación del Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
+                        <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
+                        <p><strong>Clasificación:</strong> <span id="desestimacionTicketClasificacion"></span></p>
+                        <p><strong>Descripción:</strong> <span id="desestimacionTicketDescripcion"></span></p>
+                        <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span id="desestimacionTicketHora"></span></p>
+
+                        <!-- Campo adicional para comentarios de desestimación -->
+                        <div class="mb-3">
+                            <label for="comentariosDesestimacion" class="form-label">Comentarios de Desestimación</label>
+                            <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
+                                      placeholder="Agrega algún comentario sobre la desestimación del ticket..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clasificacionUrgencia" class="form-label">Clasificación de Desestimacion</label>
+                            <select class="form-select" id="clasificacionDesestimacion" name="clasificacion_desestimacion" required>
+                                <option selected disabled value="">Selecciona Desestimacion</option>
+                                <option th:each="tipo : ${Lista_clasificacion_desestimacion}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger">Desestimar Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // Al abrir el modal de desestimación, actualizar su contenido con los datos del ticket seleccionado
+        const desestimacionModal = document.getElementById('desestimacionModal');
+        desestimacionModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que disparó el modal
+            const button = event.relatedTarget;
+
+            // Extraer información del ticket desde los atributos data-*
+            const ticketId = button.getAttribute('data-ticket-id');
+            const ticketUsuario = button.getAttribute('data-ticket-usuario');
+            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
+            const ticketFecha = button.getAttribute('data-ticket-fecha');
+            const ticketHora = button.getAttribute('data-ticket-hora');
+
+            // Actualizar los elementos del modal con la información del ticket
+            document.getElementById('desestimacionTicketId').textContent = ticketId;
+            document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
+            document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
+            document.getElementById('desestimacionTicketClasificacion').textContent = ticketClasificacion;
+            document.getElementById('desestimacionTicketFecha').textContent = ticketFecha;
+            document.getElementById('desestimacionTicketHora').textContent = ticketHora;
+
+            // Actualizar la acción del formulario para que envíe el ticket correspondiente
+            const form = document.getElementById('desestimacionForm');
+            form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
+        });
+    </script>
 
 
 

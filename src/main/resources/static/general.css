@@ -252,3 +252,8 @@ h2 {
     font-size: 24px; /* Tamaño del ícono */
     margin-left: 10px; /* Espaciado a la izquierda del ícono */
 }
+/*DESESTIMACION*/
+#comentariosDesestimacion:focus, #clasificacionDesestimacion:focus {
+    border-color: red;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Opcional: agrega un efecto de sombra roja */
+}
