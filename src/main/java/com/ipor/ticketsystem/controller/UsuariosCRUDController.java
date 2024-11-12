@@ -97,7 +97,9 @@ public class UsuariosCRUDController {
             usuarioService.desactivarUsuario(id);
 
             List<Ticket>listaTicketsUsuarioFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 1L);
+
             for (Ticket ticket : listaTicketsUsuarioFase1){
+                System.out.println("creados: "+ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
                 ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
@@ -109,10 +111,12 @@ public class UsuariosCRUDController {
                 atencionService.saveDesestimacion(ticketDesestimado);
                 //CAMBIAR A NUMERO DEL ID FASE DESESTIMADO
                 ticket.setFaseTicket(ticketService.getFaseTicketPorID(4L));
+                ticketRepository.save(ticket);
             }
 
             List<Ticket>listaTicketsUsuarioFase2 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 2L);
             for (Ticket ticket : listaTicketsUsuarioFase2){
+                System.out.println("recepcionados:" + ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
                 ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
@@ -124,28 +128,13 @@ public class UsuariosCRUDController {
                 atencionService.saveDesestimacion(ticketDesestimado);
                 //CAMBIAR A NUMERO DEL ID FASE DESESTIMADO
                 ticket.setFaseTicket(ticketService.getFaseTicketPorID(4L));
+                ticketRepository.save(ticket);
                 //ELIMINAR REGISTRO DE RECEPCION
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(ticket.getId()));
+
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
         }
         return "redirect:/admin/Usuarios";
     }

@@ -145,6 +145,7 @@ public class AtencionService {
     //guardar servicio en base de datos
     public void saveDesestimacion(Desestimacion desestimacion){
         desestimacionRepository.save(desestimacion);
+        System.out.println("guardando desestimacion:" + desestimacion.getId());
     }
 
     public void deleteRecepcion(Recepcion recepcion){

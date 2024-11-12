@@ -88,22 +88,6 @@ public class UsuarioService {
             Usuario usuario = usuarioOpt.get();
             usuario.setIsActive(false);
             usuarioRepository.save(usuario);
-
-            List<Ticket> listaTicketsFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(usuario.getId(), 1L);
-            List<Ticket> listaTicketsFase2 = ticketRepository.findByUsuarioIdAndFaseTicketId(usuario.getId(), 2L);
-
-            List<Ticket> listaTicketsADesactivar = new ArrayList<>();
-            listaTicketsADesactivar.addAll(listaTicketsFase1);
-            listaTicketsADesactivar.addAll(listaTicketsFase2);
-
-            FaseTicket faseDesactivado = faseTicketRepository.findByNombre("Desestimado");
-
-
-            for (Ticket ticket : listaTicketsADesactivar) {
-                ticket.setFaseTicket(faseDesactivado);
-            }
-            ticketRepository.saveAll(listaTicketsADesactivar);
-
         }
     }
     public void activarUsuario(Long id) {
