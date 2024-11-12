@@ -118,6 +118,14 @@ public class WebController {
         model.addAttribute("Titulo", "HelpDesk - Soporte/Atendidos");
         return "soporte/ticketsAtendidos";
     }
+    @GetMapping("/soporte/Desestimados")
+    public String redirigePaginaTicketsDesestimados(Model model) {
+        atencionController.retornaTodosLosTicketsDesestimadosAVista(model);
+        ticketController.retornaListaClasificacionIncidenciaActivos(model);
+        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
+        model.addAttribute("Titulo", "HelpDesk - Soporte/Desestimados");
+        return "soporte/ticketsDesestimados";
+    }
     @GetMapping("/soporte/Dashboard")
     public String redirigePaginaDashboardSoporte(Model model) {
         model.addAttribute("Titulo", "HelpDesk - Soporte/Dashboard");

@@ -62,15 +62,15 @@ public class AtencionService {
         return listaRecepcionadosDTO;
     }
 
-    //metodo para retornar todos los tickets atendidos:
-    public List<AtencionTicketDTO> getListaAtendidos() {
-        List<Servicio> listaAtendidos = servicioRepository.findAllByTicketFaseID3();
-        List<AtencionTicketDTO> listaAtendidosDTO = new ArrayList<>();
-        for (Servicio servicio : listaAtendidos) {
-            AtencionTicketDTO atendidoDTO = new AtencionTicketDTO(servicio, ticketService);
-            listaAtendidosDTO.add(atendidoDTO);
+    //metodo para retornar todos los tickets desestimados:
+    public List<AtencionTicketDTO> getListaDesestimados() {
+        List<Desestimacion> listaDesestimados = desestimacionRepository.findAllByTicketFaseID4();
+        List<AtencionTicketDTO> listaDesestimadosDTO = new ArrayList<>();
+        for (Desestimacion desestimacion : listaDesestimados) {
+            AtencionTicketDTO desestimadoDTO = new AtencionTicketDTO(desestimacion, ticketService);
+            listaDesestimadosDTO.add(desestimadoDTO);
         }
-        return listaAtendidosDTO;
+        return listaDesestimadosDTO;
     }
 
     //metodo para retornar Mis tickets atendidos:

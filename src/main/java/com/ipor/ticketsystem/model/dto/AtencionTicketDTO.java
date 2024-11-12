@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.model.dto;
 
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.service.TicketService;
@@ -45,6 +46,7 @@ public class AtencionTicketDTO {
 
 
 
+    //solo recepcion
     public AtencionTicketDTO(Recepcion recepcion, TicketService ticketService){
         this.id = recepcion.getId();
         this.ticket = new TicketDTO(recepcion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(recepcion.getTicket().getId()));
@@ -57,6 +59,7 @@ public class AtencionTicketDTO {
         this.horaFormateadaRecepcion = ConvertirHoraConFormato(this.hora);
 
     }
+    //solo servicio
     public AtencionTicketDTO(Servicio servicio, TicketService ticketService){
         this.id = servicio.getId();
         this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
@@ -69,6 +72,7 @@ public class AtencionTicketDTO {
         this.horaFormateadaServicio = ConvertirHoraConFormato(this.hora);
 
     }
+    //combina recepcion y servicio para historial
     public AtencionTicketDTO(Servicio servicio, Recepcion recepcion, TicketService ticketService){
         this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
         this.recepcionHistorial = recepcion;
@@ -80,8 +84,17 @@ public class AtencionTicketDTO {
         this.fechaFormateadaServicio = ConvertirFechaConFormato(this.servicioHistorial.getFecha());
         this.horaFormateadaServicio = ConvertirHoraConFormato(this.servicioHistorial.getHora());
 
+    }
 
-
+    public AtencionTicketDTO(Desestimacion desestimacion , TicketService ticketService){
+        this.ticket = new TicketDTO(desestimacion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(desestimacion.getTicket().getId()));
+        this.fecha = desestimacion.getFecha();
+        this.fechaFormateadaServicio = ConvertirFechaConFormato(this.fecha);
+        this.hora = desestimacion.getHora();
+        this.horaFormateadaServicio = ConvertirHoraConFormato(this.hora);
+        this.descripcion = desestimacion.getDescripcion();
+        this.id = desestimacion.getId();
+        this.usuario = desestimacion.getUsuario();
     }
 
 

@@ -65,6 +65,13 @@ public class AtencionController {
         return  model;
     }
 
+    public Model retornaTodosLosTicketsDesestimadosAVista(Model model) {
+        List<AtencionTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
+        Collections.reverse(AllDesestimados);
+        model.addAttribute("AllDesestimados", AllDesestimados);
+        return  model;
+    }
+
 
 
 
