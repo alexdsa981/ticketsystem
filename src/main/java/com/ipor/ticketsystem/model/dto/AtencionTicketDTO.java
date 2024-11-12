@@ -25,6 +25,7 @@ public class AtencionTicketDTO {
     private TicketDTO ticket;
     private List<ArchivoAdjunto> adjuntosTicket;
 
+    private ClasificacionDesestimacion clasificacionDesestimacion;
     private ClasificacionUrgencia clasificacionUrgencia;
     private ClasificacionServicio clasificacionServicio;
     private String mensaje;
@@ -37,6 +38,8 @@ public class AtencionTicketDTO {
     private String horaFormateadaRecepcion;
     private String fechaFormateadaServicio;
     private String horaFormateadaServicio;
+    private String fechaFormateadaDesestimacion;
+    private String horaFormateadaDesestimacion;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -89,12 +92,13 @@ public class AtencionTicketDTO {
     public AtencionTicketDTO(Desestimacion desestimacion , TicketService ticketService){
         this.ticket = new TicketDTO(desestimacion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(desestimacion.getTicket().getId()));
         this.fecha = desestimacion.getFecha();
-        this.fechaFormateadaServicio = ConvertirFechaConFormato(this.fecha);
+        this.fechaFormateadaDesestimacion = ConvertirFechaConFormato(this.fecha);
         this.hora = desestimacion.getHora();
-        this.horaFormateadaServicio = ConvertirHoraConFormato(this.hora);
+        this.horaFormateadaDesestimacion = ConvertirHoraConFormato(this.hora);
         this.descripcion = desestimacion.getDescripcion();
         this.id = desestimacion.getId();
         this.usuario = desestimacion.getUsuario();
+        this.clasificacionDesestimacion = desestimacion.getClasificacionDesestimacion();
     }
 
 

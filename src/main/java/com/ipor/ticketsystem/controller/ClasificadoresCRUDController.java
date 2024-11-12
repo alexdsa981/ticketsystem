@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
@@ -31,12 +32,40 @@ public class ClasificadoresCRUDController {
         List<ClasificacionIncidencia> incidencias = clasificadoresService.RetornaListaClasIncidencia();
         List<ClasificacionServicio> servicios = clasificadoresService.RetornaListaClasServicio();
         List<ClasificacionUrgencia> urgencias = clasificadoresService.RetornaListaClasUrgencia();
+        List<ClasificacionDesestimacion> desestimaciones = clasificadoresService.RetornaListaClasDesestimacion();
 
+        model.addAttribute("desestimaciones", desestimaciones);
         model.addAttribute("incidencias", incidencias);
         model.addAttribute("servicios", servicios);
         model.addAttribute("urgencias", urgencias);
         return model;
     }
+
+
+    //crear desestimacion nueva
+    @PostMapping("/desestimacion/nuevo")
+    public ResponseEntity<String> crearClasificacionDesestimacion(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
+        clasificacionDesestimacion.setNombre(nombre);
+        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCDesestimacion(clasificacionDesestimacion);
+        response.sendRedirect("/admin/Clasificadores");
+        return ResponseEntity.ok("Clasificación Desestimacion creado correctamente");
+    }
+    // Actualizar un incidencia existente
+    @PostMapping("/actualizar/desestimacion/{id}")
+    public String actualizarDesestimacion(@PathVariable Long id,
+                                       @RequestParam("nombre") String nombre
+    ) {
+        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
+        clasificacionDesestimacion.setNombre(nombre);
+        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarDesestimacion(id, clasificacionDesestimacion);
+        return "redirect:/admin/Clasificadores";
+    }
+
 
 
     //crear incidencia nueva
@@ -163,7 +192,19 @@ public class ClasificadoresCRUDController {
     }
 
 
+    // Desactivar Clasificación Desestimacion
+    @GetMapping("/desactivar/desestimacion/{id}")
+    public String desactivarDesestimacion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoDesestimacion(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
 
+    // Activar Clasificación Desestimacion
+    @GetMapping("/activar/desestimacion/{id}")
+    public String activarDesestimaciona(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoDesestimacion(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
 
 
 

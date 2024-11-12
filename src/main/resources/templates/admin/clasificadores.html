@@ -60,6 +60,55 @@
             </table>
         </div>
 
+        <!-- Clasificadores de Urgencia -->
+        <div class="col-12 mb-3" style="margin-bottom: 30px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Clasificadores Urgencia</h5>
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <table class="table table-hover table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Urgencia</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${urgencias}"
+                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                    <td>
+                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#urgenciaModal"
+                                th:data-urgencia-id="${clasificador.id}"
+                                th:data-urgencia-nombre="${clasificador.nombre}"
+                                onclick="openUrgenciaModal(this)">
+                            Editar
+                        </button>
+                        <th:block th:if="${clasificador.isActive}">
+                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/urgencia/' + ${clasificador.id}}"
+                               onclick="return confirm('¿Estás seguro de desactivar esta urgencia?');">
+                                Desactivar
+                            </a>
+                        </th:block>
+                        <th:block th:if="${!clasificador.isActive}">
+                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/urgencia/' + ${clasificador.id}}"
+                               onclick="return confirm('¿Estás seguro de activar esta urgencia?');">
+                                Activar
+                            </a>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
         <!-- Clasificadores de Servicio -->
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
@@ -109,11 +158,12 @@
             </table>
         </div>
 
-        <!-- Clasificadores de Urgencia -->
+
+        <!-- Clasificadores de Desestimacion -->
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
-                <h5>Clasificadores Urgencia</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
+                <h5>Clasificadores Desestimación</h5>
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newDesestimacionModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
@@ -121,34 +171,34 @@
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
-                    <th>Nombre Urgencia</th>
+                    <th>Nombre Desestimacion</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="clasificador, iter: ${urgencias}"
+                <tr th:each="clasificador, iter: ${desestimaciones}"
                     th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
                     <td th:text="${iter.count}">#</td>
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
                         <button style="width: 100px;" type="button" class="btn btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#urgenciaModal"
-                                th:data-urgencia-id="${clasificador.id}"
-                                th:data-urgencia-nombre="${clasificador.nombre}"
-                                onclick="openUrgenciaModal(this)">
+                                data-bs-toggle="modal" data-bs-target="#desestimacionModal"
+                                th:data-desestimacion-id="${clasificador.id}"
+                                th:data-desestimacion-nombre="${clasificador.nombre}"
+                                onclick="openDesestimacionModal(this)">
                             Editar
                         </button>
                         <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de desactivar esta urgencia?');">
+                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
+                               onclick="return confirm('¿Estás seguro de desactivar esta desestimacion?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de activar esta urgencia?');">
+                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
+                               onclick="return confirm('¿Estás seguro de activar este desestimacion?');">
                                 Activar
                             </a>
                         </th:block>
@@ -157,10 +207,35 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 
+<div class="modal fade" id="newDesestimacionModal" tabindex="-1" aria-labelledby="newDesestimacionModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación de Desestimación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -252,6 +327,35 @@
 
 
 
+<!-- Modal para Clasificador de Desestimacion -->
+<div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="desestimacionForm" method="post">
+                    <input type="hidden" id="desestimacionId" name="id" />
+                    <div class="mb-3">
+                        <label for="desestimacionNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 <!-- Modal para Clasificador de Incidencia -->
 <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -327,41 +431,52 @@
 </div>
 
 <script>
-    function openIncidenciaModal(button) {
-        var id = button.getAttribute("data-incidencia-id");
-        var nombre = button.getAttribute("data-incidencia-nombre");
+    function openDesestimacionModal(button) {
+    var id = button.getAttribute("data-desestimacion-id");
+    var nombre = button.getAttribute("data-desestimacion-nombre");
 
-        document.getElementById("incidenciaId").value = id;
-        document.getElementById("incidenciaNombre").value = nombre;
+    document.getElementById("desestimacionId").value = id;
+    document.getElementById("desestimacionNombre").value = nombre;
 
-        // Configurar la acción del formulario
-        const form = document.getElementById('incidenciaForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
-    }
+    // Configurar la acción del formulario
+    const form = document.getElementById('desestimacionForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/desestimacion/${id}`);
+}
+function openIncidenciaModal(button) {
+    var id = button.getAttribute("data-incidencia-id");
+    var nombre = button.getAttribute("data-incidencia-nombre");
 
-    function openServicioModal(button) {
-        var id = button.getAttribute("data-servicio-id");
-        var nombre = button.getAttribute("data-servicio-nombre");
+    document.getElementById("incidenciaId").value = id;
+    document.getElementById("incidenciaNombre").value = nombre;
 
-        document.getElementById("servicioId").value = id;
-        document.getElementById("servicioNombre").value = nombre;
+    // Configurar la acción del formulario
+    const form = document.getElementById('incidenciaForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
+}
 
-        // Configurar la acción del formulario
-        const form = document.getElementById('servicioForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
-    }
+function openServicioModal(button) {
+    var id = button.getAttribute("data-servicio-id");
+    var nombre = button.getAttribute("data-servicio-nombre");
 
-    function openUrgenciaModal(button) {
-        var id = button.getAttribute("data-urgencia-id");
-        var nombre = button.getAttribute("data-urgencia-nombre");
+    document.getElementById("servicioId").value = id;
+    document.getElementById("servicioNombre").value = nombre;
 
-        document.getElementById("urgenciaId").value = id;
-        document.getElementById("urgenciaNombre").value = nombre;
+    // Configurar la acción del formulario
+    const form = document.getElementById('servicioForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
+}
 
-        // Configurar la acción del formulario
-        const form = document.getElementById('urgenciaForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
-    }
+function openUrgenciaModal(button) {
+    var id = button.getAttribute("data-urgencia-id");
+    var nombre = button.getAttribute("data-urgencia-nombre");
+
+    document.getElementById("urgenciaId").value = id;
+    document.getElementById("urgenciaNombre").value = nombre;
+
+    // Configurar la acción del formulario
+    const form = document.getElementById('urgenciaForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
+}
 
 </script>
 

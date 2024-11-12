@@ -13,7 +13,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <h2>SOPORTE / Tickets Desestimados</h2>
-                    <div id="ticketCount" class="badge bg-success ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
+                    <div id="ticketCount" class="badge bg-secondary ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
                         0
                     </div>
                     <a href="/soporte/Dashboard" class="btn btn-dark" role="button" style="margin-left:15px">
@@ -43,10 +43,9 @@
                             <th class="usuario-table">Soporte</th>
                             <th class="usuario-table">Emisor</th>
                             <th class="descripcion-table">Descripción de Incidencia</th>
-                            <th>Clasificación Desestimación</th>
                             <th class="descripcion-table">Descripción de Desestimación</th>
-                            <th class="adjunto-table">Adjuntos de Incidencia</th>
-                            <th class="acciones-table">Detalle</th>
+                            <th class="acciones-table">Adjunto</th>
+                            <th class="acciones-table">Historial</th>
                         </tr>
                     </thead>
                     <tbody id="ticketTableBody">
@@ -54,8 +53,8 @@
                         <tr th:each="desestimado, iter: ${AllDesestimados}">
                             <td th:text="${iter.count}">#</td>
                             <td th:text="${desestimado.ticket.idFormateado}">#</td>
-                            <td class="fecha" th:text="${desestimado.fechaFormateadaServicio}">Fecha</td>
-                            <td th:text="${desestimado.horaFormateadaServicio}">Hora</td>
+                            <td class="fecha" th:text="${desestimado.fechaFormateadaDesestimacion}">Fecha</td>
+                            <td th:text="${desestimado.horaFormateadaDesestimacion}">Hora</td>
                             <td class="usuario-atencion" th:text="${desestimado.usuario.nombre}">Usuario Desestimación</td>
                             <td class="usuario-emisor" th:text="${desestimado.ticket.usuario.nombre}">Usuario Emisor</td>
                             <td>
@@ -63,10 +62,17 @@
                                     th:utext="${desestimado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                                 <span th:text="${#strings.length(desestimado.ticket.descripcion) > 150 ? desestimado.ticket.descripcion.substring(0, 150) + '...' : desestimado.ticket.descripcion}"></span>
                             </td>
-                            <td class="desestimacion" th:text="${desestimado.clasificacionDesestimacion.nombre}">Clasificacion Desestimación</td>
-                            <td th:text="${#strings.length(desestimado.descripcion) > 150 ? desestimado.descripcion.substring(0, 150) + '...' : desestimado.descripcion}">
-                                Descripción de la Desestimación
+
+                            <td>
+                                <span class="nombreClasificacionIncidencia clasificacion urgencia"
+                                      th:utext="${desestimado.clasificacionDesestimacion.nombre + ':<br>'}"></span>
+                                <span th:text="${#strings.length(desestimado.descripcion) > 150 ? desestimado.descripcion.substring(0, 150) + '...' : desestimado.descripcion}"></span>
                             </td>
+
+
+
+
+
                             <td>
                                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                                 <ul>
@@ -77,8 +83,6 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td class="clasificacion-desestimacion" th:text="${desestimado.clasificacionDesestimacion.nombre}">Clasificación de
-                                desestimación</td>
 
                             <td>
                                 <!-- Botón de recepción que abre el modal -->
@@ -92,8 +96,8 @@
                                     th:data-desestimacion-usuario="${desestimado.usuario.nombre}"
                                     th:data-desestimacion-mensaje="${desestimado.descripcion}"
                                     th:data-desestimacion-clasificacion="${desestimado.clasificacionDesestimacion.nombre}"
-                                    th:data-desestimacion-fecha="${desestimado.fechaFormateadaRecepcion}"
-                                    th:data-desestimacion-hora="${desestimado.horaFormateadaRecepcion}">
+                                    th:data-desestimacion-fecha="${desestimado.fechaFormateadaDesestimacion}"
+                                    th:data-desestimacion-hora="${desestimado.horaFormateadaDesestimacion}">
                                     <i class="bi bi-clock-history"></i>
                                 </button>
                             </td>
@@ -203,7 +207,7 @@
                                 </tr>
                             </table>
 
-                            <!-- Sección de Recepción -->
+                            <!-- Sección de Desestimacion -->
                             <h5 class="mb-3 text-primary">Detalles de Desestimacion</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
@@ -216,11 +220,11 @@
                                 </tr>
                                 <tr>
                                     <th>Clasificación de Desestimación:</th>
-                                    <td><span id="modalRecepcionClasificacion"></span></td>
+                                    <td><span id="modalDesestimacionClasificacion"></span></td>
                                 </tr>
                                 <tr>
                                     <th>Fecha y Hora de Desestimación:</th>
-                                    <td><span id="modalRecepcionFecha"></span> | <span id="modalRecepcionHora"></span>
+                                    <td><span id="modalDesestimacionFecha"></span> | <span id="modalDesestimacionHora"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -236,8 +240,8 @@
 
         <script>
             // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
-            const atencionModal = document.getElementById('atencionModal');
-            atencionModal.addEventListener('show.bs.modal', function (event) {
+            const desestimacionModal = document.getElementById('desestimacionModal');
+            desestimacionModal.addEventListener('show.bs.modal', function (event) {
                 // Botón que disparó el modal
                 const button = event.relatedTarget;
 
@@ -265,12 +269,12 @@
                 document.getElementById('modalTicketFecha').textContent = ticketFecha;
                 document.getElementById('modalTicketHora').textContent = ticketHora;
 
-                // Actualizar los elementos del modal con la información de recepción
+                // Actualizar los elementos del modal con la información de Desestimacion
                 document.getElementById('modalDesestimacionUsuario').textContent = desestimacionUsuario;
                 document.getElementById('modalDesestimacionMensaje').textContent = desestimacionMensaje;
                 document.getElementById('modalDesestimacionClasificacion').textContent = desestimacionClasificacion;
                 document.getElementById('modalDesestimacionFecha').textContent = desestimacionFecha;
-                document.getElementById('modalDesestimacionnHora').textContent = desestimacionHora;
+                document.getElementById('modalDesestimacionHora').textContent = desestimacionHora;
             });
         </script>
 

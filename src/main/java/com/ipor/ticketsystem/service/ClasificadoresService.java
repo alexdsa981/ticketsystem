@@ -1,9 +1,11 @@
 package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
+import com.ipor.ticketsystem.repository.fixed.ClasificacionDesestimacionRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionIncidenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
@@ -25,6 +27,10 @@ public class ClasificadoresService {
     @Autowired
     private ClasificacionUrgenciaRepository clasificacionUrgenciaRepository;
 
+    @Autowired
+    private ClasificacionDesestimacionRepository clasificacionDesestimacionRepository;
+
+
     public void saveCIncidencia(ClasificacionIncidencia clasificacionIncidencia){
         clasificacionIncidenciaRepository.save(clasificacionIncidencia);
     }
@@ -33,6 +39,9 @@ public class ClasificadoresService {
     }
     public void saveCServicio(ClasificacionServicio clasificacionServicio){
         clasificacionServicioRepository.save(clasificacionServicio);
+    }
+    public void saveCDesestimacion(ClasificacionDesestimacion clasificacionDesestimacion){
+        clasificacionDesestimacionRepository.save(clasificacionDesestimacion);
     }
 
     public List<ClasificacionIncidencia> RetornaListaClasIncidencia(){
@@ -44,6 +53,10 @@ public class ClasificadoresService {
     public List<ClasificacionServicio> RetornaListaClasServicio(){
         return  clasificacionServicioRepository.findAll();
     }
+    public List<ClasificacionDesestimacion> RetornaListaClasDesestimacion(){
+        return  clasificacionDesestimacionRepository.findAll();
+    }
+
 
     // Actualizar una clasificación de incidencia existente
     public void actualizarIncidencia(Long id, ClasificacionIncidencia incidenciaActualizada) {
@@ -63,6 +76,12 @@ public class ClasificadoresService {
         ClasificacionServicio servicio = clasificacionServicioRepository.findById(id).get();
         servicio.setNombre(servicioActualizado.getNombre());
         clasificacionServicioRepository.save(servicio); // Persistir los cambios
+    }
+    // Actualizar una clasificación de desestimacion existente
+    public void actualizarDesestimacion(Long id, ClasificacionDesestimacion desestimacionActualizado) {
+        ClasificacionDesestimacion desestimacion = clasificacionDesestimacionRepository.findById(id).get();
+        desestimacion.setNombre(desestimacionActualizado.getNombre());
+        clasificacionDesestimacionRepository.save(desestimacion); // Persistir los cambios
     }
 
 
@@ -87,6 +106,13 @@ public class ClasificadoresService {
                 .orElseThrow(() -> new RuntimeException("Urgencia no encontrada"));
         urgencia.setIsActive(isActive);
         clasificacionUrgenciaRepository.save(urgencia);
+    }
+
+    public void cambiarEstadoDesestimacion(Long id, boolean isActive) {
+        ClasificacionDesestimacion desestimacion = clasificacionDesestimacionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Desestimacion no encontrada"));
+        desestimacion.setIsActive(isActive);
+        clasificacionDesestimacionRepository.save(desestimacion);
     }
 
 
