@@ -50,13 +50,13 @@
                 <!-- Botón para Activar o Desactivar el usuario según su estado -->
                 <th:block th:if="${usuario.isActive}">
                     <a style="width: 120px;" class="btn btn-danger" th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
-                       onclick="return confirm('¿Estás seguro de desactivar este usuario?');">
+                       onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Usuario?');">
                         Desactivar
                     </a>
                 </th:block>
                 <th:block th:if="${!usuario.isActive}">
                     <a style="width: 120px;" class="btn btn-success" th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
-                       onclick="return confirm('¿Estás seguro de activar este usuario?');">
+                       onclick="return confirmAction(this.href, '¿Estás seguro de activar este Usuario?');">
                         Activar
                     </a>
                 </th:block>
@@ -169,7 +169,24 @@
         </div>
     </div>
 </div>
-
+<!--SweetAlert-->
+<script>
+    function confirmAction(url, message) {
+        Swal.fire({
+            title: 'Confirmación',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+        return false; // Evita que el enlace se abra automáticamente
+    }
+</script>
 <!-- Script JavaScript para manejar el modal -->
 <script>
     // Al abrir el modal, actualizar su contenido con los datos del usuario seleccionado

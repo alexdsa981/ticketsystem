@@ -180,4 +180,20 @@ public class AtencionController {
         return ResponseEntity.ok("Ticket desestimado correctamente");
     }
 
+    // Método para cambiar la fase del ticket y que lo vea el rol Direccion
+    @PostMapping("/RedirigirADireccion/{id}")
+    public ResponseEntity<String> redirigirTicketADireccion(
+            @PathVariable Long id,
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+
+        // Cambiar fase del ticket
+        atencionService.updateFaseTicket(id, 5L);
+        response.sendRedirect("/soporte/Recibidos");
+        return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
+    }
+
+
+
+
 }

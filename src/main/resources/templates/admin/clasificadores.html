@@ -43,14 +43,17 @@
                             Editar
                         </button>
                         <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/incidencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de desactivar esta incidencia?');">
+                            <a style="width: 100px;" class="btn btn-danger"
+                               th:href="@{'/app/clasificadores/desactivar/incidencia/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Incidencia?');">
                                 Desactivar
                             </a>
                         </th:block>
+
                         <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/incidencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de activar esta incidencia?');">
+                            <a style="width: 100px;" class="btn btn-success"
+                               th:href="@{'/app/clasificadores/activar/incidencia/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Incidencia?');">
                                 Activar
                             </a>
                         </th:block>
@@ -93,13 +96,13 @@
                         </button>
                         <th:block th:if="${clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de desactivar esta urgencia?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Urgencia?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de activar esta urgencia?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Urgencia?');">
                                 Activar
                             </a>
                         </th:block>
@@ -142,13 +145,13 @@
                         </button>
                         <th:block th:if="${clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de desactivar este servicio?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Servicio?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de activar este servicio?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Servicio?');">
                                 Activar
                             </a>
                         </th:block>
@@ -192,13 +195,13 @@
                         </button>
                         <th:block th:if="${clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de desactivar esta desestimacion?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Desestimacion?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
                             <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
-                               onclick="return confirm('¿Estás seguro de activar este desestimacion?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Desestimacion?');">
                                 Activar
                             </a>
                         </th:block>
@@ -429,6 +432,25 @@
         </div>
     </div>
 </div>
+
+<!--SweetAlert-->
+<script>
+    function confirmAction(url, message) {
+        Swal.fire({
+            title: 'Confirmación',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+        return false; // Evita que el enlace se abra automáticamente
+    }
+</script>
 
 <script>
     function openDesestimacionModal(button) {
