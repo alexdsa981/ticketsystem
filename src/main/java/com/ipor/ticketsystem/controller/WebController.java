@@ -17,7 +17,7 @@ public class WebController {
     @Autowired
     private UsuariosCRUDController usuariosCRUDController;
     @Autowired
-    private ClasificadoresCRUDController clasificadoresCRUDController;
+    private ClasificadoresController clasificadoresController;
     @Autowired
     private LoginController loginController;
 
@@ -47,27 +47,35 @@ public class WebController {
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
         ticketController.retornaTicketsPropiosAVista(model);
-        ticketController.retornaListaClasificacionIncidenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Inicio");
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        model.addAttribute("Titulo", "HelpDesk | Inicio");
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
 
     @GetMapping("/TicketsEnProceso")
     public String redirigePaginaTicketsEnProceso(Model model) {
-        atencionController.retornaMisTicketsEnProcesoAVista(model);
-        model.addAttribute("Titulo", "HelpDesk - En Proceso");
+        atencionController.getListaMisTicketsRecepcionadosAVista(model);
+        model.addAttribute("Titulo", "HelpDesk | En Proceso");
         return "enProceso";
     }
 
     @GetMapping("/TicketsAtendidos")
     public String redirigePaginaMisTicketsAtendidos(Model model) {
-        atencionController.retornaMisTicketsAtendidosAVista(model);
-        model.addAttribute("Titulo", "HelpDesk - Atendidos");
+        atencionController.getListaMisTicketsAtendidosAVista(model);
+        model.addAttribute("Titulo", "HelpDesk | Atendidos");
         return "atendidos";
     }
+    @GetMapping("/TicketsDesestimados")
+    public String redirigePaginaMisTicketsDesestimados(Model model) {
+        atencionController.getListaMisTicketsDesestimadosAVista(model);
+        model.addAttribute("Titulo", "HelpDesk | Desestimados");
+        return "desestimados";
+    }
+
+    //NO SE UTILIZA MODEL PORQUE LOS DATOS SE OBTIENEN A TRAVÉS DE FETCH CON JS PARA ACTUALIZARLOS AUTOMATICAMENTE CADA X segundos
     @GetMapping("/admin/Dashboard")
     public String redirigePaginaDashboardAdmin(Model model) {
-        model.addAttribute("Titulo", "HelpDesk - Admin/Dashboard");
+        model.addAttribute("Titulo", "HelpDesk | Admin - Dashboard");
         return "admin/dashboard";
     }
 
@@ -75,64 +83,88 @@ public class WebController {
     public String redirigePaginaUsuarios(Model model) {
         usuariosCRUDController.listarUsuarios(model);
         usuariosCRUDController.listarRoles(model);
-        model.addAttribute("Titulo", "HelpDesk - Admin/Gestion - Usuarios");
+        model.addAttribute("Titulo", "HelpDesk | Admin - Gestion de Usuarios");
 
         return "admin/usuarios";
     }
 
     @GetMapping("/admin/Clasificadores")
     public String redirigePaginaClasiicadores(Model model) {
-        clasificadoresCRUDController.listarClasificadores(model);
-        model.addAttribute("Titulo", "HelpDesk - Admin/Gestion - Clasificadores");
+        clasificadoresController.listarClasificadores(model);
+        model.addAttribute("Titulo", "HelpDesk | Admin - Gestion de Clasificadores");
         return "admin/clasificadores";
     }
 
     @GetMapping("/soporte/Recibidos")
     public String redirigePaginaTicketsRecibidos(Model model) {
-        ticketController.retornaTicketRecibidosAVista(model);
-        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
-        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
-        ticketController.retornaListaClasificacionIncidenciaActivos(model);
-
-        model.addAttribute("Titulo", "HelpDesk - Soporte/Recibidos");
+        ticketController.retornaTicketsRecibidosAVista(model);
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaTipoComponentesActivos(model);
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Recibidos");
         return "/soporte/ticketsRecibidos";
     }
 
     @GetMapping("/soporte/Recepcionados")
     public String redirigePaginaTicketsRecepcionados(Model model) {
-        atencionController.retornaTodosLosTicketsEnProcesoAVista(model);
-        atencionController.retornaListaClasificacionesServicioActivos(model);
-        ticketController.retornaListaClasificacionIncidenciaActivos(model);
-        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
-        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Soporte/Recepcionados");
+        atencionController.getListaTodosLosTicketsRecepcionadosAVista(model);
+        clasificadoresController.getListaClasificacionesServicioActivos(model);
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Recepcionados");
         return "soporte/ticketsRecepcionados";
     }
 
     @GetMapping("/soporte/Atendidos")
     public String redirigePaginaTicketsAtendidos(Model model) {
-        atencionController.retornaTodosLosTicketsAtendidosAVista(model);
-        atencionController.retornaListaClasificacionesServicioActivos(model);
-        ticketController.retornaListaClasificacionIncidenciaActivos(model);
-        atencionController.retornaListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Soporte/Atendidos");
+        atencionController.getListaTodosLosTicketsAtendidosAVista(model);
+        clasificadoresController.getListaClasificacionesServicioActivos(model);
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Atendidos");
         return "soporte/ticketsAtendidos";
     }
     @GetMapping("/soporte/Desestimados")
     public String redirigePaginaTicketsDesestimados(Model model) {
-        atencionController.retornaTodosLosTicketsDesestimadosAVista(model);
-        ticketController.retornaListaClasificacionIncidenciaActivos(model);
-        atencionController.retornaListaClasificacionesDesestimacionActivos(model);
-        model.addAttribute("Titulo", "HelpDesk - Soporte/Desestimados");
+        atencionController.getListaTodosLosTicketsDesestimadosAVista(model);
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Desestimados");
         return "soporte/ticketsDesestimados";
     }
+
+    //NO SE UTILIZA MODEL PORQUE LOS DATOS SE OBTIENEN A TRAVÉS DE FETCH CON JS PARA ACTUALIZARLOS AUTOMATICAMENTE CADA X segundos
     @GetMapping("/soporte/Dashboard")
     public String redirigePaginaDashboardSoporte(Model model) {
-        model.addAttribute("Titulo", "HelpDesk - Soporte/Dashboard");
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Dashboard");
         return "soporte/dashboard";
     }
 
 
+
+
+
+    @GetMapping("/direccion/Dashboard")
+    public String redirigePaginaDashboardDireccion(Model model) {
+        model.addAttribute("Titulo", "HelpDesk | Dirección - Dashboard");
+        return "direccion/dashboard";
+    }
+    //Metodo para manejar fragment expression
+    @GetMapping("/direccion/Recibidos")
+    public String redirigePaginaTicketsRecibidosDireccion(Model model) {
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaTipoComponentesActivos(model);
+        ticketController.retornaTicketsRecibidosAVistaDireccion(model);
+        return "direccion/ticketsRedirigidos";
+    }
+    //Metodo para manejar fragment expression
+    @GetMapping("/direccion/Historial")
+    public String redirigePaginaHistorialDireccion(Model model) {
+
+        return "direccion/historial";
+    }
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
     public String fragmentExpression() {

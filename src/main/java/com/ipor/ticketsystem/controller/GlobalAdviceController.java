@@ -5,8 +5,6 @@ import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,7 +23,7 @@ UsuarioService usuarioService;
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getPrincipal().equals("anonymousUser")) {
             Usuario usuario = new Usuario();
-                usuario = usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado());
+                usuario = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
             model.addAttribute("nombreUsuario", usuario.getNombre());
             // Obtener la hora actual del servidor
             LocalDateTime now = LocalDateTime.now(); // Hora actual

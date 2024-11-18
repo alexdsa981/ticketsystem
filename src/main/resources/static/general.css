@@ -2,6 +2,14 @@
 .nav-link{
     color: white;
 }
+.nav-item.dropdown .dropdown-menu {
+    display: none;
+}
+
+/* Cuando el mouse pasa por encima del item, muestra el menú */
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
 
 table {
     width: auto;

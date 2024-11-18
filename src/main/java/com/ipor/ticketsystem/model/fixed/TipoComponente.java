@@ -16,4 +16,7 @@ public class TipoComponente {
     private Long id;
     @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false)
+    private Boolean isActive;
+
 }

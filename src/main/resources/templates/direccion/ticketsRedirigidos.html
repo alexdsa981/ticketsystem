@@ -15,13 +15,13 @@
     <div class="d-flex justify-content-between align-items-center">
         <!-- Contenedor para agrupar el título y el contador -->
         <div class="d-flex align-items-center">
-            <h2>SOPORTE / Tickets Recibidos</h2>
+            <h2>DIRECCIÓN / Tickets Recibidos</h2>
             <div id="ticketCount" class="badge bg-danger ms-2 border d-flex justify-content-center align-items-center"
                  style="width: 30px; height: 30px;">
                 0
             </div>
             <!-- Botón con estilo de Bootstrap -->
-            <a href="/soporte/Dashboard" class="btn btn-dark" role="button" style="margin-left:15px">
+            <a href="/direccion/Dashboard" class="btn btn-dark" role="button" style="margin-left:15px">
                 Ir a Dashboard
             </a>
 
@@ -51,6 +51,7 @@
                 <th class="hora-table">Hora</th>
                 <th class="usuario-table">Usuario Emisor</th>
                 <th class="descripcion-table">Descripción</th>
+                <th>Componentes</th>
                 <th class="adjunto-table">Adjunto</th>
                 <th class="acciones-table">Recepcionar</th>
             </tr>
@@ -66,6 +67,23 @@
                             <span class="nombreClasificacionIncidencia clasificacion"
                                   th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                     <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span><br>
+                </td>
+                <td>
+
+
+
+
+                    <ul>
+                        <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
+                            <span th:text="${componente.cantidad}"></span>
+                            <span th:text="${componente.tipoComponente.nombre}"></span>
+                        </li>
+                    </ul>
+
+
+
+
+
                 </td>
                 <td>
                     <ul>
@@ -85,11 +103,10 @@
                             th:data-ticket-fase="${ticket.faseTicket.nombre}"
                             th:data-ticket-fecha="${ticket.fechaFormateada}"
                             th:data-ticket-hora="${ticket.horaFormateada}">
+
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary" th:data-ticket-id="${ticket.id}" onclick="confirmRedirect(this)">
-                        <i class="bi bi-send"></i>
-                    </button>
+
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#desestimacionModal" th:data-ticket-id="${ticket.id}"
                             th:data-ticket-usuario="${ticket.usuario.nombre}"
@@ -115,38 +132,7 @@
         <button id="nextPage" class="btn btn-secondary mx-1" disabled>&gt;</button>
     </div>
 </div>
-<!--Redireccion a direccion-->
-<script>
-    function confirmRedirect(button) {
-    const ticketId = button.getAttribute('data-ticket-id');
-        Swal.fire({
-            title: 'Confirmación',
-            text: "¿Está seguro de enviar el ticket a Dirección?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, enviar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/app/tickets/RedirigirADireccion/`+ ticketId, {
-                    method: 'POST'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "/soporte/Recibidos";
-                    } else {
-                        Swal.fire('Error', 'Error al redirigir el ticket a Dirección.', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    Swal.fire('Error', 'Hubo un problema al redirigir el ticket.', 'error');
-                });
-            }
-        });
-    }
 
-</script>
 
 <!-- Modal FILTRO -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">

@@ -1,13 +1,9 @@
 package com.ipor.ticketsystem.service;
 
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
-import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.JwtAuthenticationFilter;
@@ -15,7 +11,6 @@ import com.ipor.ticketsystem.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,19 +24,15 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
     @Autowired
     RolUsuarioRepository rolUsuarioRepository;
-    @Autowired
-    TicketRepository ticketRepository;
-    @Autowired
-    FaseTicketRepository faseTicketRepository;
 
-    public Long RetornarIDdeUsuarioLogeado(){
+    public Long getIDdeUsuarioLogeado(){
 
         String token = jwtAuthenticationFilter.tokenActual;
         String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
         Usuario usuario = usuarioRepository.findByUsername(username).get();
         return usuario.getId();
     }
-    public Usuario RetornarUsuarioPorId(Long id){
+    public Usuario getUsuarioPorId(Long id){
         return usuarioRepository.findById(id).get();
     }
 
@@ -52,7 +43,7 @@ public class UsuarioService {
     }
 
     // Obtener todos los usuarios
-    public List<Usuario> obtenerTodosLosUsuarios() {
+    public List<Usuario> getListaUsuarios() {
         return usuarioRepository.findAll();
     }
 
@@ -94,22 +85,19 @@ public class UsuarioService {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            usuario.setIsActive(true); // Cambia el estado activo a 'true'
-            usuarioRepository.save(usuario); // Guarda el usuario actualizado
+            usuario.setIsActive(true);
+            usuarioRepository.save(usuario);
         }
     }
 
-
-
     //retorna todos los roles:
-    public List<RolUsuario> retornaTodosLosRoles(){
+    public List<RolUsuario> getListaRoles(){
         return rolUsuarioRepository.findAll();
     }
-    public RolUsuario retornarRolPorId(Long id){
+    public RolUsuario getRolPorId(Long id){
         return rolUsuarioRepository.findById(id).get();
     }
-
-    public Usuario findByUsername(String username){
+    public Usuario getUsuarioPorUsername(String username){
         return usuarioRepository.findByUsername(username).get();
     }
 }

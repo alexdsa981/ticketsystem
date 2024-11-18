@@ -4,27 +4,20 @@ import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
-import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
-import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
-import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
-import com.ipor.ticketsystem.service.AtencionService;
-import com.ipor.ticketsystem.service.DashboardService;
-import com.ipor.ticketsystem.service.TicketService;
-import com.ipor.ticketsystem.service.UsuarioService;
+import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
+import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/app/tickets")
@@ -36,62 +29,45 @@ public class AtencionController {
     @Autowired
     UsuarioService usuarioService;
     @Autowired
-    DashboardService dashboardService;
+    ClasificadoresService clasificadoresService;
 
-    //metodo para enviar todos los tickets en proceso a "enProceso"
-    public Model retornaMisTicketsEnProcesoAVista(Model model) {
+    //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS DESDE LA FASE RECEPCIÓN
+    // ATENDIDO O DESESTIMADO EN LAS VISTAS
+
+    public Model getListaMisTicketsRecepcionadosAVista(Model model) {
         List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
         Collections.reverse(MyRecepcionados);
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return  model;
     }
-    public Model retornaTodosLosTicketsEnProcesoAVista(Model model) {
+    public Model getListaTodosLosTicketsRecepcionadosAVista(Model model) {
         List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
         model.addAttribute("AllRecepcionados", AllRecepcionados);
         return  model;
     }
 
-    //metodo para enviar todos los tickets atendidos a "atendidos"
-    public Model retornaMisTicketsAtendidosAVista(Model model) {
+    public Model getListaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
         Collections.reverse(MyAtendidos);
         model.addAttribute("MyAtendidos", MyAtendidos);
         return  model;
     }
-    public Model retornaTodosLosTicketsAtendidosAVista(Model model) {
+    public Model getListaTodosLosTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
         Collections.reverse(AllAtendidos);
         model.addAttribute("AllAtendidos", AllAtendidos);
         return  model;
     }
-
-    public Model retornaTodosLosTicketsDesestimadosAVista(Model model) {
+    public Model getListaMisTicketsDesestimadosAVista(Model model) {
+        List<AtencionTicketDTO> MyDesestimados = atencionService.getMyListaDesestimados();
+        Collections.reverse(MyDesestimados);
+        model.addAttribute("MyDesestimados", MyDesestimados);
+        return  model;
+    }
+    public Model getListaTodosLosTicketsDesestimadosAVista(Model model) {
         List<AtencionTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
         Collections.reverse(AllDesestimados);
         model.addAttribute("AllDesestimados", AllDesestimados);
-        return  model;
-    }
-
-
-
-
-
-    //metodo para enviar Lista de clasificaciones urgencia a Inicio
-    public Model retornaListaClasificacionesUrgenciaActivos(Model model){
-        List<ClasificacionUrgencia> listaUrgencias = atencionService.obtenerListaClasificacionUrgencia();
-        model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
-        return  model;
-    }
-    //metodo para enviar Lista de clasificaciones servicio a Inicio
-    public Model retornaListaClasificacionesServicioActivos(Model model){
-        List<ClasificacionServicio> listaServicios = atencionService.obtenerListaClasificacionServicio();
-        model.addAttribute("Lista_clasificacion_servicio", listaServicios);
-        return  model;
-    }
-    //metodo para enviar Lista de clasificaciones urgencia a Inicio
-    public Model retornaListaClasificacionesDesestimacionActivos(Model model){
-        List<ClasificacionDesestimacion> listaDesestimacion = atencionService.obtenerListaClasificacionDesestimacion();
-        model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
         return  model;
     }
 
@@ -103,6 +79,7 @@ public class AtencionController {
             @RequestParam("mensaje") String mensaje,
             @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
             @PathVariable Long id,
+            HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
         //cambiar fase de ticket
@@ -110,23 +87,26 @@ public class AtencionController {
         // Lógica para crear la recepcion
         Recepcion recepcion = new Recepcion();
         recepcion.setMensaje(mensaje);
-        recepcion.setClasificacionUrgencia(atencionService.obtenerClasificacionUrgenciaPorId(IDclasificacion_urgencia));
+        recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
         recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
-        recepcion.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         recepcion.setHora(recepcion.getHora());
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
 
-        response.sendRedirect("/soporte/Recibidos");
+        // Redirigir a la URL actual
+        String referer = request.getHeader("Referer");
+        response.sendRedirect(referer != null ? referer : "/fallbackUrl");
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
 
-    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
+    //metodo para atender un ticket, crea un atendido(servicio) y cambia la fase del ticket:
     @PostMapping("/atencion/{id}")
     public ResponseEntity<String> atenderTicket(
             @RequestParam("descripcion") String descripcion,
             @RequestParam("clasificacion_servicio") Long IDclasificacion_servicio,
             @PathVariable Long id,
+            HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
         //cambiar fase de ticket
@@ -134,14 +114,16 @@ public class AtencionController {
         // Lógica para crear la recepcion
         Servicio servicio = new Servicio();
         servicio.setDescripcion(descripcion);
-        servicio.setClasificacionServicio(atencionService.obtenerClasificacionServicioPorId(IDclasificacion_servicio));
+        servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
         servicio.setTicket(ticketService.getObtenerTicketPorID(id));
-        servicio.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        servicio.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         servicio.setHora(servicio.getHora());
         servicio.setFecha(servicio.getFecha());
         atencionService.saveServicio(servicio);
 
-        response.sendRedirect("/soporte/Recepcionados");
+        // Redirigir a la URL actual
+        String referer = request.getHeader("Referer");
+        response.sendRedirect(referer != null ? referer : "/fallbackUrl");
         return ResponseEntity.ok("Ticket atendido correctamente");
     }
 
@@ -160,9 +142,9 @@ public class AtencionController {
         // Lógica para crear la desestimación
         Desestimacion desestimacion = new Desestimacion();
         desestimacion.setDescripcion(mensaje);
-        desestimacion.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
+        desestimacion.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
         desestimacion.setTicket(ticketService.getObtenerTicketPorID(id));
-        desestimacion.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        desestimacion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         desestimacion.setHora(desestimacion.getHora());
         desestimacion.setFecha(desestimacion.getFecha());
         atencionService.saveDesestimacion(desestimacion);
@@ -180,18 +162,34 @@ public class AtencionController {
         return ResponseEntity.ok("Ticket desestimado correctamente");
     }
 
-    // Método para cambiar la fase del ticket y que lo vea el rol Direccion
     @PostMapping("/RedirigirADireccion/{id}")
     public ResponseEntity<String> redirigirTicketADireccion(
             @PathVariable Long id,
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            @RequestBody Map<String, Object> datos) throws IOException {
+
+        // Extraer listas de componentes y cantidades
+        List<String> componentes = (List<String>) datos.get("componentes");
+        List<String> cantidades = (List<String>) datos.get("cantidades");
+
+        for (int i = 0; i < componentes.size(); i++) {
+            Long componenteId = Long.valueOf(componentes.get(i));
+            Integer cantidad = Integer.valueOf(cantidades.get(i));
+
+            TipoComponenteAdjunto tipoComponenteAdjunto = new TipoComponenteAdjunto();
+            tipoComponenteAdjunto.setTipoComponente(clasificadoresService.getTipoComponentePorId(componenteId));
+            tipoComponenteAdjunto.setCantidad(cantidad);
+            tipoComponenteAdjunto.setTicket(ticketService.getObtenerTicketPorID(id));
+            tipoComponenteAdjunto.setAprobado(null);
+            ticketService.saveComponenteAdjunto(tipoComponenteAdjunto);
+        }
 
         // Cambiar fase del ticket
         atencionService.updateFaseTicket(id, 5L);
-        response.sendRedirect("/soporte/Recibidos");
+
         return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
     }
+
+
 
 
 

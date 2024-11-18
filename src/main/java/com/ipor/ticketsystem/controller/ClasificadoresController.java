@@ -1,13 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.model.dynamic.Usuario;
-import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
-import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
-import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
-import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionIncidenciaRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
+import com.ipor.ticketsystem.model.fixed.*;
 import com.ipor.ticketsystem.service.ClasificadoresService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/app/clasificadores")
-public class ClasificadoresCRUDController {
+public class ClasificadoresController {
     @Autowired
     ClasificadoresService clasificadoresService;
 
@@ -29,16 +22,45 @@ public class ClasificadoresCRUDController {
     // Listar todos los clasificadores (Incidencias, Servicios, Urgencias)
 
     public Model listarClasificadores(Model model) {
-        List<ClasificacionIncidencia> incidencias = clasificadoresService.RetornaListaClasIncidencia();
-        List<ClasificacionServicio> servicios = clasificadoresService.RetornaListaClasServicio();
-        List<ClasificacionUrgencia> urgencias = clasificadoresService.RetornaListaClasUrgencia();
-        List<ClasificacionDesestimacion> desestimaciones = clasificadoresService.RetornaListaClasDesestimacion();
+        List<ClasificacionIncidencia> incidencias = clasificadoresService.getListaClasIncidencia();
+        List<ClasificacionServicio> servicios = clasificadoresService.getListaClasServicio();
+        List<ClasificacionUrgencia> urgencias = clasificadoresService.getListaClasUrgencia();
+        List<ClasificacionDesestimacion> desestimaciones = clasificadoresService.getListaClasDesestimacion();
+        List<TipoComponente> tipoComponentes = clasificadoresService.getListaTipoComponente();
 
+        model.addAttribute("tipoComponentes", tipoComponentes);
         model.addAttribute("desestimaciones", desestimaciones);
         model.addAttribute("incidencias", incidencias);
         model.addAttribute("servicios", servicios);
         model.addAttribute("urgencias", urgencias);
         return model;
+    }
+
+    public Model getListaClasificacionIncidenciaActivos(Model model) {
+        List<ClasificacionIncidencia> ListaTiposIncidencia = clasificadoresService.getListaTiposDeIncidenciaActivos();
+        model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
+        return model;
+    }
+
+    public Model getListaTipoComponentesActivos(Model model) {
+        List<TipoComponente> ListaTiposComponentes = clasificadoresService.getListaTiposDeComponentesActivos();
+        model.addAttribute("Lista_tipo_componentes", ListaTiposComponentes);
+        return model;
+    }
+    public Model getListaClasificacionesUrgenciaActivos(Model model){
+        List<ClasificacionUrgencia> listaUrgencias = clasificadoresService.getListaClasificacionUrgenciaActivos();
+        model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
+        return  model;
+    }
+    public Model getListaClasificacionesServicioActivos(Model model){
+        List<ClasificacionServicio> listaServicios = clasificadoresService.getListaClasificacionServicioActivos();
+        model.addAttribute("Lista_clasificacion_servicio", listaServicios);
+        return  model;
+    }
+    public Model getListaClasificacionesDesestimacionActivos(Model model){
+        List<ClasificacionDesestimacion> listaDesestimacion = clasificadoresService.getListaClasificacionDesestimacionActivos();
+        model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
+        return  model;
     }
 
 
@@ -117,11 +139,6 @@ public class ClasificadoresCRUDController {
         clasificadoresService.actualizarServicio(id, clasificacionServicio);
         return "redirect:/admin/Clasificadores";
     }
-
-
-
-
-
 
     //crear Clasificacion Urgencia nueva
     @PostMapping("/urgencia/nuevo")
@@ -205,7 +222,6 @@ public class ClasificadoresCRUDController {
         clasificadoresService.cambiarEstadoDesestimacion(id, true);
         return "redirect:/admin/Clasificadores";
     }
-
 
 
 }

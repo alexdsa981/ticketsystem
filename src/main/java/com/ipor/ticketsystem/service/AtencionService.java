@@ -5,16 +5,12 @@ import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
-import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
-import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
-import com.ipor.ticketsystem.model.fixed.ClasificacionUrgencia;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionDesestimacionRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +49,7 @@ public class AtencionService {
 
     //metodo para retornar Mis tickets en proceso:
     public List<AtencionTicketDTO> getMyListaRecepcionados() {
-        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.RetornarIDdeUsuarioLogeado());
+        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
         List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
             AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
@@ -72,10 +68,19 @@ public class AtencionService {
         }
         return listaDesestimadosDTO;
     }
-
+    //metodo para retornar Mis tickets atendidos:
+    public List<AtencionTicketDTO> getMyListaDesestimados() {
+        List<Desestimacion> listaDesestimaciones = desestimacionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
+        List<AtencionTicketDTO> listaDesestimacionesDTO = new ArrayList<>();
+        for (Desestimacion desestimacion : listaDesestimaciones) {
+            AtencionTicketDTO desestimacionDTO = new AtencionTicketDTO(desestimacion, ticketService);
+            listaDesestimacionesDTO.add(desestimacionDTO);
+        }
+        return listaDesestimacionesDTO;
+    }
     //metodo para retornar Mis tickets atendidos:
     public List<AtencionTicketDTO> getMyListaAtendidos() {
-        List<Servicio> listaServicios = servicioRepository.findAllByTicketUsuarioId(usuarioService.RetornarIDdeUsuarioLogeado());
+        List<Servicio> listaServicios = servicioRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
         List<AtencionTicketDTO> listaServiciosDTO = new ArrayList<>();
         for (Servicio servicio : listaServicios) {
             AtencionTicketDTO servicioDTO = new AtencionTicketDTO(servicio, ticketService);
@@ -106,32 +111,7 @@ public class AtencionService {
     }
 
 
-    //obtener clasificacion urgencia por id
-    public ClasificacionUrgencia obtenerClasificacionUrgenciaPorId(Long id){
-        return clasificacionUrgenciaRepository.findById(id).get();
-    }
-    //obtener clasificaciones urgencia
-    public List<ClasificacionUrgencia> obtenerListaClasificacionUrgencia(){
-        return clasificacionUrgenciaRepository.findByIsActiveTrue();
-    }
 
-    //obtener clasificacion servicio por id
-    public ClasificacionServicio obtenerClasificacionServicioPorId(Long id){
-        return clasificacionServicioRepository.findById(id).get();
-    }
-    //obtener clasificaciones servicio
-    public List<ClasificacionServicio> obtenerListaClasificacionServicio(){
-        return clasificacionServicioRepository.findByIsActiveTrue();
-    }
-
-    //obtener clasificacion desestimacion por id
-    public ClasificacionDesestimacion obtenerClasificacionDesestimacionPorId(Long id){
-        return clasificacionDesestimacionRepository.findById(id).get();
-    }
-    //obtener clasificaciones desestimacion
-    public List<ClasificacionDesestimacion> obtenerListaClasificacionDesestimacion(){
-        return clasificacionDesestimacionRepository.findByIsActiveTrue();
-    }
 
 
     //guardar recepcion en base de datos

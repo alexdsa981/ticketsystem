@@ -67,6 +67,24 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                     data-ticket-hora="${ticketRecord.horaFormateada}">
                     <i class="bi bi-pencil-square"></i>
             </button>
+
+            <button type="button" class="btn btn-secondary"
+                    data-ticket-id="${ticketRecord.id}"
+                    onclick="confirmRedirect(this)">
+                <i class="bi bi-send"></i>
+            </button>
+
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
+                    data-ticket-descripcion="${ticketRecord.descripcion}"
+                    data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
+                    data-ticket-hora="${ticketRecord.horaFormateada}">
+                <i class="bi bi-trash"></i>
+            </button>
+
         </td>
     `;
 

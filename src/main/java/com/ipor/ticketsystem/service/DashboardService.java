@@ -31,6 +31,7 @@ public class DashboardService {
     public long obtenerNTotalDesestimados() {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
     }
+
     public List<RecordConteoTicketxFactor> obtenerConteoDeTicketsPorFase(){
         return ticketRepository.findTicketCountByFase();
     }

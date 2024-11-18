@@ -5,6 +5,7 @@ import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.AtencionService;
+import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,16 +35,18 @@ public class UsuariosCRUDController {
     private AtencionService atencionService;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private ClasificadoresService clasificadoresService;
 
     // Mostrar la lista de usuarios
     @GetMapping
     public Model listarUsuarios(Model model) {
-        List<Usuario> listaUsuarios = usuarioService.obtenerTodosLosUsuarios();
+        List<Usuario> listaUsuarios = usuarioService.getListaUsuarios();
         model.addAttribute("ListaUsuarios", listaUsuarios);
         return model;
     }
     public Model listarRoles(Model model){
-        List<RolUsuario> listaRoles = usuarioService.retornaTodosLosRoles();
+        List<RolUsuario> listaRoles = usuarioService.getListaRoles();
         model.addAttribute("ListaRoles", listaRoles);
         return model;
     }
@@ -59,7 +62,7 @@ public class UsuariosCRUDController {
 
         // Lógica para crear el ticket
         Usuario usuario = new Usuario();
-        usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
+        usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
         usuario.setNombre(nombre);
         usuario.setPassword(password);
         usuario.setUsername(username);
@@ -84,7 +87,7 @@ public class UsuariosCRUDController {
             usuario.setPassword(password);
         }
         usuario.setNombre(nombre);
-        usuario.setRolUsuario(usuarioService.retornarRolPorId(rolId));
+        usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
         usuario.setIsActive(Boolean.TRUE);
         usuarioService.actualizarUsuario(id, usuario);
         return "redirect:/admin/Usuarios";
@@ -93,7 +96,7 @@ public class UsuariosCRUDController {
     // desactivar un usuario
     @GetMapping("/desactivar/{id}")
     public String desactivarUsuario(@PathVariable Long id) {
-        if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
+        if (!Objects.equals(usuarioService.getIDdeUsuarioLogeado(), id)) {
             usuarioService.desactivarUsuario(id);
 
             List<Ticket>listaTicketsUsuarioFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 1L);
@@ -102,8 +105,8 @@ public class UsuariosCRUDController {
                 System.out.println("creados: "+ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
-                ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
-                ticketDesestimado.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+                ticketDesestimado.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(2L));
+                ticketDesestimado.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
                 ticketDesestimado.setTicket(ticket);
                 ticketDesestimado.setDescripcion("Desestimado por desactivación de usuario: " + ticket.getUsuario().getNombre());
                 ticketDesestimado.setFecha(ticketDesestimado.getFecha());
@@ -119,8 +122,8 @@ public class UsuariosCRUDController {
                 System.out.println("recepcionados:" + ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
-                ticketDesestimado.setClasificacionDesestimacion(atencionService.obtenerClasificacionDesestimacionPorId(2L));
-                ticketDesestimado.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+                ticketDesestimado.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(2L));
+                ticketDesestimado.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
                 ticketDesestimado.setTicket(ticket);
                 ticketDesestimado.setDescripcion("Desestimado por desactivación de usuario: " + ticket.getUsuario().getNombre());
                 ticketDesestimado.setFecha(ticketDesestimado.getFecha());
@@ -141,7 +144,7 @@ public class UsuariosCRUDController {
     // activar un usuario
     @GetMapping("/activar/{id}")
     public String activarUsuario(@PathVariable Long id) {
-        if (!Objects.equals(usuarioService.RetornarIDdeUsuarioLogeado(), id)) {
+        if (!Objects.equals(usuarioService.getIDdeUsuarioLogeado(), id)) {
             usuarioService.activarUsuario(id); // Llama al método para activar
         }
         return "redirect:/admin/Usuarios";
@@ -153,7 +156,7 @@ public class UsuariosCRUDController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Usuario usuario = usuarioService.findByUsername(userDetails.getUsername());
+            Usuario usuario = usuarioService.getUsuarioPorUsername(userDetails.getUsername());
 
             if (usuario != null && usuario.getRolUsuario().getId() == 2L) {
                 return ResponseEntity.ok("soporte");

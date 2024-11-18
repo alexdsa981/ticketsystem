@@ -5,8 +5,9 @@ import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
-import com.ipor.ticketsystem.service.DashboardService;
+import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.core.io.Resource;
@@ -37,9 +38,10 @@ public class TicketController {
     @Autowired
     NotificationService notificationService;
     @Autowired
-    DashboardService dashboardService;
+    ClasificadoresService clasificadoresService;
 
-    // Método para enviar Tickets y Datos Iniciales al Inicio, es llamado en WebController
+    //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
+
     public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         Collections.reverse(MisTicketsDTO);
@@ -47,21 +49,20 @@ public class TicketController {
         return model;
     }
 
-    public Model retornaListaClasificacionIncidenciaActivos(Model model) {
-        List<ClasificacionIncidencia> ListaTiposIncidencia = ticketService.getObtenerTodosLosTiposDeIncidenciaActivos();
-        model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
-        return model;
-    }
-
-
-
-    public Model retornaTicketRecibidosAVista(Model model) {
+    public Model retornaTicketsRecibidosAVista(Model model) {
         List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
         Collections.reverse(AllTicketsDTO);
         model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
     }
+    public Model retornaTicketsRecibidosAVistaDireccion(Model model) {
+        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionarDireccion();
+        Collections.reverse(AllTicketsDTO);
+        model.addAttribute("AllTickets", AllTicketsDTO);
+        return model;
+    }
 
+    //crea ticket y además lo envia a través de webSocket para notificaciones y actualizaciones en tiempo real
     @PostMapping("/crearTicket")
     public ResponseEntity<String> crearTicket(
             @RequestParam("descripcion") String descripcion,
@@ -72,10 +73,10 @@ public class TicketController {
         // Lógica para crear el ticket
         Ticket ticket = new Ticket();
         ticket.setDescripcion(descripcion);
-        ClasificacionIncidencia clasificacionIncidencia = ticketService.getClasificacionIncidenciaPorID(clasificacion);
+        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
         ticket.setClasificacionIncidencia(clasificacionIncidencia);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
-        ticket.setUsuario(usuarioService.RetornarUsuarioPorId(usuarioService.RetornarIDdeUsuarioLogeado()));
+        ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         ticket.setFecha(ticket.getFecha());
         ticket.setHora(ticket.getHora());
 
@@ -112,7 +113,6 @@ public class TicketController {
         String message = "Ticket Recibido: "+ticketRecordWS.nombreUsuario() + " - " + ticketRecordWS.nombreClasificacionIncidencia();
         notificationService.enviarNotificacion(message);
 
-
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");
     }
@@ -132,8 +132,12 @@ public class TicketController {
                 .body(recurso); // El cuerpo de la respuesta es el recurso
     }
 
+    @GetMapping("/componentes/{id}")
+    public ResponseEntity<List<TipoComponenteAdjunto>> getComponentesPorTicketID(@PathVariable Long id) {
+        List<TipoComponenteAdjunto> listaComponentes = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
 
-
+        return ResponseEntity.ok(listaComponentes);
+    }
 
 
 }

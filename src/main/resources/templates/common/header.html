@@ -18,14 +18,55 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
                         <a class="nav-link" href="/inicio">Inicio</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
                         <a class="nav-link" href="/TicketsEnProceso">Tickets En proceso</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
                         <a class="nav-link" href="/TicketsAtendidos">Tickets Atendidos</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
+                        <a class="nav-link" href="/TicketsDesestimados">Tickets Desestimados</a>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección','Soporte')">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Mis Tickets
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/inicio">Enviados</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/TicketsEnProceso">En proceso</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/TicketsAtendidos">Atendidos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/TicketsDesestimados">Desestimados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección')">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Dirección
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/direccion/Dashboard">Dashboard</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/direccion/Recibidos">Tickets Recibidos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/direccion/Historial">Historial</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
