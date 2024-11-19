@@ -135,7 +135,6 @@ public class TicketController {
     @GetMapping("/componentes/{id}")
     public ResponseEntity<List<TipoComponenteAdjunto>> getComponentesPorTicketID(@PathVariable Long id) {
         List<TipoComponenteAdjunto> listaComponentes = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
-
         return ResponseEntity.ok(listaComponentes);
     }
 

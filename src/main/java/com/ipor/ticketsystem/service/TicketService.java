@@ -118,6 +118,11 @@ public class TicketService {
         return archivoAdjuntoRepository.findById(id)
                 .get();
     }
+    //obtener componente adjunto por ID
+    public TipoComponenteAdjunto getComponenteAdjuntoPorId(Long id) {
+        return tipoComponenteAdjuntoRepository.findById(id)
+                .get();
+    }
 
 
     public Ticket getObtenerTicketPorID(Long id) {

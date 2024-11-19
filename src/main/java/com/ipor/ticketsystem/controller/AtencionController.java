@@ -1,5 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +76,7 @@ public class AtencionController {
 
 
 
-    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
+    //metodo para recepcionar un ticket(desde soporte), crea un recepcionado y cambia la fase del ticket:
     @PostMapping("/recepcion/{id}")
     public ResponseEntity<String> recepcionarTicket(
             @RequestParam("mensaje") String mensaje,
@@ -190,7 +193,67 @@ public class AtencionController {
     }
 
 
+    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
+    @PostMapping("/recepcionDireccion/{id}")
+    public ResponseEntity<String> recepcionarTicketDirección(
+            @RequestParam("mensaje") String mensaje,
+            @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
+            @RequestParam("componentesSeleccionados") String componentesJson,
+            @PathVariable Long id,
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
+        //desaprueba todos los componentes adjuntos
+        List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
+        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket){
+            componenteAdjunto.setAprobado(false);
+            ticketService.saveComponenteAdjunto(componenteAdjunto);
+        }
+        //aprueba los componentes adjuntos seleccionados, el resto quedan desaprobados
+        List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {});
+        for (Long idcomponente : componentesSeleccionados){
+            System.out.println(idcomponente);
+            TipoComponenteAdjunto componenteAdjuntoAprobado = new TipoComponenteAdjunto();
+            componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
+            componenteAdjuntoAprobado.setAprobado(true);
+            ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
+        }
+        //cambiar fase de ticket
+        atencionService.updateFaseTicket(id, 2L);
+        // Lógica para crear la recepcion
+        Recepcion recepcion = new Recepcion();
+        List<TipoComponenteAdjunto> listaComponentesParaMensaje = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
+
+
+
+        StringBuilder mensajeFinal = new StringBuilder(); // Iniciar con el mensaje base
+
+        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesParaMensaje) {
+            String aprobacion = componenteAdjunto.getAprobado() ? "[APROBADO]" : "[NO APROBADO]";
+            mensajeFinal.append(" ")
+                    .append(componenteAdjunto.getCantidad())
+                    .append(" ")
+                    .append(componenteAdjunto.getTipoComponente().getNombre())
+                    .append(" ")
+                    .append(aprobacion)
+                    .append(" ||");
+        }
+
+        recepcion.setMensaje(mensaje + "  || " + mensajeFinal.toString());
+
+
+
+
+        recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
+        recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
+        recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+        recepcion.setHora(recepcion.getHora());
+        recepcion.setFecha(recepcion.getFecha());
+        atencionService.saveRecepcion(recepcion);
+
+        response.sendRedirect("/direccion/Recibidos");
+        return ResponseEntity.ok("Ticket recepcionado correctamente");
+    }
 
 
 

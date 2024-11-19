@@ -44,6 +44,7 @@
                         <th class="usuario-table">Enviado Por</th>
                         <th class="descripcion-table">Descripción de Incidencia</th>
                         <th class="adjunto-table">Adjunto</th>
+                        <th class="descripcion-table">Mensaje Recepción</th>
                         <th class="n-table">Urgencia</th>
                         <th class="acciones-table">Atención</th>
 
@@ -76,6 +77,7 @@
                                 </li>
                             </ul>
                         </td>
+                        <td class="usuario-emisor" th:text="${recepcionado.mensaje}">Mensaje Recepción</td>
                         <td class="urgencia" th:text="${recepcionado.clasificacionUrgencia.nombre}">Urgencia</td>
 
                         <td class="td-accion">

@@ -265,3 +265,38 @@ h2 {
     border-color: red;
     box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Opcional: agrega un efecto de sombra roja */
 }
+
+/*COMPONENTES CHECKBOX*/
+/* Estilo inicial del checkbox (no seleccionado) */
+.custom-checkbox {
+  -webkit-appearance: none;  /* Elimina el estilo predeterminado */
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #dc3545;  /* Borde rojo */
+  background-color: #dc3545;  /* Fondo rojo */
+  position: relative;
+}
+
+/* La 'x' en el centro cuando el checkbox no está seleccionado */
+.custom-checkbox::before {
+  content: "x";  /* Letra 'x' en minúscula */
+  color: white;
+  font-size: 12px;
+  position: absolute;
+  top: -2px;
+  left: 5px;
+}
+
+/* Estilo cuando el checkbox está seleccionado, con el estilo predeterminado */
+.custom-checkbox:checked {
+  background-color: #28a745;  /* Fondo verde */
+  border-color: #28a745;  /* Borde verde */
+}
+
+/* Elimina la 'x' cuando el checkbox está seleccionado */
+.custom-checkbox:checked::before {
+  content: "";  /* Eliminar la 'x' */
+}
