@@ -379,7 +379,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="#" required>
+                                    <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="1" value="1" required>
                                 </div>
                                 <div class="col-md-1">
                                     <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
@@ -501,7 +501,7 @@ function agregarFila() {
             ${templateSelect.innerHTML} <!-- Usar el select ya procesado -->
         </div>
         <div class="col-md-2">
-            <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="#" required>
+            <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="1" value="1" required>
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">

@@ -211,6 +211,54 @@
             </table>
         </div>
 
+        <!-- Tipo Componentes -->
+        <div class="col-12 mb-3" style="margin-bottom: 30px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Tipos de Componentes</h5>
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newtipocomponenteModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <table class="table table-hover table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Componente</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${tipoComponentes}"
+                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                    <td>
+                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#tipocomponenteModal"
+                                th:data-tipocomponente-id="${clasificador.id}"
+                                th:data-tipocomponente-nombre="${clasificador.nombre}"
+                                onclick="openTipoComponenteModal(this)">
+                            Editar
+                        </button>
+                        <th:block th:if="${clasificador.isActive}">
+                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/tipoComponente/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Tipo Componente?');">
+                                Desactivar
+                            </a>
+                        </th:block>
+                        <th:block th:if="${!clasificador.isActive}">
+                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/tipoComponente/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Tipo Componente?');">
+                                Activar
+                            </a>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -314,6 +362,34 @@
                     <div class="mb-3">
                         <label for="nombreincidencia" class="form-label">Nuevo clasificador:</label>
                         <input type="text" class="form-control" id="nombreincidencia" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="newtipocomponenteModal" tabindex="-1" aria-labelledby="newtipocomponenteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/app/clasificadores/tipoComponente/nuevo" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabell">Nombra el nuevo Tipo Componente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombretipocomponente" class="form-label">Nuevo Clasificador:</label>
+                        <input type="text" class="form-control" id="nombretipocomponente" name="nombre" required>
                     </div>
                 </div>
 
@@ -433,6 +509,27 @@
     </div>
 </div>
 
+<!-- Modal para Tipo Componente -->
+<div class="modal fade" id="tipocomponenteModal" tabindex="-1" aria-labelledby="tipocomponenteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tipocomponenteModalLabel">Editar Tipo Componente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="tipocomponenteForm" method="post">
+                    <input type="hidden" id="tipocomponenteId" name="id" />
+                    <div class="mb-3">
+                        <label for="tipocomponenteNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="tipocomponenteNombre" name="nombre" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!--SweetAlert-->
 <script>
     function confirmAction(url, message) {
@@ -499,7 +596,17 @@ function openUrgenciaModal(button) {
     const form = document.getElementById('urgenciaForm');
     form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
 }
+function openTipoComponenteModal(button) {
+    var id = button.getAttribute("data-tipocomponente-id");
+    var nombre = button.getAttribute("data-tipocomponente-nombre");
 
+    document.getElementById("tipocomponenteId").value = id;
+    document.getElementById("tipocomponenteNombre").value = nombre;
+
+    // Configurar la acción del formulario
+    const form = document.getElementById('tipocomponenteForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/tipoComponente/${id}`);
+}
 </script>
 
 

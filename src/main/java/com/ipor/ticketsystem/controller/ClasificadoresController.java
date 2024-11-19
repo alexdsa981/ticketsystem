@@ -165,6 +165,31 @@ public class ClasificadoresController {
         return "redirect:/admin/Clasificadores";
     }
 
+    //crear Tipo Componente nuevo
+    @PostMapping("/tipoComponente/nuevo")
+    public ResponseEntity<String> crearTipoComponente(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        TipoComponente tipoComponente = new TipoComponente();
+        tipoComponente.setNombre(nombre);
+        tipoComponente.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveTipoComponente(tipoComponente);
+        response.sendRedirect("/admin/Clasificadores");
+        return ResponseEntity.ok("Tipo Componente creado correctamente");
+    }
+
+    // Actualizar un Urgencia existente
+    @PostMapping("/actualizar/tipoComponente/{id}")
+    public String actualizarTipoComponente(@PathVariable Long id,
+                                     @RequestParam("nombre") String nombre
+    ) {
+        TipoComponente tipoComponente = new TipoComponente();
+        tipoComponente.setNombre(nombre);
+        tipoComponente.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarTipoComponente(id, tipoComponente);
+        return "redirect:/admin/Clasificadores";
+    }
+
 
     // Desactivar Clasificación Incidencia
     @GetMapping("/desactivar/incidencia/{id}")
@@ -220,6 +245,20 @@ public class ClasificadoresController {
     @GetMapping("/activar/desestimacion/{id}")
     public String activarDesestimaciona(@PathVariable Long id) {
         clasificadoresService.cambiarEstadoDesestimacion(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Desactivar Tipo Componente
+    @GetMapping("/desactivar/tipoComponente/{id}")
+    public String desactivarTipoComponente(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoTipoComponente(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    // Activar Clasificación Desestimacion
+    @GetMapping("/activar/tipoComponente/{id}")
+    public String activarTipoComponente(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoTipoComponente(id, true);
         return "redirect:/admin/Clasificadores";
     }
 
