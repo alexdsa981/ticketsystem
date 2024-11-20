@@ -12,7 +12,7 @@
             <!-- Encabezado con título, contador y botones -->
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <h2>SOPORTE / Tickets Desestimados</h2>
+                    <h2>SOPORTE: Tickets Desestimados</h2>
                     <div id="ticketCount" class="badge bg-secondary ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
                         0
                     </div>
@@ -36,16 +36,15 @@
                 <table id="ticketTable" class="table table-bordered table-hover w-100">
                     <thead class="table-dark">
                         <tr>
-                            <th class="n-table">N°</th>
-                            <th class="n-table">Código</th>
-                            <th class="fecha-table">Fecha</th>
-                            <th class="hora-table">Hora</th>
-                            <th class="usuario-table">Soporte</th>
-                            <th class="usuario-table">Emisor</th>
-                            <th class="descripcion-table">Descripción de Incidencia</th>
-                            <th class="descripcion-table">Descripción de Desestimación</th>
-                            <th class="acciones-table">Adjunto</th>
-                            <th class="acciones-table">Historial</th>
+                            <th >N°</th>
+                            <th >Código</th>
+                            <th >Fecha</th>
+                            <th >Hora</th>
+                            <th >Emisor</th>
+                            <th >Evaluador</th>
+                            <th style="width:20%;">Motivo de Ticket</th>
+                            <th style="width:20%;">Motivo de Desestimación</th>
+                            <th >Historial</th>
                         </tr>
                     </thead>
                     <tbody id="ticketTableBody">
@@ -61,6 +60,15 @@
                                 <span class="nombreClasificacionIncidencia clasificacion"
                                     th:utext="${desestimado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                                 <span th:text="${#strings.length(desestimado.ticket.descripcion) > 150 ? desestimado.ticket.descripcion.substring(0, 150) + '...' : desestimado.ticket.descripcion}"></span>
+                                <br>
+                                <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+                                <ul>
+                                    <li th:each="adjunto: ${desestimado.ticket.listaArchivosAdjuntos}">
+                                        <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                                           th:text="${adjunto.nombre}">Archivo</a> - <span
+                                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                                    </li>
+                                </ul>
                             </td>
 
                             <td>
@@ -69,20 +77,6 @@
                                 <span th:text="${#strings.length(desestimado.descripcion) > 150 ? desestimado.descripcion.substring(0, 150) + '...' : desestimado.descripcion}"></span>
                             </td>
 
-
-
-
-
-                            <td>
-                                <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
-                                <ul>
-                                    <li th:each="adjunto: ${desestimado.ticket.listaArchivosAdjuntos}">
-                                        <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
-                                            th:text="${adjunto.nombre}">Archivo</a> - <span
-                                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                                    </li>
-                                </ul>
-                            </td>
 
                             <td>
                                 <!-- Botón de recepción que abre el modal -->

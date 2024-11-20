@@ -1,6 +1,5 @@
 EN PROCESO
 
--Creo que en lugar de colocar las aprobaciones junto con la variable "mensaje" de recepción, los pasaré a través del dto para que se muestren de manera independiente dentro del mismo td de mensaje recepción en la vista, porque se ve mal usando || 
 -Los tickets que se reenvían y son aceptados se mostrarán en el apartado Historial de Dirección, donde se hará
 el query buscando los tickets recepcionados por los usuarios con este el Rol Direccion
 
@@ -9,11 +8,5 @@ el query buscando los tickets recepcionados por los usuarios con este el Rol Dir
 
 
 
-
-REALIZADO:
--crear tabla componenteAdjunto y componenteTicket, componenteTicket alojará los nombres y componenteAdjunto se juntará con el ticket, dando la cantidad y el id de componenteTicket
--deberá aprobar cada componente que se desee
--crear lógica para redireccionar tickets desde soporte a dirección (
-	tal vez creando una fase nueva que pueda ver solo el rol Dirección (Ej: Fase -> Esperando aprobación), si no se aprueba el ticket se desestima, si es aprobado se devuelve a la vista de tickets recepcionados como "Compra Aprobada" y luego los de soporte cierran el ticket cuando se realiza la compra y entrega de lo que se pidió.
-
-)
+-sistema de notificaciones
+-arreglar el front de los modales y agregar componentes al modal

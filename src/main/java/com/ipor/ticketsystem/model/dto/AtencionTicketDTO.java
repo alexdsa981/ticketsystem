@@ -23,7 +23,6 @@ public class AtencionTicketDTO {
     private Usuario usuario;
 
     private TicketDTO ticket;
-    private List<ArchivoAdjunto> adjuntosTicket;
 
     private ClasificacionDesestimacion clasificacionDesestimacion;
     private ClasificacionUrgencia clasificacionUrgencia;
@@ -52,7 +51,7 @@ public class AtencionTicketDTO {
     //solo recepcion
     public AtencionTicketDTO(Recepcion recepcion, TicketService ticketService){
         this.id = recepcion.getId();
-        this.ticket = new TicketDTO(recepcion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(recepcion.getTicket().getId()));
+        this.ticket = new TicketDTO(recepcion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(recepcion.getTicket().getId()), ticketService.geComponentesAdjuntosDeTicketPorTicketID(recepcion.getTicket().getId()));
         this.usuario = recepcion.getUsuario();
         this.clasificacionUrgencia=recepcion.getClasificacionUrgencia();
         this.mensaje = recepcion.getMensaje();
@@ -65,7 +64,7 @@ public class AtencionTicketDTO {
     //solo servicio
     public AtencionTicketDTO(Servicio servicio, TicketService ticketService){
         this.id = servicio.getId();
-        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
+        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()), ticketService.geComponentesAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
         this.usuario = servicio.getUsuario();
         this.clasificacionServicio = servicio.getClasificacionServicio();
         this.descripcion = servicio.getDescripcion();
@@ -77,7 +76,7 @@ public class AtencionTicketDTO {
     }
     //combina recepcion y servicio para historial
     public AtencionTicketDTO(Servicio servicio, Recepcion recepcion, TicketService ticketService){
-        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
+        this.ticket = new TicketDTO(servicio.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()), ticketService.geComponentesAdjuntosDeTicketPorTicketID(servicio.getTicket().getId()));
         this.recepcionHistorial = recepcion;
         this.servicioHistorial = servicio;
 
@@ -90,7 +89,7 @@ public class AtencionTicketDTO {
     }
 
     public AtencionTicketDTO(Desestimacion desestimacion , TicketService ticketService){
-        this.ticket = new TicketDTO(desestimacion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(desestimacion.getTicket().getId()));
+        this.ticket = new TicketDTO(desestimacion.getTicket(), ticketService.getArchivosAdjuntosDeTicketPorTicketID(desestimacion.getTicket().getId()), ticketService.geComponentesAdjuntosDeTicketPorTicketID(desestimacion.getTicket().getId()));
         this.fecha = desestimacion.getFecha();
         this.fechaFormateadaDesestimacion = ConvertirFechaConFormato(this.fecha);
         this.hora = desestimacion.getHora();

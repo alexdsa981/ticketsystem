@@ -12,7 +12,7 @@
             <!-- Encabezado con título, contador y botones -->
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <h2>SOPORTE / Tickets Atendidos - Cerrados</h2>
+                    <h2>SOPORTE: Tickets Atendidos - Cerrados</h2>
                     <div id="ticketCount" class="badge bg-success ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
                         0
                     </div>
@@ -36,50 +36,69 @@
                 <table id="ticketTable" class="table table-bordered table-hover w-100">
                     <thead class="table-dark">
                         <tr>
-                            <th class="n-table">N°</th>
-                            <th class="n-table">Código</th>
-                            <th class="fecha-table">Fecha</th>
-                            <th class="hora-table">Hora</th>
-                            <th class="usuario-table">Soporte</th>
-                            <th class="usuario-table">Emisor</th>
-                            <th class="descripcion-table">Descripción de Incidencia</th>
-                            <th>Urgencia</th>
-                            <th class="descripcion-table">Descripción Atención</th>
-                            <th class="adjunto-table">Adjuntos</th>
-                            <th>Clasificación</th>
-                            <th class="acciones-table">Historial</th>
+                            <th >N°</th>
+                            <th >Código</th>
+                            <th >Fecha</th>
+                            <th >Hora</th>
+                            <th >Emisor</th>
+                            <th >Receptor</th>
+                            <th >Soporte</th>
+                            <th style="width:25%;">Motivo de Ticket</th>
+                            <th style="width:25%;">Mensaje Recepción</th>
+                            <th style="width:25%;">Descripción Atención</th>
+                            <th >Historial</th>
                         </tr>
                     </thead>
                     <tbody id="ticketTableBody">
                         <!-- Iterar sobre los tickets con un solo bucle th:each -->
                         <tr th:each="atendido, iter: ${AllAtendidos}">
+
                             <td th:text="${iter.count}">#</td>
                             <td th:text="${atendido.ticket.idFormateado}">#</td>
+
                             <td class="fecha" th:text="${atendido.fechaFormateadaServicio}">Fecha</td>
                             <td th:text="${atendido.horaFormateadaServicio}">Hora</td>
-                            <td class="usuario-atencion" th:text="${atendido.servicioHistorial.usuario.nombre}">Usuario Receptor</td>
-                            <td class="usuario-emisor" th:text="${atendido.ticket.usuario.nombre}">Usuario Emisor</td>
+
+                            <td class="usuario-emisor" th:text="${atendido.ticket.usuario.nombre}">Emisor</td>
+                            <td class="usuario-receptor" th:text="${atendido.recepcionHistorial.usuario.nombre}">Receptor</td>
+                            <td class="usuario-atencion" th:text="${atendido.servicioHistorial.usuario.nombre}">Soporte</td>
+
                             <td>
                                 <span class="nombreClasificacionIncidencia clasificacion"
                                     th:utext="${atendido.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                                 <span th:text="${#strings.length(atendido.ticket.descripcion) > 150 ? atendido.ticket.descripcion.substring(0, 150) + '...' : atendido.ticket.descripcion}"></span>
-                            </td>
-                            <td class="urgencia" th:text="${atendido.recepcionHistorial.clasificacionUrgencia.nombre}">Clasificacion Urgencia</td>
-                            <td th:text="${#strings.length(atendido.servicioHistorial.descripcion) > 150 ? atendido.servicioHistorial.descripcion.substring(0, 150) + '...' : atendido.servicioHistorial.descripcion}">
-                                Descripción de Atención
-                            </td>
-                            <td>
+                                <br>
                                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                                 <ul>
                                     <li th:each="adjunto: ${atendido.ticket.listaArchivosAdjuntos}">
                                         <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
-                                            th:text="${adjunto.nombre}">Archivo</a> - <span
-                                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                                           th:text="${adjunto.nombre}">Archivo</a> -
+                                        <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                                     </li>
                                 </ul>
                             </td>
-                            <td class="clasificacion-servicio" th:text="${atendido.servicioHistorial.clasificacionServicio.nombre}">Clasificación de
-                                atención</td>
+
+                            <td>
+                                <span class="nombreClasificacionIncidencia urgencia"
+                                      th:utext="${atendido.recepcionHistorial.clasificacionUrgencia.nombre + ':<br>'}"></span>
+                                <span th:text="${#strings.length(atendido.recepcionHistorial.mensaje) > 150 ? atendido.recepcionHistorial.mensaje.substring(0, 150) + '...' : atendido.recepcionHistorial.mensaje}"></span>
+                                <ul>
+                                    <li th:each="componente: ${atendido.ticket.listaComponentesAdjuntos}">
+                                        <span th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
+                                        <span th:text="${componente.cantidad}"></span>
+                                        <span th:text="${componente.tipoComponente.nombre}"></span>
+                                    </li>
+                                </ul>
+                            </td>
+
+                            <td>
+                                <span class="nombreClasificacionIncidencia clasificacion-servicio"
+                                  th:utext="${atendido.servicioHistorial.clasificacionServicio.nombre + ':<br>'}"></span>
+                                <span th:text="${#strings.length(atendido.servicioHistorial.descripcion) > 150 ? atendido.servicioHistorial.descripcion.substring(0, 150) + '...' : atendido.servicioHistorial.descripcion}"></span>
+                            </td>
+
+
+
 
                             <td>
                                 <!-- Botón de recepción que abre el modal -->
@@ -133,13 +152,18 @@
                         <div class="container">
                             <div class="row g-3 align-items-center">
                                 <div class="col-md-12">
-                                    <label for="usuarioAtencionFilter" class="form-label">Usuario Atencion:</label>
-                                    <input type="text" id="usuarioAtencionFilter" class="form-control"
+                                    <label for="usuarioEmisorFilter" class="form-label">Usuario Emisor:</label>
+                                    <input type="text" id="usuarioEmisorFilter" class="form-control"
                                            placeholder="Buscar por usuario">
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="usuarioEmisorFilter" class="form-label">Usuario Emisor:</label>
-                                    <input type="text" id="usuarioEmisorFilter" class="form-control"
+                                    <label for="usuarioReceptorFilter" class="form-label">Usuario Receptor:</label>
+                                    <input type="text" id="usuarioReceptorFilter" class="form-control"
+                                           placeholder="Buscar por usuario">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="usuarioAtencionFilter" class="form-label">Usuario Soporte:</label>
+                                    <input type="text" id="usuarioAtencionFilter" class="form-control"
                                            placeholder="Buscar por usuario">
                                 </div>
                                 <div class="col-md-12">
@@ -147,7 +171,7 @@
                                     <input type="date" id="fechaFilter" class="form-control">
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="clasificacionFilter" class="form-label">Clasificación:</label>
+                                    <label for="clasificacionFilter" class="form-label">Clasificación Incidencia:</label>
                                     <select class="form-select" id="clasificacionFilter" name="clasificacion_incidencia"
                                             required>
                                         <option selected disabled value="">Selecciona Incidencia</option>

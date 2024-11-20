@@ -95,43 +95,43 @@ public class WebController {
         return "admin/clasificadores";
     }
 
-    @GetMapping("/soporte/Recibidos")
+    @GetMapping("/soporte/Recepcionar")
     public String redirigePaginaTicketsRecibidos(Model model) {
         ticketController.retornaTicketsRecibidosAVista(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaTipoComponentesActivos(model);
-        model.addAttribute("Titulo", "HelpDesk | Soporte - Recibidos");
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Recepcionar Tickets");
         return "/soporte/ticketsRecibidos";
     }
 
-    @GetMapping("/soporte/Recepcionados")
+    @GetMapping("/soporte/Atender")
     public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.getListaTodosLosTicketsRecepcionadosAVista(model);
         clasificadoresController.getListaClasificacionesServicioActivos(model);
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk | Soporte - Recepcionados");
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Atender Tickets");
         return "soporte/ticketsRecepcionados";
     }
 
-    @GetMapping("/soporte/Atendidos")
+    @GetMapping("/soporte/Tickets-Cerrados")
     public String redirigePaginaTicketsAtendidos(Model model) {
         atencionController.getListaTodosLosTicketsAtendidosAVista(model);
         clasificadoresController.getListaClasificacionesServicioActivos(model);
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
-        model.addAttribute("Titulo", "HelpDesk | Soporte - Atendidos");
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets Cerrados");
         return "soporte/ticketsAtendidos";
     }
-    @GetMapping("/soporte/Desestimados")
+    @GetMapping("/soporte/Tickets-Desestimados")
     public String redirigePaginaTicketsDesestimados(Model model) {
         atencionController.getListaTodosLosTicketsDesestimadosAVista(model);
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
-        model.addAttribute("Titulo", "HelpDesk | Soporte - Desestimados");
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets Desestimados");
         return "soporte/ticketsDesestimados";
     }
 
@@ -157,12 +157,14 @@ public class WebController {
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaTipoComponentesActivos(model);
         ticketController.retornaTicketsRecibidosAVistaDireccion(model);
+        model.addAttribute("Titulo", "HelpDesk | Dirección - Tickets Recibidos");
         return "direccion/ticketsRedirigidos";
     }
     //Metodo para manejar fragment expression
     @GetMapping("/direccion/Historial")
     public String redirigePaginaHistorialDireccion(Model model) {
 
+        model.addAttribute("Titulo", "HelpDesk | Dirección - Recepciones Realizadas");
         return "direccion/historial";
     }
     //Metodo para manejar fragment expression

@@ -213,7 +213,8 @@ public class AtencionController {
         List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {});
         for (Long idcomponente : componentesSeleccionados){
             System.out.println(idcomponente);
-            TipoComponenteAdjunto componenteAdjuntoAprobado = new TipoComponenteAdjunto();
+            new TipoComponenteAdjunto();
+            TipoComponenteAdjunto componenteAdjuntoAprobado;
             componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
             componenteAdjuntoAprobado.setAprobado(true);
             ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
@@ -222,24 +223,10 @@ public class AtencionController {
         atencionService.updateFaseTicket(id, 2L);
         // Lógica para crear la recepcion
         Recepcion recepcion = new Recepcion();
-        List<TipoComponenteAdjunto> listaComponentesParaMensaje = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
 
 
 
-        StringBuilder mensajeFinal = new StringBuilder(); // Iniciar con el mensaje base
-
-        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesParaMensaje) {
-            String aprobacion = componenteAdjunto.getAprobado() ? "[APROBADO]" : "[NO APROBADO]";
-            mensajeFinal.append(" ")
-                    .append(componenteAdjunto.getCantidad())
-                    .append(" ")
-                    .append(componenteAdjunto.getTipoComponente().getNombre())
-                    .append(" ")
-                    .append(aprobacion)
-                    .append(" ||");
-        }
-
-        recepcion.setMensaje(mensaje + "  || " + mensajeFinal.toString());
+        recepcion.setMensaje(mensaje);
 
 
 
@@ -251,7 +238,7 @@ public class AtencionController {
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
 
-        response.sendRedirect("/direccion/Recibidos");
+        response.sendRedirect("/direccion/Recepcionar");
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
 
