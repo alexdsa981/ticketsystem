@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <!-- Modal Genérico para atención -->
+    <!-- Modal para atención -->
     <div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -139,8 +139,9 @@
                     </div>
 
                     <div class="modal-body">
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <!-- Sección de Detalles del Ticket -->
-                        <h5 class="text-primary mb-3">Detalles del Ticket</h5>
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
@@ -156,9 +157,17 @@
                                 <p id="modalTicketDescripcion"></p>
                             </div>
                         </div>
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE RECEPCIÓN</strong></p>
+                        <!-- Sección de Detalles de recepcion -->
+
+
+
+
 
                         <!-- Sección de Comentarios de Servicio -->
-                        <h5 class="text-primary mb-3">Detalles del Servicio</h5>
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE LA ATENCIÓN</strong></p>
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label for="descripcionAtencion" class="form-label"><strong>Descripción de
@@ -237,12 +246,12 @@
                             <div class="col-md-12">
                                 <label for="usuarioReceptorFilter" class="form-label">Usuario Receptor:</label>
                                 <input type="text" id="usuarioReceptorFilter" class="form-control"
-                                    placeholder="Buscar por usuario">
+                                    placeholder="Buscar por usuario" autocomplete="off">
                             </div>
                             <div class="col-md-12">
                                 <label for="usuarioEmisorFilter" class="form-label">Usuario Emisor:</label>
                                 <input type="text" id="usuarioEmisorFilter" class="form-control"
-                                    placeholder="Buscar por usuario">
+                                    placeholder="Buscar por usuario" autocomplete="off">
                             </div>
                             <div class="col-md-12">
                                 <label for="fechaFilter" class="form-label">Fecha:</label>
@@ -285,6 +294,8 @@
                     </div>
 
                     <div class="modal-body">
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
                         <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
                         <p><strong>Clasificación:</strong> <span id="desestimacionTicketClasificacion"></span></p>
@@ -292,6 +303,8 @@
                         <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span id="desestimacionTicketHora"></span></p>
 
                         <!-- Campo adicional para comentarios de desestimación -->
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE DESESTIMACIÓN</strong></p>
                         <div class="mb-3">
                             <label for="comentariosDesestimacion" class="form-label">Comentarios de Desestimación</label>
                             <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"

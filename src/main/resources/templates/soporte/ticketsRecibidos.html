@@ -172,7 +172,7 @@
                             <div class="col-md-12">
                                 <label for="usuarioEmisorFilter" class="form-label">Usuario:</label>
                                 <input type="text" id="usuarioEmisorFilter" class="form-control"
-                                    placeholder="Buscar por usuario">
+                                    placeholder="Buscar por usuario" autocomplete="off">
                             </div>
 
                             <div class="col-md-12">
@@ -211,6 +211,8 @@
                     </div>
 
                     <div class="modal-body">
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
                         <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
                         <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
@@ -218,9 +220,9 @@
                         <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span
                                 id="modalTicketHora"></span>
                         </p>
-
-
                         <!-- Campo adicional para comentarios de recepción o cambios -->
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE LA RECEPCIÓN</strong></p>
                         <div class="mb-3">
                             <label for="comentariosRecepcion" class="form-label">Comentarios de Recepción</label>
                             <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
@@ -288,6 +290,8 @@
                     </div>
 
                     <div class="modal-body">
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
                         <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
                         <p><strong>Clasificación:</strong> <span id="desestimacionTicketClasificacion"></span></p>
@@ -295,6 +299,8 @@
                         <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span
                                 id="desestimacionTicketHora"></span></p>
 
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE DESESTIMACIÓN</strong></p>
                         <!-- Campo adicional para comentarios de desestimación -->
                         <div class="mb-3">
                             <label for="comentariosDesestimacion" class="form-label">Comentarios de
@@ -362,6 +368,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <p><strong>ID del Ticket:</strong> <span id="redireccionTicketId"></span></p>
                         <p><strong>Usuario:</strong> <span id="redireccionTicketUsuario"></span></p>
                         <p><strong>Clasificación:</strong> <span id="redireccionTicketClasificacion"></span></p>
@@ -369,6 +377,8 @@
                         <p><strong>Fecha:</strong> <span id="redireccionTicketFecha"></span> |
                             <span id="redireccionTicketHora"></span>
                         </p>
+                        <hr>
+                        <p style="text-align:center;"><strong>DETALLES DE REDIRECCIÓN</strong></p>
                         <!-- Componentes y cantidades -->
                         <div id="componentesContainer">
                             <div class="row mb-2 align-items-center componente-fila">

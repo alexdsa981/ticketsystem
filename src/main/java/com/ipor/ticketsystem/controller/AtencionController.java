@@ -238,7 +238,7 @@ public class AtencionController {
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
 
-        response.sendRedirect("/direccion/Recepcionar");
+        response.sendRedirect("/direccion/Recibidos");
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
 
