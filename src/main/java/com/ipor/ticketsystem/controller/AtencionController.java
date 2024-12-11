@@ -43,6 +43,12 @@ public class AtencionController {
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return  model;
     }
+    public Model getListaMisTicketsRecepcionadosDirecciónAVista(Model model) {
+        List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
+        Collections.reverse(MyRecepcionados);
+        model.addAttribute("MyRecepcionados", MyRecepcionados);
+        return  model;
+    }
     public Model getListaTodosLosTicketsRecepcionadosAVista(Model model) {
         List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
         model.addAttribute("AllRecepcionados", AllRecepcionados);

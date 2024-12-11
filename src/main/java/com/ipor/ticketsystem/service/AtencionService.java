@@ -57,6 +57,15 @@ public class AtencionService {
         }
         return listaRecepcionadosDTO;
     }
+    public List<AtencionTicketDTO> getMyListaRecepcionadosDireccion() {
+        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
+        List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
+        for (Recepcion recepcion : listaRecepcionados) {
+            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
+            listaRecepcionadosDTO.add(recepcionadoDTO);
+        }
+        return listaRecepcionadosDTO;
+    }
 
     //metodo para retornar todos los tickets desestimados:
     public List<AtencionTicketDTO> getListaDesestimados() {
