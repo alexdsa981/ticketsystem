@@ -46,6 +46,16 @@ public class AtencionService {
         }
         return listaRecepcionadosDTO;
     }
+    //metodo para retornar todos los tickets en proceso en Direccion:
+    public List<AtencionTicketDTO> getListaRecepcionadosDireccion() {
+        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketFaseID2AndUsuarioRol4();
+        List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
+        for (Recepcion recepcion : listaRecepcionados) {
+            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
+            listaRecepcionadosDTO.add(recepcionadoDTO);
+        }
+        return listaRecepcionadosDTO;
+    }
 
     //metodo para retornar Mis tickets en proceso:
     public List<AtencionTicketDTO> getMyListaRecepcionados() {
@@ -57,15 +67,7 @@ public class AtencionService {
         }
         return listaRecepcionadosDTO;
     }
-    public List<AtencionTicketDTO> getMyListaRecepcionadosDireccion() {
-        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
-        List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
-        for (Recepcion recepcion : listaRecepcionados) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
-            listaRecepcionadosDTO.add(recepcionadoDTO);
-        }
-        return listaRecepcionadosDTO;
-    }
+
 
     //metodo para retornar todos los tickets desestimados:
     public List<AtencionTicketDTO> getListaDesestimados() {

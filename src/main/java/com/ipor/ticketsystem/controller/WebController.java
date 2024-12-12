@@ -163,9 +163,9 @@ public class WebController {
     //Metodo para manejar fragment expression
     @GetMapping("/direccion/Historial")
     public String redirigePaginaHistorialDireccion(Model model) {
-
+        atencionController.getListaTodosLosTicketsRecepcionadosPorDireccionAVista(model);
         model.addAttribute("Titulo", "HelpDesk | Dirección - Recepciones Realizadas");
-        return "direccion/historial";
+        return "direccion/historialRecepcion";
     }
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
