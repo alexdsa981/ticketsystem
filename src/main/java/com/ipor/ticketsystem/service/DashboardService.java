@@ -1,7 +1,7 @@
 package com.ipor.ticketsystem.service;
 
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoxFactor;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -32,13 +32,13 @@ public class DashboardService {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
     }
 
-    public List<RecordConteoTicketxFactor> obtenerConteoDeTicketsPorFase(){
+    public List<RecordConteoxFactor> obtenerConteoDeTicketsPorFase(){
         return ticketRepository.findTicketCountByFase();
     }
-    public List <RecordConteoTicketxFactor> obtenerConteoDeTicketsPorClasificacionIncidencia(){
+    public List <RecordConteoxFactor> obtenerConteoDeTicketsPorClasificacionIncidencia(){
         return ticketRepository.findTicketCountByClasificacionIncidencia();
     }
-    public List <RecordConteoTicketxFactor> obtenerConteoDeTicketsPorClasificacionUrgencia(){
+    public List <RecordConteoxFactor> obtenerConteoDeTicketsPorClasificacionUrgencia(){
         return ticketRepository.findTicketCountByClasificacionUrgencia();
     }
 }

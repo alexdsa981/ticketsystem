@@ -12,4 +12,6 @@ public interface TipoComponenteAdjuntoRepository extends JpaRepository<TipoCompo
     @Query("SELECT a FROM TipoComponenteAdjunto a WHERE a.ticket.id = :ticketId")
     List<TipoComponenteAdjunto> BuscarPorIdTicket(@Param("ticketId") Long ticketId);
 
+
+
 }

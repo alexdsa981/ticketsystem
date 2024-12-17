@@ -1,9 +1,9 @@
 EN PROCESO
 
--Los tickets que se reenvían y son aceptados se mostrarán en el apartado Historial de Dirección, donde se hará
-el query buscando los tickets recepcionados por los usuarios con este el Rol Direccion
 
 -puede ver el dashboard de admin (colocar filtros de fecha)
+
+
 -tiene su propio dashboard (solicitudes por aprobar, cantidad de mouse, teclado, monitor, entre otros se han pedido)
 
 
