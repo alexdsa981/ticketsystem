@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoxFactor;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,14 +48,21 @@ public class DashboardController {
         return ResponseEntity.ok(ntotal);
     }
 
+    // Endpoint para obtener el número total de atendidos
+    @GetMapping("/contador/redireccionados")
+    public ResponseEntity<Long> getTotalRedireccionados() {
+        Long ntotal = dashboardService.obtenerNTotalRedireccionados();
+        return ResponseEntity.ok(ntotal);
+    }
+
     @GetMapping("/grafico/EstadoActual")
     public ResponseEntity<Map<String, Object>> getGraficoData() {
         // Obtienes el conteo de tickets por fase
-        List<RecordConteoxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
 
         // Mapear nombres de fase y conteos en listas separadas
         List<String> etiquetas = conteoTickets.stream()
-                .map(RecordConteoxFactor::nombre)
+                .map(RecordFactorXConteo::nombre)
                 .collect(Collectors.toList());
         List<Long> datos = conteoTickets.stream()
                 .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
@@ -73,11 +80,11 @@ public class DashboardController {
     @GetMapping("/grafico/TicketsporIncidencia")
     public ResponseEntity<Map<String, Object>> getTxIGraficoData() {
         // Obtienes el conteo de tickets por fase
-        List<RecordConteoxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia();
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia();
 
         // Mapear nombres de fase y conteos en listas separadas
         List<String> etiquetas = conteoTickets.stream()
-                .map(RecordConteoxFactor::nombre)
+                .map(RecordFactorXConteo::nombre)
                 .collect(Collectors.toList());
         List<Long> datos = conteoTickets.stream()
                 .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
@@ -95,13 +102,35 @@ public class DashboardController {
     @GetMapping("/grafico/TicketsporUrgencia")
     public ResponseEntity<Map<String, Object>> getTxUGraficoData() {
         // Obtienes el conteo de tickets por fase
-        List<RecordConteoxFactor> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionUrgencia();
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionUrgencia();
 
         // Mapear nombres de fase y conteos en listas separadas
         List<String> etiquetas = conteoTickets.stream()
-                .map(RecordConteoxFactor::nombre)
+                .map(RecordFactorXConteo::nombre)
                 .collect(Collectors.toList());
         List<Long> datos = conteoTickets.stream()
+                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
+                .collect(Collectors.toList());
+
+        // Crear la respuesta en formato JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("etiquetas", etiquetas);
+        response.put("datos", datos);
+
+        // Devuelve la respuesta como JSON
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/grafico/TipoComponentesAdjuntosAprobados")
+    public ResponseEntity<Map<String, Object>> getTCAAprobados() {
+        // Obtienes el conteo de tickets por fase
+        List<RecordFactorXConteo> conteoComponentesAdjuntos = dashboardService.obtenerConteoDeComponentesAdjuntosAprobados();
+
+        // Mapear nombres de fase y conteos en listas separadas
+        List<String> etiquetas = conteoComponentesAdjuntos.stream()
+                .map(RecordFactorXConteo::nombre)
+                .collect(Collectors.toList());
+        List<Long> datos = conteoComponentesAdjuntos.stream()
                 .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
                 .collect(Collectors.toList());
 

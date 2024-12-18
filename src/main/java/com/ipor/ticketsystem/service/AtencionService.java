@@ -1,13 +1,11 @@
 package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.Desestimacion;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
+import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionDesestimacionRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
@@ -27,12 +25,6 @@ public class AtencionService {
     DesestimacionRepository desestimacionRepository;
     @Autowired
     TicketService ticketService;
-    @Autowired
-    ClasificacionUrgenciaRepository clasificacionUrgenciaRepository;
-    @Autowired
-    ClasificacionServicioRepository clasificacionServicioRepository;
-    @Autowired
-    ClasificacionDesestimacionRepository clasificacionDesestimacionRepository;
     @Autowired
     UsuarioService usuarioService;
 

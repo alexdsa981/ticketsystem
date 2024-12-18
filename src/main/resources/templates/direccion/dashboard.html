@@ -9,13 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <div class="container" style="margin-top: 10px">
         <h2>DIRECCIÓN: Dashboard</h2>
-        <p>Estado Actual - Pendientes:</p>
-        <div class="row">
-
+        <p>Estado Actual:</p>
+        <div class="row justify-content-center align-items-center">
             <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/direccion/Recepcionar" class="btn-dashboard">
+                <a href="/direccion/Recibidos" class="btn-dashboard">
                     <div class="rounded text-dark card" style="background-color: #f8d7da;">
-                        <p class="mb-0">Tickets Solicitados</p>
+                        <p class="mb-0">Tickets Recibidos</p>
                         <div class="info-container">
                             <span id="nRecibidos" class="h4 mb-0">0</span> <!-- ID agregado -->
                             <i class="bi bi-ticket icon"></i>
@@ -23,166 +22,166 @@
                     </div>
                 </a>
             </div>
-
-
-            <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/soporte/Atender" class="btn-dashboard">
-                    <div class="rounded text-dark card" style="background-color: #fff3cd;">
-                        <p class="mb-0">Tickets Recepcionados</p>
-                        <div class="info-container">
-                            <span id="ntotalRecepcionados" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check-circle icon"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/soporte/Tickets-Cerrados" class="btn-dashboard">
-                    <div class="rounded text-dark card" style="background-color: #d4edda; color: #6c757d;">
-                        <p class="mb-0">Total: Tickets Desestimados</p>
-                        <div class="info-container">
-                            <span id="ntotalAtendidos" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check2-circle icon"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
         </div>
     </div>
 
-    <div class="container text-center mt-4">
-        <div class="d-flex justify-content-center align-items-center gap-3">
-            <div style="width: 500px;">
-                <canvas id="graficoEstadoActualTickets" style="width: 100%; height: 400px;"></canvas>
+    <script>
+        // URL del endpoint que devuelve el número de tickets por recepcionar
+        const endpoint = '/app/dashboard/contador/redireccionados';
+
+        // Función para actualizar el contenido de nRecibidos
+        function actualizarNRecibidos() {
+            fetch(endpoint)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json(); // Asume que el endpoint devuelve un número en formato JSON
+                })
+                .then(data => {
+                    // Actualizar el valor en el DOM
+                    document.getElementById('nRecibidos').textContent = data;
+                })
+                .catch(error => console.error('Error al obtener nRecibidos:', error));
+        }
+
+        // Llamar a la función al cargar la página
+        actualizarNRecibidos();
+
+        // Actualizar cada 5 segundos
+        setInterval(actualizarNRecibidos, 5000);
+    </script>
+
+
+
+    <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
+        <h3>Gráfico de Componentes Solicitados Aprobados</h3>
+        <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+            <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-2 order-md-1">
+                <table class="table table-bordered table-hover" style="font-size:14px;">
+                    <thead>
+                    <tr>
+                        <th>Componente Solicitado</th>
+                        <th>Contador</th>
+                        <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                    </tr>
+                    </thead>
+                    <tbody id="tablaComponentesAprobados">
+                    <!-- Filas se agregarán dinámicamente aquí -->
+                    </tbody>
+                </table>
             </div>
-            <div style="width: 300px;">
-                <canvas id="graficoTotalAtendidos" style="width: 100%; height: 400px;"></canvas>
+            <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-1 order-md-2">
+                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                <canvas id="graficoComponentesAprobados"
+                        style="max-width: 100%; height: 400px; margin-top:10px; margin-bottom:10px;"></canvas>
             </div>
         </div>
     </div>
-
 
     <script th:inline="javascript">
-        let graficoEstadoActualTickets = null;
-        let graficoTotalAtendidos = null;
+        let graficoComponentesAprobados = null;
+        let etiquetasComponentes = []; // Inicialmente vacías hasta que se obtengan del servidor
+        let datosComponentes = [];     // Datos vacíos hasta que se obtengan del servidor
 
-        // Función para crear o actualizar los gráficos
-        function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
-            const ctx = document.getElementById(idCanvas).getContext('2d');
+        // Función para actualizar la tabla con los datos actuales del gráfico
+        function actualizarTablaComponentes() {
+            const tablaBody = document.getElementById('tablaComponentesAprobados');
+            tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
 
-            if (idCanvas === 'graficoEstadoActualTickets') {
-                if (graficoEstadoActualTickets) {
-                    graficoEstadoActualTickets.data.labels = etiquetas;
-                    graficoEstadoActualTickets.data.datasets[0].data = datos;
-                    graficoEstadoActualTickets.update();
-                } else {
-                    graficoEstadoActualTickets = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: etiquetas,
-                            datasets: [{
-                                label: label,
-                                data: datos,
-                                backgroundColor: colores.background,
-                                borderColor: colores.border,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1,
-                                        callback: function(value) {
-                                            return Number.isInteger(value) ? value : null;
-                                        }
-                                    }
-                                }
+            // Calcula el total de todos los tickets sumando los valores de datosComponentes
+            const totalTickets = datosComponentes.reduce((acc, count) => acc + count, 0);
+
+            etiquetasComponentes.forEach((etiqueta, index) => {
+                const conteo = datosComponentes[index];
+                const porcentaje = totalTickets > 0 ? ((conteo / totalTickets) * 100).toFixed(2) : 0; // Calcula el porcentaje
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${etiqueta}</td>
+                    <td>${conteo}</td>
+                    <td>${porcentaje}%</td> <!-- Nueva columna para el porcentaje -->
+                `;
+                tablaBody.appendChild(row);
+            });
+        }
+
+        // Función para crear o actualizar el gráfico
+        function crearOActualizarGraficoComponentes() {
+            const ctx = document.getElementById('graficoComponentesAprobados').getContext('2d');
+
+            if (graficoComponentesAprobados) {
+                // Si el gráfico ya existe, actualizamos solo los datos
+                graficoComponentesAprobados.data.labels = etiquetasComponentes;
+                graficoComponentesAprobados.data.datasets[0].data = datosComponentes;
+                graficoComponentesAprobados.update();
+            } else {
+                // Si el gráfico no existe, lo creamos
+                graficoComponentesAprobados = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: etiquetasComponentes,
+                        datasets: [{
+                            label: 'Tickets por Componentes',
+                            data: datosComponentes,
+                            backgroundColor: [
+                                'rgba(169, 169, 169, 0.2)',  // Gris
+                                'rgba(135, 206, 235, 0.2)',  // Celeste
+                                'rgba(75, 192, 192, 0.2)',   // Verde
+                                'rgba(255, 206, 86, 0.2)',   // Amarillo
+                                'rgba(153, 102, 255, 0.2)',  // Morado
+                                'rgba(255, 159, 64, 0.2)'    // Naranja
+                            ],
+                            borderColor: [
+                                'rgba(169, 169, 169, 1)',    // Gris
+                                'rgba(135, 206, 235, 1)',    // Celeste
+                                'rgba(75, 192, 192, 1)',     // Verde
+                                'rgba(255, 206, 86, 1)',     // Amarillo
+                                'rgba(153, 102, 255, 1)',    // Morado
+                                'rgba(255, 159, 64, 1)'      // Naranja
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Tickets por Componentes'
                             }
                         }
-                    });
-                }
-            } else if (idCanvas === 'graficoTotalAtendidos') {
-                if (graficoTotalAtendidos) {
-                    graficoTotalAtendidos.data.labels = etiquetas;
-                    graficoTotalAtendidos.data.datasets[0].data = datos;
-                    graficoTotalAtendidos.update();
-                } else {
-                    graficoTotalAtendidos = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: etiquetas,
-                            datasets: [{
-                                label: label,
-                                data: datos,
-                                backgroundColor: colores.background,
-                                borderColor: colores.border,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true
-                        }
-                    });
-                }
+                    }
+                });
             }
         }
 
-        // Función para obtener los datos del endpoint y actualizar los gráficos
-        function actualizarDatos() {
-            fetch('/app/dashboard/grafico/EstadoActual')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Error en la respuesta del servidor");
-                    }
-                    return response.json();
-                })
+        // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
+        function actualizardatosComponentes() {
+            fetch('/app/dashboard/grafico/TipoComponentesAdjuntosAprobados')
+                .then(response => response.json())
                 .then(data => {
-                    const etiquetas = data.etiquetas.slice(0, 3); // Tomamos las primeras 3 etiquetas
-                    etiquetas[0] = "Solicitados";
-                    etiquetas[1] = "Recepcionado";
-                    const datos = data.datos.slice(0, 3); // Tomamos los primeros 3 valores de datos
+                    // Asigna los datos obtenidos del servidor
+                    etiquetasComponentes = data.etiquetas || [];
+                    datosComponentes = data.datos || [];
 
-                    // Actualizamos contadores individuales en el DOM
-                    document.getElementById("nRecibidos").textContent = datos[0] || 0;
-                    document.getElementById("ntotalRecepcionados").textContent = datos[1] || 0;
-                    document.getElementById("ntotalAtendidos").textContent = datos[2] || 0;
-
-                    // Crear/actualizar gráficos
-                    crearGrafico(
-                        etiquetas.slice(0, 2),
-                        datos.slice(0, 2),
-                        'graficoEstadoActualTickets',
-                        'Tickets',
-                        {
-                            background: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 206, 86, 0.2)'],
-                            border: ['rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)']
-                        }
-                    );
-
-                    crearGrafico(
-                        [etiquetas[2]],
-                        [datos[2]],
-                        'graficoTotalAtendidos',
-                        'Total Tickets Atendidos',
-                        {
-                            background: ['rgba(75, 192, 192, 0.2)'],
-                            border: ['rgba(75, 192, 192, 1)']
-                        }
-                    );
+                    // Llama a las funciones para actualizar el gráfico y la tabla
+                    crearOActualizarGraficoComponentes();
+                    actualizarTablaComponentes();
                 })
-                .catch(error => console.error('Error al obtener los datos:', error));
+                .catch(error => console.error('Error al obtener los datos del gráfico:', error));
         }
 
-        // Llamamos a la función para actualizar los datos y crear los gráficos
-        actualizarDatos();
-
-        // Actualiza los datos cada 5 segundos
-        setInterval(actualizarDatos, 5000);
+        // Llamada inicial y configuración de la actualización periódica
+        actualizardatosComponentes();
+        setInterval(actualizardatosComponentes, 5000); // Actualiza cada 5 segundos
     </script>
-
 
 </main>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>

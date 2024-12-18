@@ -1,7 +1,7 @@
 package com.ipor.ticketsystem.service;
 
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoxFactor;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -25,20 +25,24 @@ public class DashboardService {
     public long obtenerNTotalRecepcionados() {
         return recepcionRepository.count();
     }
-    public long obtenerNTotalAtendidos() {
-        return servicioRepository.count();
-    }
+    public long obtenerNTotalAtendidos() {return servicioRepository.count();}
     public long obtenerNTotalDesestimados() {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
     }
+    public long obtenerNTotalRedireccionados() {
+        return ticketRepository.countByFaseTicketNombre("Espera en Dirección");
+    }
 
-    public List<RecordConteoxFactor> obtenerConteoDeTicketsPorFase(){
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(){
         return ticketRepository.findTicketCountByFase();
     }
-    public List <RecordConteoxFactor> obtenerConteoDeTicketsPorClasificacionIncidencia(){
+    public List <RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionIncidencia(){
         return ticketRepository.findTicketCountByClasificacionIncidencia();
     }
-    public List <RecordConteoxFactor> obtenerConteoDeTicketsPorClasificacionUrgencia(){
+    public List <RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionUrgencia(){
         return ticketRepository.findTicketCountByClasificacionUrgencia();
+    }
+    public List <RecordFactorXConteo> obtenerConteoDeComponentesAdjuntosAprobados(){
+        return ticketRepository.findGroupedByTipoComponenteAprobado();
     }
 }

@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.repository.dynamic;
 
-import com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoxFactor;
+import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,31 +18,33 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     long count();
     long countByFaseTicketNombre(String nombre);
 
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(ft.nombre, " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ft.nombre, " +
             "COALESCE(COUNT(t), 0)) " +
             "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft " +
             "GROUP BY ft.nombre " +
             "ORDER BY MIN(ft.id)")
-    List<RecordConteoxFactor> findTicketCountByFase();
+    List<RecordFactorXConteo> findTicketCountByFase();
 
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(ci.nombre, COUNT(t)) " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(t)) " +
             "FROM Ticket t INNER JOIN t.clasificacionIncidencia ci " +
             "GROUP BY ci.nombre")
-    List<RecordConteoxFactor> findTicketCountByClasificacionIncidencia();
+    List<RecordFactorXConteo> findTicketCountByClasificacionIncidencia();
 
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordConteoTicketxFactor(cu.nombre, COUNT(t)) " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(t)) " +
             "FROM Ticket t " +
             "INNER JOIN t.recepcion r " +
             "INNER JOIN r.clasificacionUrgencia cu " +
             "WHERE t.faseTicket.id = 3 " +
             "GROUP BY cu.nombre")
-    List<RecordConteoxFactor> findTicketCountByClasificacionUrgencia();
+    List<RecordFactorXConteo> findTicketCountByClasificacionUrgencia();
 
-    @Query(value = "SELECT id_tipo_componente, SUM(cantidad) AS cantidad " +
-            "FROM tipo_componente_adjunto " +
-            "WHERE aprobado = 1 " +
-            "GROUP BY id_tipo_componente", nativeQuery = true)
-    List<RecordConteoxFactor> findGroupedByTipoComponente();
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(tc.nombre, SUM(tca.cantidad)) " +
+            "FROM TipoComponenteAdjunto tca " +
+            "INNER JOIN tca.tipoComponente tc " +
+            "WHERE tca.aprobado = true " +
+            "GROUP BY tc.nombre")
+    List<RecordFactorXConteo> findGroupedByTipoComponenteAprobado();
+
 
 
 

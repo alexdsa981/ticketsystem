@@ -7,6 +7,7 @@ import com.ipor.ticketsystem.model.dynamic.Desestimacion;
 import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
+import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +34,8 @@ public class AtencionController {
     UsuarioService usuarioService;
     @Autowired
     ClasificadoresService clasificadoresService;
+    @Autowired
+    TipoComponenteAdjuntoRepository tipoComponenteAdjuntoRepository;
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS DESDE LA FASE RECEPCIÓN
     // ATENDIDO O DESESTIMADO EN LAS VISTAS
@@ -157,6 +160,11 @@ public class AtencionController {
         desestimacion.setFecha(desestimacion.getFecha());
         atencionService.saveDesestimacion(desestimacion);
 
+        //eliminar los componentes adjuntos
+        List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
+        for(TipoComponenteAdjunto componente : componentesAdjuntos){
+            tipoComponenteAdjuntoRepository.delete(componente);
+        }
         if (atencionService.findRecepcionByTicketID(id) != null){
             atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
         }else{

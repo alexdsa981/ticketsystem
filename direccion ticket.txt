@@ -3,10 +3,5 @@ EN PROCESO
 
 -puede ver el dashboard de admin (colocar filtros de fecha)
 
-
--tiene su propio dashboard (solicitudes por aprobar, cantidad de mouse, teclado, monitor, entre otros se han pedido)
-
-
-
 -sistema de notificaciones
 -arreglar el front de los modales y agregar componentes al modal
