@@ -11,7 +11,7 @@ const stompClient = Stomp.over(socket);
         console.log('Conectado: ' + frame);
 
     // Verifica si estás en la página específica antes de suscribirte
-    if (window.location.pathname === '/soporte/Recibidos') {
+    if (window.location.pathname === '/soporte/Recepcionar') {
         stompClient.subscribe('/topic/tickets', (message) => {
             // Aquí recibes el mensaje
             const ticketRecord = JSON.parse(message.body);

@@ -6,15 +6,20 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="/imports/sweetalert2.min.css">
+    <script src="/imports/sweetalert2.all.min.js"></script>
+
+
+    <!--CSS LOCAL BOOSTRAP ICONS 1.11.3-->
+    <link rel="stylesheet" href="/imports/bootstrap-icons/font/bootstrap-icons.min.css">
+
+    <!--Para usar WS LOCAL-->
+    <script src="/imports/sockjs.min.js"></script>
+    <script src="/imports/stomp.min.js"></script>
 
 
 
-    <!--BOOSTRAP 5.3.3-->
+    <!--CSS LOCAL BOOSTRAP 5.3.3-->
     <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css"/>
 
     <link rel="stylesheet" th:href="@{/general.css}"/>
@@ -33,6 +38,7 @@
         <p id="notificationMessage"></p>
     </div>
     <audio id="notificationSound" src="/sounds/alert.mp3" preload="auto"></audio>
+    <!--JS LOCAL BOOSTRAP 5.3.3-->
     <script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>

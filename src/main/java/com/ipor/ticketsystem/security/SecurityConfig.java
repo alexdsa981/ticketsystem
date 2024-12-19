@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         // Funcionalidades de la app permitidas a todos sin loguearse
-                        .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/images/**", "/css/**", "/js/**", "/imports/**").permitAll()
                         .requestMatchers("/app/login/**").permitAll()
                         .requestMatchers("/app/logout/**").permitAll()
                         //paginas front permitidas sin logearse
