@@ -132,6 +132,27 @@
                         </script>
                     </li>
                 </ul>
+
+                    <div class="dropdown">
+                        <button
+                                id="notificaciones-btn"
+                                class="btn btn-light position-relative dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi bi-bell"></i>
+                            <span
+                                    id="notificaciones-contador"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                              0
+                            </span>
+                        </button>
+                        <ul id="notificaciones-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificaciones-btn" style="max-height: 300px; overflow-y: auto;">
+                            <li><span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span></li>
+                        </ul>
+                    </div>
+
+                
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <form action="/app/logout" method="POST">
