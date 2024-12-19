@@ -4,4 +4,15 @@ EN PROCESO
 -puede ver el dashboard de admin (colocar filtros de fecha)
 
 -sistema de notificaciones
+(
+
+    Toda esta info se puede colocar en el mensaje a través del servidor
+    (
+        -Mostrará el id del ticket formateado ej: TK-0142
+        -Quién creó/recepcionó/atendió/desestimó el ticket
+    )
+    -fecha y hora de la notificación o acción
+    -mensaje ej:"El ticket TK-0142 ha sido atendido por Alexander Saldaña"
+
+realizada al ticket)
 -arreglar el front de los modales y agregar componentes al modal
