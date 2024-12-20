@@ -89,7 +89,10 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
         }
     }
-
+    //retorna lista de usuarios por rol
+    public List<Usuario> ListaUsuariosPorRol(Long idRolUsuario){
+        return usuarioRepository.findByIdRolUsuario(idRolUsuario);
+    }
     //retorna todos los roles:
     public List<RolUsuario> getListaRoles(){
         return rolUsuarioRepository.findAll();

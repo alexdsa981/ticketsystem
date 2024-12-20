@@ -3,9 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.NotificationService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.TicketService;
@@ -105,6 +103,24 @@ public class TicketController {
             }
 
         }
+
+
+        List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
+        for (Usuario soporte : listaSoportes){
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(ticket);
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(soporte);
+            notificacion.setMensaje(ticket.getUsuario().getNombre() + "Ha Enviado un Ticket");
+            notificacion.setUrl("/soporte/Recepcionar");
+        }
+
+
+
+
         TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
         // Enviar el ticket creado a través de WebSocket
