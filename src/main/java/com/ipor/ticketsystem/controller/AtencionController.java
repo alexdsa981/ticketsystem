@@ -3,10 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.Desestimacion;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +33,8 @@ public class AtencionController {
     ClasificadoresService clasificadoresService;
     @Autowired
     TipoComponenteAdjuntoRepository tipoComponenteAdjuntoRepository;
+    @Autowired
+    NotificacionesService notificacionesService;
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS DESDE LA FASE RECEPCIÓN
     // ATENDIDO O DESESTIMADO EN LAS VISTAS
@@ -105,6 +104,18 @@ public class AtencionController {
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
 
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTicket(recepcion.getTicket());
+        notificacion.setHora(notificacion.getHora());
+        notificacion.setFecha(notificacion.getFecha());
+        notificacion.setAbierto(Boolean.FALSE);
+        notificacion.setLeido(Boolean.FALSE);
+        notificacion.setUsuario(recepcion.getTicket().getUsuario());
+        notificacion.setMensaje(" Ha sido Recepcionado");
+        notificacion.setUrl("/TicketsEnProceso");
+        notificacionesService.saveNotiicacion(notificacion);
+
+
         // Redirigir a la URL actual
         String referer = request.getHeader("Referer");
         response.sendRedirect(referer != null ? referer : "/fallbackUrl");
@@ -131,6 +142,17 @@ public class AtencionController {
         servicio.setHora(servicio.getHora());
         servicio.setFecha(servicio.getFecha());
         atencionService.saveServicio(servicio);
+
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTicket(servicio.getTicket());
+        notificacion.setHora(notificacion.getHora());
+        notificacion.setFecha(notificacion.getFecha());
+        notificacion.setAbierto(Boolean.FALSE);
+        notificacion.setLeido(Boolean.FALSE);
+        notificacion.setUsuario(servicio.getTicket().getUsuario());
+        notificacion.setMensaje(" Ha sido Atendido");
+        notificacion.setUrl("/TicketsAtendidos");
+        notificacionesService.saveNotiicacion(notificacion);
 
         // Redirigir a la URL actual
         String referer = request.getHeader("Referer");
@@ -159,6 +181,17 @@ public class AtencionController {
         desestimacion.setHora(desestimacion.getHora());
         desestimacion.setFecha(desestimacion.getFecha());
         atencionService.saveDesestimacion(desestimacion);
+
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTicket(desestimacion.getTicket());
+        notificacion.setHora(notificacion.getHora());
+        notificacion.setFecha(notificacion.getFecha());
+        notificacion.setAbierto(Boolean.FALSE);
+        notificacion.setLeido(Boolean.FALSE);
+        notificacion.setUsuario(desestimacion.getTicket().getUsuario());
+        notificacion.setMensaje(" Ha sido Desestimado");
+        notificacion.setUrl("/TicketsDesestimados");
+        notificacionesService.saveNotiicacion(notificacion);
 
         //eliminar los componentes adjuntos
         List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
@@ -199,6 +232,32 @@ public class AtencionController {
             ticketService.saveComponenteAdjunto(tipoComponenteAdjunto);
         }
 
+        Ticket ticket = ticketService.getObtenerTicketPorID(id);
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTicket(ticket);
+        notificacion.setHora(notificacion.getHora());
+        notificacion.setFecha(notificacion.getFecha());
+        notificacion.setAbierto(Boolean.FALSE);
+        notificacion.setLeido(Boolean.FALSE);
+        notificacion.setUsuario(ticket.getUsuario());
+        notificacion.setMensaje(" En espera de aprobación por Dirección");
+        notificacion.setUrl("/TicketsDesestimados");
+        notificacionesService.saveNotiicacion(notificacion);
+
+        List<Usuario> listaDireccion = usuarioService.ListaUsuariosPorRol(4L);
+        for (Usuario soporte : listaDireccion){
+            Notificacion notificacionDireccion = new Notificacion();
+            notificacionDireccion.setTicket(ticket);
+            notificacionDireccion.setHora(notificacionDireccion.getHora());
+            notificacionDireccion.setFecha(notificacionDireccion.getFecha());
+            notificacionDireccion.setAbierto(Boolean.FALSE);
+            notificacionDireccion.setLeido(Boolean.FALSE);
+            notificacionDireccion.setUsuario(soporte);
+            notificacionDireccion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
+            notificacionDireccion.setUrl("/direccion/Recibidos");
+            notificacionesService.saveNotiicacion(notificacionDireccion);
+        }
+
         // Cambiar fase del ticket
         atencionService.updateFaseTicket(id, 5L);
 
@@ -236,20 +295,26 @@ public class AtencionController {
         atencionService.updateFaseTicket(id, 2L);
         // Lógica para crear la recepcion
         Recepcion recepcion = new Recepcion();
-
-
-
         recepcion.setMensaje(mensaje);
-
-
-
-
         recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
         recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
         recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         recepcion.setHora(recepcion.getHora());
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
+
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTicket(recepcion.getTicket());
+        notificacion.setHora(notificacion.getHora());
+        notificacion.setFecha(notificacion.getFecha());
+        notificacion.setAbierto(Boolean.FALSE);
+        notificacion.setLeido(Boolean.FALSE);
+        notificacion.setUsuario(recepcion.getTicket().getUsuario());
+        notificacion.setMensaje(" Ha sido Recepcionado");
+        notificacion.setUrl("/TicketsEnProceso");
+        notificacionesService.saveNotiicacion(notificacion);
+
+
 
         response.sendRedirect("/direccion/Recibidos");
         return ResponseEntity.ok("Ticket recepcionado correctamente");

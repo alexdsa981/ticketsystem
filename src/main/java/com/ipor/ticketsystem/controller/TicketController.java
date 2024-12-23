@@ -117,7 +117,7 @@ public class TicketController {
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(soporte);
-            notificacion.setMensaje(ticket.getUsuario().getNombre() + "Ha Enviado un Ticket");
+            notificacion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
             notificacion.setUrl("/soporte/Recepcionar");
             notificacionesService.saveNotiicacion(notificacion);
         }

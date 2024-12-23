@@ -12,7 +12,7 @@ public interface NotificacionesRepository extends JpaRepository<Notificacion, Lo
     @Query("SELECT n FROM Notificacion n WHERE n.ticket.id = :ticketId")
     List<Notificacion> BuscarPorIdTicket(@Param("ticketId") Long ticketId);
 
-    @Query("SELECT n FROM Notificacion n WHERE n.usuario.id = :UsuarioId")
-    List<Notificacion> BuscarPorIdUsuario(@Param("ticketId") Long UsuarioId);
+    @Query("SELECT n FROM Notificacion n WHERE n.usuario.id = :usuarioId")
+    List<Notificacion> BuscarPorIdUsuario(@Param("usuarioId") Long usuarioId);
 
 }
