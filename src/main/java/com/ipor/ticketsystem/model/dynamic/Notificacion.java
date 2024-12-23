@@ -35,7 +35,7 @@ public class Notificacion {
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_ticket", nullable = false)
     private Ticket ticket;
 

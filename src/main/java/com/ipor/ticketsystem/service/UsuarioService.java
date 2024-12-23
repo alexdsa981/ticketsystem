@@ -91,9 +91,9 @@ public class UsuarioService {
     }
     //retorna lista de usuarios por rol
     public List<Usuario> ListaUsuariosPorRol(Long idRolUsuario){
-        return usuarioRepository.findByIdRolUsuario(idRolUsuario);
+        return usuarioRepository.findByRolUsuarioId(idRolUsuario);
     }
-    //retorna todos los roles:
+//    //retorna todos los roles:
     public List<RolUsuario> getListaRoles(){
         return rolUsuarioRepository.findAll();
     }

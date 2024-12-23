@@ -6,6 +6,7 @@ import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.service.ClasificadoresService;
+import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.core.io.Resource;
@@ -35,6 +36,8 @@ public class TicketController {
     SimpMessagingTemplate messagingTemplate;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    NotificacionesService notificacionesService;
     @Autowired
     ClasificadoresService clasificadoresService;
 
@@ -116,6 +119,7 @@ public class TicketController {
             notificacion.setUsuario(soporte);
             notificacion.setMensaje(ticket.getUsuario().getNombre() + "Ha Enviado un Ticket");
             notificacion.setUrl("/soporte/Recepcionar");
+            notificacionesService.saveNotiicacion(notificacion);
         }
 
 
