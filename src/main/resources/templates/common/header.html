@@ -133,7 +133,10 @@
                     </li>
                 </ul>
 
-                    <div class="dropdown">
+
+                
+                <ul class="navbar-nav ms-auto">
+                    <li style="margin-right:10px">
                         <button
                                 id="notificaciones-btn"
                                 class="btn btn-light position-relative dropdown-toggle"
@@ -143,17 +146,135 @@
                             <i class="bi bi-bell"></i>
                             <span
                                     id="notificaciones-contador"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
                               0
                             </span>
                         </button>
                         <ul id="notificaciones-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificaciones-btn" style="max-height: 300px; overflow-y: auto;">
                             <li><span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span></li>
                         </ul>
-                    </div>
+                    </li>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const notificacionesBtn = document.getElementById('notificaciones-btn');
+                            const notificacionesContador = document.getElementById('notificaciones-contador');
+                            const notificacionesDropdown = document.getElementById('notificaciones-dropdown');
 
-                
-                <ul class="navbar-nav ms-auto">
+                            async function actualizarContador() {
+                                try {
+                                    const response = await fetch('/app/notificaciones');
+                                    if (response.ok) {
+                                        const notificaciones = await response.json();
+
+                                        // Filtrar notificaciones no leídas
+                                        const noLeidas = notificaciones.filter(n => !n.leido).length;
+
+                                        if (noLeidas > 0) {
+                                            notificacionesContador.textContent = noLeidas;
+                                            notificacionesContador.classList.remove('d-none'); // Mostrar el contador
+                                        } else {
+                                            notificacionesContador.classList.add('d-none'); // Ocultar si no hay notificaciones
+                                        }
+                                    } else {
+                                        console.error('Error al cargar el contador de notificaciones:', response.statusText);
+                                    }
+                                } catch (error) {
+                                    console.error('Error en la solicitud del contador de notificaciones:', error);
+                                }
+                            }
+
+                            async function cargarNotificaciones() {
+                                try {
+                                    const response = await fetch('/app/notificaciones');
+                                    if (response.ok) {
+                                        const notificaciones = await response.json();
+
+                                        // Limpia el dropdown
+                                        notificacionesDropdown.innerHTML = '';
+
+                                        // Verifica si hay notificaciones
+                                        if (notificaciones.length > 0) {
+                                            notificaciones.forEach(notificacion => {
+                                                const item = document.createElement('li');
+                                                item.innerHTML = `
+                                                    <a style="text-decoration: none" href="${notificacion.url}" class="notificacion-item" data-id="${notificacion.id}">
+                                                        <div class="dropdown-item ${notificacion.abierto ? 'notificacion-abierta' : ''}">
+                                                            <strong>${notificacion.idFormateado}</strong>
+                                                            <p class="mb-0">${notificacion.descripcion}</p>
+                                                            <small class="text-muted">
+                                                        ${notificacion.fechaFormateada} ${notificacion.horaFormateada} ${notificacion.abierto ? '- Abierto' : ''}                                                            </small>
+                                                        </div>
+                                                    </a>
+                                                `;
+                                                notificacionesDropdown.appendChild(item);
+                                            });
+                                        } else {
+                                            const item = document.createElement('li');
+                                            item.innerHTML = `<span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span>`;
+                                            notificacionesDropdown.appendChild(item);
+                                        }
+
+                                        // Agregar evento para marcar como abierto
+                                        document.querySelectorAll('.notificacion-item').forEach(item => {
+                                            item.addEventListener('click', async (e) => {
+                                                const notificacionId = e.currentTarget.getAttribute('data-id');
+                                                await marcarNotificacionComoAbierto(notificacionId);
+                                                // Cambiar el estilo visual de la notificación
+                                                e.currentTarget.querySelector('.dropdown-item').classList.add('notificacion-abierta');
+                                            });
+                                        });
+                                    } else {
+                                        console.error('Error al cargar las notificaciones:', response.statusText);
+                                    }
+                                } catch (error) {
+                                    console.error('Error en la solicitud de notificaciones:', error);
+                                }
+                            }
+
+                            async function marcarNotificacionComoAbierto(id) {
+                                try {
+                                    const response = await fetch(`/app/notificaciones/marcar-abierto/${id}`, {
+                                        method: 'POST',
+                                    });
+                                    if (!response.ok) {
+                                        console.error('Error al marcar notificación como abierta:', response.statusText);
+                                    }
+                                } catch (error) {
+                                    console.error('Error en la solicitud para marcar notificación como abierta:', error);
+                                }
+                            }
+
+                            async function marcarNotificacionesComoLeidas() {
+                                try {
+                                    const response = await fetch('/app/notificaciones/marcar-leidas', {
+                                        method: 'POST',
+                                    });
+                                    if (!response.ok) {
+                                        console.error('Error al marcar notificaciones como leídas:', response.statusText);
+                                    }
+                                } catch (error) {
+                                    console.error('Error en la solicitud para marcar notificaciones como leídas:', error);
+                                }
+                            }
+
+                            notificacionesBtn.addEventListener('click', async () => {
+                                // Marcar las notificaciones como leídas
+                                await marcarNotificacionesComoLeidas();
+
+                                // Cargar las notificaciones en el menú
+                                await cargarNotificaciones();
+
+                                // Ocultar el contador de notificaciones
+                                notificacionesContador.classList.add('d-none');
+                            });
+
+                            // Actualiza el contador al cargar la página
+                            actualizarContador();
+                        });
+
+
+                    </script>
+
                     <li class="nav-item">
                         <form action="/app/logout" method="POST">
                             <button type="submit" class="btn btn-warning">Cerrar Sesión</button>

@@ -245,14 +245,14 @@ public class AtencionController {
         notificacionesService.saveNotiicacion(notificacion);
 
         List<Usuario> listaDireccion = usuarioService.ListaUsuariosPorRol(4L);
-        for (Usuario soporte : listaDireccion){
+        for (Usuario direccion : listaDireccion){
             Notificacion notificacionDireccion = new Notificacion();
             notificacionDireccion.setTicket(ticket);
             notificacionDireccion.setHora(notificacionDireccion.getHora());
             notificacionDireccion.setFecha(notificacionDireccion.getFecha());
             notificacionDireccion.setAbierto(Boolean.FALSE);
             notificacionDireccion.setLeido(Boolean.FALSE);
-            notificacionDireccion.setUsuario(soporte);
+            notificacionDireccion.setUsuario(direccion);
             notificacionDireccion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
             notificacionDireccion.setUrl("/direccion/Recibidos");
             notificacionesService.saveNotiicacion(notificacionDireccion);

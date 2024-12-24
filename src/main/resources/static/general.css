@@ -295,3 +295,10 @@ h2 {
 .custom-checkbox:checked::before {
   content: "";  /* Eliminar la 'x' */
 }
+
+
+.notificacion-abierta {
+    opacity: 0.5; /* Hacer más opaco */
+    background-color: #f8f9fa11; /* Cambiar el color de fondo (opcional) */
+}
+
