@@ -5,10 +5,6 @@ import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
-import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionDesestimacionRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionServicioRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionUrgenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +36,7 @@ public class AtencionService {
     }
     //metodo para retornar todos los tickets en proceso en Direccion:
     public List<AtencionTicketDTO> getListaRecepcionadosDireccion() {
-        List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketFaseID2AndUsuarioRol4();
+        List<Recepcion> listaRecepcionados = recepcionRepository.findDistinctRecepcionesConTicketsConAdjuntos();
         List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
             AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);

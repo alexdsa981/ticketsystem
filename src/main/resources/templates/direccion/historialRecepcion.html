@@ -44,7 +44,6 @@
                         <th >Receptor</th>
                         <th style="width:25%;">Motivo de Ticket</th>
                         <th style="width:25%;">Mensaje Recepción</th>
-                        <th style="width:200px;">Atención</th>
 
                     </tr>
                 </thead>
@@ -89,19 +88,6 @@
                             </ul>
                         </td>
 
-                        <td class="td-accion">
-                            <!-- Botón de recepción que abre el modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#atencionModal" th:data-ticket-id="${recepcionado.ticket.id}"
-                                th:data-ticket-usuario="${recepcionado.ticket.usuario.nombre}"
-                                th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
-                                th:data-ticket-clasificacion="${recepcionado.ticket.clasificacionIncidencia.nombre}"
-                                th:data-ticket-fase="${recepcionado.ticket.faseTicket.nombre}"
-                                th:data-ticket-fecha="${recepcionado.ticket.fechaFormateada}"
-                                th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
-                                <i class="bi bi-check2-square"></i>
-                            </button>
-                        </td>
                     </tr>
                 </tbody>
             </table>
