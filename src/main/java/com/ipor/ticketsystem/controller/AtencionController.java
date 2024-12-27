@@ -2,6 +2,7 @@ package com.ipor.ticketsystem.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
@@ -35,52 +36,58 @@ public class AtencionController {
     TipoComponenteAdjuntoRepository tipoComponenteAdjuntoRepository;
     @Autowired
     NotificacionesService notificacionesService;
+    @Autowired
+    WSNotificacionesService WSNotificacionesService;
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS DESDE LA FASE RECEPCIÓN
     // ATENDIDO O DESESTIMADO EN LAS VISTAS
 
     public Model getListaMisTicketsRecepcionadosAVista(Model model) {
-        List<AtencionTicketDTO> MyRecepcionados =  atencionService.getMyListaRecepcionados();
+        List<AtencionTicketDTO> MyRecepcionados = atencionService.getMyListaRecepcionados();
         Collections.reverse(MyRecepcionados);
         model.addAttribute("MyRecepcionados", MyRecepcionados);
-        return  model;
+        return model;
     }
+
     public Model getListaTodosLosTicketsRecepcionadosAVista(Model model) {
-        List<AtencionTicketDTO> AllRecepcionados =  atencionService.getListaRecepcionados();
+        List<AtencionTicketDTO> AllRecepcionados = atencionService.getListaRecepcionados();
         model.addAttribute("AllRecepcionados", AllRecepcionados);
-        return  model;
+        return model;
     }
+
     public Model getListaTodosLosTicketsRecepcionadosPorDireccionAVista(Model model) {
-        List<AtencionTicketDTO> AllRecepcionadosDireccion =  atencionService.getListaRecepcionadosDireccion();
+        List<AtencionTicketDTO> AllRecepcionadosDireccion = atencionService.getListaRecepcionadosDireccion();
         model.addAttribute("AllRecepcionadosDireccion", AllRecepcionadosDireccion);
-        return  model;
+        return model;
     }
 
     public Model getListaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
         Collections.reverse(MyAtendidos);
         model.addAttribute("MyAtendidos", MyAtendidos);
-        return  model;
+        return model;
     }
+
     public Model getListaTodosLosTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
         Collections.reverse(AllAtendidos);
         model.addAttribute("AllAtendidos", AllAtendidos);
-        return  model;
+        return model;
     }
+
     public Model getListaMisTicketsDesestimadosAVista(Model model) {
         List<AtencionTicketDTO> MyDesestimados = atencionService.getMyListaDesestimados();
         Collections.reverse(MyDesestimados);
         model.addAttribute("MyDesestimados", MyDesestimados);
-        return  model;
+        return model;
     }
+
     public Model getListaTodosLosTicketsDesestimadosAVista(Model model) {
         List<AtencionTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
         Collections.reverse(AllDesestimados);
         model.addAttribute("AllDesestimados", AllDesestimados);
-        return  model;
+        return model;
     }
-
 
 
     //metodo para recepcionar un ticket(desde soporte), crea un recepcionado y cambia la fase del ticket:
@@ -114,6 +121,7 @@ public class AtencionController {
         notificacion.setMensaje(" Ha sido Recepcionado");
         notificacion.setUrl("/TicketsEnProceso");
         notificacionesService.saveNotiicacion(notificacion);
+        WSNotificacionesService.aumentarNumeroNotificacion(recepcion.getTicket().getUsuario().getId());
 
 
         // Redirigir a la URL actual
@@ -153,6 +161,7 @@ public class AtencionController {
         notificacion.setMensaje(" Ha sido Atendido");
         notificacion.setUrl("/TicketsAtendidos");
         notificacionesService.saveNotiicacion(notificacion);
+        WSNotificacionesService.aumentarNumeroNotificacion(servicio.getTicket().getUsuario().getId());
 
         // Redirigir a la URL actual
         String referer = request.getHeader("Referer");
@@ -192,15 +201,16 @@ public class AtencionController {
         notificacion.setMensaje(" Ha sido Desestimado");
         notificacion.setUrl("/TicketsDesestimados");
         notificacionesService.saveNotiicacion(notificacion);
+        WSNotificacionesService.aumentarNumeroNotificacion(desestimacion.getTicket().getUsuario().getId());
 
         //eliminar los componentes adjuntos
         List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
-        for(TipoComponenteAdjunto componente : componentesAdjuntos){
+        for (TipoComponenteAdjunto componente : componentesAdjuntos) {
             tipoComponenteAdjuntoRepository.delete(componente);
         }
-        if (atencionService.findRecepcionByTicketID(id) != null){
+        if (atencionService.findRecepcionByTicketID(id) != null) {
             atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
-        }else{
+        } else {
             System.out.println("no se ha encontrado recepcion");
         }
 
@@ -241,11 +251,11 @@ public class AtencionController {
         notificacion.setLeido(Boolean.FALSE);
         notificacion.setUsuario(ticket.getUsuario());
         notificacion.setMensaje(" En espera de aprobación por Dirección");
-        notificacion.setUrl("/TicketsDesestimados");
+        notificacion.setUrl("/inicio");
         notificacionesService.saveNotiicacion(notificacion);
 
         List<Usuario> listaDireccion = usuarioService.ListaUsuariosPorRol(4L);
-        for (Usuario direccion : listaDireccion){
+        for (Usuario direccion : listaDireccion) {
             Notificacion notificacionDireccion = new Notificacion();
             notificacionDireccion.setTicket(ticket);
             notificacionDireccion.setHora(notificacionDireccion.getHora());
@@ -256,6 +266,7 @@ public class AtencionController {
             notificacionDireccion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
             notificacionDireccion.setUrl("/direccion/Recibidos");
             notificacionesService.saveNotiicacion(notificacionDireccion);
+            WSNotificacionesService.aumentarNumeroNotificacion(direccion.getId());
         }
 
         // Cambiar fase del ticket
@@ -277,13 +288,14 @@ public class AtencionController {
 
         //desaprueba todos los componentes adjuntos
         List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
-        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket){
+        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket) {
             componenteAdjunto.setAprobado(false);
             ticketService.saveComponenteAdjunto(componenteAdjunto);
         }
         //aprueba los componentes adjuntos seleccionados, el resto quedan desaprobados
-        List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {});
-        for (Long idcomponente : componentesSeleccionados){
+        List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {
+        });
+        for (Long idcomponente : componentesSeleccionados) {
             System.out.println(idcomponente);
             new TipoComponenteAdjunto();
             TipoComponenteAdjunto componenteAdjuntoAprobado;
@@ -313,13 +325,11 @@ public class AtencionController {
         notificacion.setMensaje(" Ha sido Recepcionado");
         notificacion.setUrl("/TicketsEnProceso");
         notificacionesService.saveNotiicacion(notificacion);
-
-
+        WSNotificacionesService.aumentarNumeroNotificacion(recepcion.getTicket().getUsuario().getId());
 
         response.sendRedirect("/direccion/Recibidos");
         return ResponseEntity.ok("Ticket recepcionado correctamente");
     }
-
 
 
 }
