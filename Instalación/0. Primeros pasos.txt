@@ -1,0 +1,16 @@
+Requisitos:
+-JDK 17
+-SQL SERVER
+Instalación:
+-Ejecutar 1. en SQL Server
+-Iniciar el programa
+-Ejecutar 2. 3. 4. 5. en SQL Server
+-Configurar \ticketsystem\src\main\resources\application.properties
+	con la configuración de la base de datos y SQL Server:
+
+	-Colocar dirección de BD, usuario y contraseña de SQL Server
+	-colocar el puerto en el que se alojará la aplicación
+	"spring.datasource.url= jdbc:sqlserver://localhost:1433;trustServerCertificate=true;databaseName=ticketSystem
+	spring.datasource.username= alex
+	spring.datasource.password= password!!
+	server.port=8080"

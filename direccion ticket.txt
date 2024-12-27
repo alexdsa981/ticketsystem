@@ -2,4 +2,3 @@ EN PROCESO
 
 -arreglar el front de los modales y agregar componentes al modal
 -mejorar la version mobile
--websockets
