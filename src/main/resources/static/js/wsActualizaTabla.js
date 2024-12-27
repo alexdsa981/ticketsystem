@@ -1,30 +1,29 @@
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     updateTicketCount();
 });
 
 function updateTicketCount() {
     const ticketTableBody = document.getElementById('ticketTableBody');
     const ticketCount = document.getElementById('ticketCount');
-    if(ticketTableBody){
-    const totalTickets = ticketTableBody.querySelectorAll('tr').length;
-    if(ticketCount){
-    ticketCount.textContent = totalTickets;
-    }
+    if (ticketTableBody) {
+        const totalTickets = ticketTableBody.querySelectorAll('tr').length;
+        if (ticketCount) {
+            ticketCount.textContent = totalTickets;
+        }
 
     }
-
-
-
 
 }
 
+
+export function AumentarContadorNotificacion(){
+
+}
+
+
 // Función para manejar el ticket recibido
 export function ActualizaTablaRecibidos(ticketRecord) {
-    console.log('Ticket recibido:', ticketRecord);
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');

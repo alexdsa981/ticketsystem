@@ -164,6 +164,11 @@ public class UsuariosCRUDController {
         }
         return ResponseEntity.ok("otro");
     }
+    @GetMapping("/id")
+    public ResponseEntity<Long> obtenerIdUsuarioLogeado() {
+        Long id = usuarioService.getIDdeUsuarioLogeado();
+        return ResponseEntity.ok(id);
+    }
 
 
 }

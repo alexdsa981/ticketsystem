@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.WebSocket.NotificationService;
+import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
@@ -35,7 +35,7 @@ public class TicketController {
     @Autowired
     SimpMessagingTemplate messagingTemplate;
     @Autowired
-    NotificationService notificationService;
+    WSNotificacionesService WSNotificacionesService;
     @Autowired
     NotificacionesService notificacionesService;
     @Autowired
@@ -107,7 +107,7 @@ public class TicketController {
 
         }
 
-
+        //NOTIFICACION EN BASE DE DATOS
         List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
         for (Usuario soporte : listaSoportes){
             Notificacion notificacion = new Notificacion();
@@ -120,18 +120,15 @@ public class TicketController {
             notificacion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
             notificacion.setUrl("/soporte/Recepcionar");
             notificacionesService.saveNotiicacion(notificacion);
+            //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
+            WSNotificacionesService.aumentarNumeroNotificacion(soporte.getId());
         }
 
-
-
-
+        //NOTIFICACIONES EN TIEMPO REAL A TRAVES DE WEB SOCKETS
         TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        // Enviar el ticket creado a través de WebSocket
-        messagingTemplate.convertAndSend("/topic/tickets", ticketRecordWS);
+        WSNotificacionesService.enviarAlertaASoporte(ticketDTO);
+        WSNotificacionesService.enviarTicket(ticketDTO);
 
-        String message = "Ticket Recibido: "+ticketRecordWS.nombreUsuario() + " - " + ticketRecordWS.nombreClasificacionIncidencia();
-        notificationService.enviarNotificacion(message);
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");

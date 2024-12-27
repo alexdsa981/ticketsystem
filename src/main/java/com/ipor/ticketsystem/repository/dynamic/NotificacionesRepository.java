@@ -14,7 +14,8 @@ public interface NotificacionesRepository extends JpaRepository<Notificacion, Lo
     @Query("SELECT n FROM Notificacion n WHERE n.usuario.id = :usuarioId")
     List<Notificacion> BuscarPorIdUsuario(@Param("usuarioId") Long usuarioId);
 
-    @Query("SELECT n FROM Notificacion n WHERE n.usuario.id = :usuarioId ORDER BY n.fecha DESC, n.hora DESC")
+    @Query(value = "SELECT TOP 15 * FROM Notificacion n WHERE n.id_usuario = :usuarioId ORDER BY n.fecha DESC, n.hora DESC", nativeQuery = true)
     List<Notificacion> findTop15ByUsuarioId(@Param("usuarioId") Long usuarioId);
+
 
 }
