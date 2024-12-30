@@ -32,7 +32,7 @@ public class Ticket {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_clasificacion_incidencia", nullable = false)
+    @JoinColumn(name = "id_clasificacion_incidencia", nullable = true)
     private ClasificacionIncidencia clasificacionIncidencia;
 
     @ManyToOne

@@ -22,7 +22,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
-                            <a class="nav-link" href="/inicio">Inicio</a>
+                            <a class="nav-link" href="/inicio">Enviar Tickets</a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
                             <a class="nav-link" href="/TicketsEnProceso">Tickets En proceso</a>
@@ -39,19 +39,19 @@
                                 Mis Tickets
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/inicio">Enviados</a></li>
+                                <li><a class="dropdown-item" href="/inicio">Enviar Tickets</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/TicketsEnProceso">En proceso</a></li>
+                                <li><a class="dropdown-item" href="/TicketsEnProceso">Tickets En proceso</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/TicketsAtendidos">Atendidos</a></li>
+                                <li><a class="dropdown-item" href="/TicketsAtendidos">Tickets Atendidos</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/TicketsDesestimados">Desestimados</a></li>
+                                <li><a class="dropdown-item" href="/TicketsDesestimados">Tickets Desestimados</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección')">
@@ -68,7 +68,7 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/direccion/Historial">Historial</a></li>
+                                <li><a class="dropdown-item" href="/direccion/Historial">Historial de Recepción</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
@@ -89,12 +89,11 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/soporte/Tickets-Cerrados">Tickets Cerrados</a></li>
+                                <li><a class="dropdown-item" href="/soporte/Tickets-Cerrados">Historial Cerrados</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/soporte/Tickets-Desestimados">Tickets
-                                        Desestimados</a></li>
+                                <li><a class="dropdown-item" href="/soporte/Tickets-Desestimados">Historial Desestimados</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
@@ -200,7 +199,7 @@
                                                     item.innerHTML = `
                                                         <a style="text-decoration: none" href="${notificacion.url}" class="notificacion-item" data-id="${notificacion.id}">
                                                             <div class="dropdown-item ${notificacion.abierto ? 'notificacion-abierta' : ''}">
-                                                                <strong>${notificacion.idFormateado}</strong>
+                                                                <strong>${notificacion.idFormateado} - ${notificacion.clasificacionIncidencia}</strong>
                                                                 <p class="mb-0">${notificacion.descripcion}</p>
                                                                 <small class="text-muted">
                                                                 ${notificacion.fechaFormateada} ${notificacion.horaFormateada} ${notificacion.abierto ? '- Abierto' : ''}                                                            </small>

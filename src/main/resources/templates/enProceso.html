@@ -9,7 +9,7 @@
 <main>
 
     <div class="container">
-        <h2>USUARIO: Tickets En Proceso</h2>
+        <h2> <i class="bi bi-hourglass-split text-warning"></i> TICKETS EN PROCESO:</h2>
         <table id="ticketTable" class="table table-hover table-bordered">
             <thead class="table-dark">
             <tr>
@@ -17,7 +17,7 @@
                 <th class="n-table">Código</th>
                 <th>Fecha</th>
                 <th>Hora</th>
-                <th>Descripción de Incidencia</th>
+                <th style="width:300px">Descripción de Incidencia</th>
                 <th>Mensaje Recepción</th>
                 <th>Fase</th>
             </tr>
@@ -33,7 +33,16 @@
                     <span class="nombreClasificacionIncidencia" th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                     <span th:text="${recepcionado.ticket.descripcion}"></span><br>
                 </td>
-                <td th:text="${recepcionado.mensaje}">Mensaje de Recepción</td>
+                <td>
+                    <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
+                    <ul>
+                        <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
+                            <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
+                            <span th:text="${componente.cantidad}"></span>
+                            <span th:text="${componente.tipoComponente.nombre}"></span>
+                        </li>
+                    </ul>
+                </td>
                 <td th:text="${recepcionado.ticket.faseTicket.nombre}">Fase</td>
             </tr>
             </tbody>

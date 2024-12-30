@@ -29,7 +29,10 @@ public class WebController {
 
     //abre index.html en /login
     @GetMapping("/login")
-    public String redirigePaginaLogin(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String redirigePaginaLogin(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "username", required = false) String username,
+            Model model) {
         // Obtén la autenticación actual
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -38,10 +41,15 @@ public class WebController {
                 !authentication.getPrincipal().equals("anonymousUser")) {
             return "redirect:/inicio"; // Redirige a la vista de inicio
         }
+
+        // Añade los atributos para la vista
         model.addAttribute("error", error);
-        // Si no está autenticado, redirige a la vista de login (index.html en este caso)
+        model.addAttribute("username", username);
+
+        // Si no está autenticado, redirige a la vista de login
         return "index";
     }
+
 
     // Método para manejar la vista de inicio y mostrar los tickets
     @GetMapping("/inicio")
@@ -155,6 +163,7 @@ public class WebController {
     @GetMapping("/direccion/Recibidos")
     public String redirigePaginaTicketsRecibidosDireccion(Model model) {
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaTipoComponentesActivos(model);
         ticketController.retornaTicketsRecibidosAVistaDireccion(model);
         model.addAttribute("Titulo", "HelpDesk | Dirección - Tickets Recibidos");

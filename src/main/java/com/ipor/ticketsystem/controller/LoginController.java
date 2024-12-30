@@ -44,11 +44,11 @@ public class LoginController {
 
         if (usuarioOpt.isEmpty()) {
             // Usuario no existe
-            response.sendRedirect("/login?error=badCredentials");
+            response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (!usuarioOpt.get().getIsActive()) {
             // Usuario desactivado
-            response.sendRedirect("/login?error=inactive");
+            response.sendRedirect("/login?error=inactive&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -67,18 +67,18 @@ public class LoginController {
             response.addCookie(jwtCookie);
 
             response.sendRedirect("/inicio");
-            System.out.println("logeado correctamente");
             return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
             // Credenciales incorrectas
-            response.sendRedirect("/login?error=badCredentials");
+            response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             // Otro error
-            response.sendRedirect("/login?error=unknown");
+            response.sendRedirect("/login?error=unknown&username=" + username);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
 

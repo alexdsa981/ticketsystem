@@ -50,8 +50,12 @@
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" required autocomplete="off"/>
+                    <input type="text" id="username" name="username"
+                           class="form-control"
+                           required autocomplete="off"
+                           th:value="${username != null ? username : ''}" />
                 </div>
+
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="password">Contraseña</label>

@@ -14,6 +14,7 @@ public record NotificacionDTO(
         String descripcion,
         String nombreUsuario,
         String url,
+        String clasificacionIncidencia,
         boolean leido,
         boolean abierto
 )
@@ -29,6 +30,7 @@ public record NotificacionDTO(
                 notificacion.getMensaje(),
                 notificacion.getUsuario().getNombre(),
                 notificacion.getUrl(),
+                notificacion.getTicket().getClasificacionIncidencia().getNombre(),
                 notificacion.getLeido(),
                 notificacion.getAbierto()
         );
