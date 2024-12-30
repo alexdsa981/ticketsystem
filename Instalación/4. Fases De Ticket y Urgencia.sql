@@ -6,9 +6,9 @@ VALUES
 ('Desestimado'),
 ('Espera en Dirección');
 GO
-INSERT INTO [ticketSystem].[dbo].[clasificacion_urgencia] ([nombre])
+INSERT INTO [ticketSystem].[dbo].[clasificacion_urgencia] ([nombre], [is_active])
 VALUES
-('Baja'),
-('Media'),
-('Alta');
+('Baja', 1),
+('Media', 1),
+('Alta', 1);
 GO

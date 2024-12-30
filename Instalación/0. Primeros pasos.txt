@@ -1,10 +1,9 @@
 Requisitos:
+-Maven 3.9.9 bin https://maven.apache.org/download.cgi
 -JDK 17
 -SQL SERVER
 Instalación:
--Ejecutar 1. en SQL Server
--Iniciar el programa
--Ejecutar 2. 3. 4. 5. en SQL Server
+-Ejecutar 1. en SQL Server (Creará la base de datos)
 -Configurar \ticketsystem\src\main\resources\application.properties
 	con la configuración de la base de datos y SQL Server:
 
@@ -14,3 +13,5 @@ Instalación:
 	spring.datasource.username= alex
 	spring.datasource.password= password!!
 	server.port=8080"
+-Iniciar el programa (Se cargarán las tablas)
+-Ejecutar 2. 3. 4. 5. en SQL Server (Cargará información de tablas a la BD)

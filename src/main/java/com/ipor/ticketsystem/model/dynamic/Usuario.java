@@ -29,7 +29,8 @@ public class Usuario {
     private String nombre;
     @Column(nullable = false)
     private Boolean isActive;
-
+    @Column(nullable = false)
+    private Boolean changedPass;
 
     @JsonIgnore
     @ManyToOne

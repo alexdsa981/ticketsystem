@@ -1,0 +1,2 @@
+cmd:
+cd C:\proyectos\ticketsystem (ruta)

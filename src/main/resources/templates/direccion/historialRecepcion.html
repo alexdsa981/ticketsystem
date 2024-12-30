@@ -40,8 +40,7 @@
                         <th >Código</th>
                         <th >Fecha</th>
                         <th >Hora</th>
-                        <th >Emisor</th>
-                        <th >Receptor</th>
+                        <th >Solicitante</th>
                         <th style="width:25%;">Motivo de Ticket</th>
                         <th style="width:25%;">Componentes</th>
 
@@ -56,7 +55,6 @@
                         <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
                         <td th:text="${ticket.horaFormateada}">Hora</td>
                         <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
-                        <td class="usuario-receptor" th:text="${ticket.usuario.nombre}">Usuario Receptor</td>
                         <td>
                             <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span>
                             <br>
