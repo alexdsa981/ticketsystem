@@ -41,8 +41,7 @@ export function ActualizaTablaRecibidos(ticketRecord) {
         <td>${ticketRecord.horaFormateada}</td>
         <td>${ticketRecord.nombreUsuario}</td>
         <td>
-            <span class="nombreClasificacionIncidencia">${ticketRecord.nombreClasificacionIncidencia}:<br></span>
-            <span>${ticketRecord.descripcion}</span><br>
+            <span>${ticketRecord.descripcion}</span>
         </td>
         <td>
             <ul>
@@ -60,7 +59,6 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                     data-ticket-id="${ticketRecord.id}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
                     data-ticket-descripcion="${ticketRecord.descripcion}"
-                    data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
                     data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                     data-ticket-fecha="${ticketRecord.fechaFormateada}"
                     data-ticket-hora="${ticketRecord.horaFormateada}">
@@ -77,7 +75,6 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                     data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
                     data-ticket-descripcion="${ticketRecord.descripcion}"
-                    data-ticket-clasificacion="${ticketRecord.nombreClasificacionIncidencia}"
                     data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                     data-ticket-fecha="${ticketRecord.fechaFormateada}"
                     data-ticket-hora="${ticketRecord.horaFormateada}">

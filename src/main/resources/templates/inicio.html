@@ -19,49 +19,60 @@
         </button>
     </div>
     <!--MIS TICKETS-->
-    <table id="ticketTable" class="table table-hover table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>N°</th>
-            <th class="n-table">Código</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th class="descripcionTD">Descripción</th>
-            <th>Archivos Adjuntos</th>
-            <th>Fase</th>
-        </tr>
-        </thead>
-        <tbody id="ticketTableBody">
-        <!-- Iterar sobre los tickets con un solo bucle th:each -->
-        <tr th:each="ticket, iter: ${MyTickets}">
-            <td th:text="${iter.count}">#</td>
-            <td th:text="${ticket.idFormateado}">#</td>
-            <td th:text="${ticket.fechaFormateada}">Fecha</td>
-            <td th:text="${ticket.horaFormateada}">Hora</td>
-            <td>
-            <span class="nombreClasificacionIncidencia"
-                  th:utext="${ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                <span th:text="${ticket.descripcion}"></span><br>
-            </td>
+    <div class="table-responsive">
+        <table id="ticketTable" class="table table-hover table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>N°</th>
+                <th class="n-table">Código</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th class="descripcionTD">Descripción</th>
+                <th>Archivos Adjuntos</th>
+                <th>Fase</th>
+            </tr>
+            </thead>
+            <tbody id="ticketTableBody">
+            <!-- Iterar sobre los tickets con un solo bucle th:each -->
+            <tr th:each="ticket, iter: ${MyTickets}">
+                <td th:text="${iter.count}">#</td>
+                <td th:text="${ticket.idFormateado}">#</td>
+                <td th:text="${ticket.fechaFormateada}">Fecha</td>
+                <td th:text="${ticket.horaFormateada}">Hora</td>
+                <td>
+                    <span th:text="${ticket.descripcion}"></span><br>
+                    <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
+                    <span th:if="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)}"><strong>Respuesta de Dirección:</strong></span><br>
 
-            <td>
-                <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
-                <ul>
-                    <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                        <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#"
-                           th:text="${adjunto.nombre}">Archivo</a> - <span
-                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                    </li>
-                </ul>
-            </td>
-            <td th:text="${ticket.faseTicket.nombre}">Fase</td>
-        </tr>
-        </tbody>
-    </table>
+                    <ul>
+                        <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
+                                <span class="status-componente"
+                                      th:text="${componente != null && componente.aprobado != null ?
+                                      (componente.aprobado ? '[Aprobado]' : '[Desestimado]') : '[Sin estado]'}"></span>
+                            <span th:text="${componente.cantidad}"></span>
+                            <span th:text="${componente.tipoComponente.nombre}"></span>
+                        </li>
+                    </ul>
+                </td>
+
+                <td>
+                    <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+                    <ul>
+                        <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                            <a th:href="@{'app/tickets/adjunto/descargar/' + ${adjunto.id}}" href="#"
+                               th:text="${adjunto.nombre}">Archivo</a> - <span
+                                th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                        </li>
+                    </ul>
+                </td>
+                <td th:text="${ticket.faseTicket.nombre}">Fase</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div id="noResultsMessage" class="alert alert-warning" style="display: none;">
         No se ha encontrado ningún elemento.
     </div>
-
 </div>
 
 
@@ -82,14 +93,7 @@
                         <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
                                   placeholder="Describe el problema." required></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="clasificacion" class="form-label">Clasificación de Incidencia</label>
-                        <select class="form-select" id="clasificacion" name="clasificacion" required>
-                            <option selected disabled value="">Selecciona la clasificación</option>
-                            <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
-                    </div>
+
                     <div class="mb-3">
                         <label for="archivo" class="form-label">Subir Archivo (opcional)</label>
                         <input class="form-control" type="file" id="archivo" name="archivo">

@@ -55,7 +55,6 @@ public class WebController {
     @GetMapping("/inicio")
     public String redirigePaginaInicio(Model model) {
         ticketController.retornaTicketsPropiosAVista(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Inicio");
         return "inicio"; // Redirige a la vista 'inicio.html'
     }
@@ -172,7 +171,7 @@ public class WebController {
     //Metodo para manejar fragment expression
     @GetMapping("/direccion/Historial")
     public String redirigePaginaHistorialDireccion(Model model) {
-        atencionController.getListaTodosLosTicketsRecepcionadosPorDireccionAVista(model);
+        ticketController.getListaTodosLosTicketsRevisadosPorDireccionAVista(model);
         model.addAttribute("Titulo", "HelpDesk | Dirección - Recepciones Realizadas");
         return "direccion/historialRecepcion";
     }

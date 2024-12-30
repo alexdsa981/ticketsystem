@@ -211,12 +211,12 @@ h2 {
 
 /*RECEPCIONADO*/
 .high-urgency td {
-    background-color: rgba(255, 245, 245, 0.897);
+    background-color: rgba(255, 193, 193, 0.6);
     /* Color rojo claro para alta urgencia */
 }
 
 .medium-urgency td {
-    background-color: rgba(255, 255, 245, 0.897);
+    background-color: rgba(237, 237, 200, 0.6);
     /* Color amarillo claro para media urgencia */
 }
 
@@ -302,3 +302,17 @@ h2 {
     background-color: #f8f9fa11; /* Cambiar el color de fondo (opcional) */
 }
 
+.tr-con-componentes td {
+    background-color: #ddeef380; /* Celeste claro */
+}
+
+.scroll-table {
+    position: relative;
+    z-index: 1;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Asegurar que el encabezado esté encima */
+}

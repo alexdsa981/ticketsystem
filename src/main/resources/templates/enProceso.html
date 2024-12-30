@@ -7,51 +7,52 @@
 </header>
 
 <main>
-
     <div class="container">
         <h2> <i class="bi bi-hourglass-split text-warning"></i> TICKETS EN PROCESO:</h2>
-        <table id="ticketTable" class="table table-hover table-bordered">
-            <thead class="table-dark">
-            <tr>
-                <th>N°</th>
-                <th class="n-table">Código</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th style="width:300px">Descripción de Incidencia</th>
-                <th>Mensaje Recepción</th>
-                <th>Fase</th>
-            </tr>
-            </thead>
-            <tbody id="ticketTableBody">
-            <!-- Iterar sobre los tickets con un solo bucle th:each -->
-            <tr th:each="recepcionado, iter: ${MyRecepcionados}">
-                <td th:text="${iter.count}">#</td>
-                <td th:text="${recepcionado.ticket.idFormateado}">#</td>
-                <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
-                <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
-                <td>
-                    <span class="nombreClasificacionIncidencia" th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                    <span th:text="${recepcionado.ticket.descripcion}"></span><br>
-                </td>
-                <td>
-                    <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
-                    <ul>
-                        <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
-                            <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
-                            <span th:text="${componente.cantidad}"></span>
-                            <span th:text="${componente.tipoComponente.nombre}"></span>
-                        </li>
-                    </ul>
-                </td>
-                <td th:text="${recepcionado.ticket.faseTicket.nombre}">Fase</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="ticketTable" class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th class="n-table">Código</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th style="width:300px">Descripción de Incidencia</th>
+                    <th>Mensaje Recepción</th>
+                    <th>Fase</th>
+                </tr>
+                </thead>
+                <tbody id="ticketTableBody">
+                <!-- Iterar sobre los tickets con un solo bucle th:each -->
+                <tr th:each="recepcionado, iter: ${MyRecepcionados}">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${recepcionado.ticket.idFormateado}">#</td>
+                    <td th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
+                    <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
+                    <td>
+                        <span class="nombreClasificacionIncidencia" th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                        <span th:text="${recepcionado.ticket.descripcion}"></span><br>
+                    </td>
+                    <td>
+                        <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
+                        <ul>
+                            <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
+                                <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
+                                <span th:text="${componente.cantidad}"></span>
+                                <span th:text="${componente.tipoComponente.nombre}"></span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td th:text="${recepcionado.ticket.faseTicket.nombre}">Fase</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div id="noResultsMessage" class="alert alert-warning" style="display: none;">
             No se ha encontrado ningún elemento.
         </div>
     </div>
-    <!--Mis tickets Recepcionados-->
+
 
 
 </main>

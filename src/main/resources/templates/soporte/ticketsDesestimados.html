@@ -57,8 +57,6 @@
                             <td class="usuario-atencion" th:text="${desestimado.usuario.nombre}">Usuario Desestimación</td>
                             <td class="usuario-emisor" th:text="${desestimado.ticket.usuario.nombre}">Usuario Emisor</td>
                             <td>
-                                <span class="nombreClasificacionIncidencia clasificacion"
-                                    th:utext="${desestimado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                                 <span th:text="${#strings.length(desestimado.ticket.descripcion) > 150 ? desestimado.ticket.descripcion.substring(0, 150) + '...' : desestimado.ticket.descripcion}"></span>
                                 <br>
                                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
@@ -84,7 +82,6 @@
                                     data-bs-target="#desestimacionModal" th:data-ticket-id="${desestimado.ticket.id}"
                                     th:data-ticket-usuario="${desestimado.ticket.usuario.nombre}"
                                     th:data-ticket-descripcion="${desestimado.ticket.descripcion}"
-                                    th:data-ticket-clasificacion="${desestimado.ticket.clasificacionIncidencia.nombre}"
                                     th:data-ticket-fecha="${desestimado.ticket.fechaFormateada}"
                                     th:data-ticket-hora="${desestimado.ticket.horaFormateada}"
                                     th:data-desestimacion-usuario="${desestimado.usuario.nombre}"
@@ -137,15 +134,6 @@
                                     <input type="date" id="fechaFilter" class="form-control">
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="clasificacionFilter" class="form-label">Clasificación:</label>
-                                    <select class="form-select" id="clasificacionFilter" name="clasificacion_incidencia"
-                                            required>
-                                        <option selected disabled value="">Selecciona Incidencia</option>
-                                        <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.nombre}"
-                                                th:text="${tipo.nombre}"></option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12">
                                     <label for="urgenciaFilter" class="form-label">Desestimación:</label>
                                     <select class="form-select" id="urgenciaFilter" name="clasificacion_desestimacion" required>
                                         <option selected disabled value="">Selecciona Desestimación</option>
@@ -190,10 +178,6 @@
                                 <tr>
                                     <th>Descripción de Incidencia:</th>
                                     <td><span id="modalTicketDescripcion"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Clasificación de Incidencia:</th>
-                                    <td><span id="modalTicketClasificacion"></span></td>
                                 </tr>
                                 <tr>
                                     <th>Fecha y Hora de Emisión:</th>
@@ -243,7 +227,6 @@
                 const ticketId = button.getAttribute('data-ticket-id');
                 const ticketUsuario = button.getAttribute('data-ticket-usuario');
                 const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-                const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
                 const ticketFase = button.getAttribute('data-ticket-fase');
                 const ticketFecha = button.getAttribute('data-ticket-fecha');
                 const ticketHora = button.getAttribute('data-ticket-hora');
@@ -259,7 +242,6 @@
                 document.getElementById('modalTicketId').textContent = ticketId;
                 document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
                 document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
-                document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
                 document.getElementById('modalTicketFecha').textContent = ticketFecha;
                 document.getElementById('modalTicketHora').textContent = ticketHora;
 

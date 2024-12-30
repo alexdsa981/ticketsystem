@@ -1,10 +1,9 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
+import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
-import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
-import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
@@ -62,20 +61,25 @@ public class TicketController {
         model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
     }
+    public Model getListaTodosLosTicketsRevisadosPorDireccionAVista(Model model) {
+        List<TicketDTO> AllRevisadosDireccion = ticketService.getListaRevisadosDireccion();
+        model.addAttribute("AllRevisadosDireccion", AllRevisadosDireccion);
+        return model;
+    }
 
     //crea ticket y además lo envia a través de webSocket para notificaciones y actualizaciones en tiempo real
     @PostMapping("/crearTicket")
     public ResponseEntity<String> crearTicket(
             @RequestParam("descripcion") String descripcion,
-            @RequestParam("clasificacion") Long clasificacion,
+//            @RequestParam("clasificacion") Long clasificacion,
             @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             HttpServletResponse response) throws IOException {
 
         // Lógica para crear el ticket
         Ticket ticket = new Ticket();
         ticket.setDescripcion(descripcion);
-        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
-        ticket.setClasificacionIncidencia(clasificacionIncidencia);
+//        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
+//        ticket.setClasificacionIncidencia(clasificacionIncidencia);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
         ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         ticket.setFecha(ticket.getFecha());
@@ -133,6 +137,7 @@ public class TicketController {
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");
     }
+
 
     @GetMapping("/adjunto/descargar/{id}")
     public ResponseEntity<Resource> descargarArchivo(@PathVariable Long id) {

@@ -13,6 +13,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     //obtener tickets propios
     List<Ticket> findByUsuarioIdAndFaseTicketId(Long usuarioId, Long faseTicketId);
 
+
+    @Query(value = "SELECT t.*, tca.aprobado " +
+            "FROM ticket t " +
+            "INNER JOIN tipo_componente_adjunto tca ON t.id = tca.id_ticket " +
+            "WHERE tca.aprobado IS NOT NULL",
+            nativeQuery = true)
+    List<Ticket> findTicketsConAdjuntosNoNulos();
+
+
     //para dashboard
     //numero total de ticket
     long count();

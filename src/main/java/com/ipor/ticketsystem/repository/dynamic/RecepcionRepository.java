@@ -16,12 +16,6 @@ public interface RecepcionRepository extends JpaRepository<Recepcion, Long> {
     @Query(value = "SELECT r.* FROM recepcion r INNER JOIN ticket t ON r.id_ticket = t.id WHERE t.id_fase_ticket = 2 ORDER BY r.fecha DESC, r.hora DESC", nativeQuery = true)
     List<Recepcion> findAllByTicketFaseID2();
 
-    @Query(value = "SELECT DISTINCT r.* " +
-            "FROM recepcion r " +
-            "INNER JOIN ticket t ON r.id_ticket = t.id " +
-            "INNER JOIN tipo_componente_adjunto tcp ON t.id = tcp.id_ticket",
-            nativeQuery = true)
-    List<Recepcion> findDistinctRecepcionesConTicketsConAdjuntos();
 
 
     @Query(value = "SELECT r.* FROM recepcion r WHERE r.id_ticket = :idTicket", nativeQuery = true)

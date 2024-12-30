@@ -11,7 +11,7 @@
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <h2>DIRECCIÓN: Recepciones Realizadas</h2>
+                <h2>DIRECCIÓN: Revisiones Realizadas</h2>
                 <div id="ticketCount" class="badge bg-warning ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
                     0
                 </div>
@@ -43,45 +43,36 @@
                         <th >Emisor</th>
                         <th >Receptor</th>
                         <th style="width:25%;">Motivo de Ticket</th>
-                        <th style="width:25%;">Mensaje Recepción</th>
+                        <th style="width:25%;">Componentes</th>
 
                     </tr>
                 </thead>
 
                 <tbody id="ticketTableBody">
                     <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                    <tr th:each="recepcionado, iter: ${AllRecepcionadosDireccion}"
-                        th:class="${recepcionado.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
-                       (recepcionado.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
+                    <tr th:each="ticket, iter: ${AllRevisadosDireccion}">
                         <td th:text="${iter.count}">#</td>
-                        <td th:text="${recepcionado.ticket.idFormateado}">#</td>
-                        <td class="fecha" th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
-                        <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
-                        <td class="usuario-emisor" th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
-                        <td class="usuario-receptor" th:text="${recepcionado.usuario.nombre}">Usuario Receptor</td>
+                        <td th:text="${ticket.idFormateado}">#</td>
+                        <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
+                        <td th:text="${ticket.horaFormateada}">Hora</td>
+                        <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
+                        <td class="usuario-receptor" th:text="${ticket.usuario.nombre}">Usuario Receptor</td>
                         <td>
-                            <span class="nombreClasificacionIncidencia clasificacion"
-                                th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                            <span th:text="${#strings.length(recepcionado.ticket.descripcion) > 150 ? recepcionado.ticket.descripcion.substring(0, 150) + '...' : recepcionado.ticket.descripcion}"></span>
+                            <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span>
                             <br>
                             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                             <ul>
-                                <li th:each="adjunto: ${recepcionado.ticket.listaArchivosAdjuntos}">
+                                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
                                     <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
                                        th:text="${adjunto.nombre}">Archivo</a> -
                                     <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                                 </li>
                             </ul>
-
-
                         </td>
                         <td>
-                            <span class="nombreClasificacionIncidencia urgencia"
-                                  th:utext="${recepcionado.clasificacionUrgencia.nombre + ':<br>'}"></span>
-                            <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
                             <ul>
-                                <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
-                                    <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
+                                <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
+                                    <span class="status-componente" th:text="${componente != null && componente.aprobado != null ? (componente.aprobado ? '[Aprobado]' : '[Desestimado]') : '[Sin estado]'}"></span>
                                     <span th:text="${componente.cantidad}"></span>
                                     <span th:text="${componente.tipoComponente.nombre}"></span>
                                 </li>
@@ -103,109 +94,7 @@
         </div>
     </div>
 
-    <!-- Modal para atención -->
-    <div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="atencionForm" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="atencionModalLabel">Atender Ticket</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
 
-                    <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <!-- Sección de Detalles del Ticket -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
-                                <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span
-                                        id="modalTicketHora"></span></p>
-                                <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p><strong>Descripción:</strong></p>
-                                <p id="modalTicketDescripcion"></p>
-                            </div>
-                        </div>
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE RECEPCIÓN</strong></p>
-                        <!-- Sección de Detalles de recepcion -->
-
-
-
-
-
-                        <!-- Sección de Comentarios de Servicio -->
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE LA ATENCIÓN</strong></p>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <label for="descripcionAtencion" class="form-label"><strong>Descripción de
-                                        Servicio</strong></label>
-                                <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
-                                    placeholder="Agrega algún comentario sobre la atención del ticket..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Sección de Clasificación del Servicio -->
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <label for="clasificacionServicio" class="form-label"><strong>Clasificación del
-                                        Servicio</strong></label>
-                                <select class="form-select" id="clasificacionServicio" name="clasificacion_servicio"
-                                    required>
-                                    <option selected disabled value="">Selecciona una clasificación</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_servicio}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Servicio</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
-        const atencionModal = document.getElementById('atencionModal');
-        atencionModal.addEventListener('show.bs.modal', function (event) {
-            // Botón que disparó el modal
-            const button = event.relatedTarget;
-
-            // Extraer información del ticket desde los atributos data-*
-            const ticketId = button.getAttribute('data-ticket-id');
-            const ticketUsuario = button.getAttribute('data-ticket-usuario');
-            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
-            const ticketFase = button.getAttribute('data-ticket-fase');
-            const ticketFecha = button.getAttribute('data-ticket-fecha');
-            const ticketHora = button.getAttribute('data-ticket-hora');
-
-            // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('modalTicketId').textContent = ticketId;
-            document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
-            document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
-            document.getElementById('modalTicketFecha').textContent = ticketFecha;
-            document.getElementById('modalTicketHora').textContent = ticketHora;
-
-            // Actualizar la acción del formulario para que envíe el ticket correspondiente
-            const form = document.getElementById('atencionForm');
-            form.setAttribute('action', `/app/tickets/atencion/${ticketId}`);
-        });
-    </script>
     <!-- Modal FILTRO -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -232,23 +121,6 @@
                                 <label for="fechaFilter" class="form-label">Fecha:</label>
                                 <input type="date" id="fechaFilter" class="form-control">
                             </div>
-                            <div class="col-md-12">
-                                <label for="clasificacionFilter" class="form-label">Clasificación:</label>
-                                <select class="form-select" id="clasificacionFilter" name="clasificacion_incidencia"
-                                    required>
-                                    <option selected disabled value="">Selecciona Incidencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.nombre}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="urgenciaFilter" class="form-label">Urgencia:</label>
-                                <select class="form-select" id="urgenciaFilter" name="clasificacion_urgencia" required>
-                                    <option selected disabled value="">Selecciona Urgencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.nombre}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -258,83 +130,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal para Desestimación -->
-    <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="desestimacionForm" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="desestimacionModalLabel">Desestimación del Ticket</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
-                        <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
-                        <p><strong>Clasificación:</strong> <span id="desestimacionTicketClasificacion"></span></p>
-                        <p><strong>Descripción:</strong> <span id="desestimacionTicketDescripcion"></span></p>
-                        <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span id="desestimacionTicketHora"></span></p>
-
-                        <!-- Campo adicional para comentarios de desestimación -->
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE DESESTIMACIÓN</strong></p>
-                        <div class="mb-3">
-                            <label for="comentariosDesestimacion" class="form-label">Comentarios de Desestimación</label>
-                            <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
-                                      placeholder="Agrega algún comentario sobre la desestimación del ticket..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="clasificacionDesestimacion" class="form-label">Clasificación de Desestimacion</label>
-                            <select class="form-select" id="clasificacionDesestimacion" name="clasificacion_desestimacion" required>
-                                <option selected disabled value="">Selecciona Desestimacion</option>
-                                <option th:each="tipo : ${Lista_clasificacion_desestimacion}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">Desestimar Ticket</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <script>
-        // Al abrir el modal de desestimación, actualizar su contenido con los datos del ticket seleccionado
-        const desestimacionModal = document.getElementById('desestimacionModal');
-        desestimacionModal.addEventListener('show.bs.modal', function (event) {
-            // Botón que disparó el modal
-            const button = event.relatedTarget;
-
-            // Extraer información del ticket desde los atributos data-*
-            const ticketId = button.getAttribute('data-ticket-id');
-            const ticketUsuario = button.getAttribute('data-ticket-usuario');
-            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
-            const ticketFecha = button.getAttribute('data-ticket-fecha');
-            const ticketHora = button.getAttribute('data-ticket-hora');
-
-            // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('desestimacionTicketId').textContent = ticketId;
-            document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
-            document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('desestimacionTicketClasificacion').textContent = ticketClasificacion;
-            document.getElementById('desestimacionTicketFecha').textContent = ticketFecha;
-            document.getElementById('desestimacionTicketHora').textContent = ticketHora;
-
-            // Actualizar la acción del formulario para que envíe el ticket correspondiente
-            const form = document.getElementById('desestimacionForm');
-            form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
-        });
-    </script>
 
 
 

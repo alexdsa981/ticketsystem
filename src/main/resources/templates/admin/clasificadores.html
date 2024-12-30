@@ -63,55 +63,6 @@
             </table>
         </div>
 
-        <!-- Clasificadores de Urgencia -->
-        <div class="col-12 mb-3" style="margin-bottom: 30px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Clasificadores Urgencia</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUrgenciaModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo
-                </button>
-            </div>
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>N°</th>
-                    <th>Nombre Urgencia</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="clasificador, iter: ${urgencias}"
-                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
-                    <td th:text="${iter.count}">#</td>
-                    <td th:text="${clasificador.nombre}">Nombre</td>
-                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                    <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#urgenciaModal"
-                                th:data-urgencia-id="${clasificador.id}"
-                                th:data-urgencia-nombre="${clasificador.nombre}"
-                                onclick="openUrgenciaModal(this)">
-                            Editar
-                        </button>
-                        <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Urgencia?');">
-                                Desactivar
-                            </a>
-                        </th:block>
-                        <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/urgencia/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Urgencia?');">
-                                Activar
-                            </a>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
         <!-- Clasificadores de Servicio -->
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
@@ -319,35 +270,6 @@
 
 
 
-<div class="modal fade" id="newUrgenciaModal" tabindex="-1" aria-labelledby="newUrgenciaModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/urgencia/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newUrgenciaModalLabel">Nombra la Nueva Clasificación de Urgencia</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreurgencia" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreurgencia" name="nombre" required>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal" aria-hidden="true">
     <div class="modal-dialog">
@@ -486,28 +408,6 @@
 </div>
 
 
-
-<!-- Modal para Clasificador de Urgencia -->
-<div class="modal fade" id="urgenciaModal" tabindex="-1" aria-labelledby="urgenciaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="urgenciaModalLabel">Editar Clasificador de Urgencia</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="urgenciaForm" method="post">
-                    <input type="hidden" id="urgenciaId" name="id" />
-                    <div class="mb-3">
-                        <label for="urgenciaNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="urgenciaNombre" name="nombre" required />
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal para Tipo Componente -->
 <div class="modal fade" id="tipocomponenteModal" tabindex="-1" aria-labelledby="tipocomponenteModalLabel" aria-hidden="true">

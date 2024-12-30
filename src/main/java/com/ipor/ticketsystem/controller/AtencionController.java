@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,10 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/app/tickets")
@@ -55,11 +53,6 @@ public class AtencionController {
         return model;
     }
 
-    public Model getListaTodosLosTicketsRecepcionadosPorDireccionAVista(Model model) {
-        List<AtencionTicketDTO> AllRecepcionadosDireccion = atencionService.getListaRecepcionadosDireccion();
-        model.addAttribute("AllRecepcionadosDireccion", AllRecepcionadosDireccion);
-        return model;
-    }
 
     public Model getListaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
@@ -95,6 +88,7 @@ public class AtencionController {
     public ResponseEntity<String> recepcionarTicket(
             @RequestParam("mensaje") String mensaje,
             @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
+            @RequestParam("clasificacion") Long clasificacion,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -110,6 +104,11 @@ public class AtencionController {
         recepcion.setHora(recepcion.getHora());
         recepcion.setFecha(recepcion.getFecha());
         atencionService.saveRecepcion(recepcion);
+
+        //Modifica el ticket para colocarle una clasificacion de incidencia
+        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
+        recepcion.getTicket().setClasificacionIncidencia(clasificacionIncidencia);
+        ticketService.saveTicket(recepcion.getTicket());
 
         Notificacion notificacion = new Notificacion();
         notificacion.setTicket(recepcion.getTicket());
@@ -278,13 +277,9 @@ public class AtencionController {
 
     //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
     @PostMapping("/recepcionDireccion/{id}")
-    public ResponseEntity<String> recepcionarTicketDirección(
-            @RequestParam("mensaje") String mensaje,
-            @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
+    public ResponseEntity<Map<String, String>> recepcionarTicketDirección(
             @RequestParam("componentesSeleccionados") String componentesJson,
-            @PathVariable Long id,
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            @PathVariable Long id) throws IOException {
 
         //desaprueba todos los componentes adjuntos
         List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
@@ -297,38 +292,52 @@ public class AtencionController {
         });
         for (Long idcomponente : componentesSeleccionados) {
             System.out.println(idcomponente);
-            new TipoComponenteAdjunto();
-            TipoComponenteAdjunto componenteAdjuntoAprobado;
-            componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
+            TipoComponenteAdjunto componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
             componenteAdjuntoAprobado.setAprobado(true);
             ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
         }
         //cambiar fase de ticket
-        atencionService.updateFaseTicket(id, 2L);
-        // Lógica para crear la recepcion
-        Recepcion recepcion = new Recepcion();
-        recepcion.setMensaje(mensaje);
-        recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
-        recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
-        recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-        recepcion.setHora(recepcion.getHora());
-        recepcion.setFecha(recepcion.getFecha());
-        atencionService.saveRecepcion(recepcion);
+        atencionService.updateFaseTicket(id, 1L);
 
+        //avisar a usuario que direccion ha revisado la solicitud
+        Ticket ticket = ticketService.getObtenerTicketPorID(id);
         Notificacion notificacion = new Notificacion();
-        notificacion.setTicket(recepcion.getTicket());
+        notificacion.setTicket(ticket);
         notificacion.setHora(notificacion.getHora());
         notificacion.setFecha(notificacion.getFecha());
         notificacion.setAbierto(Boolean.FALSE);
         notificacion.setLeido(Boolean.FALSE);
-        notificacion.setUsuario(recepcion.getTicket().getUsuario());
-        notificacion.setMensaje(" Ha sido Recepcionado");
-        notificacion.setUrl("/TicketsEnProceso");
+        notificacion.setUsuario(ticket.getUsuario());
+        notificacion.setMensaje(" Dirección ha revisado la solicitud");
+        notificacion.setUrl("/inicio");
         notificacionesService.saveNotiicacion(notificacion);
-        WSNotificacionesService.aumentarNumeroNotificacion(recepcion.getTicket().getUsuario().getId());
+        WSNotificacionesService.aumentarNumeroNotificacion(ticket.getUsuario().getId());
 
-        response.sendRedirect("/direccion/Recibidos");
-        return ResponseEntity.ok("Ticket recepcionado correctamente");
+        //avisar a soportes que direccion a revisado la solicitud
+        //NOTIFICACION EN BASE DE DATOS
+        List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
+        for (Usuario soporte : listaSoportes){
+            Notificacion notificacionS = new Notificacion();
+            notificacionS.setTicket(ticket);
+            notificacionS.setHora(notificacionS.getHora());
+            notificacionS.setFecha(notificacionS.getFecha());
+            notificacionS.setAbierto(Boolean.FALSE);
+            notificacionS.setLeido(Boolean.FALSE);
+            notificacionS.setUsuario(soporte);
+            notificacionS.setMensaje(" Dirección ha revisado la solicitud");
+            notificacionS.setUrl("/soporte/Recepcionar");
+            notificacionesService.saveNotiicacion(notificacionS);
+            //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
+            WSNotificacionesService.aumentarNumeroNotificacion(soporte.getId());
+        }
+
+
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("redirectUrl", "/direccion/Recibidos");
+
+        return ResponseEntity.ok(response);
     }
 
 

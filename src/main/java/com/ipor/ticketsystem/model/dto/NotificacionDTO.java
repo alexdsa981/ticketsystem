@@ -2,9 +2,6 @@ package com.ipor.ticketsystem.model.dto;
 
 import com.ipor.ticketsystem.model.dynamic.Notificacion;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 
 public record NotificacionDTO(
         Long id,
@@ -14,7 +11,6 @@ public record NotificacionDTO(
         String descripcion,
         String nombreUsuario,
         String url,
-        String clasificacionIncidencia,
         boolean leido,
         boolean abierto
 )
@@ -30,7 +26,6 @@ public record NotificacionDTO(
                 notificacion.getMensaje(),
                 notificacion.getUsuario().getNombre(),
                 notificacion.getUrl(),
-                notificacion.getTicket().getClasificacionIncidencia().getNombre(),
                 notificacion.getLeido(),
                 notificacion.getAbierto()
         );

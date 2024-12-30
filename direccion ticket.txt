@@ -1,13 +1,54 @@
-EN PROCESO
+
 
 -arreglar el front de los modales y agregar componentes al modal
+
 -mejorar la version mobile
 
--colocar urgencias predeterminadas y no deben poder ser modificadas en el front
+-agregar un buscador de ticket (para admin y soporte, solo con colocar el numero te debe redireccionara auna pagina con el ticket en cuestion
+este ticket debe ser clickeable para redirigirnos a la pagina correspondiente (segun su id fase))
 
+-filtros entre 2 fechas en lugar de buscar una fecha especifica
+
+
+
+
+
+
+
+
+
+EN PROCESO
+
+
+
+
+
+
+
+
+
+
+
+COMPLETADO
 
 -los usuarios ya no clasifican su ticket, lo hacen los de soporte
 pasos:
-clas incidencia nulleable
-eliminar input de clas incidencia en usuario y colocarlo en recepcion de soporte
-cambiar controladores
+    clas incidencia nulleable (LISTO)
+    eliminar input de clas incidencia en usuario y colocarlo en recepcion de soporte (LISTO)
+    cambiar controladores(ticket y recepcion)(LISTO)
+    cambiar modales y tablas (ticket, redireccion, desestimacion y recepcion)(LISTO)
+
+-colocar urgencias predeterminadas y no deben poder ser modificadas en el front (LISTO)
+pasos:
+    eliminar todo lo de urgencias del frot
+
+-direccion solo aprueba y desaprueba componentes
+pasos:
+    modificar controlador (solo seleccionará componentes y cambiará las fases de ticket) (LISTO)
+    modificar front (quitar mensaje de recepcion y urgencia) (LISTO)
+    modificar historial, mostrará todos los tickets que tienen componentes (LISTO)
+    se mostrarán los componentes en Inicio(USUARIO) y en Recepcionar (SOPORTE) (LISTO)
+
+
+
+

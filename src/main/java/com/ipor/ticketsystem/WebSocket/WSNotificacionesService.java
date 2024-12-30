@@ -18,7 +18,9 @@ public class WSNotificacionesService {
 
     public void enviarAlertaASoporte(TicketDTO ticketDTO) {
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        String message = "Ticket Recibido: "+ticketRecordWS.nombreUsuario() + " - " + ticketRecordWS.nombreClasificacionIncidencia();
+        String descripcion = ticketRecordWS.descripcion();
+        String message = "Ticket Recibido: " + ticketRecordWS.nombreUsuario() + " - " +
+                (descripcion.length() > 60 ? descripcion.substring(0, 60) : descripcion) + "...";
         messagingTemplate.convertAndSend("/topic/notificaciones/soporte", message);
 
     }

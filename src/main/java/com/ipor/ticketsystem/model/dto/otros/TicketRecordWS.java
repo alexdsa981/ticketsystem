@@ -14,7 +14,6 @@ public record TicketRecordWS(
         String horaFormateada,
         String descripcion,
         String nombreUsuario,
-        String nombreClasificacionIncidencia,
         String nombreFaseTicket,
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 ) {
@@ -26,7 +25,6 @@ public record TicketRecordWS(
                 ticketDTO.getHoraFormateada(),
                 ticketDTO.getDescripcion(),
                 ticketDTO.getUsuario().getNombre(),
-                ticketDTO.getClasificacionIncidencia().getNombre(),
                 ticketDTO.getFaseTicket().getNombre(),
                 ticketDTO.getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
