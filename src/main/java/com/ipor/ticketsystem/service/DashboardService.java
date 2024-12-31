@@ -19,6 +19,7 @@ public class DashboardService {
     @Autowired
     private ServicioRepository servicioRepository;
 
+    //para obtener el numero en las tablas
     public long obtenerNTotalTickets() {
         return ticketRepository.count();
     }
@@ -33,6 +34,7 @@ public class DashboardService {
         return ticketRepository.countByFaseTicketNombre("Espera en Dirección");
     }
 
+    //para dashboard
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(){
         return ticketRepository.findTicketCountByFase();
     }

@@ -211,44 +211,40 @@
             <div class="modal-content">
                 <form id="recepcionForm" method="POST">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="recepcionModalLabel">Recepción del Ticket</h5>
+                        <h5 class="modal-title text-primary" id="recepcionModalLabel"><i class="bi bi-ticket-detailed"></i> Recepción <span id="modalTicketIdFormateado"></span>:</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
-                        <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
-                        <p><strong>Descripción:</strong> <span id="modalTicketDescripcion"></span></p>
-                        <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span
-                                id="modalTicketHora"></span>
-                        </p>
-                        <!-- Campo adicional para comentarios de recepción o cambios -->
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE LA RECEPCIÓN</strong></p>
-                        <div class="mb-3">
-                            <label for="comentariosRecepcion" class="form-label">Comentarios de Recepción</label>
-                            <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
-                                placeholder="Agrega algún comentario sobre la recepción del ticket..."
-                                required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="clasificacion" class="form-label">Clasificación de Incidencia</label>
-                            <select class="form-select" id="clasificacion" name="clasificacion" required>
-                                <option selected disabled value="">Selecciona la clasificación</option>
-                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="clasificacionUrgencia" class="form-label">Clasificación de Urgencia</label>
-                            <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
-                                required>
-                                <option selected disabled value="">Selecciona Urgencia</option>
-                                <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                            </select>
+                        <div>
+                            <div class="mb-3 text-secondary">
+                                <p><strong>USUARIO:</strong> <span id="modalTicketUsuario"></span></p>
+                                <p><strong>DESCRIPCIÓN:</strong> <span id="modalTicketDescripcion"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comentariosRecepcion" class="form-label"><strong><i class="bi bi-chat-left-text"></i> COMENTARIOS DE RECEPCIÓN:</strong></label>
+                                <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
+                                    placeholder="Agrega algún comentario sobre la recepción del ticket..."
+                                    required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clasificacion" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
+                                <select class="form-select" id="clasificacion" name="clasificacion" required>
+                                    <option selected disabled value="">Selecciona la clasificación</option>
+                                    <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clasificacionUrgencia" class="form-label"><strong><i class="bi bi-exclamation-triangle"></i>
+                                    CLASIFICACIÓN DE URGENCIA:</strong></label>
+                                <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
+                                    required>
+                                    <option selected disabled value="">Selecciona Urgencia</option>
+                                    <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -269,6 +265,8 @@
 
             // Extraer información del ticket desde los atributos data-*
             const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
+
             const ticketUsuario = button.getAttribute('data-ticket-usuario');
             const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
             const ticketFase = button.getAttribute('data-ticket-fase');
@@ -276,11 +274,9 @@
             const ticketHora = button.getAttribute('data-ticket-hora');
 
             // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('modalTicketId').textContent = ticketId;
+            document.getElementById('modalTicketIdFormateado').textContent = formattedTicketId;
             document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
             document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('modalTicketFecha').textContent = ticketFecha;
-            document.getElementById('modalTicketHora').textContent = ticketHora;
 
             // Actualizar la acción del formulario para que envíe el ticket correspondiente
             const form = document.getElementById('recepcionForm');
@@ -296,30 +292,23 @@
             <div class="modal-content">
                 <form id="desestimacionForm" method="POST">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="desestimacionModalLabel">Desestimación del Ticket</h5>
+                        <h5 class="modal-title text-danger" id="desestimacionModalLabel"><i class="bi bi-trash"></i> Desestimación <span id="desestimacionTicketIdFormateado"></span>:</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
-                        <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
-                        <p><strong>Descripción:</strong> <span id="desestimacionTicketDescripcion"></span></p>
-                        <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span
-                                id="desestimacionTicketHora"></span></p>
-
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE DESESTIMACIÓN</strong></p>
-                        <!-- Campo adicional para comentarios de desestimación -->
+                        <div class="mb-3 text-secondary">
+                            <span style="display:none" id="redireccionTicketId"></span>
+                            <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
+                            <p><strong>Descripción:</strong> <span id="desestimacionTicketDescripcion"></span></p>
+                        </div>
                         <div class="mb-3">
-                            <label for="comentariosDesestimacion" class="form-label">Comentarios de
-                                Desestimación</label>
+                            <label for="comentariosDesestimacion" class="form-label"><strong><i class="bi bi-chat-left-text"></i> COMENTARIOS DE DESESTIMACIÓN</strong></label>
                             <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
                                 placeholder="Agrega algún comentario sobre la desestimación del ticket..." required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="clasificacionUrgencia" class="form-label">Clasificación de Desestimacion</label>
+                            <label for="clasificacionUrgencia" class="form-label"><strong><i class="bi bi-slash-circle"></i> CLASIFICACIÓN DE DESESTIMACIÓN</strong></label>
                             <select class="form-select" id="clasificacionDesestimacion"
                                 name="clasificacion_desestimacion" required>
                                 <option selected disabled value="">Selecciona Desestimacion</option>
@@ -348,17 +337,17 @@
 
             // Extraer información del ticket desde los atributos data-*
             const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
             const ticketUsuario = button.getAttribute('data-ticket-usuario');
             const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
             const ticketFecha = button.getAttribute('data-ticket-fecha');
             const ticketHora = button.getAttribute('data-ticket-hora');
 
             // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('desestimacionTicketId').textContent = ticketId;
+            document.getElementById('desestimacionTicketIdFormateado').textContent = formattedTicketId;
             document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
             document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('desestimacionTicketFecha').textContent = ticketFecha;
-            document.getElementById('desestimacionTicketHora').textContent = ticketHora;
+
 
             // Actualizar la acción del formulario para que envíe el ticket correspondiente
             const form = document.getElementById('desestimacionForm');
@@ -373,20 +362,16 @@
             <div class="modal-content">
                 <form id="redireccionForm" method="POST">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="redireccionModalLabel">Redireccionar Ticket a Dirección</h5>
+                        <h5 class="modal-title" id="redireccionModalLabel"><i class="bi bi-send"></i> Redirección a Dirección <span id="redireccionTicketIdFormateado"></span>:</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <p><strong>ID del Ticket:</strong> <span id="redireccionTicketId"></span></p>
-                        <p><strong>Usuario:</strong> <span id="redireccionTicketUsuario"></span></p>
-                        <p><strong>Descripción:</strong> <span id="redireccionTicketDescripcion"></span></p>
-                        <p><strong>Fecha:</strong> <span id="redireccionTicketFecha"></span> |
-                            <span id="redireccionTicketHora"></span>
-                        </p>
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE REDIRECCIÓN</strong></p>
+                        <div class="mb-3 text-secondary">
+                            <p><strong>USUARIO:</strong> <span id="redireccionTicketUsuario"></span></p>
+                            <p><strong>DESCRIPCIÓN:</strong> <span id="redireccionTicketDescripcion"></span></p>
+                        </div>
+
+                        <p style="text-align:center;"><strong><i class="bi bi-motherboard"></i> AGREGAR COMPONENTES</strong></p>
                         <!-- Componentes y cantidades -->
                         <div id="componentesContainer">
                             <div class="row mb-2 align-items-center componente-fila">
@@ -541,17 +526,19 @@
         function fillRedirectModal(button) {
             // Extraer los datos del botón
             const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
             const usuario = button.getAttribute('data-ticket-usuario');
             const descripcion = button.getAttribute('data-ticket-descripcion');
             const fecha = button.getAttribute('data-ticket-fecha');
             const hora = button.getAttribute('data-ticket-hora');
 
             // Llenar el modal de redirección con los datos extraídos
-            document.getElementById('redireccionTicketId').innerText = ticketId;
+
+            document.getElementById('redireccionTicketId').textContent = ticketId;
+            document.getElementById('redireccionTicketIdFormateado').textContent = formattedTicketId;
             document.getElementById('redireccionTicketUsuario').innerText = usuario;
             document.getElementById('redireccionTicketDescripcion').innerText = descripcion;
-            document.getElementById('redireccionTicketFecha').innerText = fecha;
-            document.getElementById('redireccionTicketHora').innerText = hora;
+
         }
 
     </script>

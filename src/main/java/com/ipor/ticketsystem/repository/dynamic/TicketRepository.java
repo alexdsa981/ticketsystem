@@ -25,8 +25,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     //para dashboard
     //numero total de ticket
     long count();
+
+    //obtiene el numero de tickets por fase
     long countByFaseTicketNombre(String nombre);
 
+    //dashboard admin conteo de tickets por fase
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ft.nombre, " +
             "COALESCE(COUNT(t), 0)) " +
             "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft " +
@@ -34,19 +37,23 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "ORDER BY MIN(ft.id)")
     List<RecordFactorXConteo> findTicketCountByFase();
 
+    //dashboard admin tickets creados por clasificación incidencia
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(t)) " +
             "FROM Ticket t INNER JOIN t.clasificacionIncidencia ci " +
             "GROUP BY ci.nombre")
     List<RecordFactorXConteo> findTicketCountByClasificacionIncidencia();
 
+
+    //dashboard admin tickets por clasificacion urgencia
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(t)) " +
             "FROM Ticket t " +
             "INNER JOIN t.recepcion r " +
             "INNER JOIN r.clasificacionUrgencia cu " +
-            "WHERE t.faseTicket.id = 3 " +
             "GROUP BY cu.nombre")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgencia();
 
+
+    //dashboard direccion
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(tc.nombre, SUM(tca.cantidad)) " +
             "FROM TipoComponenteAdjunto tca " +
             "INNER JOIN tca.tipoComponente tc " +
