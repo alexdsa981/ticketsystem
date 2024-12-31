@@ -17,37 +17,7 @@ este ticket debe ser clickeable para redirigirnos a la pagina correspondiente (s
 
 
 
-EN PROCESO
 
-
-
-
-
-
-
-
-
-
-
-COMPLETADO
-
--los usuarios ya no clasifican su ticket, lo hacen los de soporte
-pasos:
-    clas incidencia nulleable (LISTO)
-    eliminar input de clas incidencia en usuario y colocarlo en recepcion de soporte (LISTO)
-    cambiar controladores(ticket y recepcion)(LISTO)
-    cambiar modales y tablas (ticket, redireccion, desestimacion y recepcion)(LISTO)
-
--colocar urgencias predeterminadas y no deben poder ser modificadas en el front (LISTO)
-pasos:
-    eliminar todo lo de urgencias del frot
-
--direccion solo aprueba y desaprueba componentes
-pasos:
-    modificar controlador (solo seleccionará componentes y cambiará las fases de ticket) (LISTO)
-    modificar front (quitar mensaje de recepcion y urgencia) (LISTO)
-    modificar historial, mostrará todos los tickets que tienen componentes (LISTO)
-    se mostrarán los componentes en Inicio(USUARIO) y en Recepcionar (SOPORTE) (LISTO)
 
 
 

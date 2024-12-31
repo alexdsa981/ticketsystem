@@ -1,4 +1,57 @@
+/*
+2.CREA ROLES DE USUARIO:
+*/
 
+INSERT INTO [ticketSystem].[dbo].[rol_usuario] ([nombre])
+VALUES 
+('Usuario'),
+('Soporte'),
+('Admin'),
+('Dirección');
+
+
+/*
+3.CREAR CUENTA N°1 ADMINISTRADOR:
+
+	CONTRASEÑA: password = $2a$12$7SW6dd16qcrYSdV0L4Uzp.qzCEe6ricYOH9fdr1r/bGlF2ItBun4a
+	ENCRIPTADOR DE CONTRASEÑA: https://bcrypt-generator.com/
+
+	USUARIO ADMINISTRADOR: 
+		-USERNAME: admin
+		-NOMBRE: ADMINISTRADOR
+		-CONTRASEÑA: password
+	
+*/
+INSERT INTO [ticketSystem].[dbo].[usuario] (is_active, nombre, password, username, id_rol_usuario, changed_pass)
+		VALUES(1, 'ADMINISTRADOR', '$2a$12$7SW6dd16qcrYSdV0L4Uzp.qzCEe6ricYOH9fdr1r/bGlF2ItBun4a', 'admin', 3, 0);
+
+
+/*
+4. CREA FASES DE TICKET:
+*/
+INSERT INTO [ticketSystem].[dbo].[fase_ticket] ([nombre])
+VALUES 
+('Enviado'),
+('Recepcionado - En Proceso'),
+('Cerrado - Atendido'),
+('Desestimado'),
+('Espera en Dirección');
+GO
+/*
+5. CREA TIPOS DE URGENCIA
+*/
+INSERT INTO [ticketSystem].[dbo].[clasificacion_urgencia] ([nombre], [is_active])
+VALUES
+('Baja', 1),
+('Media', 1),
+('Alta', 1);
+GO
+/*
+6. CREA VISTA PARA FUNCIÓN EXPORTAR TICKETS
+*/
+
+USE [ticketSystem];
+GO
 CREATE VIEW vw_ticket_detalle as
 SELECT 
     t.id AS id_ticket, 

@@ -67,6 +67,7 @@ public class UsuariosCRUDController {
         usuario.setPassword(password);
         usuario.setUsername(username);
         usuario.setIsActive(Boolean.TRUE);
+        usuario.setChangedPass(Boolean.FALSE);
         usuarioService.guardarUsuario(usuario);
         response.sendRedirect("/admin/Usuarios");
         return ResponseEntity.ok("Usuario creado correctamente");

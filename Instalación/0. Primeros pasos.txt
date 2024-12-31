@@ -13,5 +13,5 @@ Instalación:
 	spring.datasource.username= alex
 	spring.datasource.password= password!!
 	server.port=8080"
--Iniciar el programa (Se cargarán las tablas)
--Ejecutar 2. 3. 4. 5. en SQL Server (Cargará información de tablas a la BD)
+-Iniciar el programa (Se crearán las tablas)
+-Ejecutar 2. en SQL Server (Cargará información de tablas a la BD)

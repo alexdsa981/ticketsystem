@@ -29,7 +29,7 @@ public class Usuario {
     private String nombre;
     @Column(nullable = false)
     private Boolean isActive;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     private Boolean changedPass;
 
     @JsonIgnore

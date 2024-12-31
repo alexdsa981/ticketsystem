@@ -5,6 +5,7 @@ import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
 import com.ipor.ticketsystem.security.ConstantesSeguridad;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
+import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,15 @@ public class LoginController {
     private UsuarioRepository usuarioRepository;
     private RolUsuarioRepository rolUsuarioRepository;
     private JwtTokenProvider jwtTokenProvider;
+    private UsuarioService usuarioService;
 
     @Autowired
-    public LoginController(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository, RolUsuarioRepository rolUsuarioRepository, JwtTokenProvider jwtTokenProvider) {
+    public LoginController(UsuarioService usuarioService, AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository, RolUsuarioRepository rolUsuarioRepository, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.usuarioRepository = usuarioRepository;
         this.rolUsuarioRepository = rolUsuarioRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
@@ -65,6 +68,14 @@ public class LoginController {
             jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
             jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
+
+
+            if (!usuarioOpt.get().getChangedPass()) {
+                // Usuario debe cambiar su contraseña
+                response.sendRedirect("/inicio?changePassword");
+                return ResponseEntity.ok().build();
+            }
+
 
             response.sendRedirect("/inicio");
             return ResponseEntity.ok().build();
@@ -97,6 +108,20 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PostMapping("/cambiar-password")
+    public ResponseEntity<Void> cambiarPassword(@RequestParam String newPassword) {
+        Long iDUsuarioLogeado = usuarioService.getIDdeUsuarioLogeado();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(iDUsuarioLogeado);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.encriptarPassword(newPassword);
+            usuario.setChangedPass(true); // Actualiza el estado
+            usuarioRepository.save(usuario); // Guarda los cambios en la BD
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
 
 }

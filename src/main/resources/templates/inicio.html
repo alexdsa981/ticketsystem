@@ -112,6 +112,39 @@
 </div>
 
 
+<!-- Modal para cambiar la contraseña -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                        <input type="password" class="form-control" id="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                    </div>
+                    <div id="error" class="text-danger d-none">Las contraseñas no coinciden.</div>
+                    <button type="button" class="btn btn-primary" id="savePassword">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 
 
 <div id="customNotification" class="custom-notification" style="display: none;">
@@ -119,9 +152,49 @@
 </div>
 <audio id="notificationSound" src="/sounds/alert.mp3" preload="auto"></audio>
 
-
 <div th:insert="~{common/imports :: bodyImportsAndNotification}">
 </div>
+
+
+
+<script>
+    // Detectar si el URL contiene '?changePassword'
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('changePassword')) {
+        const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+        changePasswordModal.show();
+    }
+
+    // Guardar la nueva contraseña
+    document.getElementById('savePassword').addEventListener('click', () => {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            document.getElementById('error').classList.remove('d-none');
+            return;
+        }
+
+        fetch('/app/cambiar-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `newPassword=${newPassword}`
+        }).then(response => {
+            if (response.ok) {
+                alert('Contraseña actualizada correctamente.');
+                window.location.href = "/inicio"; // Redirigir sin el parámetro
+            } else {
+                alert('Error al actualizar la contraseña.');
+            }
+        });
+    });
+</script>
+
+
+
+
 
 </body>
 </html>

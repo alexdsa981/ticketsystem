@@ -58,6 +58,7 @@ public class UsuarioService {
             // Encriptar la nueva contraseña si es que se actualiza
             if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().isEmpty()) {
                 usuario.encriptarPassword(usuarioActualizado.getPassword());
+                usuario.setChangedPass(Boolean.FALSE);
             }
             return usuarioRepository.save(usuario);
         }
