@@ -164,49 +164,45 @@
                 <div class="modal-content">
                     <form id="atencionForm" method="POST">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="atencionModalLabel">Historial de Ticket</h5>
+                            <h5 class="modal-title" id="atencionModalLabel"><i class="bi bi-clock-history"></i> HISTORIAL <span id="TicketIdFormateado"></span>:</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
                         <div class="modal-body">
                             <!-- Sección del Ticket -->
-                            <h5 class="mb-3 text-primary">Detalles del Ticket</h5>
+                            <h5 class="mb-3 text-primary"><i class="bi bi-journal-text"></i> DETALLES DE TICKET</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
-                                    <th>ID del Ticket:</th>
-                                    <td><span id="modalTicketId"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Usuario Emisor:</th>
+                                    <th>EMISOR:</th>
                                     <td><span id="modalTicketUsuario"></span></td>
                                 </tr>
                                 <tr>
-                                    <th>Descripción de Incidencia:</th>
+                                    <th>INCIDENCIA:</th>
                                     <td><span id="modalTicketDescripcion"></span></td>
                                 </tr>
                                 <tr>
-                                    <th>Fecha y Hora de Emisión:</th>
+                                    <th>EMITIDO:</th>
                                     <td><span id="modalTicketFecha"></span> | <span id="modalTicketHora"></span></td>
                                 </tr>
                             </table>
 
                             <!-- Sección de Desestimacion -->
-                            <h5 class="mb-3 text-primary">Detalles de Desestimacion</h5>
+                            <h5 class="mb-3 text-primary"><i class="bi bi-x-circle"></i> DETALLES DE DESESTIMACIÓN</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
-                                    <th>Usuario Desestimación:</th>
+                                    <th>TÉCNICO:</th>
                                     <td><span id="modalDesestimacionUsuario"></span></td>
                                 </tr>
                                 <tr>
-                                    <th>Mensaje de Desestimación:</th>
+                                    <th>MENSAJE:</th>
                                     <td><span id="modalDesestimacionMensaje"></span></td>
                                 </tr>
                                 <tr>
-                                    <th>Clasificación de Desestimación:</th>
+                                    <th>CLASIFICACIÓN:</th>
                                     <td><span id="modalDesestimacionClasificacion"></span></td>
                                 </tr>
                                 <tr>
-                                    <th>Fecha y Hora de Desestimación:</th>
+                                    <th>DESESTIMADO:</th>
                                     <td><span id="modalDesestimacionFecha"></span> | <span id="modalDesestimacionHora"></span>
                                     </td>
                                 </tr>
@@ -230,6 +226,7 @@
 
                 // Extraer información del ticket desde los atributos data-*
                 const ticketId = button.getAttribute('data-ticket-id');
+                const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
                 const ticketUsuario = button.getAttribute('data-ticket-usuario');
                 const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
                 const ticketFase = button.getAttribute('data-ticket-fase');
@@ -244,7 +241,7 @@
 
 
                 // Actualizar los elementos del modal con la información del ticket
-                document.getElementById('modalTicketId').textContent = ticketId;
+                document.getElementById('TicketIdFormateado').textContent = formattedTicketId;
                 document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
                 document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
                 document.getElementById('modalTicketFecha').textContent = ticketFecha;

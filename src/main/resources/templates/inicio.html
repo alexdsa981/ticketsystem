@@ -83,27 +83,29 @@
         <div class="modal-content">
             <form action="/app/tickets/crearTicket" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Ticket</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-plus-square"></i> NUEVO TICKET</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
+                        <label for="descripcion" class="form-label"><i class="bi bi-card-text"></i> DESCRIPCIÓN:</label>
                         <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
                                   placeholder="Describe el problema." required></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label for="archivo" class="form-label">Subir Archivo (opcional)</label>
+                        <label for="archivo" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO: (opcional)</label>
                         <input class="form-control" type="file" id="archivo" name="archivo">
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <p class="text-warning">Este Ticket no podrá ser eliminado ni modificado</p>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear Ticket</button>
+                    <p class="text-warning"><i class="bi bi-exclamation-triangle"></i> Este Ticket no podrá ser eliminado ni modificado</p>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Crear Ticket</button>
+                    </div>
                 </div>
             </form>
 

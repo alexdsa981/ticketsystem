@@ -96,7 +96,7 @@
 
                         <td class="td-accion">
                             <!-- Botón de recepción que abre el modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#atencionModal" th:data-ticket-id="${recepcionado.ticket.id}"
                                 th:data-ticket-usuario="${recepcionado.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
@@ -139,55 +139,37 @@
             <div class="modal-content">
                 <form id="atencionForm" method="POST">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="atencionModalLabel">Atender Ticket</h5>
+                        <h5 class="modal-title text-success" id="atencionModalLabel"><i class="bi bi-tools"></i> ATENCIÓN <span id="TicketIdFormateado"></span>: </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <hr>
                         <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
                         <!-- Sección de Detalles del Ticket -->
-                        <div class="row mb-4">
-                            <p><strong>ID del Ticket:</strong> <span id="modalTicketId"></span></p>
-                            <p><strong>Usuario:</strong> <span id="modalTicketUsuario"></span></p>
-                            <p><strong>Fecha:</strong> <span id="modalTicketFecha"></span> | <span
-                                    id="modalTicketHora"></span></p>
-                            <p><strong>Clasificación:</strong> <span id="modalTicketClasificacion"></span></p>
-                            <p><strong>Descripción: </strong><span id="modalTicketDescripcion"></span></p>
-
+                        <div class="mb-3 text-secondary">
+                            <p><strong>USUARIO: </strong> <span id="modalTicketUsuario"></span></p>
+                            <p><strong>DESCRIPCIÓN: </strong><span id="modalTicketDescripcion"></span></p>
                         </div>
-                        
-                        <!-- Sección de Comentarios de Servicio -->
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE LA ATENCIÓN</strong></p>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <label for="descripcionAtencion" class="form-label"><strong>Descripción de
-                                        Servicio</strong></label>
-                                <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
-                                    placeholder="Agrega algún comentario sobre la atención del ticket..." required></textarea>
-                            </div>
+                        <div class="mb-3">
+                            <label for="descripcionAtencion" class="form-label"><strong><i class="bi bi-check2-square"></i> DESCRIPCIÓN DE ATENCIÓN:</strong></label>
+                            <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
+                                placeholder="Agrega algún comentario sobre la atención del ticket..." required></textarea>
                         </div>
-
-                        <!-- Sección de Clasificación del Servicio -->
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <label for="clasificacionServicio" class="form-label"><strong>Clasificación del
-                                        Servicio</strong></label>
+                        <div class="mb-3">
+                                <label for="clasificacionServicio" class="form-label"><strong><i class="bi bi-list-check"></i> CLASIFICACIÓN DE ATENCIÓN:</strong></label>
                                 <select class="form-select" id="clasificacionServicio" name="clasificacion_servicio"
                                     required>
                                     <option selected disabled value="">Selecciona una clasificación</option>
                                     <option th:each="tipo : ${Lista_clasificacion_servicio}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                                 </select>
-                            </div>
                         </div>
                     </div>
 
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Servicio</button>
+                        <button type="submit" class="btn btn-success">Guardar Servicio</button>
                     </div>
                 </form>
             </div>
@@ -203,6 +185,7 @@
 
             // Extraer información del ticket desde los atributos data-*
             const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
             const ticketUsuario = button.getAttribute('data-ticket-usuario');
             const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
             const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
@@ -211,12 +194,10 @@
             const ticketHora = button.getAttribute('data-ticket-hora');
 
             // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('modalTicketId').textContent = ticketId;
+            document.getElementById('TicketIdFormateado').textContent = formattedTicketId;
             document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
             document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('modalTicketClasificacion').textContent = ticketClasificacion;
-            document.getElementById('modalTicketFecha').textContent = ticketFecha;
-            document.getElementById('modalTicketHora').textContent = ticketHora;
+
 
             // Actualizar la acción del formulario para que envíe el ticket correspondiente
             const form = document.getElementById('atencionForm');
@@ -280,36 +261,33 @@
             </div>
         </div>
     </div>
+
     <!-- Modal para Desestimación -->
-    <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel" aria-hidden="true">
+    <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="desestimacionForm" method="POST">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="desestimacionModalLabel">Desestimación del Ticket</h5>
+                        <h5 class="modal-title text-danger" id="desestimacionModalLabel"><i class="bi bi-trash"></i> Desestimación <span id="desestimacionTicketIdFormateado"></span>:</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                        <p><strong>ID del Ticket:</strong> <span id="desestimacionTicketId"></span></p>
-                        <p><strong>Usuario:</strong> <span id="desestimacionTicketUsuario"></span></p>
-                        <p><strong>Clasificación:</strong> <span id="desestimacionTicketClasificacion"></span></p>
-                        <p><strong>Descripción:</strong> <span id="desestimacionTicketDescripcion"></span></p>
-                        <p><strong>Fecha:</strong> <span id="desestimacionTicketFecha"></span> | <span id="desestimacionTicketHora"></span></p>
-
-                        <!-- Campo adicional para comentarios de desestimación -->
-                        <hr>
-                        <p style="text-align:center;"><strong>DETALLES DE DESESTIMACIÓN</strong></p>
+                        <div class="mb-3 text-secondary">
+                            <span style="display:none" id="redireccionTicketId"></span>
+                            <p><strong>USUARIO:</strong> <span id="desestimacionTicketUsuario"></span></p>
+                            <p><strong>DESCRIPCIÓN:</strong> <span id="desestimacionTicketDescripcion"></span></p>
+                        </div>
                         <div class="mb-3">
-                            <label for="comentariosDesestimacion" class="form-label">Comentarios de Desestimación</label>
+                            <label for="comentariosDesestimacion" class="form-label"><strong><i class="bi bi-chat-left-text"></i> COMENTARIOS DE DESESTIMACIÓN</strong></label>
                             <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
                                       placeholder="Agrega algún comentario sobre la desestimación del ticket..." required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="clasificacionDesestimacion" class="form-label">Clasificación de Desestimacion</label>
-                            <select class="form-select" id="clasificacionDesestimacion" name="clasificacion_desestimacion" required>
+                            <label for="clasificacionDesestimacion" class="form-label"><strong><i class="bi bi-slash-circle"></i> CLASIFICACIÓN DE DESESTIMACIÓN</strong></label>
+                            <select class="form-select" id="clasificacionDesestimacion"
+                                    name="clasificacion_desestimacion" required>
                                 <option selected disabled value="">Selecciona Desestimacion</option>
                                 <option th:each="tipo : ${Lista_clasificacion_desestimacion}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
@@ -338,19 +316,17 @@
 
             // Extraer información del ticket desde los atributos data-*
             const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
             const ticketUsuario = button.getAttribute('data-ticket-usuario');
             const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
             const ticketFecha = button.getAttribute('data-ticket-fecha');
             const ticketHora = button.getAttribute('data-ticket-hora');
 
             // Actualizar los elementos del modal con la información del ticket
-            document.getElementById('desestimacionTicketId').textContent = ticketId;
+            document.getElementById('desestimacionTicketIdFormateado').textContent = formattedTicketId;
             document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
             document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
-            document.getElementById('desestimacionTicketClasificacion').textContent = ticketClasificacion;
-            document.getElementById('desestimacionTicketFecha').textContent = ticketFecha;
-            document.getElementById('desestimacionTicketHora').textContent = ticketHora;
+
 
             // Actualizar la acción del formulario para que envíe el ticket correspondiente
             const form = document.getElementById('desestimacionForm');
