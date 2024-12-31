@@ -1,5 +1,7 @@
 import { mostrarNotificacionPersonalizada } from './notificacionPersonalizada.js';
 import { ActualizaTablaRecibidos } from './wsActualizaTabla.js';
+import { EliminarTicketDeTabla } from './wsActualizaTabla.js';
+
 
 // Crear una conexión WebSocket
 const socket = new SockJS('/ws');
@@ -12,12 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
     stompClient.connect({}, (frame) => {
         console.log('Conectado: ' + frame);
 
-        // Verifica si estás en la página específica antes de suscribirte
+        // RECEPCION: OCULTA O ACTUALIZA REGISTROS
         if (window.location.pathname === '/soporte/Recepcionar') {
-            stompClient.subscribe('/topic/tickets', (message) => {
+            // Suscripción para actualizar la tabla cuando se agregan tickets
+            stompClient.subscribe('/topic/actualizar/recepcion', (message) => {
                 const ticketRecord = JSON.parse(message.body);
                 ActualizaTablaRecibidos(ticketRecord);
             });
+
+            // Suscripción para ocultar un ticket cuando sea recepcionado
+            stompClient.subscribe('/topic/ocultar/recepcion', (message) => {
+                const ticketId = message.body.trim(); // Este es el ID sin formato
+                EliminarTicketDeTabla(ticketId);
+            });
+
+
+
         }
 
         // Verificar el rol del usuario antes de suscribirse

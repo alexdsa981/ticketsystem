@@ -22,15 +22,20 @@ public class WSNotificacionesService {
         String message = "Ticket Recibido: " + ticketRecordWS.nombreUsuario() + " - " +
                 (descripcion.length() > 60 ? descripcion.substring(0, 60) : descripcion) + "...";
         messagingTemplate.convertAndSend("/topic/notificaciones/soporte", message);
-
-    }
-    public void enviarTicket(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        messagingTemplate.convertAndSend("/topic/tickets", ticketRecordWS);
     }
     public void aumentarNumeroNotificacion(Long id) {
         String message = "Contador Actualizado desde wsnotificacionesService"; // O cualquier contenido que tenga sentido
         messagingTemplate.convertAndSend("/topic/notificaciones/contador/" + id, message);
+    }
+
+    public void enviarTicket(TicketDTO ticketDTO) {
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+        messagingTemplate.convertAndSend("/topic/actualizar/recepcion", ticketRecordWS);
+    }
+
+    public void ocultarRegistroEnVistaRecepcion(Long idTicket) {
+        String message = String.valueOf(idTicket);
+        messagingTemplate.convertAndSend("/topic/ocultar/recepcion", message);
     }
 
 }

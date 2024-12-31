@@ -16,9 +16,6 @@ function updateTicketCount() {
 }
 
 
-export function AumentarContadorNotificacion(){
-
-}
 
 
 // Función para manejar el ticket recibido
@@ -114,3 +111,25 @@ export function ActualizaTablaRecibidos(ticketRecord) {
     updateFilteredRows();
     updateTicketCount();
 }
+
+
+export function EliminarTicketDeTabla(ticketId) {
+    console.log("wsactualizatabla eliminar");
+
+    // Buscar el <td> utilizando el ticketId
+    const ticketCell = document.getElementById(ticketId);
+
+    if (ticketCell) {
+        // Obtener la fila <tr> que contiene este <td>
+        const row = ticketCell.closest('tr');
+        if (row) {
+            row.remove(); // Eliminar la fila del DOM
+            console.log(`Fila con ID ${ticketId} eliminada.`);
+        } else {
+            console.error(`No se encontró una fila para el ticket con ID ${ticketId}`);
+        }
+    } else {
+        console.error(`No se encontró una celda con ID ${ticketId}`);
+    }
+}
+

@@ -11,6 +11,8 @@ import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,41 +95,56 @@ public class AtencionController {
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        //cambiar fase de ticket
-        atencionService.updateFaseTicket(id, 2L);
-        // Lógica para crear la recepcion
-        Recepcion recepcion = new Recepcion();
-        recepcion.setMensaje(mensaje);
-        recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
-        recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
-        recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-        recepcion.setHora(recepcion.getHora());
-        recepcion.setFecha(recepcion.getFecha());
-        atencionService.saveRecepcion(recepcion);
+        try {
+            // Cambiar fase de ticket
+            atencionService.updateFaseTicket(id, 2L);
 
-        //Modifica el ticket para colocarle una clasificacion de incidencia
-        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
-        recepcion.getTicket().setClasificacionIncidencia(clasificacionIncidencia);
-        ticketService.saveTicket(recepcion.getTicket());
+            // Crear la recepción
+            Recepcion recepcion = new Recepcion();
+            recepcion.setMensaje(mensaje);
+            recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
+            recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
+            recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+            recepcion.setHora(recepcion.getHora());
+            recepcion.setFecha(recepcion.getFecha());
+            atencionService.saveRecepcion(recepcion);
 
-        Notificacion notificacion = new Notificacion();
-        notificacion.setTicket(recepcion.getTicket());
-        notificacion.setHora(notificacion.getHora());
-        notificacion.setFecha(notificacion.getFecha());
-        notificacion.setAbierto(Boolean.FALSE);
-        notificacion.setLeido(Boolean.FALSE);
-        notificacion.setUsuario(recepcion.getTicket().getUsuario());
-        notificacion.setMensaje(" Ha sido Recepcionado");
-        notificacion.setUrl("/TicketsEnProceso");
-        notificacionesService.saveNotiicacion(notificacion);
-        WSNotificacionesService.aumentarNumeroNotificacion(recepcion.getTicket().getUsuario().getId());
+            // Modificar el ticket
+            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
+            recepcion.getTicket().setClasificacionIncidencia(clasificacionIncidencia);
+            ticketService.saveTicket(recepcion.getTicket());
 
+            // Crear notificación
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(recepcion.getTicket());
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(recepcion.getTicket().getUsuario());
+            notificacion.setMensaje(" Ha sido Recepcionado");
+            notificacion.setUrl("/TicketsEnProceso");
+            notificacionesService.saveNotiicacion(notificacion);
+            WSNotificacionesService.aumentarNumeroNotificacion(recepcion.getTicket().getUsuario().getId());
+            WSNotificacionesService.ocultarRegistroEnVistaRecepcion(id);
+            // Redirigir a la URL actual
+            String referer = request.getHeader("Referer");
+            response.sendRedirect("/soporte/Recepcionar?successful=true");
+            return ResponseEntity.ok("Ticket recepcionado correctamente");
 
-        // Redirigir a la URL actual
-        String referer = request.getHeader("Referer");
-        response.sendRedirect(referer != null ? referer : "/fallbackUrl");
-        return ResponseEntity.ok("Ticket recepcionado correctamente");
+        } catch (DataIntegrityViolationException e) {
+            // Error de llave duplicada u otros problemas de integridad
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=duplicated" : "/fallbackUrl?error=duplicated");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido recepcionado por otro usuario.");
+        } catch (Exception e) {
+            // Captura otros errores
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=general" : "/fallbackUrl?error=general");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al recepcionar el ticket.");
+        }
     }
+
 
     //metodo para atender un ticket, crea un atendido(servicio) y cambia la fase del ticket:
     @PostMapping("/atencion/{id}")

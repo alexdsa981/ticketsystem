@@ -56,10 +56,10 @@
                     </tr>
                 </thead>
                 <tbody id="ticketTableBody">
-                <tr th:each="ticket, iter: ${AllTickets}"
+                <tr th:each="ticket, iter: ${AllTickets}" id="ticket-${ticket.id}"
                     th:classappend="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)} ? 'tr-con-componentes' : ''">
                         <td th:text="${iter.count}">#</td>
-                        <td th:text="${ticket.idFormateado}">#</td>
+                        <td th:id="${ticket.id}" th:text="${ticket.idFormateado}">#</td>
                         <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
                         <td th:text="${ticket.horaFormateada}">Hora</td>
                         <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
@@ -541,6 +541,50 @@
 
         }
 
+    </script>
+    <script>
+        // Detectar parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.has('successful')) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'El ticket fue recepcionado correctamente.',
+                confirmButtonText: 'Entendido',
+            }).then(() => {
+                // Limpiar el parámetro de la URL sin recargar
+                const cleanUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, cleanUrl);
+            });
+        }
+
+        if (params.has('error')) {
+            const errorType = params.get('error');
+            let errorMessage;
+
+            // Determinar el mensaje según el tipo de error
+            switch (errorType) {
+                case 'duplicated':
+                    errorMessage = 'El ticket ya ha sido recepcionado por otro usuario.';
+                    break;
+                case 'general':
+                default:
+                    errorMessage = 'Ocurrió un problema inesperado. Por favor, inténtalo nuevamente.';
+                    break;
+            }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+                confirmButtonText: 'Entendido',
+            }).then(() => {
+                // Limpiar el parámetro de la URL sin recargar
+                const cleanUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, cleanUrl);
+            });
+        }
     </script>
 
     <div th:insert="~{common/imports :: bodyImportsAndNotification}">
