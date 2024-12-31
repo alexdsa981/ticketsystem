@@ -1,6 +1,6 @@
 
 
--arreglar el front de los modales
+-notificaciones con sonido a usuarios
 
 -MANEJAR ERRORES SI ES QUE YA SE HIZO UNA RECEPCION O ATENCION DE UN TICKET, ETC.
 
