@@ -74,8 +74,12 @@ if (filterButton) {
         const usuarioEmisorFilter = getValueOrDefault('usuarioEmisorFilter');
         const usuarioAtencionFilter = getValueOrDefault('usuarioAtencionFilter');
 
-        const fechaFilter = document.getElementById('fechaFilter') ? document.getElementById('fechaFilter').value : '';
-        const formattedFechaFilter = fechaFilter ? fechaFilter.split('-').reverse().join('/') : '';
+
+        const fechaInicioFilter = document.getElementById('fechaInicioFilter') ? document.getElementById('fechaInicioFilter').value : '';
+        const fechaFinFilter = document.getElementById('fechaFinFilter') ? document.getElementById('fechaFinFilter').value : '';
+        // Convertir las fechas a formato Date
+        const fechaInicio = fechaInicioFilter ? new Date(fechaInicioFilter) : null;
+        const fechaFin = fechaFinFilter ? new Date(fechaFinFilter) : null;
 
         const clasificacionFilter = getValueOrDefault('clasificacionFilter');
         const urgenciaFilter = getValueOrDefault('urgenciaFilter');
@@ -92,16 +96,19 @@ if (filterButton) {
             const usuarioReceptorCell = row.querySelector('.usuario-receptor') ? row.querySelector('.usuario-receptor').textContent.toLowerCase() : '';
             const usuarioAtencionCell = row.querySelector('.usuario-atencion') ? row.querySelector('.usuario-atencion').textContent.toLowerCase() : '';
             const usuarioEmisorCell = row.querySelector('.usuario-emisor') ? row.querySelector('.usuario-emisor').textContent.toLowerCase() : '';
-            const fechaCell = row.querySelector('.fecha') ? row.querySelector('.fecha').textContent : '';
             const clasificacionCell = row.querySelector('.clasificacion') ? row.querySelector('.clasificacion').textContent.toLowerCase() : '';
             const urgenciaCell = row.querySelector('.urgencia') ? row.querySelector('.urgencia').textContent.toLowerCase() : '';
             const clasificacionServicioCell = row.querySelector('.clasificacion-servicio') ? row.querySelector('.clasificacion-servicio').textContent.toLowerCase() : '';
 
+            const fechaCell = row.querySelector('.fecha') ? row.querySelector('.fecha').textContent : '';
+            const cellFecha = new Date(fechaCell.split('/').reverse().join('/')); // Suponiendo que la fecha está en formato DD/MM/YYYY
+
             // Comparar con los filtros
+            const matchesFecha = (!fechaInicio || cellFecha >= fechaInicio) && (!fechaFin || cellFecha <= fechaFin);
+
             const matchesUsuarioReceptor = usuarioReceptorFilter === '' || usuarioReceptorCell.includes(usuarioReceptorFilter);
             const matchesUsuarioEmisor = usuarioEmisorFilter === '' || usuarioEmisorCell.includes(usuarioEmisorFilter);
             const matchesUsuarioAtencion = usuarioAtencionFilter === '' || usuarioAtencionCell.includes(usuarioAtencionFilter);
-            const matchesFecha = formattedFechaFilter === '' || fechaCell === formattedFechaFilter;
             const matchesClasificacion = clasificacionFilter === '' || clasificacionCell.includes(clasificacionFilter);
             const matchesUrgencia = urgenciaFilter === '' || urgenciaCell.includes(urgenciaFilter);
             const matchesClasificacionServicio = clasificacionServicioFilter === '' || clasificacionServicioCell.includes(clasificacionServicioFilter);

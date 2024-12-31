@@ -1,9 +1,11 @@
 package com.ipor.ticketsystem.security;
 
+import com.ipor.ticketsystem.service.CookieUtil;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
+    @Autowired
+    private HttpServletResponse response;
 
     //metodo para crear un token por medio de la authenticacion
     public String generarToken(Authentication authentication) {
@@ -44,13 +48,16 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-
+            CookieUtil.removeJwtCookie(response);
             throw new AuthenticationCredentialsNotFoundException("El token ha expirado: " + token, ex);
         } catch (MalformedJwtException ex) {
+            CookieUtil.removeJwtCookie(response);
             throw new AuthenticationCredentialsNotFoundException("Token JWT mal formado: " + token, ex);
         } catch (SignatureException ex) {
+            CookieUtil.removeJwtCookie(response);
             throw new AuthenticationCredentialsNotFoundException("Fallo en la firma del token JWT: " + token, ex);
         } catch (IllegalArgumentException ex) {
+            CookieUtil.removeJwtCookie(response);
             throw new AuthenticationCredentialsNotFoundException("El token JWT está vacío o es incorrecto: " + token, ex);
         }
     }
