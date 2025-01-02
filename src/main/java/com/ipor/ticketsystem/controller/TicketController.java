@@ -1,7 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.service.ClasificadoresService;
@@ -78,8 +77,6 @@ public class TicketController {
         // Lógica para crear el ticket
         Ticket ticket = new Ticket();
         ticket.setDescripcion(descripcion);
-//        ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
-//        ticket.setClasificacionIncidencia(clasificacionIncidencia);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
         ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         ticket.setFecha(ticket.getFecha());
@@ -125,13 +122,12 @@ public class TicketController {
             notificacion.setUrl("/soporte/Recepcionar");
             notificacionesService.saveNotiicacion(notificacion);
             //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
-            WSNotificacionesService.aumentarNumeroNotificacion(soporte.getId());
+            WSNotificacionesService.enviarNotificacion(notificacion);
         }
 
         //NOTIFICACIONES EN TIEMPO REAL A TRAVES DE WEB SOCKETS
         TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
-        WSNotificacionesService.enviarAlertaASoporte(ticketDTO);
-        WSNotificacionesService.enviarTicket(ticketDTO);
+        WSNotificacionesService.enviarTicketAVistaRecepción(ticketDTO);
 
 
         response.sendRedirect("/inicio");

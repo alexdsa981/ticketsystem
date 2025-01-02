@@ -1,7 +1,9 @@
 package com.ipor.ticketsystem.WebSocket;
 
+import com.ipor.ticketsystem.model.dto.NotificacionDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.TicketRecordWS;
+import com.ipor.ticketsystem.model.dynamic.Notificacion;
 import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -16,19 +18,13 @@ public class WSNotificacionesService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void enviarAlertaASoporte(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        String descripcion = ticketRecordWS.descripcion();
-        String message = "Ticket Recibido: " + ticketRecordWS.nombreUsuario() + " - " +
-                (descripcion.length() > 60 ? descripcion.substring(0, 60) : descripcion) + "...";
-        messagingTemplate.convertAndSend("/topic/notificaciones/soporte", message);
-    }
-    public void aumentarNumeroNotificacion(Long id) {
-        String message = "Contador Actualizado desde wsnotificacionesService"; // O cualquier contenido que tenga sentido
-        messagingTemplate.convertAndSend("/topic/notificaciones/contador/" + id, message);
+    public void enviarNotificacion(Notificacion notificacion) {
+        NotificacionDTO notificacionDTO = new NotificacionDTO(notificacion);
+        String message = notificacionDTO.idFormateado() + ": "+ notificacionDTO.descripcion();
+        messagingTemplate.convertAndSend("/topic/notificaciones/" + notificacion.getUsuario().getId(), message);
     }
 
-    public void enviarTicket(TicketDTO ticketDTO) {
+    public void enviarTicketAVistaRecepción(TicketDTO ticketDTO) {
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/recepcion", ticketRecordWS);
     }

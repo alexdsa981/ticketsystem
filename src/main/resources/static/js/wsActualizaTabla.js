@@ -62,9 +62,14 @@ export function ActualizaTablaRecibidos(ticketRecord) {
                     <i class="bi bi-pencil-square"></i>
             </button>
 
-            <button type="button" class="btn btn-secondary"
-                    data-ticket-id="${ticketRecord.id}"
-                    onclick="confirmRedirect(this)">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                    data-bs-target="#redireccionModal" data-ticket-id="${ticketRecord.id}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
+                    data-ticket-descripcion="${ticketRecord.descripcion}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
+                    data-ticket-hora="${ticketRecord.horaFormateada}"
+                    onclick="fillRedirectModal(this)">
                 <i class="bi bi-send"></i>
             </button>
 

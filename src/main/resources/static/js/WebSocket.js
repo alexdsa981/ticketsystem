@@ -32,33 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
 
-        // Verificar el rol del usuario antes de suscribirse
-        fetch('/app/usuarios/rol')
-            .then(response => response.text())
-            .then(role => {
-                if (role === 'soporte') {
-                    stompClient.subscribe('/topic/notificaciones/soporte', (message) => {
-                        console.log('Alerta recibida:', message.body);
-                        mostrarNotificacionPersonalizada(message.body);
-                    });
-                } else {
-                    console.log('El usuario no tiene permisos para recibir notificaciones de soporte.');
-                }
-            })
-            .catch(error => console.error('Error al obtener el rol del usuario:', error));
-
         // Obtener el ID del usuario logeado para suscribirse al contador de notificaciones
         fetch('/app/usuarios/id')
             .then(response => response.json())
             .then(userId => {
-                stompClient.subscribe(`/topic/notificaciones/contador/${userId}`, (message) => {
-                    console.log('Mensaje recibido:', message.body);
+                stompClient.subscribe(`/topic/notificaciones/${userId}`, (message) => {
 
+                    //ACTUALIZAR CONTADOR
                     let contadorActual = parseInt(notificacionesContador.textContent) || 0;
                     contadorActual += 1;
-
                     notificacionesContador.textContent = contadorActual;
                     notificacionesContador.classList.remove('d-none');
+                    //ALERTA
+                    mostrarNotificacionPersonalizada(message.body);
                 });
             })
             .catch(error => console.error('Error al obtener el ID del usuario:', error));

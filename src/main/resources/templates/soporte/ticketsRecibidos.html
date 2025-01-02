@@ -135,38 +135,6 @@
             <button id="nextPage" class="btn btn-secondary mx-1" disabled>&gt;</button>
         </div>
     </div>
-    <!--Redireccion a direccion-->
-    <script>
-        function confirmRedirect(button) {
-            const ticketId = button.getAttribute('data-ticket-id');
-            Swal.fire({
-                title: 'Confirmación',
-                text: "¿Está seguro de enviar el ticket a Dirección?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, enviar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/app/tickets/RedirigirADireccion/` + ticketId, {
-                        method: 'POST'
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                window.location.href = "/soporte/Recibidos";
-                            } else {
-                                Swal.fire('Error', 'Error al redirigir el ticket a Dirección.', 'error');
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            Swal.fire('Error', 'Hubo un problema al redirigir el ticket.', 'error');
-                        });
-                }
-            });
-        }
-
-    </script>
 
     <!-- Modal FILTRO -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -419,106 +387,109 @@
 
     <script>
         function submitRedireccionForm() {
-    const ticketId = document.getElementById('redireccionTicketId').innerText;
+            const ticketId = document.getElementById('redireccionTicketId').innerText;
 
-    if (!ticketId) {
-        alert('Error: No se encontró el ID del ticket.');
-        return;
-    }
-
-    const componentes = [];
-    const cantidades = [];
-
-    // Recolectar los datos de los componentes y cantidades
-    const filas = document.querySelectorAll('#componentesContainer .row'); // Selecciona todas las filas
-    filas.forEach(fila => {
-        const componenteSelect = fila.querySelector('.componente-select');
-        const cantidadInput = fila.querySelector('.cantidad-input');
-
-        if (componenteSelect && cantidadInput) {
-            const componenteId = componenteSelect.value;
-            const cantidad = cantidadInput.value;
-
-            if (componenteId && cantidad) {
-                componentes.push(componenteId);
-                cantidades.push(cantidad);
+            if (!ticketId) {
+                console.error('Error: No se encontró el ID del ticket.');
+                return;
             }
-        }
-    });
 
-    if (componentes.length === 0 || cantidades.length === 0) {
-        alert('Debes agregar al menos un componente y su cantidad.');
-        return;
-    }
+            const componentes = [];
+            const cantidades = [];
 
-    console.log('Componentes:', componentes); // Depuración
-    console.log('Cantidades:', cantidades); // Depuración
+            // Recolectar los datos de los componentes y cantidades
+            const filas = document.querySelectorAll('#componentesContainer .row'); // Selecciona todas las filas
+            filas.forEach(fila => {
+                const componenteSelect = fila.querySelector('.componente-select');
+                const cantidadInput = fila.querySelector('.cantidad-input');
 
-    // Crear el objeto a enviar
-    const datos = {
-        ticketId,
-        componentes,
-        cantidades
-    };
+                if (componenteSelect && cantidadInput) {
+                    const componenteId = componenteSelect.value;
+                    const cantidad = cantidadInput.value;
 
-    // Enviar los datos al backend
-    fetch(`/app/tickets/RedirigirADireccion/${ticketId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datos)
-    })
-        .then(response => {
-            if (response.ok) {
-                alert('Ticket redirigido correctamente.');
-                window.location.reload();
-            } else {
-                alert('Error al redirigir el ticket.');
+                    if (componenteId && cantidad) {
+                        componentes.push(componenteId);
+                        cantidades.push(cantidad);
+                    }
+                }
+            });
+
+            if (componentes.length === 0 || cantidades.length === 0) {
+                console.error('Debes agregar al menos un componente y su cantidad.');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Ocurrió un error inesperado.');
-        });
-}
 
+            console.log('Componentes:', componentes); // Depuración
+            console.log('Cantidades:', cantidades); // Depuración
 
-    function agregarFila() {
-        const container = document.getElementById('componentesContainer');
-        const templateSelect = document.getElementById('templateSelect');
+            // Crear el objeto a enviar
+            const datos = {
+                componentes,
+                cantidades
+            };
 
-        if (!templateSelect) {
-            console.error("No se encontró el elemento 'templateSelect'.");
-            alert("Ocurrió un error al intentar agregar un nuevo componente.");
-            return;
+            // Enviar los datos al backend
+            fetch(`/app/tickets/RedirigirADireccion/${ticketId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // El backend se encarga de redirigir
+                        window.location.href = response.url; // Redirigir a la URL proporcionada por el backend
+                    } else {
+                        console.error('Error al redirigir el ticket.');
+                        window.location.href = response.url;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    console.error('Ocurrió un error inesperado.');
+                });
         }
 
-        const nuevaFila = document.createElement('div');
-        nuevaFila.classList.add('row', 'mb-2', 'align-items-center', 'componente-fila'); // Asegura la clase componente-fila
-        nuevaFila.innerHTML = `
-    <div class="col-md-7">
-        ${templateSelect.innerHTML} <!-- Usar el select ya procesado -->
-    </div>
-    <div class="col-md-2">
-        <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="1" value="1" required>
-    </div>
-    <div class="col-md-1">
-        <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
-            <i class="bi bi-x"></i>
-        </button>
-    </div>
-`;
-        container.appendChild(nuevaFila);
-    }
+
+
+            function agregarFila() {
+                const container = document.getElementById('componentesContainer');
+                const templateSelect = document.getElementById('templateSelect');
+
+                if (!templateSelect) {
+                    console.error("No se encontró el elemento 'templateSelect'.");
+                    alert("Ocurrió un error al intentar agregar un nuevo componente.");
+                    return;
+                }
+
+                const nuevaFila = document.createElement('div');
+                nuevaFila.classList.add('row', 'mb-2', 'align-items-center', 'componente-fila'); // Asegura la clase componente-fila
+                nuevaFila.innerHTML = `
+            <div class="col-md-7">
+                ${templateSelect.innerHTML} <!-- Usar el select ya procesado -->
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="1" value="1" required>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        `;
+                container.appendChild(nuevaFila);
+            }
 
 
 
 
-    function eliminarFila(button) {
-        const fila = button.parentElement.parentElement;
-        fila.remove();
-    }
+            function eliminarFila(button) {
+                const fila = button.parentElement.parentElement;
+                fila.remove();
+            }
+
+
     </script>
 
 
@@ -543,32 +514,65 @@
 
     </script>
     <script>
-        // Detectar parámetros de la URL
-        const params = new URLSearchParams(window.location.search);
+            // Detectar parámetros de la URL
+            const params = new URLSearchParams(window.location.search);
 
-        if (params.has('successful')) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: 'El ticket fue recepcionado correctamente.',
-                confirmButtonText: 'Entendido',
-            }).then(() => {
-                // Limpiar el parámetro de la URL sin recargar
-                const cleanUrl = window.location.href.split('?')[0];
-                window.history.replaceState({}, document.title, cleanUrl);
-            });
-        }
+            if (params.has('successful')) {
+                const successType = params.get('successful');
+                let successMessage;
 
-        if (params.has('error')) {
+                // Determinar el mensaje según el tipo de éxito
+                switch (successType) {
+                    case 'recepcion':
+                        successMessage = 'El ticket fue recepcionado correctamente.';
+                        break;
+                    case 'redireccion':
+                        successMessage = 'Redirección realizada con éxito.';
+                        break;
+                    // Puedes agregar más casos aquí según sea necesario
+                    default:
+                        successMessage = 'Operación realizada con éxito.';
+                        break;
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: successMessage,
+                    confirmButtonText: 'Entendido',
+                }).then(() => {
+                    // Limpiar el parámetro de la URL sin recargar
+                    const cleanUrl = window.location.href.split('?')[0];
+                    window.history.replaceState({}, document.title, cleanUrl);
+                });
+            }
+
+            if (params.has('error')) {
             const errorType = params.get('error');
             let errorMessage;
 
             // Determinar el mensaje según el tipo de error
             switch (errorType) {
-                case 'duplicated':
+                case 'recepcion-duplicated':
                     errorMessage = 'El ticket ya ha sido recepcionado por otro usuario.';
                     break;
-                case 'general':
+                case 'recepcion-general':
+                    errorMessage = 'Error inesperado al recepcionar el ticket.';
+                    break;
+
+                case 'redireccion-moved':
+                    errorMessage = 'El ticket ya se encuentra en otra fase.';
+                    break;
+
+                case 'desestimacion-duplicated':
+                    errorMessage = 'El ticket ya ha sido desestimado por otro usuario.';
+                    break;
+                case 'desestimacion-general':
+                    errorMessage = 'Error inesperado al desestimar el ticket.';
+                    break;
+                case 'desestimacion-moved':
+                    errorMessage = 'El ticket ya se encuentra en otra fase.';
+                    break;
                 default:
                     errorMessage = 'Ocurrió un problema inesperado. Por favor, inténtalo nuevamente.';
                     break;
@@ -586,6 +590,7 @@
             });
         }
     </script>
+
 
     <div th:insert="~{common/imports :: bodyImportsAndNotification}">
     </div>
