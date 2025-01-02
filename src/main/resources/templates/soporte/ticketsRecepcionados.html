@@ -51,11 +51,11 @@
 
                 <tbody id="ticketTableBody">
                     <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                    <tr th:each="recepcionado, iter: ${AllRecepcionados}"
+                    <tr th:each="recepcionado, iter: ${AllRecepcionados}" id="ticket-${ticket.id}"
                         th:class="${recepcionado.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
                        (recepcionado.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
                         <td th:text="${iter.count}">#</td>
-                        <td th:text="${recepcionado.ticket.idFormateado}">#</td>
+                        <td th:id="${recepcionado.ticket.id}" th:text="${recepcionado.ticket.idFormateado}">#</td>
                         <td class="fecha" th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
                         <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
                         <td class="usuario-emisor" th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
@@ -293,6 +293,7 @@
                                         th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
+                        <input type="number" value="2" style="display:none" name="fase">
                     </div>
 
                     <div class="modal-footer">

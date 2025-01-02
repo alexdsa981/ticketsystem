@@ -160,12 +160,7 @@
 
 
 <script>
-    // Detectar si el URL contiene '?changePassword'
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('changePassword')) {
-        const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
-        changePasswordModal.show();
-    }
+
 
     // Guardar la nueva contraseña
     document.getElementById('savePassword').addEventListener('click', () => {

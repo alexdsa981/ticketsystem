@@ -14,22 +14,32 @@ document.addEventListener('DOMContentLoaded', () => {
     stompClient.connect({}, (frame) => {
         console.log('Conectado: ' + frame);
 
-        // RECEPCION: OCULTA O ACTUALIZA REGISTROS
+        // SOPORTE RECEPCION: OCULTA O ACTUALIZA REGISTROS
         if (window.location.pathname === '/soporte/Recepcionar') {
             // Suscripción para actualizar la tabla cuando se agregan tickets
-            stompClient.subscribe('/topic/actualizar/recepcion', (message) => {
+            stompClient.subscribe('/topic/actualizar/soporte-recepcion', (message) => {
                 const ticketRecord = JSON.parse(message.body);
                 ActualizaTablaRecibidos(ticketRecord);
             });
-
             // Suscripción para ocultar un ticket cuando sea recepcionado
-            stompClient.subscribe('/topic/ocultar/recepcion', (message) => {
+            stompClient.subscribe('/topic/ocultar/soporte-recepcion', (message) => {
                 const ticketId = message.body.trim(); // Este es el ID sin formato
                 EliminarTicketDeTabla(ticketId);
             });
+        }
 
-
-
+        // SOPORTE ATENCIÓN: OCULTA O ACTUALIZA REGISTROS
+        if (window.location.pathname === '/soporte/Atender') {
+            // Suscripción para actualizar la tabla cuando se agregan tickets
+            stompClient.subscribe('/topic/actualizar/soporte-atencion', (message) => {
+                const ticketRecord = JSON.parse(message.body);
+                ActualizaTablaRecibidos(ticketRecord);
+            });
+            // Suscripción para ocultar un ticket cuando sea recepcionado
+            stompClient.subscribe('/topic/ocultar/soporte-atencion', (message) => {
+                const ticketId = message.body.trim(); // Este es el ID sin formato
+                EliminarTicketDeTabla(ticketId);
+            });
         }
 
         // Obtener el ID del usuario logeado para suscribirse al contador de notificaciones

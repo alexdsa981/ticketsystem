@@ -26,12 +26,17 @@ public class WSNotificacionesService {
 
     public void enviarTicketAVistaRecepción(TicketDTO ticketDTO) {
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/recepcion", ticketRecordWS);
+        messagingTemplate.convertAndSend("/topic/actualizar/soporte-recepcion", ticketRecordWS);
     }
 
-    public void ocultarRegistroEnVistaRecepcion(Long idTicket) {
+    public void ocultarRegistroEnVistaSoporteRecepcion(Long idTicket) {
         String message = String.valueOf(idTicket);
-        messagingTemplate.convertAndSend("/topic/ocultar/recepcion", message);
+        messagingTemplate.convertAndSend("/topic/ocultar/soporte-recepcion", message);
+    }
+
+    public void ocultarRegistroEnVistaSoporteAtencion(Long idTicket) {
+        String message = String.valueOf(idTicket);
+        messagingTemplate.convertAndSend("/topic/ocultar/soporte-atencion", message);
     }
 
 }

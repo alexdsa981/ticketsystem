@@ -333,6 +333,10 @@
                         // Redirigir manualmente en el frontend
                         window.location.href = data.redirectUrl;
                     }
+                    else if(data.status === 'error duplicated') {
+                        // Redirigir manualmente en el frontend
+                        window.location.href = data.redirectUrl;
+                    }
                 })
                 .catch(error => {
                     console.error('Error al enviar la recepción:', error);
@@ -379,6 +383,7 @@
                                     th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
+                        <input type="number" value="5" style="display:none" name="fase">
                     </div>
 
                     <div class="modal-footer">

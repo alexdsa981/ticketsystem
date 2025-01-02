@@ -32,7 +32,7 @@ export function ActualizaTablaRecibidos(ticketRecord) {
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
 
-        <td>${ticketRecord.idFormateado}</td>
+        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
 
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>

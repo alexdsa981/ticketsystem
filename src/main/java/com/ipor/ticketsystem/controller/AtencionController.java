@@ -126,7 +126,7 @@ public class AtencionController {
             notificacion.setUrl("/TicketsEnProceso");
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
-            WSNotificacionesService.ocultarRegistroEnVistaRecepcion(id);
+            WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
             response.sendRedirect("/soporte/Recepcionar?successful=recepcion");
@@ -154,96 +154,121 @@ public class AtencionController {
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
+        try {
+            //cambiar fase de ticket
+            atencionService.updateFaseTicket(id, 3L);
+            // Lógica para crear la recepcion
+            Servicio servicio = new Servicio();
+            servicio.setDescripcion(descripcion);
+            servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
+            servicio.setTicket(ticketService.getObtenerTicketPorID(id));
+            servicio.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+            servicio.setHora(servicio.getHora());
+            servicio.setFecha(servicio.getFecha());
+            atencionService.saveServicio(servicio);
 
-        //cambiar fase de ticket
-        atencionService.updateFaseTicket(id, 3L);
-        // Lógica para crear la recepcion
-        Servicio servicio = new Servicio();
-        servicio.setDescripcion(descripcion);
-        servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
-        servicio.setTicket(ticketService.getObtenerTicketPorID(id));
-        servicio.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-        servicio.setHora(servicio.getHora());
-        servicio.setFecha(servicio.getFecha());
-        atencionService.saveServicio(servicio);
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(servicio.getTicket());
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(servicio.getTicket().getUsuario());
+            notificacion.setMensaje(" Ha sido Atendido");
+            notificacion.setUrl("/TicketsAtendidos");
+            notificacionesService.saveNotiicacion(notificacion);
+            WSNotificacionesService.enviarNotificacion(notificacion);
+            WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            // Redirigir a la URL actual
+            String referer = request.getHeader("Referer");
+            String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=atencion";
+            response.sendRedirect(redirectUrl);
+            return ResponseEntity.ok("Ticket atendido correctamente");
+        } catch (DataIntegrityViolationException e) {
+            // Error de llave duplicada u otros problemas de integridad
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=atencion-duplicated" : "/fallbackUrl?error=atencion-duplicated");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido desestimado por otro usuario.");
+        } catch (Exception e) {
+            // Captura otros errores
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=atencion-general" : "/fallbackUrl?error=atencion-general");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al desestimar el ticket.");
+        }
 
-        Notificacion notificacion = new Notificacion();
-        notificacion.setTicket(servicio.getTicket());
-        notificacion.setHora(notificacion.getHora());
-        notificacion.setFecha(notificacion.getFecha());
-        notificacion.setAbierto(Boolean.FALSE);
-        notificacion.setLeido(Boolean.FALSE);
-        notificacion.setUsuario(servicio.getTicket().getUsuario());
-        notificacion.setMensaje(" Ha sido Atendido");
-        notificacion.setUrl("/TicketsAtendidos");
-        notificacionesService.saveNotiicacion(notificacion);
-        WSNotificacionesService.enviarNotificacion(notificacion);
-
-        // Redirigir a la URL actual
-        String referer = request.getHeader("Referer");
-        response.sendRedirect(referer != null ? referer : "/fallbackUrl");
-        return ResponseEntity.ok("Ticket atendido correctamente");
     }
 
     // Método para desestimar un ticket, crea una desestimación y cambia la fase del ticket:
     @PostMapping("/desestimacion/{id}")
     public ResponseEntity<String> desestimarTicket(
             @RequestParam("mensaje") String mensaje,
+            @RequestParam("fase") int fase,
             @RequestParam("clasificacion_desestimacion") Long IDclasificacion_desestimacion,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         try {
             Ticket ticket = ticketService.getObtenerTicketPorID(id);
-            if (ticket.getFaseTicket().getId() == 1L || ticket.getFaseTicket().getId() == 2L) {
 
-                // Cambiar fase del ticket
-                atencionService.updateFaseTicket(id, 4L);
+            Long lastFaseTicket = ticket.getFaseTicket().getId();
 
-                // Lógica para crear la desestimación
-                Desestimacion desestimacion = new Desestimacion();
-                desestimacion.setDescripcion(mensaje);
-                desestimacion.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
-                desestimacion.setTicket(ticketService.getObtenerTicketPorID(id));
-                desestimacion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-                desestimacion.setHora(desestimacion.getHora());
-                desestimacion.setFecha(desestimacion.getFecha());
-                atencionService.saveDesestimacion(desestimacion);
-
-                Notificacion notificacion = new Notificacion();
-                notificacion.setTicket(desestimacion.getTicket());
-                notificacion.setHora(notificacion.getHora());
-                notificacion.setFecha(notificacion.getFecha());
-                notificacion.setAbierto(Boolean.FALSE);
-                notificacion.setLeido(Boolean.FALSE);
-                notificacion.setUsuario(desestimacion.getTicket().getUsuario());
-                notificacion.setMensaje(" Ha sido Desestimado");
-                notificacion.setUrl("/TicketsDesestimados");
-                notificacionesService.saveNotiicacion(notificacion);
-                WSNotificacionesService.enviarNotificacion(notificacion);
-
-                //eliminar los componentes adjuntos
-                List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
-                for (TipoComponenteAdjunto componente : componentesAdjuntos) {
-                    tipoComponenteAdjuntoRepository.delete(componente);
-                }
-                if (atencionService.findRecepcionByTicketID(id) != null) {
-                    atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
-                } else {
-                    System.out.println("no se ha encontrado recepcion");
-                }
-                WSNotificacionesService.ocultarRegistroEnVistaRecepcion(id);
-                String referer = request.getHeader("Referer");
-                String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=desestimacion";
-                response.sendRedirect(redirectUrl);
-                return ResponseEntity.ok("Ticket desestimado correctamente");
-
-            }else{
+            if (fase != lastFaseTicket) {
                 String referer = request.getHeader("Referer");
                 String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?error=desestimacion-moved";
                 response.sendRedirect(redirectUrl);
-                return ResponseEntity.ok("Ticket desestimado correctamente");
+                return ResponseEntity.ok("Ticket ya fue movido a otra fase.");
             }
+
+
+            // Cambiar fase del ticket
+            atencionService.updateFaseTicket(id, 4L);
+
+            // Lógica para crear la desestimación
+            Desestimacion desestimacion = new Desestimacion();
+            desestimacion.setDescripcion(mensaje);
+            desestimacion.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
+            desestimacion.setTicket(ticketService.getObtenerTicketPorID(id));
+            desestimacion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+            desestimacion.setHora(desestimacion.getHora());
+            desestimacion.setFecha(desestimacion.getFecha());
+            atencionService.saveDesestimacion(desestimacion);
+
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(desestimacion.getTicket());
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(desestimacion.getTicket().getUsuario());
+            notificacion.setMensaje(" Ha sido Desestimado");
+            notificacion.setUrl("/TicketsDesestimados");
+
+            notificacionesService.saveNotiicacion(notificacion);
+            WSNotificacionesService.enviarNotificacion(notificacion);
+
+            //eliminar los componentes adjuntos
+            List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
+            for (TipoComponenteAdjunto componente : componentesAdjuntos) {
+                tipoComponenteAdjuntoRepository.delete(componente);
+            }
+            if (atencionService.findRecepcionByTicketID(id) != null) {
+                atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
+            } else {
+                System.out.println("no se ha encontrado recepcion");
+            }
+            if (lastFaseTicket == 1L) {
+                WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+            } else if (lastFaseTicket == 2L) {
+                WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            } else if (lastFaseTicket == 5L) {
+
+            }
+
+            String referer = request.getHeader("Referer");
+            String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=desestimacion";
+            response.sendRedirect(redirectUrl);
+            return ResponseEntity.ok("Ticket desestimado correctamente");
+
 
         } catch (DataIntegrityViolationException e) {
             // Error de llave duplicada u otros problemas de integridad
@@ -253,7 +278,7 @@ public class AtencionController {
         } catch (Exception e) {
             // Captura otros errores
             String referer = request.getHeader("Referer");
-            response.sendRedirect(referer != null ? referer + "?error=desestimacion-general" : "/fallbackUrl?desestimacion-error=general");
+            response.sendRedirect(referer != null ? referer + "?error=desestimacion-general" : "/fallbackUrl?error=desestimacion-general");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al desestimar el ticket.");
         }
 
@@ -311,7 +336,7 @@ public class AtencionController {
             }
             // Cambiar fase del ticket
             atencionService.updateFaseTicket(id, 5L);
-            WSNotificacionesService.ocultarRegistroEnVistaRecepcion(id);
+            WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             response.sendRedirect("/soporte/Recepcionar?successful=redireccion");
             return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
         } else {
@@ -326,64 +351,79 @@ public class AtencionController {
     public ResponseEntity<Map<String, String>> recepcionarTicketDirección(
             @RequestParam("componentesSeleccionados") String componentesJson,
             @PathVariable Long id) throws IOException {
-        Ticket ticket = ticketService.getObtenerTicketPorID(id);
 
-        //desaprueba todos los componentes adjuntos
-        List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
-        for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket) {
-            componenteAdjunto.setAprobado(false);
-            ticketService.saveComponenteAdjunto(componenteAdjunto);
-        }
-        //aprueba los componentes adjuntos seleccionados, el resto quedan desaprobados
-        List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {
-        });
-        for (Long idcomponente : componentesSeleccionados) {
-            System.out.println(idcomponente);
-            TipoComponenteAdjunto componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
-            componenteAdjuntoAprobado.setAprobado(true);
-            ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
-        }
-        //cambiar fase de ticket
-        atencionService.updateFaseTicket(id, 1L);
+        try{
+            Ticket ticket = ticketService.getObtenerTicketPorID(id);
 
-        //avisar a usuario que direccion ha revisado la solicitud
+            //desaprueba todos los componentes adjuntos
+            List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
+            for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket) {
+                if (componenteAdjunto.getAprobado() == null){
+                    componenteAdjunto.setAprobado(false);
+                    ticketService.saveComponenteAdjunto(componenteAdjunto);
+                }else{
+                    Map<String, String> response = new HashMap<>();
+                    response.put("status", "error duplicated");
+                    response.put("redirectUrl", "/direccion/Recibidos?error=revision-duplicated");
+                    return ResponseEntity.ok(response);
+                }
+            }
+            //aprueba los componentes adjuntos seleccionados, el resto quedan desaprobados
+            List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {
+            });
+            for (Long idcomponente : componentesSeleccionados) {
+                System.out.println(idcomponente);
+                TipoComponenteAdjunto componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
+                componenteAdjuntoAprobado.setAprobado(true);
+                ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
+            }
+            //cambiar fase de ticket
+            atencionService.updateFaseTicket(id, 1L);
 
-        Notificacion notificacion = new Notificacion();
-        notificacion.setTicket(ticket);
-        notificacion.setHora(notificacion.getHora());
-        notificacion.setFecha(notificacion.getFecha());
-        notificacion.setAbierto(Boolean.FALSE);
-        notificacion.setLeido(Boolean.FALSE);
-        notificacion.setUsuario(ticket.getUsuario());
-        notificacion.setMensaje(" Dirección ha revisado la solicitud");
-        notificacion.setUrl("/inicio");
-        notificacionesService.saveNotiicacion(notificacion);
-        WSNotificacionesService.enviarNotificacion(notificacion);
+            //avisar a usuario que direccion ha revisado la solicitud
 
-        //avisar a soportes que direccion a revisado la solicitud
-        //NOTIFICACION EN BASE DE DATOS
-        List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
-        for (Usuario soporte : listaSoportes) {
-            Notificacion notificacionS = new Notificacion();
-            notificacionS.setTicket(ticket);
-            notificacionS.setHora(notificacionS.getHora());
-            notificacionS.setFecha(notificacionS.getFecha());
-            notificacionS.setAbierto(Boolean.FALSE);
-            notificacionS.setLeido(Boolean.FALSE);
-            notificacionS.setUsuario(soporte);
-            notificacionS.setMensaje(" Dirección ha revisado la solicitud");
-            notificacionS.setUrl("/soporte/Recepcionar");
-            notificacionesService.saveNotiicacion(notificacionS);
-            //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(ticket);
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(ticket.getUsuario());
+            notificacion.setMensaje(" Dirección ha revisado la solicitud");
+            notificacion.setUrl("/inicio");
+            notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
+
+            //avisar a soportes que direccion a revisado la solicitud
+            //NOTIFICACION EN BASE DE DATOS
+            List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
+            for (Usuario soporte : listaSoportes) {
+                Notificacion notificacionS = new Notificacion();
+                notificacionS.setTicket(ticket);
+                notificacionS.setHora(notificacionS.getHora());
+                notificacionS.setFecha(notificacionS.getFecha());
+                notificacionS.setAbierto(Boolean.FALSE);
+                notificacionS.setLeido(Boolean.FALSE);
+                notificacionS.setUsuario(soporte);
+                notificacionS.setMensaje(" Dirección ha revisado la solicitud");
+                notificacionS.setUrl("/soporte/Recepcionar");
+                notificacionesService.saveNotiicacion(notificacionS);
+                //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
+                WSNotificacionesService.enviarNotificacion(notificacion);
+            }
+
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("redirectUrl", "/direccion/Recibidos?successful=revision");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Captura otros errores
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "error");
+            response.put("redirectUrl", "/direccion/Recibidos?error=revision-general");
+            return ResponseEntity.ok(response);
         }
-
-
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("redirectUrl", "/direccion/Recibidos");
-
-        return ResponseEntity.ok(response);
     }
 
 
