@@ -36,7 +36,7 @@
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
             <tr th:each="ticket, iter: ${MyTickets}">
                 <td th:text="${iter.count}">#</td>
-                <td th:text="${ticket.idFormateado}">#</td>
+                <td th:id="${ticket.id}" th:text="${ticket.idFormateado}">#</td>
                 <td th:text="${ticket.fechaFormateada}">Fecha</td>
                 <td th:text="${ticket.horaFormateada}">Hora</td>
                 <td>
@@ -104,7 +104,7 @@
                     <p class="text-warning"><i class="bi bi-exclamation-triangle"></i> Este Ticket no podrá ser eliminado ni modificado</p>
                     <div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Crear Ticket</button>
+                        <button type="submit" class="btn btn-primary submit-btn" >Crear Ticket</button>
                     </div>
                 </div>
             </form>
@@ -112,6 +112,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', function () {
+                const submitButton = form.querySelector('.submit-btn');
+                if (submitButton && !submitButton.disabled) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...';
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
 
 
 <!-- Modal para cambiar la contraseña -->
@@ -139,8 +160,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 

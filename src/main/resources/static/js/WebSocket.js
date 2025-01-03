@@ -3,6 +3,16 @@ import { ActualizaTablasSoporteRecepcion } from './wsActualizaTabla.js';
 import { ActualizaTablaDireccionRecibidos } from './wsActualizaTabla.js';
 import { ActualizaTablaDireccionHistorial } from './wsActualizaTabla.js';
 import { ActualizaTablaAtencionSoporte } from './wsActualizaTabla.js';
+import { ActualizaTablaSoporteHistorial } from './wsActualizaTabla.js';
+import { ActualizaTablaDesestimacionHistorial } from './wsActualizaTabla.js';
+import { ActualizaTablaUsuarioRecepcionados } from './wsActualizaTabla.js';
+import { ActualizaTablaUsuarioAtendidos } from './wsActualizaTabla.js';
+import { ActualizaTablaUsuarioDesestimados } from './wsActualizaTabla.js';
+import { ActualizaTablaUsuarioEnviados } from './wsActualizaTabla.js';
+
+
+
+
 
 import { EliminarTicketDeTabla } from './wsActualizaTabla.js';
 
@@ -45,26 +55,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 EliminarTicketDeTabla(ticketId);
             });
         }
+
+        if (window.location.pathname === '/soporte/Tickets-Cerrados') {
+            // Suscripción para actualizar la tabla cuando se agregan tickets
+            stompClient.subscribe('/topic/actualizar/soporte-historial', (message) => {
+                const ticketRecord = JSON.parse(message.body);
+                ActualizaTablaSoporteHistorial(ticketRecord);
+            });
+        }
         // DIRECCION REVISION: OCULTA O ACTUALIZA REGISTROS
-            if (window.location.pathname === '/direccion/Recibidos') {
-                // Suscripción para actualizar la tabla cuando se agregan tickets
-                stompClient.subscribe('/topic/actualizar/direccion-revision', (message) => {
-                    const ticketRecord = JSON.parse(message.body);
-                    ActualizaTablaDireccionRecibidos(ticketRecord);
-                });
-                // Suscripción para ocultar un ticket cuando sea revisado
-                stompClient.subscribe('/topic/ocultar/direccion-revision', (message) => {
-                    const ticketId = message.body.trim(); // Este es el ID sin formato
-                    EliminarTicketDeTabla(ticketId);
-                });
-            }
-            if (window.location.pathname === '/direccion/Historial') {
-                // Suscripción para actualizar la tabla de historial cuando se revisan tickets
-                stompClient.subscribe('/topic/actualizar/direccion-historial', (message) => {
-                    const ticketRecord = JSON.parse(message.body);
-                    ActualizaTablaDireccionHistorial(ticketRecord);
-                });
-            }
+        if (window.location.pathname === '/direccion/Recibidos') {
+            // Suscripción para actualizar la tabla cuando se agregan tickets
+            stompClient.subscribe('/topic/actualizar/direccion-revision', (message) => {
+                const ticketRecord = JSON.parse(message.body);
+                ActualizaTablaDireccionRecibidos(ticketRecord);
+            });
+            // Suscripción para ocultar un ticket cuando sea revisado
+            stompClient.subscribe('/topic/ocultar/direccion-revision', (message) => {
+                const ticketId = message.body.trim(); // Este es el ID sin formato
+                EliminarTicketDeTabla(ticketId);
+            });
+        }
+        if (window.location.pathname === '/direccion/Historial') {
+            // Suscripción para actualizar la tabla de historial cuando se revisan tickets
+            stompClient.subscribe('/topic/actualizar/direccion-historial', (message) => {
+                const ticketRecord = JSON.parse(message.body);
+                ActualizaTablaDireccionHistorial(ticketRecord);
+            });
+        }
+
+        //DESESTIMACION HISTORIAL ActualizaTablaDesestimacionHistorial
+        if (window.location.pathname === '/soporte/Tickets-Desestimados') {
+            // Suscripción para actualizar la tabla de historial cuando se revisan tickets
+            stompClient.subscribe('/topic/actualizar/desestimacion-historial', (message) => {
+                const ticketRecord = JSON.parse(message.body);
+                ActualizaTablaDesestimacionHistorial(ticketRecord);
+            });
+        }
+
+
+
 
         // Obtener el ID del usuario logeado para suscribirse al contador de notificaciones
         fetch('/app/usuarios/id')
@@ -82,6 +112,93 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             })
             .catch(error => console.error('Error al obtener el ID del usuario:', error));
+
+
+
+
+
+
+        //USUARIO ENVIADOS: OCULTA O ACTUALIZA REGISTROS
+        if (window.location.pathname === '/inicio') {
+            fetch('/app/usuarios/id')
+                .then(response => response.json())
+                .then(userId => {
+
+                    // Suscripción para actualizar la tabla cuando se agregan tickets
+                    stompClient.subscribe(`/topic/actualizar/usuario-enviados/${userId}`, (message) => {
+                        const ticketRecord = JSON.parse(message.body);
+                        ActualizaTablaUsuarioEnviados(ticketRecord);
+                    });
+                    // Suscripción para ocultar un ticket cuando sea recepcionado
+                    stompClient.subscribe(`/topic/ocultar/usuario-enviados/${userId}`, (message) => {
+                        const ticketId = message.body.trim(); // Este es el ID sin formato
+                        EliminarTicketDeTabla(ticketId);
+                    });
+
+                })
+                .catch(error => console.error('Error al obtener el ID del usuario:', error));
+        }
+
+
+
+
+
+
+
+
+        //USUARIO RECEPCIONADOS: OCULTA O ACTUALIZA REGISTROS
+        if (window.location.pathname === '/TicketsEnProceso') {
+            fetch('/app/usuarios/id')
+                .then(response => response.json())
+                .then(userId => {
+
+                    // Suscripción para actualizar la tabla cuando se agregan tickets
+                    stompClient.subscribe(`/topic/actualizar/usuario-recepcionados/${userId}`, (message) => {
+                        const ticketRecord = JSON.parse(message.body);
+                        ActualizaTablaUsuarioRecepcionados(ticketRecord);
+                    });
+                    // Suscripción para ocultar un ticket cuando sea recepcionado
+                    stompClient.subscribe(`/topic/ocultar/usuario-recepcionados/${userId}`, (message) => {
+                        const ticketId = message.body.trim(); // Este es el ID sin formato
+                        EliminarTicketDeTabla(ticketId);
+                    });
+
+                })
+                .catch(error => console.error('Error al obtener el ID del usuario:', error));
+        }
+
+        //USUARIO ATENDIDOS: ACTUALIZA REGISTROS
+        if (window.location.pathname === '/TicketsAtendidos') {
+            fetch('/app/usuarios/id')
+                .then(response => response.json())
+                .then(userId => {
+                    // Suscripción para actualizar la tabla cuando se agregan tickets
+                    stompClient.subscribe(`/topic/actualizar/usuario-atendidos/${userId}`, (message) => {
+                        const ticketRecord = JSON.parse(message.body);
+                        ActualizaTablaUsuarioAtendidos(ticketRecord);
+                    });
+
+                })
+                .catch(error => console.error('Error al obtener el ID del usuario:', error));
+        }
+        //USUARIO DESESTIMADOS: ACTUALIZA REGISTROS
+        if (window.location.pathname === '/TicketsDesestimados') {
+            fetch('/app/usuarios/id')
+                .then(response => response.json())
+                .then(userId => {
+                    // Suscripción para actualizar la tabla cuando se agregan tickets
+                    stompClient.subscribe(`/topic/actualizar/usuario-desestimados/${userId}`, (message) => {
+                        const ticketRecord = JSON.parse(message.body);
+                        ActualizaTablaUsuarioDesestimados(ticketRecord);
+                    });
+
+                })
+                .catch(error => console.error('Error al obtener el ID del usuario:', error));
+        }
+
+
+
+
     }, (error) => {
         console.error('Error al conectar con el WebSocket:', error);
     });

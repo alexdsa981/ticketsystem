@@ -129,6 +129,9 @@ public class AtencionController {
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(recepcion, ticketService);
+            WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(recepcion, ticketService);
+            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
             response.sendRedirect("/soporte/Recepcionar?successful=recepcion");
@@ -181,6 +184,11 @@ public class AtencionController {
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
+            Recepcion recepcion = atencionService.findRecepcionByTicketID(id);
+            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(servicio, recepcion, ticketService);
+            WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(servicio, recepcion, ticketService);
+
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
             String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=atencion";
@@ -190,12 +198,13 @@ public class AtencionController {
             // Error de llave duplicada u otros problemas de integridad
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=atencion-duplicated" : "/fallbackUrl?error=atencion-duplicated");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido desestimado por otro usuario.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido atendido por otro usuario.");
         } catch (Exception e) {
+            System.out.println(e);
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=atencion-general" : "/fallbackUrl?error=atencion-general");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al desestimar el ticket.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al atender el ticket.");
         }
 
     }
@@ -247,6 +256,19 @@ public class AtencionController {
 
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
+            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialDesestimacion(desestimacion, ticketService);
+            WSNotificacionesService.enviarAtencionAVistaUsuarioDesestimados(desestimacion, ticketService);
+            if (lastFaseTicket == 1L) {
+                WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+            } else if (lastFaseTicket == 2L) {
+                WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            } else if (lastFaseTicket == 5L) {
+                WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
+            }
+            WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
+            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+
+
 
             //eliminar los componentes adjuntos
             List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
@@ -255,15 +277,6 @@ public class AtencionController {
             }
             if (atencionService.findRecepcionByTicketID(id) != null) {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
-            } else {
-                System.out.println("no se ha encontrado recepcion");
-            }
-            if (lastFaseTicket == 1L) {
-                WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
-            } else if (lastFaseTicket == 2L) {
-                WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
-            } else if (lastFaseTicket == 5L) {
-                WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
             }
 
             String referer = request.getHeader("Referer");
@@ -278,6 +291,7 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=desestimacion-duplicated" : "/fallbackUrl?error=desestimacion-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido desestimado por otro usuario.");
         } catch (Exception e) {
+            System.out.println(e);
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=desestimacion-general" : "/fallbackUrl?error=desestimacion-general");
@@ -339,8 +353,11 @@ public class AtencionController {
             // Cambiar fase del ticket
             atencionService.updateFaseTicket(id, 5L);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
             TicketDTO ticketDTO = new TicketDTO(ticket);
             WSNotificacionesService.enviarTicketAVistaDireccionRevision(ticketDTO);
+            WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
+
             response.sendRedirect("/soporte/Recepcionar?successful=redireccion");
             return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
         } else {
@@ -420,6 +437,8 @@ public class AtencionController {
             WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
             WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
             WSNotificacionesService.enviarTicketAVistaDireccionHistorial(ticketDTO);
+            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+            WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
 
             Map<String, String> response = new HashMap<>();
             response.put("status", "success");

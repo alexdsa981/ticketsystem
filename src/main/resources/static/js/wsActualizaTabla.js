@@ -317,7 +317,7 @@ export function ActualizaTablaDireccionRecibidos(ticketRecord) {
             cell.classList.remove('nuevo-ticket');
             cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
         });
-    }); 
+    });
 
     // Actualiza la lista de filas filtradas
     filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
@@ -381,16 +381,18 @@ export function ActualizaTablaDireccionHistorial(ticketRecord) {
     `;
 
     // Verificar si tiene componentes adjuntos
-    const componentesList = newRow.querySelector('#componentes');
     if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Añadir la clase "tr-con-componentes" al <tr>
-        newRow.classList.add('tr-con-componentes');
-
         // Mostrar los componentes adjuntos
+        const componentesList = newRow.querySelector('#componentes');
         ticketRecord.listaComponentesAdjuntos.forEach(componente => {
             const listItem = document.createElement("li");
 
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+
             listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
                 <span>${componente.cantidad}</span>
                 <span>${componente.nombre}</span>
             `;
@@ -419,7 +421,7 @@ export function ActualizaTablaDireccionHistorial(ticketRecord) {
             cell.classList.remove('nuevo-ticket');
             cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
         });
-    }); 
+    });
 
     // Actualiza la lista de filas filtradas
     filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
@@ -463,8 +465,8 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </span>
             <span>
                 ${ticketRecord.descripcionTicket.length > 150
-                ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-                : ticketRecord.descripcionTicket}
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
                 ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
@@ -481,8 +483,8 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </span>
             <span>
                 ${ticketRecord.mensajeRecepcion.length > 150
-                ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
-                : ticketRecord.mensajeRecepcion}
+            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
+            : ticketRecord.mensajeRecepcion}
             </span>
             <br>
             <span id="respuestaDireccion"></span>
@@ -494,7 +496,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
                 data-ticket-clasificacion="${ticketRecord.nombreClasificacionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicketTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                 data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
                 <i class="bi bi-check2-square"></i>
@@ -504,7 +506,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
                 data-ticket-clasificacion="${ticketRecord.nombreClasificacionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicketTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                 data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
                 <i class="bi bi-trash"></i>
@@ -518,21 +520,21 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
 
     if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
         const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-    
+
         // Crear un elemento strong en lugar de usar innerHTML
         const respuestaTexto = document.createElement('strong');
         respuestaTexto.textContent = "Respuesta de Dirección:";
         respuestaDireccion.appendChild(respuestaTexto);
-    
+
         const componentesList = newRow.querySelector('#componentes');
         ticketRecord.listaComponentesAdjuntos.forEach(componente => {
             const listItem = document.createElement("li");
-    
+
             // Agregar estado al componente
             const estado = componente.aprobado !== null
                 ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
                 : '[Sin estado]';
-    
+
             listItem.innerHTML = `
                 <span class="status-componente">${estado}</span>
                 <span>${componente.cantidad}</span>
@@ -541,8 +543,8 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             componentesList.appendChild(listItem);
         });
     }
-    
-    
+
+
 
     // Insertar la nueva fila al inicio de la tabla
     ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
@@ -574,3 +576,754 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
     updateFilteredRows();
     updateTicketCount();
 }
+
+
+
+//
+//
+//
+//AGREGA REGISTRO DE ATENCION AL HISTORIAL-CERRADOS DE SOPORTE:
+//
+//
+//
+
+
+export function ActualizaTablaSoporteHistorial(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaRecepcion}</td>
+        <td>${ticketRecord.horaFormateadaRecepcion}</td>
+
+        <td>${ticketRecord.nombreUsuarioTicket}</td>
+        <td>${ticketRecord.nombreUsuarioRecepcion}</td>
+        <td>${ticketRecord.nombreUsuarioAtencion}</td>
+
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion">
+                ${ticketRecord.nombreClasificacionTicket}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+            <span class="nombreClasificacionIncidencia urgencia">
+                ${ticketRecord.nombreUrgenciaRecepcion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.mensajeRecepcion.length > 150
+            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
+            : ticketRecord.mensajeRecepcion}
+            </span>
+            <br>
+            <span id="respuestaDireccion"></span>
+            <ul id="componentes"></ul>
+        </td>
+
+                <td>
+            <span class="nombreClasificacionIncidencia clasificacion-servicio">
+                ${ticketRecord.nombreClasificacionAtencion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionAtencion.length > 150
+            ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
+            : ticketRecord.descripcionAtencion}
+            </span>
+        </td>
+
+        <td>
+            <!-- Botón de recepción que abre el modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#atencionModal"
+                data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-clasificacion="${ticketRecord.nombreClasificacionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                data-recepcion-usuario="${ticketRecord.nombreUsuarioRecepcion}"
+                data-recepcion-mensaje="${ticketRecord.mensajeRecepcion}"
+                data-recepcion-clasificacion="${ticketRecord.nombreUrgenciaRecepcion}"
+                data-recepcion-fecha="${ticketRecord.fechaFormateadaRecepcion}"
+                data-recepcion-hora="${ticketRecord.horaFormateadaRecepcion}"
+                data-servicio-usuario="${ticketRecord.nombreUsuarioAtencion}"
+                data-servicio-descripcion="${ticketRecord.descripcionAtencion}"
+                data-servicio-clasificacion="${ticketRecord.nombreClasificacionAtencion}"
+                data-servicio-fecha="${ticketRecord.fechaFormateadaAtencion}"
+                data-servicio-hora="${ticketRecord.horaFormateadaAtencion}">
+
+                <i class="bi bi-clock-history"></i>
+            </button>
+        </td>
+
+    `;
+
+    // Verificar si hay componentes adjuntos
+    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+    const componentesList = newRow.querySelector('#componentes');
+
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+
+        // Crear un elemento strong en lugar de usar innerHTML
+        const respuestaTexto = document.createElement('strong');
+        respuestaTexto.textContent = "Respuesta de Dirección:";
+        respuestaDireccion.appendChild(respuestaTexto);
+
+        const componentesList = newRow.querySelector('#componentes');
+        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
+            const listItem = document.createElement("li");
+
+            // Agregar estado al componente
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+
+            listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
+                <span>${componente.cantidad}</span>
+                <span>${componente.nombre}</span>
+            `;
+            componentesList.appendChild(listItem);
+        });
+    }
+
+
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        cells.forEach(cell => {
+            cell.classList.remove('nuevo-ticket');
+            cell.classList.add('fondo-blanco');
+        });
+    });
+
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow);
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
+
+
+//
+//
+//
+//AGREGA REGISTRO DE ATENCION AL HISTORIAL-DESESTIMADOS DE SOPORTE:
+//
+//
+//
+
+
+export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaDesestimacion}</td>
+        <td>${ticketRecord.horaFormateadaDesestimacion}</td>
+
+        <td>${ticketRecord.nombreUsuarioDesestimacion}</td>
+        <td>${ticketRecord.nombreUsuarioTicket}</td>
+
+        <td>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+            <span class="nombreClasificacionIncidencia urgencia">
+                ${ticketRecord.nombreClasificacionDesestimacion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionDesestimacion.length > 150
+            ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
+            : ticketRecord.descripcionDesestimacion}
+            </span>
+            
+        </td>
+
+
+        <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#desestimacionModal"
+                data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+
+                data-desestimacion-usuario="${ticketRecord.nombreUsuarioDesestimacion}"
+                data-desestimacion-mensaje="${ticketRecord.descripcionDesestimacion}"
+                data-desestimacion-clasificacion="${ticketRecord.nombreClasificacionDesestimacion}"
+                data-desestimacion-fecha="${ticketRecord.fechaFormateadaDesestimacion}"
+                data-desestimacion-hora="${ticketRecord.horaFormateadaDesestimacion}">
+  
+
+                <i class="bi bi-clock-history"></i>
+            </button>
+        </td>
+
+
+                                    
+
+    `;
+
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        cells.forEach(cell => {
+            cell.classList.remove('nuevo-ticket');
+            cell.classList.add('fondo-blanco');
+        });
+    });
+
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow);
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
+
+//
+//
+//
+//AGREGA REGISTRO DE RECEPCION A TABLA RECEPCIONADOS USUARIO:
+//
+//
+//
+
+
+export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaRecepcion}</td>
+        <td>${ticketRecord.horaFormateadaRecepcion}</td>
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion">
+                ${ticketRecord.nombreClasificacionTicket}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+            <span class="nombreClasificacionIncidencia urgencia">
+                ${ticketRecord.nombreUrgenciaRecepcion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.mensajeRecepcion.length > 150
+            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
+            : ticketRecord.mensajeRecepcion}
+            </span>
+            <br>
+            <span id="respuestaDireccion"></span>
+            <ul id="componentes"></ul>
+        </td>
+        <td>
+        ${ticketRecord.nombreFaseTicket}
+        </td>
+        
+    `;
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+   // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+   const cells = newRow.querySelectorAll('td');
+   cells.forEach(cell => {
+       cell.classList.add('nuevo-ticket');
+   });
+
+   // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+   newRow.addEventListener('mouseover', function () {
+       cells.forEach(cell => {
+           cell.classList.remove('nuevo-ticket');
+           cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
+       });
+   });
+
+    // Verificar si hay componentes adjuntos
+    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+    const componentesList = newRow.querySelector('#componentes');
+
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+
+        // Crear un elemento strong en lugar de usar innerHTML
+        const respuestaTexto = document.createElement('strong');
+        respuestaTexto.textContent = "Respuesta de Dirección:";
+        respuestaDireccion.appendChild(respuestaTexto);
+
+        const componentesList = newRow.querySelector('#componentes');
+        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
+            const listItem = document.createElement("li");
+
+            // Agregar estado al componente
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+
+            listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
+                <span>${componente.cantidad}</span>
+                <span>${componente.nombre}</span>
+            `;
+            componentesList.appendChild(listItem);
+        });
+    }
+}
+
+
+
+
+
+
+//
+//
+//
+//AGREGA REGISTRO DE ATENCION A TABLA ATENDIDOS DE USUARIO:
+//
+//
+//
+
+
+export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaAtencion}</td>
+        <td>${ticketRecord.horaFormateadaAtencion}</td>
+
+
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion">
+                ${ticketRecord.nombreClasificacionTicket}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion-servicio">
+                ${ticketRecord.nombreClasificacionAtencion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionAtencion.length > 150
+            ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
+            : ticketRecord.descripcionAtencion}
+            </span>
+            <br>
+            <span id="respuestaDireccion"></span>
+            <ul id="componentes"></ul>
+        </td>
+        <td>
+        Cerrado - Atendido
+        </td>
+
+
+    `;
+
+    // Verificar si hay componentes adjuntos
+    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+    const componentesList = newRow.querySelector('#componentes');
+
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+
+        // Crear un elemento strong en lugar de usar innerHTML
+        const respuestaTexto = document.createElement('strong');
+        respuestaTexto.textContent = "Respuesta de Dirección:";
+        respuestaDireccion.appendChild(respuestaTexto);
+
+        const componentesList = newRow.querySelector('#componentes');
+        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
+            const listItem = document.createElement("li");
+
+            // Agregar estado al componente
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+
+            listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
+                <span>${componente.cantidad}</span>
+                <span>${componente.nombre}</span>
+            `;
+            componentesList.appendChild(listItem);
+        });
+    }
+
+
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        cells.forEach(cell => {
+            cell.classList.remove('nuevo-ticket');
+            cell.classList.add('fondo-blanco');
+        });
+    });
+
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow);
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
+
+
+
+//
+//
+//
+//AGREGA REGISTRO DE ATENCION A TABLA ATENDIDOS DE USUARIO:
+//
+//
+//
+
+
+export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaDesestimacion}</td>
+        <td>${ticketRecord.horaFormateadaDesestimacion}</td>
+
+        <td>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+            : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion-servicio">
+                ${ticketRecord.nombreClasificacionDesestimacion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionDesestimacion.length > 150
+            ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
+            : ticketRecord.descripcionDesestimacion}
+            </span>
+        </td>
+        <td>
+        Desestimado
+        </td>
+
+
+    `;
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        cells.forEach(cell => {
+            cell.classList.remove('nuevo-ticket');
+            cell.classList.add('fondo-blanco');
+        });
+    });
+
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow);
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
+
+
+
+//
+//
+//
+// AGREGA REGISTRO A TABLA USUARIO ENVIADOS
+//
+//
+//
+export function ActualizaTablaUsuarioEnviados(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+
+        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
+
+        <td>${ticketRecord.fechaFormateada}</td>
+        <td>${ticketRecord.horaFormateada}</td>
+        <td>
+            <!-- Descripción truncada -->
+            <span>${ticketRecord.descripcion.length > 150
+            ? ticketRecord.descripcion.substring(0, 150) + '...'
+            : ticketRecord.descripcion}</span><br>
+
+            <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
+            <span id="respuestaDireccion"></span><br>
+            <ul id="componentes"></ul>
+        </td>
+
+        <td>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+        ${ticketRecord.nombreFaseTicket}
+        </td>
+
+    `;
+
+    // Verificar si tiene componentes adjuntos
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        // Añadir la clase "tr-con-componentes" al <tr>
+        newRow.classList.add('tr-con-componentes');
+    }
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        // Si la fila tiene la clase "tr-con-componentes", no se toca "fondo-blanco"
+        if (!newRow.classList.contains('tr-con-componentes')) {
+            cells.forEach(cell => {
+                cell.classList.remove('nuevo-ticket');
+                cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
+            });
+        } else {
+            // Si tiene la clase "tr-con-componentes", solo se elimina "nuevo-ticket"
+            cells.forEach(cell => {
+                cell.classList.remove('nuevo-ticket');
+            });
+        }
+    });
+
+    // Verificar si hay componentes adjuntos y mostrar la "Respuesta de Dirección"
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        // Mostrar "Respuesta de Dirección"
+        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+        respuestaDireccion.innerHTML = "<strong>Respuesta de Dirección:</strong>";
+
+        // Mostrar los componentes adjuntos
+        const componentesList = newRow.querySelector('#componentes');
+        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
+            const listItem = document.createElement("li");
+
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+
+            listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
+                <span>${componente.cantidad}</span>
+                <span>${componente.nombre}</span>
+            `;
+            componentesList.appendChild(listItem);
+        });
+    }
+    // Verificar si el ticket tiene componentes
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        // Deshabilitar el botón si tiene componentes
+        const redirectButton = newRow.querySelector('.btn-secondary');
+        if (redirectButton) {
+            redirectButton.disabled = true;
+        }
+
+        // Añadir clase de fila con componentes
+        newRow.classList.add('tr-con-componentes');
+    }
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
+
