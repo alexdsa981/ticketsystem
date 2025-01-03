@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.service;
 
-import com.ipor.ticketsystem.model.dto.otros.TicketExportDTO;
+import com.ipor.ticketsystem.model.dto.otros.ExcelExport.TicketExportDTO;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.jdbc.core.JdbcTemplate;

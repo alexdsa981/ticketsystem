@@ -1,4 +1,4 @@
-package com.ipor.ticketsystem.model.dto.otros;
+package com.ipor.ticketsystem.model.dto.otros.ExcelExport;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

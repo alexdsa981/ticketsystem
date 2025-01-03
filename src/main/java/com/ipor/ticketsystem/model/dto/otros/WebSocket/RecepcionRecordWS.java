@@ -1,38 +1,64 @@
-package com.ipor.ticketsystem.model.dto.otros;
+package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
+import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
+import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record TicketRecordWS(
-        Long id,
-        String idFormateado,
-        String fechaFormateada,
-        String horaFormateada,
-        String descripcion,
-        String nombreUsuario,
-        String nombreFaseTicket,
+public record RecepcionRecordWS(
+        Long idTicket,
+        String idFormateadoTicket,
+
+        String fechaFormateadaTicket,
+        String horaFormateadaTicket,
+        String fechaFormateadaRecepcion,
+        String horaFormateadaRecepcion,
+
+        String descripcionTicket,
+        String mensajeRecepcion,
+
+        String nombreUsuarioTicket,
+        String nombreUsuarioRecepcion,
+
+        String nombreFaseTicketTicket,
+        String nombreClasificacionTicket,
+        String nombreUrgenciaRecepcion,
+
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos,
         List<TipoComponenteAdjuntoDTO> listaComponentesAdjuntos
 )
 {
-    public TicketRecordWS(TicketDTO ticketDTO) {
+    public RecepcionRecordWS(AtencionTicketDTO atencionTicketDTO) {
         this(
-                ticketDTO.getId(),
-                ticketDTO.getIdFormateado(),
-                ticketDTO.getFechaFormateada(),
-                ticketDTO.getHoraFormateada(),
-                ticketDTO.getDescripcion(),
-                ticketDTO.getUsuario().getNombre(),
-                ticketDTO.getFaseTicket().getNombre(),
-                ticketDTO.getListaArchivosAdjuntos().stream()
+                atencionTicketDTO.getTicket().getId(),
+                atencionTicketDTO.getTicket().getIdFormateado(),
+
+                atencionTicketDTO.getTicket().getFechaFormateada(),
+                atencionTicketDTO.getTicket().getHoraFormateada(),
+                atencionTicketDTO.getFechaFormateadaRecepcion(),
+                atencionTicketDTO.getHoraFormateadaRecepcion(),
+
+                atencionTicketDTO.getTicket().getDescripcion(),
+                atencionTicketDTO.getMensaje(),
+
+
+                atencionTicketDTO.getTicket().getUsuario().getNombre(),
+                atencionTicketDTO.getUsuario().getNombre(),
+
+                atencionTicketDTO.getTicket().getFaseTicket().getNombre(),
+
+                atencionTicketDTO.getTicket().getClasificacionIncidencia().getNombre(),
+                atencionTicketDTO.getClasificacionUrgencia().getNombre(),
+
+                atencionTicketDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
                         .collect(Collectors.toList()),
-                ticketDTO.getListaComponentesAdjuntos().stream()
+                atencionTicketDTO.getTicket().getListaComponentesAdjuntos().stream()
                         .map(TipoComponenteAdjuntoDTO::new) //Convierte TipoComponenteAdjunto a ComponenteAdjuntoDTO
                         .collect(Collectors.toList())
         );

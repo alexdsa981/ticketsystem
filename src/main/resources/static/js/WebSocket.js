@@ -2,6 +2,8 @@ import { mostrarNotificacionPersonalizada } from './notificacionPersonalizada.js
 import { ActualizaTablasSoporteRecepcion } from './wsActualizaTabla.js';
 import { ActualizaTablaDireccionRecibidos } from './wsActualizaTabla.js';
 import { ActualizaTablaDireccionHistorial } from './wsActualizaTabla.js';
+import { ActualizaTablaAtencionSoporte } from './wsActualizaTabla.js';
+
 import { EliminarTicketDeTabla } from './wsActualizaTabla.js';
 
 
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Suscripción para actualizar la tabla cuando se agregan tickets
             stompClient.subscribe('/topic/actualizar/soporte-atencion', (message) => {
                 const ticketRecord = JSON.parse(message.body);
-                ActualizaTablaRecibidos(ticketRecord);
+                ActualizaTablaAtencionSoporte(ticketRecord);
             });
             // Suscripción para ocultar un ticket cuando sea recepcionado
             stompClient.subscribe('/topic/ocultar/soporte-atencion', (message) => {

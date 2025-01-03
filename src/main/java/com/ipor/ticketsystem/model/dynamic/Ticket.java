@@ -54,6 +54,9 @@ public class Ticket {
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Recepcion recepcion;
 
+    @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private Desestimacion desestimacion;
+
     // Método para establecer fecha y hora actuales antes de persistir
     @PrePersist
     public void prePersist() {

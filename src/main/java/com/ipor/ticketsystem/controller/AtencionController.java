@@ -128,6 +128,7 @@ public class AtencionController {
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+            WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(recepcion, ticketService);
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
             response.sendRedirect("/soporte/Recepcionar?successful=recepcion");

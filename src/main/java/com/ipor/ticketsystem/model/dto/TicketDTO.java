@@ -1,9 +1,6 @@
 package com.ipor.ticketsystem.model.dto;
 
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
-import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 
@@ -34,7 +31,6 @@ public class TicketDTO {
     private FaseTicket faseTicket;
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
     private List<TipoComponenteAdjunto> listaComponentesAdjuntos;
-
 
     public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();

@@ -1,21 +1,14 @@
 
-
--notificaciones con sonido a usuarios(LISTO unifiqué conteo con alertas en un solo web socket)
--MANEJAR ERRORES SI ES QUE YA SE HIZO UNA RECEPCION O ATENCION DE UN TICKET, ETC. (AGREGAR WEBSOCKETS)
-    PRGRESO:
-            -PAGINA SOPORTE RECEPCION RECEPCION (WS OCULTAR/AGREGAR Y MANEJO DE ERRORES LISTO)
-            -PAGINA DIRECCION REDIRECCION (WS OCULTAR/AGREGAR y MANEJO DE ERRORES LISTO) + HISTORIAL
-            -DESESTIMACION (WS OCULTAR FALTA AGREGAR Y MANEJO DE ERRORES LISTO)
-            -ATENCION (WS OCULTAR FALTA AGREGAR Y MANEJO DE ERRORES LISTO)
-	
-	EXTRAS:
-		-Hacer pestañas de usuarios e historiales
+WEBSOCKET
+		-HACER EN PESATAÑAS DE USUARIOS (-manejar multiples creaciones de registros al clickear muchas veces
+)
+		-HISTORIAL DESESTIMACION
+		-HISTORIAL ATENCION
 
 
--mejorar la version mobile
--manejar multiples creaciones de registros al clickear muchas veces
 -agregar un buscador de ticket (para admin y soporte, solo con colocar el numero te debe redireccionara auna pagina con el ticket en cuestion
 este ticket debe ser clickeable para redirigirnos a la pagina correspondiente (segun su id fase))
+-mejorar la version mobile
 
 
 

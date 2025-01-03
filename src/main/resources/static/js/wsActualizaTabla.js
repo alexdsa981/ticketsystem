@@ -428,3 +428,149 @@ export function ActualizaTablaDireccionHistorial(ticketRecord) {
     updateFilteredRows();
     updateTicketCount();
 }
+
+
+
+//
+//
+//
+//AGREGA REGISTRO DE RECEPCION A TABLA ATENCION SOPORTE:
+//
+//
+//
+
+
+export function ActualizaTablaAtencionSoporte(ticketRecord) {
+    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
+
+    // Obtener el cuerpo de la tabla donde se agregarán las filas
+    const ticketTableBody = document.getElementById('ticketTableBody');
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+
+    // Generar las celdas de la fila con los datos del ticket
+    newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td>${ticketRecord.fechaFormateadaRecepcion}</td>
+        <td>${ticketRecord.horaFormateadaRecepcion}</td>
+        <td>${ticketRecord.nombreUsuarioTicket}</td>
+        <td>${ticketRecord.nombreUsuarioRecepcion}</td>
+        <td>
+            <span class="nombreClasificacionIncidencia clasificacion">
+                ${ticketRecord.nombreClasificacionTicket}:<br>
+            </span>
+            <span>
+                ${ticketRecord.descripcionTicket.length > 150
+                ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
+                : ticketRecord.descripcionTicket}
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                    <li>
+                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `).join('')}
+            </ul>
+        </td>
+        <td>
+            <span class="nombreClasificacionIncidencia urgencia">
+                ${ticketRecord.nombreUrgenciaRecepcion}:<br>
+            </span>
+            <span>
+                ${ticketRecord.mensajeRecepcion.length > 150
+                ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
+                : ticketRecord.mensajeRecepcion}
+            </span>
+            <br>
+            <span id="respuestaDireccion"></span>
+            <ul id="componentes"></ul>
+        </td>
+        <td class="td-accion">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#atencionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-clasificacion="${ticketRecord.nombreClasificacionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicketTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
+                <i class="bi bi-check2-square"></i>
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-clasificacion="${ticketRecord.nombreClasificacionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicketTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    `;
+
+    // Verificar si hay componentes adjuntos
+    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+    const componentesList = newRow.querySelector('#componentes');
+
+    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
+        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
+    
+        // Crear un elemento strong en lugar de usar innerHTML
+        const respuestaTexto = document.createElement('strong');
+        respuestaTexto.textContent = "Respuesta de Dirección:";
+        respuestaDireccion.appendChild(respuestaTexto);
+    
+        const componentesList = newRow.querySelector('#componentes');
+        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
+            const listItem = document.createElement("li");
+    
+            // Agregar estado al componente
+            const estado = componente.aprobado !== null
+                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
+                : '[Sin estado]';
+    
+            listItem.innerHTML = `
+                <span class="status-componente">${estado}</span>
+                <span>${componente.cantidad}</span>
+                <span>${componente.nombre}</span>
+            `;
+            componentesList.appendChild(listItem);
+        });
+    }
+    
+    
+
+    // Insertar la nueva fila al inicio de la tabla
+    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+    // Actualizar el número de cada fila
+    const rows = ticketTableBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td').textContent = index + 1;
+    });
+
+    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+    const cells = newRow.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.classList.add('nuevo-ticket');
+    });
+
+    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+    newRow.addEventListener('mouseover', function () {
+        cells.forEach(cell => {
+            cell.classList.remove('nuevo-ticket');
+            cell.classList.add('fondo-blanco');
+        });
+    });
+
+    // Actualiza la lista de filas filtradas
+    filteredRows.unshift(newRow);
+
+    // Llama a la función para actualizar las filas y la paginación
+    updateFilteredRows();
+    updateTicketCount();
+}
