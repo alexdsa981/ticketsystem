@@ -2,6 +2,7 @@ package com.ipor.ticketsystem.model.dto.otros;
 
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
+import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 
 import java.util.Base64;
 import java.util.List;
@@ -15,8 +16,10 @@ public record TicketRecordWS(
         String descripcion,
         String nombreUsuario,
         String nombreFaseTicket,
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
-) {
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntos,
+        List<TipoComponenteAdjuntoDTO> listaComponentesAdjuntos
+)
+{
     public TicketRecordWS(TicketDTO ticketDTO) {
         this(
                 ticketDTO.getId(),
@@ -28,6 +31,9 @@ public record TicketRecordWS(
                 ticketDTO.getFaseTicket().getNombre(),
                 ticketDTO.getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
+                        .collect(Collectors.toList()),
+                ticketDTO.getListaComponentesAdjuntos().stream()
+                        .map(TipoComponenteAdjuntoDTO::new) //Convierte TipoComponenteAdjunto a ComponenteAdjuntoDTO
                         .collect(Collectors.toList())
         );
     }
@@ -47,6 +53,24 @@ public record TicketRecordWS(
                     Base64.getEncoder().encodeToString(adjunto.getArchivo()),
                     adjunto.getTipoContenido(),
                     adjunto.getPesoEnMegabytes()
+            );
+        }
+    }
+
+
+    // Clase interna para representar los detalles del archivo adjunto
+    public static record TipoComponenteAdjuntoDTO(
+            Long id,
+            String nombre,
+            Integer cantidad,
+            Boolean aprobado
+    ) {
+        public TipoComponenteAdjuntoDTO(TipoComponenteAdjunto adjunto) {
+            this(
+                    adjunto.getId(),
+                    adjunto.getTipoComponente().getNombre(),
+                    adjunto.getCantidad(),
+                    adjunto.getAprobado()
             );
         }
     }

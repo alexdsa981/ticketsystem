@@ -3,7 +3,6 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
-import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
@@ -14,7 +13,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +29,10 @@ public class TicketController {
     @Autowired
     UsuarioService usuarioService;
     @Autowired
-    SimpMessagingTemplate messagingTemplate;
-    @Autowired
     WSNotificacionesService WSNotificacionesService;
     @Autowired
     NotificacionesService notificacionesService;
-    @Autowired
-    ClasificadoresService clasificadoresService;
+
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
 
@@ -62,6 +57,7 @@ public class TicketController {
     }
     public Model getListaTodosLosTicketsRevisadosPorDireccionAVista(Model model) {
         List<TicketDTO> AllRevisadosDireccion = ticketService.getListaRevisadosDireccion();
+        Collections.reverse(AllRevisadosDireccion);
         model.addAttribute("AllRevisadosDireccion", AllRevisadosDireccion);
         return model;
     }
@@ -108,6 +104,7 @@ public class TicketController {
 
         }
 
+
         //NOTIFICACION EN BASE DE DATOS
         List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
         for (Usuario soporte : listaSoportes){
@@ -126,8 +123,8 @@ public class TicketController {
         }
 
         //NOTIFICACIONES EN TIEMPO REAL A TRAVES DE WEB SOCKETS
-        TicketDTO ticketDTO = new TicketDTO(ticket, listaArchivosAdjuntos);
-        WSNotificacionesService.enviarTicketAVistaRecepción(ticketDTO);
+        TicketDTO ticketDTO = new TicketDTO(ticket);
+        WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
 
 
         response.sendRedirect("/inicio");

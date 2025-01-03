@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -41,10 +42,10 @@ public class Ticket {
 
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ArchivoAdjunto> listaArchivosAdjuntos;
+    private List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TipoComponenteAdjunto> listaComponenteAdjunto;
+    private List<TipoComponenteAdjunto> listaComponenteAdjunto = new ArrayList<>();
 
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)

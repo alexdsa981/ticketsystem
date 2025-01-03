@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
@@ -261,7 +262,7 @@ public class AtencionController {
             } else if (lastFaseTicket == 2L) {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
             } else if (lastFaseTicket == 5L) {
-
+                WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
             }
 
             String referer = request.getHeader("Referer");
@@ -337,6 +338,8 @@ public class AtencionController {
             // Cambiar fase del ticket
             atencionService.updateFaseTicket(id, 5L);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
+            WSNotificacionesService.enviarTicketAVistaDireccionRevision(ticketDTO);
             response.sendRedirect("/soporte/Recepcionar?successful=redireccion");
             return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
         } else {
@@ -411,6 +414,11 @@ public class AtencionController {
                 //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
                 WSNotificacionesService.enviarNotificacion(notificacion);
             }
+
+            TicketDTO ticketDTO = new TicketDTO(ticket);
+            WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
+            WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
+            WSNotificacionesService.enviarTicketAVistaDireccionHistorial(ticketDTO);
 
             Map<String, String> response = new HashMap<>();
             response.put("status", "success");

@@ -60,7 +60,7 @@
                 <tbody id="ticketTableBody">
                     <tr th:each="ticket, iter: ${AllTickets}">
                         <td th:text="${iter.count}">#</td>
-                        <td th:text="${ticket.idFormateado}">#</td>
+                        <td th:id="${ticket.id}" th:text="${ticket.idFormateado}">#</td>
                         <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
                         <td th:text="${ticket.horaFormateada}">Hora</td>
                         <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
@@ -70,19 +70,12 @@
                         </td>
                         <td>
 
-
-
-
                             <ul>
                                 <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
                                     <span th:text="${componente.cantidad}"></span>
                                     <span th:text="${componente.tipoComponente.nombre}"></span>
                                 </li>
                             </ul>
-
-
-
-
 
                         </td>
                         <td>

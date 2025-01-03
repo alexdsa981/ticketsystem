@@ -1,2 +1,5 @@
 cmd:
-cd C:\proyectos\ticketsystem (ruta)
+cd C:\proyectos\ticketsystem //ruta de la carpeta de proyecto
+mvn clean package //limpia y compila app en .jar
+java -jar target/ticketsystem.jar //ejecuta la app
+

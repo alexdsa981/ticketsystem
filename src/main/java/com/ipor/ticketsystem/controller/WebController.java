@@ -110,7 +110,7 @@ public class WebController {
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaTipoComponentesActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Recepcionar Tickets");
-        return "/soporte/ticketsRecibidos";
+        return "soporte/ticketsRecibidos";
     }
 
     @GetMapping("/soporte/Atender")

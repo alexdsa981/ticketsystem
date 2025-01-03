@@ -24,19 +24,41 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/notificaciones/" + notificacion.getUsuario().getId(), message);
     }
 
-    public void enviarTicketAVistaRecepción(TicketDTO ticketDTO) {
+    //ENVIA Y OCULTA TICKET DE VISTA SOPORTE RECEPCION
+    public void enviarTicketAVistaSoporteRecepcion(TicketDTO ticketDTO) {
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-recepcion", ticketRecordWS);
     }
-
     public void ocultarRegistroEnVistaSoporteRecepcion(Long idTicket) {
         String message = String.valueOf(idTicket);
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-recepcion", message);
     }
 
+
+
+    //ENVIA Y OCULTA TICKET DE VISTA SOPORTE ATENCIÓN
     public void ocultarRegistroEnVistaSoporteAtencion(Long idTicket) {
         String message = String.valueOf(idTicket);
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-atencion", message);
+    }
+
+
+
+
+    //ENVIA Y OCULTA TICKET DE VISTA DIRECCIÓN REVISION
+    public void ocultarRegistroEnVistaDireccionRevision(Long idTicket) {
+        String message = String.valueOf(idTicket);
+        messagingTemplate.convertAndSend("/topic/ocultar/direccion-revision", message);
+    }
+    public void enviarTicketAVistaDireccionRevision(TicketDTO ticketDTO) {
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+        System.out.println("envio a direccion revision");
+        messagingTemplate.convertAndSend("/topic/actualizar/direccion-revision", ticketRecordWS);
+    }
+    public void enviarTicketAVistaDireccionHistorial(TicketDTO ticketDTO) {
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+        System.out.println("envio a direccion historial");
+        messagingTemplate.convertAndSend("/topic/actualizar/direccion-historial", ticketRecordWS);
     }
 
 }

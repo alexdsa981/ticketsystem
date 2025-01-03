@@ -47,7 +47,7 @@ public class TicketService {
         for (Ticket ticket : Tickets) {
             List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket, componentesAdjuntos);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
         }
         return ListaTicketsDTO;
@@ -60,7 +60,7 @@ public class TicketService {
         for (Ticket ticket : Tickets) {
             List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket, componentesAdjuntos);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
         }
         return ListaTicketsDTO;
@@ -82,7 +82,7 @@ public class TicketService {
         for (Ticket ticket : MisTickets) {
             List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket, componentesAdjuntos);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
             MisTicketsDTO.add(ticketDTO);
         }
 
@@ -90,7 +90,7 @@ public class TicketService {
         for (Ticket ticket : MisTicketsCompra) {
             List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket, componentesAdjuntos);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
             MisTicketsDTO.add(ticketDTO);
         }
 
@@ -105,7 +105,7 @@ public class TicketService {
         for (Ticket ticket : listaRevisados) {
             List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket, adjuntosPorTicket, componentesAdjuntos);
+            TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
         }
         return ListaTicketsDTO;

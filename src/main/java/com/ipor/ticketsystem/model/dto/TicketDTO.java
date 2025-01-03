@@ -35,7 +35,8 @@ public class TicketDTO {
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
     private List<TipoComponenteAdjunto> listaComponentesAdjuntos;
 
-    public TicketDTO(Ticket ticket, List<ArchivoAdjunto> adjuntos) {
+
+    public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();
         this.idFormateado = getIdConFormato();
         this.fecha = ticket.getFecha();
@@ -46,21 +47,8 @@ public class TicketDTO {
         this.usuario = ticket.getUsuario();
         this.clasificacionIncidencia = ticket.getClasificacionIncidencia();
         this.faseTicket = ticket.getFaseTicket();
-        this.listaArchivosAdjuntos = adjuntos;
-    }
-    public TicketDTO(Ticket ticket, List<ArchivoAdjunto> adjuntos, List<TipoComponenteAdjunto> componentes) {
-        this.id = ticket.getId();
-        this.idFormateado = getIdConFormato();
-        this.fecha = ticket.getFecha();
-        this.fechaFormateada = getFechaConFormato();
-        this.hora = ticket.getHora();
-        this.horaFormateada = getHoraConFormato();
-        this.descripcion = ticket.getDescripcion();
-        this.usuario = ticket.getUsuario();
-        this.clasificacionIncidencia = ticket.getClasificacionIncidencia();
-        this.faseTicket = ticket.getFaseTicket();
-        this.listaArchivosAdjuntos = adjuntos;
-        this.listaComponentesAdjuntos = componentes;
+        this.listaArchivosAdjuntos = ticket.getListaArchivosAdjuntos();
+        this.listaComponentesAdjuntos = ticket.getListaComponenteAdjunto();
     }
 
     // Método para formatear la fecha como cadena

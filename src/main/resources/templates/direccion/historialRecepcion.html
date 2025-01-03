@@ -43,6 +43,7 @@
                         <th >Solicitante</th>
                         <th style="width:25%;">Motivo de Ticket</th>
                         <th style="width:25%;">Componentes</th>
+                        <th class="adjunto-table">Adjunto</th>
 
                     </tr>
                 </thead>
@@ -57,15 +58,6 @@
                         <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
                         <td>
                             <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span>
-                            <br>
-                            <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
-                            <ul>
-                                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
-                                    <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
-                                       th:text="${adjunto.nombre}">Archivo</a> -
-                                    <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                                </li>
-                            </ul>
                         </td>
                         <td>
                             <ul>
@@ -76,7 +68,15 @@
                                 </li>
                             </ul>
                         </td>
-
+                        <td>
+                            <ul>
+                                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                                    <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                                       th:text="${adjunto.nombre}">Archivo</a> - <span
+                                        th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                                </li>
+                            </ul>
+                        </td>
                     </tr>
                 </tbody>
             </table>
