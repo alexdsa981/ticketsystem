@@ -14,4 +14,13 @@ Instalación:
 	spring.datasource.password= password!!
 	server.port=8080"
 -Iniciar el programa (Se crearán las tablas)
+	abrir C:\proyectos\ticketsystem (ruta del proyecto) en cmd
+	ejecutar comando "mvn clean package" (creará el .jar)
+	abrir C:\proyectos\ticketsystem\Instalación\nssm-2.24\win64 en cmd como administrador
+	crear el servicio ejecutando "nssm install TicketSystemService"
+	en PATH: "C:\Program Files\Java\jdk-XX.X.X\bin\java.exe"
+	en STARTUP: "C:\proyectos\ticketsystem\target"
+	en ARGUMENT: "-jar ticketsystem.jar"
+	(Ctrl + Shift + Esc) → pestaña Servicios para verificar creación y colocarlo como automatico
+
 -Ejecutar 2. en SQL Server (Cargará información de tablas a la BD)
