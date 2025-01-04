@@ -309,8 +309,49 @@ h2 {
     top: 0;
     z-index: 10; /* Asegurar que el encabezado esté encima */
 }
-
+.ul-notificaciones button{
+    margin-right:8px;
+}
 /* Estilos para pantallas móviles */
+@media (max-width: 991px) {
+
+    .ul-direcciones{
+    float: left;
+        width:50%;
+    }
+/* Notificaciones */
+.ul-notificaciones {
+    float: right;
+    width: auto;
+    position: relative;
+}
+
+#notificaciones-dropdown {
+    position: absolute;
+    max-width: 200px;
+    top: 100%; /* Colocar el menú justo debajo del botón */
+    right: 0;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Para darle un toque de estilo */
+}
+
+    /* Cerrar sesión */
+    .ul-cerrarsesion {
+        width:100%;
+        float: left;
+        position: relative;
+    }
+
+
+    .ul-notificaciones .li-general{
+            margin-right:0px;
+    }
+    .ul-notificaciones button{
+        margin: 0px;
+        margin-top:10px;
+        float: right;
+    }
+}
 @media (max-width: 768px) {
     .title {
         text-align: center; /* Centrar el título */
@@ -318,7 +359,7 @@ h2 {
     }
 
     .btn-filtros {
-        width: 100%; /* Los botones ocuparán todo el ancho disponible */
+        width: 90%; /* Los botones ocuparán todo el ancho disponible */
         margin-top: 10px;
         margin-bottom: 10px;
     }
@@ -347,5 +388,10 @@ h2 {
     .btn-edit-clasificador{
         margin-bottom: 5px;
     }
-
+    #horaActual{
+        display:none;
+    }
+    h2{
+        font-size:20px;
+    }
 }
