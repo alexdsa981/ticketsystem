@@ -12,7 +12,7 @@
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
-        <h2><i class="bi bi-envelope text-info"></i> TICKETS ENVIADOS:</h2>
+        <h2 class=""><i class="bi bi-envelope text-info"></i> TICKETS ENVIADOS:</h2>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="bi bi-plus-lg"></i> Nuevo Ticket
@@ -113,21 +113,7 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const forms = document.querySelectorAll('form');
 
-        forms.forEach(form => {
-            form.addEventListener('submit', function () {
-                const submitButton = form.querySelector('.submit-btn');
-                if (submitButton && !submitButton.disabled) {
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...';
-                }
-            });
-        });
-    });
-</script>
 
 
 

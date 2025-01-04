@@ -23,9 +23,16 @@
                     case 'revision':
                         successMessage = 'Revisión realizada.';
                         break;
+                    case 'newUser':
+                        successMessage = 'Usuario creado exitosamente.';
+                        break;
+                    case 'updateUser':
+                        successMessage = 'Usuario modificado exitosamente.';
+                        break;
                     default:
                         successMessage = 'Operación realizada con éxito.';
                         break;
+
                 }
 
                 Swal.fire({
@@ -77,6 +84,12 @@
                     break;
                 case 'revision-general':
                     errorMessage = 'Error inesperado al enviar revisión el ticket.';
+                    break;
+                case 'duplicated-user':
+                    errorMessage = 'Error usuario ya existente.';
+                    break;
+                case 'general-user':
+                    errorMessage = 'Error inesperado.';
                     break;
                 default:
                     errorMessage = 'Ocurrió un problema inesperado. Por favor, inténtalo nuevamente.';

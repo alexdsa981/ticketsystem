@@ -17,18 +17,18 @@
             <div class="d-flex align-items-center">
                 <h2>DIRECCIÓN: Tickets Recibidos</h2>
                 <div id="ticketCount"
-                    class="badge bg-danger ms-2 border d-flex justify-content-center align-items-center"
+                    class="badge bg-danger ms-2 border d-flex justify-content-center align-items-center ticketCountAtencion"
                     style="width: 30px; height: 30px;">
                     0
                 </div>
                 <!-- Botón con estilo de Bootstrap -->
-                <a href="/direccion/Dashboard" class="btn btn-dark" role="button" style="margin-left:15px">
+                <a href="/direccion/Dashboard" class="btn btn-dark btn-dashboard-atencion" role="button" style="margin-left:15px">
                     Ir a Dashboard
                 </a>
 
             </div>
             <!-- Contenedor para los dos botones alineados a la derecha -->
-            <div>
+            <div class="btn-filtros">
                 <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
                     data-bs-target="#filterModal">
                     <i class="bi bi-filter"></i>
@@ -204,12 +204,15 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Recepción</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar Recepción</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
+
     <script>
         // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
         const recepcionModal = document.getElementById('recepcionModal');
@@ -381,7 +384,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">Desestimar Ticket</button>
+                        <button type="submit" class="btn btn-danger submit-btn">Desestimar Ticket</button>
                     </div>
                 </form>
             </div>

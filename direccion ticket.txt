@@ -1,9 +1,9 @@
 
-Agregar el disable con spiner a todos los botones que sean form
 
 -agregar un buscador de ticket (para admin y soporte, solo con colocar el numero te debe redireccionara auna pagina con el ticket en cuestion
 este ticket debe ser clickeable para redirigirnos a la pagina correspondiente (segun su id fase))
--mejorar la version mobile
+
+-mejorar el header de la version mobile
 
 
 

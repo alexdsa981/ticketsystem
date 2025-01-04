@@ -2,14 +2,7 @@
 .nav-link{
     color: white;
 }
-.nav-item.dropdown .dropdown-menu {
-    display: none;
-}
 
-/* Cuando el mouse pasa por encima del item, muestra el menú */
-.nav-item.dropdown:hover .dropdown-menu {
-    display: block;
-}
 
 table {
     width: auto;
@@ -315,4 +308,44 @@ h2 {
     position: sticky;
     top: 0;
     z-index: 10; /* Asegurar que el encabezado esté encima */
+}
+
+/* Estilos para pantallas móviles */
+@media (max-width: 768px) {
+    .title {
+        text-align: center; /* Centrar el título */
+        width: 100%; /* El título ocupará todo el ancho del div */
+    }
+
+    .btn-filtros {
+        width: 100%; /* Los botones ocuparán todo el ancho disponible */
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .btn-filtros button {
+        width: 100%; /* Los botones se ajustan al 100% en pantallas pequeñas */
+    }
+
+    .btn-filtros button:first-child {
+        margin-bottom: 10px; /* Separación entre los botones */
+    }
+    .btn-dashboard-atencion{
+        display:none;
+    }
+    .ticketCountAtencion {
+        display: none !important;
+    }
+
+    .btn-edit-user{
+        width:100%;
+    }
+    .btn-active-user{
+        width:100%;
+        margin-top:5px;
+    }
+    .btn-edit-clasificador{
+        margin-bottom: 5px;
+    }
+
 }

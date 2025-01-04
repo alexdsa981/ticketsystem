@@ -35,7 +35,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
                                 data-bs-toggle="modal" data-bs-target="#incidenciaModal"
                                 th:data-incidencia-id="${clasificador.id}"
                                 th:data-incidencia-nombre="${clasificador.nombre}"
@@ -87,7 +87,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
                                 data-bs-toggle="modal" data-bs-target="#servicioModal"
                                 th:data-servicio-id="${clasificador.id}"
                                 th:data-servicio-nombre="${clasificador.nombre}"
@@ -137,7 +137,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
                                 data-bs-toggle="modal" data-bs-target="#desestimacionModal"
                                 th:data-desestimacion-id="${clasificador.id}"
                                 th:data-desestimacion-nombre="${clasificador.nombre}"
@@ -186,7 +186,7 @@
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary"
+                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
                                 data-bs-toggle="modal" data-bs-target="#tipocomponenteModal"
                                 th:data-tipocomponente-id="${clasificador.id}"
                                 th:data-tipocomponente-nombre="${clasificador.nombre}"
@@ -231,7 +231,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
                 </div>
             </form>
 
@@ -260,7 +260,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
                 </div>
             </form>
 
@@ -289,7 +289,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
                 </div>
             </form>
 
@@ -317,7 +317,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
                 </div>
             </form>
 
@@ -343,7 +343,7 @@
                         <label for="desestimacionNombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required autocomplete="off"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
                 </form>
             </div>
         </div>
@@ -372,7 +372,7 @@
                         <label for="incidenciaNombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="incidenciaNombre" name="nombre" required autocomplete="off"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
                 </form>
             </div>
         </div>
@@ -400,7 +400,7 @@
                         <label for="servicioNombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="servicioNombre" name="nombre" required autocomplete="off"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
                 </form>
             </div>
         </div>
@@ -424,7 +424,7 @@
                         <label for="tipocomponenteNombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="tipocomponenteNombre" name="nombre" required autocomplete="off"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
                 </form>
             </div>
         </div>

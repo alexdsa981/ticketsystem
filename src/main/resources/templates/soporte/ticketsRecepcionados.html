@@ -12,15 +12,15 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
                 <h2>SOPORTE: Atender Tickets</h2>
-                <div id="ticketCount" class="badge bg-warning ms-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
+                <div id="ticketCount" class="badge bg-warning ms-2 d-flex justify-content-center align-items-center ticketCountAtencion" style="width: 30px; height: 30px;">
                     0
                 </div>
-                <a href="/soporte/Dashboard" class="btn btn-dark" role="button" style="margin-left:15px">
+                <a href="/soporte/Dashboard" class="btn btn-dark btn-dashboard-atencion" role="button" style="margin-left:15px">
                     Ir a Dashboard
                 </a>
             </div>
             <!-- Contenedor para los dos botones alineados a la derecha -->
-            <div>
+            <div class="btn-filtros">
                 <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
                     <i class="bi bi-filter"></i> Filtrar
                 </button>
@@ -168,7 +168,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success">Guardar Servicio</button>
+                        <button type="submit" class="btn btn-success submit-btn">Guardar Servicio</button>
                     </div>
                 </form>
             </div>
@@ -297,7 +297,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">Desestimar Ticket</button>
+                        <button type="submit" class="btn btn-danger submit-btn">Desestimar Ticket</button>
                     </div>
                 </form>
             </div>

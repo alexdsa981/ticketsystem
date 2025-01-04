@@ -46,6 +46,12 @@ VALUES
 ('Media', 1),
 ('Alta', 1);
 GO
+
+INSERT INTO clasificacion_desestimacion(nombre,is_active)
+VALUES ('Usuario Desactivado', 1);
+GO
+
+
 /*
 6. CREA VISTA PARA FUNCIÓN EXPORTAR TICKETS
 */
