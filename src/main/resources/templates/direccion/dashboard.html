@@ -81,109 +81,66 @@
         </div>
     </div>
 
-    <script th:inline="javascript">
-        let graficoComponentesAprobados = null;
-        let etiquetasComponentes = []; // Inicialmente vacías hasta que se obtengan del servidor
-        let datosComponentes = [];     // Datos vacíos hasta que se obtengan del servidor
 
-        // Función para actualizar la tabla con los datos actuales del gráfico
-        function actualizarTablaComponentes() {
-            const tablaBody = document.getElementById('tablaComponentesAprobados');
-            tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
+    <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
+        <h3><i class="bi bi-flag"></i> Tickets por Incidencia:</h3>
+        <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+            <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-2 order-md-1">
+                <table class="table table-bordered table-hover" style="font-size:14px;">
+                    <thead>
+                    <tr>
+                        <th>Clasificación de Incidencia</th>
+                        <th>Conteo de Tickets</th>
+                        <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                    </tr>
+                    </thead>
+                    <tbody id="tablaTicketsPorIncidencia">
+                    <!-- Filas se agregarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-1 order-md-2">
+                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                <canvas id="graficoTicketsPorIncidencia"
+                        style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
+            </div>
+        </div>
+    </div>
 
-            // Calcula el total de todos los tickets sumando los valores de datosComponentes
-            const totalTickets = datosComponentes.reduce((acc, count) => acc + count, 0);
-
-            etiquetasComponentes.forEach((etiqueta, index) => {
-                const conteo = datosComponentes[index];
-                const porcentaje = totalTickets > 0 ? ((conteo / totalTickets) * 100).toFixed(2) : 0; // Calcula el porcentaje
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${etiqueta}</td>
-                    <td>${conteo}</td>
-                    <td>${porcentaje}%</td> <!-- Nueva columna para el porcentaje -->
-                `;
-                tablaBody.appendChild(row);
-            });
-        }
-
-        // Función para crear o actualizar el gráfico
-        function crearOActualizarGraficoComponentes() {
-            const ctx = document.getElementById('graficoComponentesAprobados').getContext('2d');
-
-            if (graficoComponentesAprobados) {
-                // Si el gráfico ya existe, actualizamos solo los datos
-                graficoComponentesAprobados.data.labels = etiquetasComponentes;
-                graficoComponentesAprobados.data.datasets[0].data = datosComponentes;
-                graficoComponentesAprobados.update();
-            } else {
-                // Si el gráfico no existe, lo creamos
-                graficoComponentesAprobados = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: etiquetasComponentes,
-                        datasets: [{
-                            label: 'Tickets por Componentes',
-                            data: datosComponentes,
-                            backgroundColor: [
-                                'rgba(169, 169, 169, 0.2)',  // Gris
-                                'rgba(135, 206, 235, 0.2)',  // Celeste
-                                'rgba(75, 192, 192, 0.2)',   // Verde
-                                'rgba(255, 206, 86, 0.2)',   // Amarillo
-                                'rgba(153, 102, 255, 0.2)',  // Morado
-                                'rgba(255, 159, 64, 0.2)'    // Naranja
-                            ],
-                            borderColor: [
-                                'rgba(169, 169, 169, 1)',    // Gris
-                                'rgba(135, 206, 235, 1)',    // Celeste
-                                'rgba(75, 192, 192, 1)',     // Verde
-                                'rgba(255, 206, 86, 1)',     // Amarillo
-                                'rgba(153, 102, 255, 1)',    // Morado
-                                'rgba(255, 159, 64, 1)'      // Naranja
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top'
-                            },
-                            title: {
-                                display: true,
-                                text: 'Tickets por Componentes'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
-        function actualizardatosComponentes() {
-            fetch('/app/dashboard/grafico/TipoComponentesAdjuntosAprobados')
-                .then(response => response.json())
-                .then(data => {
-                    // Asigna los datos obtenidos del servidor
-                    etiquetasComponentes = data.etiquetas || [];
-                    datosComponentes = data.datos || [];
-
-                    // Llama a las funciones para actualizar el gráfico y la tabla
-                    crearOActualizarGraficoComponentes();
-                    actualizarTablaComponentes();
-                })
-                .catch(error => console.error('Error al obtener los datos del gráfico:', error));
-        }
-
-        // Llamada inicial y configuración de la actualización periódica
-        actualizardatosComponentes();
-        setInterval(actualizardatosComponentes, 5000); // Actualiza cada 5 segundos
-    </script>
+    <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
+        <h3><i class="bi bi-exclamation-triangle"></i> Tickets por Urgencia:</h3>
+        <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+            <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-2 order-md-1">
+                <table class="table table-bordered table-hover" style="font-size:14px;">
+                    <thead>
+                    <tr>
+                        <th>Urgencia</th>
+                        <th>Conteo de Tickets</th>
+                        <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                    </tr>
+                    </thead>
+                    <tbody id="tablaTicketsPorUrgencia">
+                    <!-- Filas se agregarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+            <div class="col-12 col-md-6 order-1 order-md-2">
+                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                <canvas id="graficoTicketsPorUrgencia"
+                        style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
+            </div>
+        </div>
+    </div>
 
 </main>
+<script src="/js/graficosDashboard.js"></script>
+<script>
+    inicializarDashboard();
+</script>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>
 </html>

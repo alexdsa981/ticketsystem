@@ -8,6 +8,7 @@ import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,17 +35,39 @@ public class DashboardService {
         return ticketRepository.countByFaseTicketNombre("Espera en Dirección");
     }
 
-    //para dashboard
-    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(){
+
+
+    // ✅ Conteo de tickets por fase con filtro de fechas
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountByFaseWithDates(fechaInicio, fechaFin);
+        }
         return ticketRepository.findTicketCountByFase();
     }
-    public List <RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionIncidencia(){
+
+    // ✅ Conteo de tickets por clasificación de incidencia con filtro de fechas
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountByClasificacionIncidenciaWithDates(fechaInicio, fechaFin);
+        }
         return ticketRepository.findTicketCountByClasificacionIncidencia();
     }
-    public List <RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionUrgencia(){
+
+    // ✅ Conteo de tickets por clasificación de urgencia con filtro de fechas
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionUrgencia(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountByClasificacionUrgenciaWithDates(fechaInicio, fechaFin);
+        }
         return ticketRepository.findTicketCountByClasificacionUrgencia();
     }
-    public List <RecordFactorXConteo> obtenerConteoDeComponentesAdjuntosAprobados(){
+
+    // ✅ Conteo de componentes adjuntos aprobados por tipo con filtro de fechas
+    public List<RecordFactorXConteo> obtenerConteoDeComponentesAdjuntosAprobados(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findGroupedByTipoComponenteAprobadoWithDates(fechaInicio, fechaFin);
+        }
         return ticketRepository.findGroupedByTipoComponenteAprobado();
     }
 }
+
+

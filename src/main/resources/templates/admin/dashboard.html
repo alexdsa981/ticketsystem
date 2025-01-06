@@ -10,7 +10,21 @@
     <main>
         <div class="container">
             <h2>ADMIN: Dashboard</h2>
+
+            <!-- Formulario de Filtrado por Fecha -->
+            <form id="formFiltrado" class="form-inline">
+                <label for="fechaInicio">Fecha Inicio:</label>
+                <input type="date" id="fechaInicio" name="fechaInicio">
+
+                <label for="fechaFin">Fecha Fin:</label>
+                <input type="date" id="fechaFin" name="fechaFin">
+
+                <button type="button" id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+            </form>
         </div>
+
+
+
         <script src="/imports/chart.min.js"></script>
         <div class="container border shadow p-3 px-4 mb-5 bg-body rounded" style="margin-top: 10px">
             <h3 style="text-align:center; margin-bottom:20px;"><i class="bi bi-clock-history"></i> Registros Realizados:</h3>
@@ -191,7 +205,7 @@
                             <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                         </tr>
                         </thead>
-                        <tbody id="tablaTicketsPorIncidencia">
+                        <tbody id="TicketsporIncidenciaTabla">
                         <!-- Filas se agregarán dinámicamente aquí -->
                         </tbody>
                     </table>
@@ -199,119 +213,11 @@
                 <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-1 order-md-2">
                     <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                    <canvas id="graficoTicketsPorIncidencia"
+                    <canvas id="TicketsporIncidencia"
                             style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
                 </div>
             </div>
         </div>
-
-        <script th:inline="javascript">
-            let graficoTicketsPorIncidencia = null;
-            let etiquetasTxI = []; // Inicialmente vacías hasta que se obtengan del servidor
-            let datosTxI = [];     // Datos vacíos hasta que se obtengan del servidor
-
-            // Función para actualizar la tabla con los datos actuales del gráfico
-            function actualizarTabla() {
-                const tablaBody = document.getElementById('tablaTicketsPorIncidencia');
-                tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
-
-                // Calcula el total de todos los tickets sumando los valores de datosTxI
-                const totalTickets = datosTxI.reduce((acc, count) => acc + count, 0);
-
-                etiquetasTxI.forEach((etiqueta, index) => {
-                    const conteo = datosTxI[index];
-                    const porcentaje = totalTickets > 0 ? ((conteo / totalTickets) * 100).toFixed(2) : 0; // Calcula el porcentaje
-
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${etiqueta}</td>
-                        <td>${conteo}</td>
-                        <td>${porcentaje}%</td> <!-- Nueva columna para el porcentaje -->
-                    `;
-                    tablaBody.appendChild(row);
-                });
-            }
-
-            // Función para crear o actualizar el gráfico
-            function crearOActualizarGrafico() {
-                const ctx = document.getElementById('graficoTicketsPorIncidencia').getContext('2d');
-
-                if (graficoTicketsPorIncidencia) {
-                    // Si el gráfico ya existe, actualizamos solo los datos
-                    graficoTicketsPorIncidencia.data.labels = etiquetasTxI;
-                    graficoTicketsPorIncidencia.data.datasets[0].data = datosTxI;
-                    graficoTicketsPorIncidencia.update();
-                } else {
-                    // Si el gráfico no existe, lo creamos
-                    graficoTicketsPorIncidencia = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: etiquetasTxI,
-                            datasets: [{
-                                label: 'Tickets por Clasificación de Incidencia',
-                                data: datosTxI,
-                                backgroundColor: [
-                                    'rgba(169, 169, 169, 0.2)',  // Gris
-                                    'rgba(135, 206, 235, 0.2)',  // Celeste
-                                    'rgba(75, 192, 192, 0.2)',   // Verde
-                                    'rgba(255, 206, 86, 0.2)',   // Amarillo
-                                    'rgba(153, 102, 255, 0.2)',  // Morado
-                                    'rgba(255, 159, 64, 0.2)'    // Naranja
-                                ],
-                                borderColor: [
-                                    'rgba(169, 169, 169, 1)',    // Gris
-                                    'rgba(135, 206, 235, 1)',    // Celeste
-                                    'rgba(75, 192, 192, 1)',     // Verde
-                                    'rgba(255, 206, 86, 1)',     // Amarillo
-                                    'rgba(153, 102, 255, 1)',    // Morado
-                                    'rgba(255, 159, 64, 1)'      // Naranja
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: false,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top'
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Tickets por Clasificación de Incidencia'
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
-            function actualizarDatos() {
-                fetch('/app/dashboard/grafico/TicketsporIncidencia')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Asigna los datos obtenidos del servidor
-                        etiquetasTxI = data.etiquetas || [];
-                        datosTxI = data.datos || [];
-
-                        // Llama a las funciones para actualizar el gráfico y la tabla
-                        crearOActualizarGrafico();
-                        actualizarTabla();
-                    })
-                    .catch(error => console.error('Error al obtener los datos del gráfico:', error));
-            }
-
-            // Llamada inicial y configuración de la actualización periódica
-            actualizarDatos();
-            setInterval(actualizarDatos, 5000); // Actualiza cada 5 segundos
-        </script>
-
-
-
-
-
-
 
 
 
@@ -328,7 +234,7 @@
                             <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                         </tr>
                         </thead>
-                        <tbody id="tablaTicketsPorUrgencia">
+                        <tbody id="TicketsporUrgenciaTabla">
                         <!-- Filas se agregarán dinámicamente aquí -->
                         </tbody>
                     </table>
@@ -336,128 +242,45 @@
                 <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-1 order-md-2">
                     <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                    <canvas id="graficoTicketsPorUrgencia"
+                    <canvas id="TicketsporUrgencia"
                             style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
                 </div>
             </div>
         </div>
 
-        <script th:inline="javascript">
-            let graficoTicketsPorUrgencia = null;
-            let etiquetasUrgencia = []; // Inicialmente vacías hasta que se obtengan del servidor
-            let datosUrgencia = [];     // Datos vacíos hasta que se obtengan del servidor
-
-            // Función para actualizar la tabla con los datos actuales del gráfico
-            function actualizarTablaUrgencia() {
-                const tablaBody = document.getElementById('tablaTicketsPorUrgencia');
-                tablaBody.innerHTML = '';  // Limpia la tabla antes de agregar nuevas filas
-
-                // Calcula el total de todos los tickets sumando los valores de datosUrgencia
-                const totalTickets = datosUrgencia.reduce((acc, count) => acc + count, 0);
-
-                etiquetasUrgencia.forEach((etiqueta, index) => {
-                    const conteo = datosUrgencia[index];
-                    const porcentaje = totalTickets > 0 ? ((conteo / totalTickets) * 100).toFixed(2) : 0; // Calcula el porcentaje
-
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${etiqueta}</td>
-                        <td>${conteo}</td>
-                        <td>${porcentaje}%</td> <!-- Nueva columna para el porcentaje -->
-                    `;
-                    tablaBody.appendChild(row);
-                });
-            }
-
-            // Función para crear o actualizar el gráfico
-            function crearOActualizarGraficoUrgencia() {
-                const ctx = document.getElementById('graficoTicketsPorUrgencia').getContext('2d');
-
-                if (graficoTicketsPorUrgencia) {
-                    // Si el gráfico ya existe, actualizamos solo los datos
-                    graficoTicketsPorUrgencia.data.labels = etiquetasUrgencia;
-                    graficoTicketsPorUrgencia.data.datasets[0].data = datosUrgencia;
-                    graficoTicketsPorUrgencia.update();
-                } else {
-                    // Si el gráfico no existe, lo creamos
-                    graficoTicketsPorUrgencia = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: etiquetasUrgencia,
-                            datasets: [{
-                                label: 'Tickets por Urgencia',
-                                data: datosUrgencia,
-                                backgroundColor: [
-                                    'rgba(169, 169, 169, 0.2)',  // Gris
-                                    'rgba(135, 206, 235, 0.2)',  // Celeste
-                                    'rgba(75, 192, 192, 0.2)',   // Verde
-                                    'rgba(255, 206, 86, 0.2)',   // Amarillo
-                                    'rgba(153, 102, 255, 0.2)',  // Morado
-                                    'rgba(255, 159, 64, 0.2)'    // Naranja
-                                ],
-                                borderColor: [
-                                    'rgba(169, 169, 169, 1)',    // Gris
-                                    'rgba(135, 206, 235, 1)',    // Celeste
-                                    'rgba(75, 192, 192, 1)',     // Verde
-                                    'rgba(255, 206, 86, 1)',     // Amarillo
-                                    'rgba(153, 102, 255, 1)',    // Morado
-                                    'rgba(255, 159, 64, 1)'      // Naranja
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: false,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top'
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Tickets por Urgencia'
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Función para obtener los datos del endpoint y actualizar tanto el gráfico como la tabla
-            function actualizarDatosUrgencia() {
-                fetch('/app/dashboard/grafico/TicketsporUrgencia')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Asigna los datos obtenidos del servidor
-                        etiquetasUrgencia = data.etiquetas || [];
-                        datosUrgencia = data.datos || [];
-
-                        // Llama a las funciones para actualizar el gráfico y la tabla
-                        crearOActualizarGraficoUrgencia();
-                        actualizarTablaUrgencia();
-                    })
-                    .catch(error => console.error('Error al obtener los datos del gráfico:', error));
-            }
-
-            // Llamada inicial y configuración de la actualización periódica
-            actualizarDatosUrgencia();
-            setInterval(actualizarDatosUrgencia, 5000); // Actualiza cada 5 segundos
-        </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
+            <h3><i class="bi bi-motherboard"></i> Gráfico de Componentes Solicitados Aprobados</h3>
+            <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+                <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-2 order-md-1">
+                    <table class="table table-bordered table-hover" style="font-size:14px;">
+                        <thead>
+                        <tr>
+                            <th>Componente Solicitado</th>
+                            <th>Contador</th>
+                            <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                        </tr>
+                        </thead>
+                        <tbody id="TipoComponentesAdjuntosAprobadosTabla">
+                        <!-- Filas se agregarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-1 order-md-2">
+                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                    <canvas id="TipoComponentesAdjuntosAprobados"
+                            style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <script src="/js/graficosDashboard.js"></script>
+    <script>
+        inicializarDashboard();
+    </script>
+
     <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>
 

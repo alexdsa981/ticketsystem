@@ -3,11 +3,14 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,91 +59,50 @@ public class DashboardController {
     }
 
     @GetMapping("/grafico/EstadoActual")
-    public ResponseEntity<Map<String, Object>> getGraficoData() {
-        // Obtienes el conteo de tickets por fase
-        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase();
-
-        // Mapear nombres de fase y conteos en listas separadas
-        List<String> etiquetas = conteoTickets.stream()
-                .map(RecordFactorXConteo::nombre)
-                .collect(Collectors.toList());
-        List<Long> datos = conteoTickets.stream()
-                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
-                .collect(Collectors.toList());
-
-        // Crear la respuesta en formato JSON
-        Map<String, Object> response = new HashMap<>();
-        response.put("etiquetas", etiquetas);
-        response.put("datos", datos);
-
-        // Devuelve la respuesta como JSON
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String, Object>> getGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
     @GetMapping("/grafico/TicketsporIncidencia")
-    public ResponseEntity<Map<String, Object>> getTxIGraficoData() {
-        // Obtienes el conteo de tickets por fase
-        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia();
-
-        // Mapear nombres de fase y conteos en listas separadas
-        List<String> etiquetas = conteoTickets.stream()
-                .map(RecordFactorXConteo::nombre)
-                .collect(Collectors.toList());
-        List<Long> datos = conteoTickets.stream()
-                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
-                .collect(Collectors.toList());
-
-        // Crear la respuesta en formato JSON
-        Map<String, Object> response = new HashMap<>();
-        response.put("etiquetas", etiquetas);
-        response.put("datos", datos);
-
-        // Devuelve la respuesta como JSON
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String, Object>> getTxIGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
     @GetMapping("/grafico/TicketsporUrgencia")
-    public ResponseEntity<Map<String, Object>> getTxUGraficoData() {
-        // Obtienes el conteo de tickets por fase
-        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionUrgencia();
-
-        // Mapear nombres de fase y conteos en listas separadas
-        List<String> etiquetas = conteoTickets.stream()
-                .map(RecordFactorXConteo::nombre)
-                .collect(Collectors.toList());
-        List<Long> datos = conteoTickets.stream()
-                .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
-                .collect(Collectors.toList());
-
-        // Crear la respuesta en formato JSON
-        Map<String, Object> response = new HashMap<>();
-        response.put("etiquetas", etiquetas);
-        response.put("datos", datos);
-
-        // Devuelve la respuesta como JSON
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String, Object>> getTxUGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionUrgencia(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
     @GetMapping("/grafico/TipoComponentesAdjuntosAprobados")
-    public ResponseEntity<Map<String, Object>> getTCAAprobados() {
-        // Obtienes el conteo de tickets por fase
-        List<RecordFactorXConteo> conteoComponentesAdjuntos = dashboardService.obtenerConteoDeComponentesAdjuntosAprobados();
+    public ResponseEntity<Map<String, Object>> getTCAAprobados(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoComponentesAdjuntos = dashboardService.obtenerConteoDeComponentesAdjuntosAprobados(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoComponentesAdjuntos));
+    }
 
+    private Map<String, Object> mapearDatosFactorxConteo(List<RecordFactorXConteo> lista){
         // Mapear nombres de fase y conteos en listas separadas
-        List<String> etiquetas = conteoComponentesAdjuntos.stream()
+        List<String> etiquetas = lista.stream()
                 .map(RecordFactorXConteo::nombre)
                 .collect(Collectors.toList());
-        List<Long> datos = conteoComponentesAdjuntos.stream()
+        List<Long> datos = lista.stream()
                 .map(ticket -> Optional.ofNullable(ticket.contador()).orElse(0L)) // Si contador() es null, asigna 0L
                 .collect(Collectors.toList());
 
-        // Crear la respuesta en formato JSON
         Map<String, Object> response = new HashMap<>();
         response.put("etiquetas", etiquetas);
         response.put("datos", datos);
-
-        // Devuelve la respuesta como JSON
-        return ResponseEntity.ok(response);
+        return response;
     }
 
 }
