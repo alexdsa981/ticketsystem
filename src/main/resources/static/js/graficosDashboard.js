@@ -1,6 +1,10 @@
 // Objeto para almacenar los gráficos creados
 const graficos = {};
 
+// Variables globales para almacenar las fechas del filtro
+let fechaInicioGlobal = null;
+let fechaFinGlobal = null;
+
 // Función para inicializar un gráfico y su tabla asociada
 function inicializarGrafico(idCanvas, idTabla, endpoint, titulo) {
     const canvas = document.getElementById(idCanvas);
@@ -76,7 +80,12 @@ function inicializarGrafico(idCanvas, idTabla, endpoint, titulo) {
 
     // Función para obtener los datos del servidor y actualizar el gráfico y la tabla
     function actualizarDatos() {
-        fetch(endpoint)
+        // Si hay fechas filtradas, las usamos; si no, usamos las fechas por defecto
+        const urlConFiltros = fechaInicioGlobal && fechaFinGlobal
+            ? `${endpoint}?fechaInicio=${fechaInicioGlobal}&fechaFin=${fechaFinGlobal}`
+            : endpoint;
+
+        fetch(urlConFiltros)
             .then(response => response.json())
             .then(data => {
                 const etiquetas = data.etiquetas || [];
@@ -88,13 +97,17 @@ function inicializarGrafico(idCanvas, idTabla, endpoint, titulo) {
             .catch(error => console.error(`Error al obtener los datos para '${idCanvas}':`, error));
     }
 
-    // Llamada inicial y actualización periódica cada 5 segundos
+    // Llamada inicial y actualización periódica cada 10 segundos
     actualizarDatos();
     setInterval(actualizarDatos, 10000);
 }
 
 // Función para actualizar un gráfico con un filtro de fechas
 async function actualizarDashboard(fechaInicio, fechaFin) {
+    // Guardamos las fechas del filtro en las variables globales
+    fechaInicioGlobal = fechaInicio;
+    fechaFinGlobal = fechaFin;
+
     const urls = [
         '/app/dashboard/grafico/TicketsporIncidencia',
         '/app/dashboard/grafico/TicketsporUrgencia',
@@ -110,21 +123,18 @@ async function actualizarDashboard(fechaInicio, fechaFin) {
 
 // Función para actualizar el gráfico con nuevos datos
 function actualizarGrafico(url, datos) {
-    // Obtener el ID del canvas basado en la URL
     const canvasId = url.split('/').pop(); // Usamos el último segmento de la URL para obtener el ID del gráfico
     const etiquetas = datos.etiquetas || [];
     const datosConteo = datos.datos || [];
 
-    // Asegúrate de tener los elementos canvas y tabla correspondientes
     const canvas = document.getElementById(canvasId);
-    const tablaBody = document.getElementById(`${canvasId}Tabla`); // Usamos un id para la tabla asociado al canvas
+    const tablaBody = document.getElementById(`${canvasId}Tabla`);
 
     if (!canvas || !tablaBody) {
         console.error(`Error: El canvas o la tabla con ID '${canvasId}' no existen.`);
         return;
     }
 
-    // Actualizamos el gráfico
     const ctx = canvas.getContext('2d');
     if (graficos[canvasId]) {
         graficos[canvasId].data.labels = etiquetas;
@@ -162,7 +172,6 @@ function actualizarGrafico(url, datos) {
         });
     }
 
-    // Actualizamos la tabla
     actualizarTabla(canvasId, etiquetas, datosConteo);
 }
 

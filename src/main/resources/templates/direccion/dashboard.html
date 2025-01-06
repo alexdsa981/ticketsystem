@@ -7,9 +7,25 @@
 <header th:replace="~{common/header :: header}"></header>
 <main>
     <script src="/imports/chart.min.js"></script>
-    <div class="container" style="margin-top: 10px">
+
+    <div class="container">
         <h2>DIRECCIÓN: Dashboard</h2>
-        <p>Estado Actual:</p>
+
+        <!-- Formulario de Filtrado por Fecha -->
+        <form id="formFiltrado" class="form-inline">
+            <label for="fechaInicio">Fecha Inicio:</label>
+            <input type="date" id="fechaInicio" name="fechaInicio">
+
+            <label for="fechaFin">Fecha Fin:</label>
+            <input type="date" id="fechaFin" name="fechaFin">
+
+            <button type="button" id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+        </form>
+    </div>
+
+
+
+    <div class="container" style="margin-top: 10px">
         <div class="row justify-content-center align-items-center">
             <div class="col-12 col-md-4 text-center mb-4">
                 <a href="/direccion/Recibidos" class="btn-dashboard">
@@ -67,7 +83,7 @@
                         <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                     </tr>
                     </thead>
-                    <tbody id="tablaComponentesAprobados">
+                    <tbody id="TipoComponentesAdjuntosAprobadosTabla">
                     <!-- Filas se agregarán dinámicamente aquí -->
                     </tbody>
                 </table>
@@ -75,7 +91,7 @@
             <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
             <div class="col-12 col-md-6 order-1 order-md-2">
                 <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                <canvas id="graficoComponentesAprobados"
+                <canvas id="TipoComponentesAdjuntosAprobados"
                         style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
             </div>
         </div>
@@ -95,7 +111,7 @@
                         <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                     </tr>
                     </thead>
-                    <tbody id="tablaTicketsPorIncidencia">
+                    <tbody id="TicketsporIncidenciaTabla">
                     <!-- Filas se agregarán dinámicamente aquí -->
                     </tbody>
                 </table>
@@ -103,11 +119,13 @@
             <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
             <div class="col-12 col-md-6 order-1 order-md-2">
                 <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                <canvas id="graficoTicketsPorIncidencia"
+                <canvas id="TicketsporIncidencia"
                         style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
             </div>
         </div>
     </div>
+
+
 
     <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
         <h3><i class="bi bi-exclamation-triangle"></i> Tickets por Urgencia:</h3>
@@ -122,7 +140,7 @@
                         <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                     </tr>
                     </thead>
-                    <tbody id="tablaTicketsPorUrgencia">
+                    <tbody id="TicketsporUrgenciaTabla">
                     <!-- Filas se agregarán dinámicamente aquí -->
                     </tbody>
                 </table>
@@ -130,7 +148,7 @@
             <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
             <div class="col-12 col-md-6 order-1 order-md-2">
                 <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                <canvas id="graficoTicketsPorUrgencia"
+                <canvas id="TicketsporUrgencia"
                         style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
             </div>
         </div>
@@ -141,6 +159,7 @@
 <script>
     inicializarDashboard();
 </script>
+
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>
 </html>

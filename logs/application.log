@@ -1694,3 +1694,79 @@ Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attri
 2025-01-06T12:51:29.779-05:00  INFO 6472 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-01-06T12:51:29.779-05:00  INFO 6472 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2025-01-06T12:51:29.779-05:00  INFO 6472 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-01-06T13:12:54.390-05:00  INFO 580 --- [main] c.i.t.TicketsystemApplication            : Starting TicketsystemApplication using Java 17.0.10 with PID 580 (C:\proyectos\ticketsystem\target\classes started by USER in C:\proyectos\ticketsystem)
+2025-01-06T13:12:54.390-05:00  INFO 580 --- [main] c.i.t.TicketsystemApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-01-06T13:12:55.779-05:00  INFO 580 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06T13:12:55.967-05:00  INFO 580 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 172 ms. Found 15 JPA repository interfaces.
+2025-01-06T13:12:57.150-05:00  INFO 580 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-01-06T13:12:57.181-05:00  INFO 580 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-01-06T13:12:57.181-05:00  INFO 580 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.28]
+2025-01-06T13:12:57.306-05:00  INFO 580 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-01-06T13:12:57.306-05:00  INFO 580 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2819 ms
+2025-01-06T13:12:57.632-05:00  INFO 580 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-06T13:12:57.739-05:00  INFO 580 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2025-01-06T13:12:57.782-05:00  INFO 580 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-01-06T13:12:58.308-05:00  INFO 580 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-06T13:12:58.355-05:00  INFO 580 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-01-06T13:12:58.837-05:00  INFO 580 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: 9a1b0531-9696-4bda-b0fb-76c8542ae16f
+2025-01-06T13:12:58.853-05:00  INFO 580 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-01-06T13:12:58.884-05:00  WARN 580 --- [main] org.hibernate.orm.deprecation            : HHH90000025: SQLServerDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06T13:13:00.708-05:00  INFO 580 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-06T13:13:01.517-05:00  INFO 580 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-06T13:13:02.121-05:00  INFO 580 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-01-06T13:13:03.433-05:00  INFO 580 --- [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUsersDetailsService
+2025-01-06T13:13:03.499-05:00  WARN 580 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-06T13:13:03.709-05:00  INFO 580 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-01-06T13:13:04.367-05:00  INFO 580 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-01-06T13:13:04.367-05:00  INFO 580 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2025-01-06T13:13:04.367-05:00  INFO 580 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@c634247]]
+2025-01-06T13:13:04.367-05:00  INFO 580 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2025-01-06T13:13:04.382-05:00  INFO 580 --- [main] c.i.t.TicketsystemApplication            : Started TicketsystemApplication in 10.762 seconds (process running for 11.429)
+2025-01-06T13:13:12.720-05:00  INFO 580 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-06T13:13:12.721-05:00  INFO 580 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-01-06T13:13:12.722-05:00  INFO 580 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-01-06T13:14:04.358-05:00  INFO 580 --- [MessageBroker-3] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 8, active threads = 0, queued tasks = 0, completed tasks = 18], outboundChannel[pool size = 2, active threads = 0, queued tasks = 0, completed tasks = 2], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 3, completed tasks = 10]
+2025-01-06T13:20:52.678-05:00  INFO 580 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-01-06T13:20:52.678-05:00  INFO 580 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@c634247]]
+2025-01-06T13:20:52.678-05:00  INFO 580 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-01-06T13:20:52.934-05:00  INFO 580 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-06T13:20:52.934-05:00  INFO 580 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-01-06T13:20:52.950-05:00  INFO 580 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-01-06T13:20:56.783-05:00  INFO 14740 --- [main] c.i.t.TicketsystemApplication            : Starting TicketsystemApplication using Java 17.0.10 with PID 14740 (C:\proyectos\ticketsystem\target\classes started by USER in C:\proyectos\ticketsystem)
+2025-01-06T13:20:56.783-05:00  INFO 14740 --- [main] c.i.t.TicketsystemApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-01-06T13:20:58.514-05:00  INFO 14740 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06T13:20:58.701-05:00  INFO 14740 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 164 ms. Found 15 JPA repository interfaces.
+2025-01-06T13:20:59.892-05:00  INFO 14740 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-01-06T13:20:59.924-05:00  INFO 14740 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-01-06T13:20:59.924-05:00  INFO 14740 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.28]
+2025-01-06T13:21:00.064-05:00  INFO 14740 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-01-06T13:21:00.064-05:00  INFO 14740 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3110 ms
+2025-01-06T13:21:00.399-05:00  INFO 14740 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-06T13:21:00.494-05:00  INFO 14740 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2025-01-06T13:21:00.541-05:00  INFO 14740 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-01-06T13:21:01.127-05:00  INFO 14740 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-06T13:21:01.174-05:00  INFO 14740 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-01-06T13:21:01.564-05:00  INFO 14740 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: 1cbe1e74-45c8-466b-bc0c-663690b30231
+2025-01-06T13:21:01.564-05:00  INFO 14740 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-01-06T13:21:01.611-05:00  WARN 14740 --- [main] org.hibernate.orm.deprecation            : HHH90000025: SQLServerDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06T13:21:03.703-05:00  INFO 14740 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-06T13:21:04.449-05:00  INFO 14740 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-06T13:21:05.237-05:00  INFO 14740 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-01-06T13:21:06.651-05:00  INFO 14740 --- [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUsersDetailsService
+2025-01-06T13:21:06.763-05:00  WARN 14740 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-06T13:21:07.020-05:00  INFO 14740 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-01-06T13:21:07.766-05:00  INFO 14740 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-01-06T13:21:07.771-05:00  INFO 14740 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2025-01-06T13:21:07.772-05:00  INFO 14740 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@69d142f6]]
+2025-01-06T13:21:07.772-05:00  INFO 14740 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2025-01-06T13:21:07.798-05:00  INFO 14740 --- [main] c.i.t.TicketsystemApplication            : Started TicketsystemApplication in 11.76 seconds (process running for 12.47)
+2025-01-06T13:21:07.881-05:00  INFO 14740 --- [http-nio-0.0.0.0-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-06T13:21:07.882-05:00  INFO 14740 --- [http-nio-0.0.0.0-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-01-06T13:21:07.884-05:00  INFO 14740 --- [http-nio-0.0.0.0-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-01-06T13:22:07.771-05:00  INFO 14740 --- [MessageBroker-4] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[1 current WS(1)-HttpStream(0)-HttpPoll(0), 3 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(3)-CONNECTED(3)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 8, active threads = 0, queued tasks = 0, completed tasks = 24], outboundChannel[pool size = 5, active threads = 0, queued tasks = 0, completed tasks = 5], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 2, completed tasks = 13]
+2025-01-06T13:22:10.439-05:00  INFO 14740 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-01-06T13:22:10.439-05:00  INFO 14740 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@69d142f6]]
+2025-01-06T13:22:10.439-05:00  INFO 14740 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-01-06T13:22:10.717-05:00  INFO 14740 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-06T13:22:10.717-05:00  INFO 14740 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-01-06T13:22:10.733-05:00  INFO 14740 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
