@@ -6,10 +6,14 @@ import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DashboardService {
@@ -19,22 +23,29 @@ public class DashboardService {
     private RecepcionRepository recepcionRepository;
     @Autowired
     private ServicioRepository servicioRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     //para obtener el numero en las tablas
     public long obtenerNTotalTickets() {
         return ticketRepository.count();
     }
+
     public long obtenerNTotalRecepcionados() {
         return recepcionRepository.count();
     }
-    public long obtenerNTotalAtendidos() {return servicioRepository.count();}
+
+    public long obtenerNTotalAtendidos() {
+        return servicioRepository.count();
+    }
+
     public long obtenerNTotalDesestimados() {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
     }
+
     public long obtenerNTotalRedireccionados() {
         return ticketRepository.countByFaseTicketNombre("Espera en Dirección");
     }
-
 
 
     // ✅ Conteo de tickets por fase con filtro de fechas
@@ -68,6 +79,21 @@ public class DashboardService {
         }
         return ticketRepository.findGroupedByTipoComponenteAprobado();
     }
+
+
+    public double obtenerPromedioSegundosR_S() {
+        return ticketRepository.obtenerPromedioSegundosRS();
+    }
+
+    public double obtenerPromedioSegundosT_R() {
+        return ticketRepository.obtenerPromedioSegundosTR();
+    }
+
+    public double obtenerPromedioSegundosT_S() {
+        return ticketRepository.obtenerPromedioSegundosTS();
+    }
+
+
 }
 
 

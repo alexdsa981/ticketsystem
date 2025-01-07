@@ -102,4 +102,37 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
 
+
+
+    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
+            "FROM servicio s " +
+            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
+            "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerPromedioSegundosRS();
+
+    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME))) " +
+            "FROM recepcion r " +
+            "INNER JOIN ticket t ON t.id = r.id_ticket " +
+            "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerPromedioSegundosTR();
+
+    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
+            "FROM servicio s " +
+            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerPromedioSegundosTS();
+
 }

@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -104,5 +106,30 @@ public class DashboardController {
         response.put("datos", datos);
         return response;
     }
+
+    @GetMapping("/promedioRecepcion")
+    @ResponseBody
+    public String obtenerPromedioRecepcion() {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_R();
+        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
+        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    }
+
+    @GetMapping("/promedioAtencion")
+    @ResponseBody
+    public String obtenerPromedioAtencion() {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosR_S();
+        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
+        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    }
+
+    @GetMapping("/promedioInicioFin")
+    @ResponseBody
+    public String obtenerPromedioInicioFin() {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_S();
+        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
+        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    }
+
 
 }

@@ -10,19 +10,45 @@
 
     <div class="container">
         <h2>DIRECCIÓN: Dashboard</h2>
-
-        <!-- Formulario de Filtrado por Fecha -->
-        <form id="formFiltrado" class="form-inline">
-            <label for="fechaInicio">Fecha Inicio:</label>
-            <input type="date" id="fechaInicio" name="fechaInicio">
-
-            <label for="fechaFin">Fecha Fin:</label>
-            <input type="date" id="fechaFin" name="fechaFin">
-
-            <button type="button" id="btnFiltrar" class="btn btn-primary">Filtrar</button>
-        </form>
+        <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
+                data-bs-target="#filterModal">
+            <i class="bi bi-filter"></i> Filtrar
+        </button>
+        <button type="button" class="btn btn-outline-danger me-2 fixed-filter-button d-none" id="btnQuitarFiltro">
+            <i class="bi bi-x"></i> Eliminar Filtrado
+        </button>
     </div>
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filtrar Tickets Recibidos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filtros dentro del modal -->
+                    <form id="formFiltrado">
+                        <div class="container">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-12">
+                                    <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+                                    <input type="date" id="fechaInicio" class="form-control" name="fechaInicio">
+                                </div>
 
+                                <div class="col-md-12">
+                                    <label for="fechaFin" class="form-label">Fecha de Fin:</label>
+                                    <input type="date" id="fechaFin" class="form-control" name="fechaFin">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container" style="margin-top: 10px">
@@ -67,7 +93,6 @@
         // Actualizar cada 5 segundos
         setInterval(actualizarNRecibidos, 5000);
     </script>
-
 
 
     <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
@@ -126,7 +151,6 @@
     </div>
 
 
-
     <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
         <h3><i class="bi bi-exclamation-triangle"></i> Tickets por Urgencia:</h3>
         <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
@@ -159,6 +183,23 @@
 <script>
     inicializarDashboard();
 </script>
+<script>
+    // Mostrar el botón "Quitar Filtro" cuando se aplica un filtro
+    document.getElementById('btnFiltrar').addEventListener('click', function () {
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
+
+        if (fechaInicio || fechaFin) {
+            document.getElementById('btnQuitarFiltro').classList.remove('d-none');
+        }
+    });
+
+    // Recargar la página al hacer clic en "Quitar Filtro"
+    document.getElementById('btnQuitarFiltro').addEventListener('click', function () {
+        location.reload();
+    });
+</script>
+
 
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 </body>

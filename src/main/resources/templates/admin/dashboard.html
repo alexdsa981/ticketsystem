@@ -6,28 +6,56 @@
 </head>
 
 <body>
-    <header th:replace="~{common/header :: header}"></header>
-    <main>
-        <div class="container">
-            <h2>ADMIN: Dashboard</h2>
+<header th:replace="~{common/header :: header}"></header>
+<main>
+    <div class="container">
+        <h2>ADMIN: Dashboard</h2>
 
-            <!-- Formulario de Filtrado por Fecha -->
-            <form id="formFiltrado" class="form-inline">
-                <label for="fechaInicio">Fecha Inicio:</label>
-                <input type="date" id="fechaInicio" name="fechaInicio">
+        <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
+                data-bs-target="#filterModal">
+            <i class="bi bi-filter"></i> Filtrar
+        </button>
+        <button type="button" class="btn btn-outline-danger me-2 fixed-filter-button d-none" id="btnQuitarFiltro">
+            <i class="bi bi-x"></i> Eliminar Filtrado
+        </button>
 
-                <label for="fechaFin">Fecha Fin:</label>
-                <input type="date" id="fechaFin" name="fechaFin">
 
-                <button type="button" id="btnFiltrar" class="btn btn-primary">Filtrar</button>
-            </form>
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filtrar Tickets Recibidos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Filtros dentro del modal -->
+                        <form id="formFiltrado">
+                            <div class="container">
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-md-12">
+                                        <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+                                        <input type="date" id="fechaInicio" class="form-control" name="fechaInicio">
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="fechaFin" class="form-label">Fecha de Fin:</label>
+                                        <input type="date" id="fechaFin" class="form-control" name="fechaFin">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
 
         <script src="/imports/chart.min.js"></script>
         <div class="container border shadow p-3 px-4 mb-5 bg-body rounded" style="margin-top: 10px">
-            <h3 style="text-align:center; margin-bottom:20px;"><i class="bi bi-clock-history"></i> Registros Realizados:</h3>
+            <h3 style="text-align:center; margin-bottom:20px;">Registros Realizados:
+            </h3>
             <div class="row">
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="/soporte/Recepcionar" class="btn-dashboard">
@@ -79,23 +107,18 @@
                 <canvas id="graficoTicketsxFase" style="max-width: 100%; height: 300px;"></canvas>
             </div>
 
-                <div class="row justify-content-center mt-4"> <!-- Centra el contenido dentro de la fila -->
-                    <div class="col-12 col-md-3 text-center mb-4">
-                        <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
-                            <div class="rounded bg-primary text-white card">
-                                <p class="mb-0">Exportar Tickets (Excel)</p>
-                                <i class="bi bi-file-earmark-excel icon"></i>
-                            </div>
-                        </a>
-                    </div>
+            <div class="row justify-content-center mt-4"> <!-- Centra el contenido dentro de la fila -->
+                <div class="col-12 col-md-3 text-center mb-4">
+                    <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
+                        <div class="rounded bg-primary text-white card">
+                            <p class="mb-0">Exportar Tickets (Excel)</p>
+                            <i class="bi bi-file-earmark-excel icon"></i>
+                        </div>
+                    </a>
                 </div>
+            </div>
 
         </div>
-
-
-
-
-
 
 
         <script th:inline="javascript">
@@ -190,6 +213,45 @@
         </script>
 
 
+        <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded contenedor-promedios">
+            <div class="row">
+                <h3 class="col-12" style="margin-bottom:10px;"><i class="bi bi-clock-history"></i> Promedio de tiempos:</h3>
+                <div class="col-12 col-md-4" >
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-clock"></i> Promedio de Recepción</h5>
+                            <p class="card-text" id="promedioRecepcion">
+                                Cargando promedio de recepción...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card para Promedio de Atención -->
+                <div class="col-12 col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-clock"></i> Promedio de Atención</h5>
+                            <p class="card-text" id="promedioAtencion">
+                                Cargando promedio de atención...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card para Promedio General -->
+                <div class="col-12 col-md-4 justify-content-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-clock"></i> Promedio General</h5>
+                            <p class="card-text" id="promedioInicioFin">
+                                Cargando promedio general...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
@@ -218,7 +280,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
@@ -274,14 +335,66 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <script src="/js/graficosDashboard.js"></script>
-    <script>
-        inicializarDashboard();
-    </script>
+<script src="/js/graficosDashboard.js"></script>
+<script>
+    inicializarDashboard();
+</script>
+<div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+<script>
+    // Mostrar el botón "Quitar Filtro" cuando se aplica un filtro
+    document.getElementById('btnFiltrar').addEventListener('click', function () {
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
 
-    <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+        if (fechaInicio || fechaFin) {
+            document.getElementById('btnQuitarFiltro').classList.remove('d-none');
+        }
+    });
+
+    // Recargar la página al hacer clic en "Quitar Filtro"
+    document.getElementById('btnQuitarFiltro').addEventListener('click', function () {
+        location.reload();
+    });
+
+</script>
+<script>
+    function actualizarPromedios() {
+        fetch('/app/dashboard/promedioRecepcion')
+            .then(response => response.text())  // Usamos text() ya que estamos esperando un String formateado
+            .then(data => {
+                document.getElementById('promedioRecepcion').innerText = `Promedio de Recepción: ${data} minutos. Creación de ticket hasta Recepción de ticket.`;
+            })
+            .catch(error => {
+                document.getElementById('promedioRecepcion').innerText = 'Error al obtener el promedio.';
+            });
+
+        fetch('/app/dashboard/promedioAtencion')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('promedioAtencion').innerText = `Promedio de Atención: ${data} minutos. Recepción de ticket hasta Atención/Cierre de ticket.`;
+            })
+            .catch(error => {
+                document.getElementById('promedioAtencion').innerText = 'Error al obtener el promedio.';
+            });
+
+        fetch('/app/dashboard/promedioInicioFin')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('promedioInicioFin').innerText = `Promedio General: ${data} minutos. Creación de ticket hasta Atención/Cierre de ticket.`;
+            })
+            .catch(error => {
+                document.getElementById('promedioInicioFin').innerText = 'Error al obtener el promedio.';
+            });
+    }
+
+    // Actualización periódica
+    actualizarPromedios();
+    setInterval(actualizarPromedios, 10000);
+
+</script>
 </body>
 
 </html>

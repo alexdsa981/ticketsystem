@@ -312,6 +312,15 @@ h2 {
 .ul-notificaciones button{
     margin-right:8px;
 }
+.fixed-filter-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+#btnQuitarFiltro {
+        right: 115px; /* Ajusta la posición del botón a la izquierda del de Filtrar */
+}
 /* Estilos para pantallas móviles */
 @media (max-width: 991px) {
 
@@ -393,5 +402,11 @@ h2 {
     }
     h2{
         font-size:20px;
+    }
+    .notificaciones-dd{
+        max-height: 200px !important;
+    }
+    .contenedor-promedios .card{
+        margin-bottom:10px;
     }
 }
