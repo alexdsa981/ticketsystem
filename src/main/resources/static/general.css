@@ -321,6 +321,29 @@ h2 {
 #btnQuitarFiltro {
         right: 115px; /* Ajusta la posición del botón a la izquierda del de Filtrar */
 }
+
+.offcanvas .offcanvas-body ul.navbar-nav {
+    padding-left: 0;
+}
+.offcanvas .nav-link {
+    color: white;
+    font-size: 16px;
+    padding: 10px 15px;
+}
+
+.offcanvas{
+    display:none;
+}
+
+
+
+
+
+
+
+
+
+
 /* Estilos para pantallas móviles */
 @media (max-width: 991px) {
 
@@ -359,6 +382,15 @@ h2 {
         margin: 0px;
         margin-top:10px;
         float: right;
+    }
+    .offcanvas{
+        display:block;
+    }
+    .ul-cerrarsesion-mobile{
+        position: fixed;
+        bottom: 20px;
+        z-index: 1050;
+
     }
 }
 @media (max-width: 768px) {

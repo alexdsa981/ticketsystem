@@ -14,11 +14,14 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="/inicio" style="margin-right: 10px;">Help<span
                         style="color: #ff6666;">Desk</span></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+
+
+                <!-- Botón para abrir el Offcanvas -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+
                 <div class="collapse navbar-collapse " id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul-direcciones">
                         <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
@@ -113,39 +116,54 @@
                                 <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
                             </ul>
                         </li>
-                        <li class="d-flex align-items-center" style="color:white;">
-                            <i class="bi bi-person-fill"></i><span style="margin-right:5px;">:</span>
-                            <p th:text="${nombreUsuario}" style="margin-bottom:0px"></p>
+                        <li sec:authorize="hasAnyAuthority('Admin','Soporte')">
+                            <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
+                                <input type="text" id="ticketId" name="ticketId" placeholder="Buscar por ID de ticket" class="form-control" required autocomplete="off">
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                            </form>
+                            <script>
+                                document.getElementById("ticketSearchForm").addEventListener("submit", function(event) {
+                                    event.preventDefault(); // Evitar que se recargue la página
+
+                                    // Obtener el ID del ticket del formulario
+                                    const ticketId = document.getElementById("ticketId").value;
+
+                                    // Realizar la solicitud GET para buscar el ticket
+                                    fetch(`/app/tickets/buscar-ticket?ticketId=${ticketId}`)
+                                        .then(response => response.text())
+                                        .then(data => {
+                                            // Llenar el modal con los datos recibidos
+                                            document.getElementById("ticketDetails").innerHTML = data;
+
+                                            // Mostrar el modal
+                                            const myModal = new bootstrap.Modal(document.getElementById("ticketModal"));
+                                            myModal.show();
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                });
+                            </script>
                         </li>
                         <li class="d-flex align-items-center" style="margin-left:15px;">
                             <p style="color: white; margin-bottom:0px; font-size: 16px; font-weight:600;"><span
                                     id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
-                            <script>
-                                function actualizarHora() {
-                                    const ahora = new Date(); // Obtiene la fecha y hora actual del cliente
-                                    const horas = String(ahora.getHours()).padStart(2, '0'); // Obtiene las horas y añade un 0 al inicio si es necesario
-                                    const minutos = String(ahora.getMinutes()).padStart(2, '0'); // Obtiene los minutos
-                                    const segundos = String(ahora.getSeconds()).padStart(2, '0'); // Obtiene los segundos
-
-                                    // Actualiza el contenido del span con la hora formateada
-                                    document.getElementById('horaActual').textContent = `${horas}:${minutos}:${segundos}`;
-                                }
-
-                                // Actualiza la hora cada segundo
-                                setInterval(actualizarHora, 1000);
-                            </script>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto" style="margin-right:10px;">
+                        <li class="d-flex align-items-center ms-auto" style="color:white;">
+                            <i class="bi bi-person-fill"></i><span style="margin-right:6px;">:</span>
+                            <p th:text="${nombreUsuario}" style="margin-bottom:0px"></p>
                         </li>
                     </ul>
 
-
-
-                    <ul class="navbar-nav ms-autos ul-notificaciones">
+                    <ul class="navbar-nav ul-notificaciones">
                         <li class="li-general">
                             <button id="notificaciones-btn" class="btn btn-light position-relative dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-bell"></i>
                                 <span id="notificaciones-contador"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
                                     0
                                 </span>
                             </button>
@@ -154,126 +172,7 @@
                                 <li><span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span></li>
                             </ul>
                         </li>
-                        <script>
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const notificacionesBtn = document.getElementById('notificaciones-btn');
-                                const notificacionesContador = document.getElementById('notificaciones-contador');
-                                const notificacionesDropdown = document.getElementById('notificaciones-dropdown');
 
-                                async function actualizarContador() {
-                                    try {
-                                        const response = await fetch('/app/notificaciones');
-                                        if (response.ok) {
-                                            const notificaciones = await response.json();
-
-                                            // Filtrar notificaciones no leídas
-                                            const noLeidas = notificaciones.filter(n => !n.leido).length;
-
-                                            if (noLeidas > 0) {
-                                                notificacionesContador.textContent = noLeidas;
-                                                notificacionesContador.classList.remove('d-none'); // Mostrar el contador
-                                            } else {
-                                                reiniciarContador(); // Reinicia el contador si no hay notificaciones no leídas
-                                            }
-                                        } else {
-                                            console.error('Error al cargar el contador de notificaciones:', response.statusText);
-                                        }
-                                    } catch (error) {
-                                        console.error('Error en la solicitud del contador de notificaciones:', error);
-                                    }
-                                }
-
-                                async function cargarNotificaciones() {
-                                    try {
-                                        const response = await fetch('/app/notificaciones');
-                                        if (response.ok) {
-                                            const notificaciones = await response.json();
-
-                                            // Limpia el dropdown
-                                            notificacionesDropdown.innerHTML = '';
-
-                                            // Verifica si hay notificaciones
-                                            if (notificaciones.length > 0) {
-                                                notificaciones.forEach(notificacion => {
-                                                    const item = document.createElement('li');
-                                                    item.innerHTML = `
-                                                        <a style="text-decoration: none" href="${notificacion.url}" class="notificacion-item" data-id="${notificacion.id}">
-                                                            <div class="dropdown-item ${notificacion.abierto ? 'notificacion-abierta' : ''}">
-                                                                <strong>${notificacion.idFormateado}</strong>
-                                                                <p class="mb-0">${notificacion.descripcion}</p>
-                                                                <small class="text-muted">
-                                                                ${notificacion.fechaFormateada} ${notificacion.horaFormateada} ${notificacion.abierto ? '- Abierto' : ''}                                                            </small>
-                                                            </div>
-                                                        </a>
-                                                    `;
-                                                    notificacionesDropdown.appendChild(item);
-                                                });
-                                            } else {
-                                                const item = document.createElement('li');
-                                                item.innerHTML = `<span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span>`;
-                                                notificacionesDropdown.appendChild(item);
-                                            }
-
-                                            // Agregar evento para marcar como abierto
-                                            document.querySelectorAll('.notificacion-item').forEach(item => {
-                                                item.addEventListener('click', async (e) => {
-                                                    const notificacionId = e.currentTarget.getAttribute('data-id');
-                                                    await marcarNotificacionComoAbierto(notificacionId);
-                                                    e.currentTarget.querySelector('.dropdown-item').classList.add('notificacion-abierta');
-                                                });
-                                            });
-                                        } else {
-                                            console.error('Error al cargar las notificaciones:', response.statusText);
-                                        }
-                                    } catch (error) {
-                                        console.error('Error en la solicitud de notificaciones:', error);
-                                    }
-                                }
-
-                                async function marcarNotificacionComoAbierto(id) {
-                                    try {
-                                        const response = await fetch(`/app/notificaciones/marcar-abierto/${id}`, {
-                                            method: 'POST',
-                                        });
-                                        if (!response.ok) {
-                                            console.error('Error al marcar notificación como abierta:', response.statusText);
-                                        }
-                                    } catch (error) {
-                                        console.error('Error en la solicitud para marcar notificación como abierta:', error);
-                                    }
-                                }
-
-                                async function marcarNotificacionesComoLeidas() {
-                                    try {
-                                        const response = await fetch('/app/notificaciones/marcar-leidas', {
-                                            method: 'POST',
-                                        });
-                                        if (response.ok) {
-                                            reiniciarContador(); // Reinicia el contador al marcar como leídas
-                                        } else {
-                                            console.error('Error al marcar notificaciones como leídas:', response.statusText);
-                                        }
-                                    } catch (error) {
-                                        console.error('Error en la solicitud para marcar notificaciones como leídas:', error);
-                                    }
-                                }
-
-                                function reiniciarContador() {
-                                    notificacionesContador.textContent = '0';
-                                    notificacionesContador.classList.add('d-none'); // Asegúrate de que se esconda si no hay notificaciones
-                                }
-
-                                notificacionesBtn.addEventListener('click', async () => {
-                                    await marcarNotificacionesComoLeidas();
-                                    await cargarNotificaciones();
-                                });
-
-                                // Actualiza el contador al cargar la página
-                                actualizarContador();
-                            });
-
-
-                        </script>
                     </ul>
                     <ul class="navbar-nav ms-autos ul-cerrarsesion">
                         <li class="nav-item">
@@ -283,8 +182,133 @@
                         </li>
                     </ul>
                 </div>
+
+
+
+                <!-- Menú Offcanvas para pantallas pequeñas -->
+                <div class="offcanvas offcanvas-end bg-dark text-white" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menú</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <li class="d-flex align-items-center" style="color:white">
+                            <i class="bi bi-person-fill"></i><span style="margin-right:5px;">:</span>
+                            <p th:text="${nombreUsuario}" style="margin-bottom:0px"></p>
+                        </li>
+                        <!-- Contenido del Menú Offcanvas -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
+                                <a class="nav-link" href="/inicio">Enviar Tickets</a>
+                            </li>
+                            <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
+                                <a class="nav-link" href="/TicketsEnProceso">Tickets En Proceso</a>
+                            </li>
+                            <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
+                                <a class="nav-link" href="/TicketsAtendidos">Tickets Atendidos</a>
+                            </li>
+                            <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
+                                <a class="nav-link" href="/TicketsDesestimados">Tickets Desestimados</a>
+                            </li>
+
+
+                            <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección','Soporte')">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Mis Tickets
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/inicio">Enviar Tickets</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="/TicketsEnProceso">Tickets En proceso</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="/TicketsAtendidos">Tickets Atendidos</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="/TicketsDesestimados">Tickets Desestimados</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Menú Dirección -->
+                            <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección')">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dirección
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/direccion/Dashboard">Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/direccion/Recibidos">Tickets Recibidos</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/direccion/Historial">Historial Aprobaciones</a></li>
+                                </ul>
+                            </li>
+                            <!-- Menú Soporte -->
+                            <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Soporte
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/soporte/Dashboard">Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/soporte/Recepcionar">Recepcionar Tickets</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/soporte/Atender">Atender Tickets</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/soporte/Tickets-Cerrados">Historial Cerrados</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/soporte/Tickets-Desestimados">Historial Desestimados</a></li>
+                                </ul>
+                            </li>
+                            <!-- Menú Admin Tools -->
+                            <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin Tools
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/admin/Dashboard">Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/Usuarios">Lista De Usuarios</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ms-autos ul-cerrarsesion ul-cerrarsesion-mobile">
+                            <li class="nav-item">
+                                <form action="/app/logout" method="POST">
+                                    <button type="submit" class="btn btn-warning">Cerrar Sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
             </div>
         </nav>
+        <!-- Modal para mostrar los detalles del ticket -->
+        <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ticketModalLabel">Detalles del Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="ticketDetails">
+                        <!-- Aquí se cargarán los detalles del ticket -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </header>
 </body>
 

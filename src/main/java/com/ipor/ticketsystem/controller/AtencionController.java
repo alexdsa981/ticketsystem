@@ -59,14 +59,12 @@ public class AtencionController {
 
     public Model getListaMisTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
-        Collections.reverse(MyAtendidos);
         model.addAttribute("MyAtendidos", MyAtendidos);
         return model;
     }
 
     public Model getListaTodosLosTicketsAtendidosAVista(Model model) {
         List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
-        Collections.reverse(AllAtendidos);
         model.addAttribute("AllAtendidos", AllAtendidos);
         return model;
     }

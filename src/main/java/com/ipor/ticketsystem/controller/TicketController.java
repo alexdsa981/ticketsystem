@@ -3,6 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
@@ -26,6 +27,8 @@ import java.util.*;
 public class TicketController {
     @Autowired
     TicketService ticketService;
+    @Autowired
+    TicketRepository ticketRepository;
     @Autowired
     UsuarioService usuarioService;
     @Autowired
@@ -61,6 +64,48 @@ public class TicketController {
         model.addAttribute("AllRevisadosDireccion", AllRevisadosDireccion);
         return model;
     }
+
+    @GetMapping("/buscar-ticket")
+    @ResponseBody
+    public String buscarTicket(@RequestParam("ticketId") Long ticketId) {
+        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+
+        if (ticket.isPresent()) {
+            TicketDTO t = new TicketDTO(ticket.get());
+            String url = "/inicio";
+
+            // Determinar el URL dependiendo de la fase del ticket
+            if (t.getFaseTicket().getId() == 1){
+                url = "/soporte/Recepcionar";
+            } else if (t.getFaseTicket().getId() == 2) {
+                url = "/soporte/Atender";
+            } else if (t.getFaseTicket().getId() == 3) {
+                url = "/soporte/Tickets-Cerrados";
+            } else if (t.getFaseTicket().getId() == 4) {
+                url = "/soporte/Tickets-Desestimados";
+            } else if (t.getFaseTicket().getId() == 5) {
+                url = "/soporte/Recepcionar";
+            }
+
+            // Formato HTML mejorado con un botón para redirigir
+            return "<div>" +
+                    "<h5><strong>Detalles del Ticket</strong></h5>" +
+                    "<p><strong>ID:</strong> " + t.getIdConFormato() + "</p>" +
+                    "<p><strong>Descripción:</strong> " + t.getDescripcion() + "</p>" +
+                    "<p><strong>Usuario:</strong> " + t.getUsuario().getNombre() + "</p>" +
+                    "<p><strong>Fecha:</strong> " + t.getFechaConFormato() + "</p>" +
+                    "<p><strong>Hora:</strong> " + t.getHoraConFormato() + "</p>" +
+                    "<p><strong>Estado:</strong> " + t.getFaseTicket().getNombre() + "</p>" +
+                    "<a href='" + url + "' class='btn btn-primary' target='_blank'>Ir a la Página del Ticket</a>" +
+                    "</div>";
+        } else {
+            // Si no se encuentra el ticket
+            return "<p>Ticket no encontrado.</p>";
+        }
+    }
+
+
+
 
     //crea ticket y además lo envia a través de webSocket para notificaciones y actualizaciones en tiempo real
     @PostMapping("/crearTicket")

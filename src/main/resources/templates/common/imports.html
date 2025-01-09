@@ -37,25 +37,13 @@
     <div id="customNotification" class="custom-notification" style="display: none;">
         <p id="notificationMessage"></p>
     </div>
+    <script src="/js/general.js"></script>
     <audio id="notificationSound" src="/sounds/alert.mp3" preload="auto"></audio>
     <!--JS LOCAL BOOSTRAP 5.3.3-->
     <script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/js/params.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const forms = document.querySelectorAll('form');
 
-            forms.forEach(form => {
-                form.addEventListener('submit', function () {
-                    const submitButton = form.querySelector('.submit-btn');
-                    if (submitButton && !submitButton.disabled) {
-                        submitButton.disabled = true;
-                        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...';
-                    }
-                });
-            });
-        });
-    </script>
+
 </div>
 </body>
 </html>
