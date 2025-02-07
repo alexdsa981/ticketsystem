@@ -139,6 +139,7 @@ public class TicketController {
                 listaArchivosAdjuntos.add(archivoAdjunto);
                 // Guardar el archivo en la base de datos
                 ticketService.saveAdjunto(archivoAdjunto);
+                ticket.setListaArchivosAdjuntos(listaArchivosAdjuntos);
 
             } catch (IOException e) {
                 ResponseEntity.badRequest().body("Error al procesar el archivo");

@@ -13,6 +13,7 @@ import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public class WSNotificacionesService {
     }
     public void enviarTicketAVistaSoporteRecepcion(TicketDTO ticketDTO) {
         TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+        System.out.println(ticketDTO.getListaArchivosAdjuntos().get(0).getNombre());
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-recepcion", ticketRecordWS);
     }
 

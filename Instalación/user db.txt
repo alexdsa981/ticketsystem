@@ -1,7 +1,0 @@
-Usuario de base de datos depende al usuario que se tienen en SQL SERVER:
-ej:
-usuario: alex
-contraseña: password!!
-
-usuario: sa
-contraseña:123IPOR2022$
