@@ -57,7 +57,7 @@ public class AtencionService {
         }
         return listaDesestimadosDTO;
     }
-    //metodo para retornar Mis tickets atendidos:
+    //metodo para retornar Mis tickets desestimados:
     public List<AtencionTicketDTO> getMyListaDesestimados() {
         List<Desestimacion> listaDesestimaciones = desestimacionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
         List<AtencionTicketDTO> listaDesestimacionesDTO = new ArrayList<>();
