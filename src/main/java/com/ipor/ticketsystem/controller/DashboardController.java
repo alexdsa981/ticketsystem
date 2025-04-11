@@ -84,13 +84,6 @@ public class DashboardController {
         return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
-    @GetMapping("/grafico/TipoComponentesAdjuntosAprobados")
-    public ResponseEntity<Map<String, Object>> getTCAAprobados(
-            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        List<RecordFactorXConteo> conteoComponentesAdjuntos = dashboardService.obtenerConteoDeComponentesAdjuntosAprobados(fechaInicio, fechaFin);
-        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoComponentesAdjuntos));
-    }
 
     private Map<String, Object> mapearDatosFactorxConteo(List<RecordFactorXConteo> lista){
         // Mapear nombres de fase y conteos en listas separadas

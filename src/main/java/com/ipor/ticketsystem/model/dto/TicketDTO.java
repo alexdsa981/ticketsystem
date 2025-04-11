@@ -30,7 +30,7 @@ public class TicketDTO {
     private ClasificacionIncidencia clasificacionIncidencia;
     private FaseTicket faseTicket;
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
-    private List<TipoComponenteAdjunto> listaComponentesAdjuntos;
+
 
     public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();
@@ -44,7 +44,6 @@ public class TicketDTO {
         this.clasificacionIncidencia = ticket.getClasificacionIncidencia();
         this.faseTicket = ticket.getFaseTicket();
         this.listaArchivosAdjuntos = ticket.getListaArchivosAdjuntos();
-        this.listaComponentesAdjuntos = ticket.getListaComponenteAdjunto();
     }
 
     // Método para formatear la fecha como cadena

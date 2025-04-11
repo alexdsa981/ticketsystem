@@ -16,16 +16,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByUsuarioIdAndFaseTicketId(Long usuarioId, Long faseTicketId);
 
 
-    @Query(value = "SELECT DISTINCT t.* " +
-            "FROM ticket t " +
-            "INNER JOIN tipo_componente_adjunto tca ON t.id = tca.id_ticket " +
-            "WHERE tca.aprobado IS NOT NULL",
-            nativeQuery = true)
-    List<Ticket> findTicketsConAdjuntosNoNulos();
-
-
-
-
     //para dashboard
     //numero total de ticket
     long count();
@@ -57,15 +47,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgencia();
 
 
-    //dashboard direccion
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(tc.nombre, SUM(tca.cantidad)) " +
-            "FROM TipoComponenteAdjunto tca " +
-            "INNER JOIN tca.tipoComponente tc " +
-            "WHERE tca.aprobado = true " +
-            "GROUP BY tc.nombre")
-    List<RecordFactorXConteo> findGroupedByTipoComponenteAprobado();
-
-
     // Conteo de tickets por fase con filtro de fechas
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ft.nombre, COALESCE(COUNT(t), 0)) " +
             "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft " +
@@ -89,19 +70,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE t.fecha BETWEEN :fechaInicio AND :fechaFin " +
             "GROUP BY cu.nombre")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-
-    //Conteo de componentes adjuntos aprobados por tipo con filtro de fechas
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(tc.nombre, SUM(tca.cantidad)) " +
-            "FROM TipoComponenteAdjunto tca " +
-            "INNER JOIN tca.tipoComponente tc " +
-            "INNER JOIN tca.ticket t " +
-            "WHERE tca.aprobado = true " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY tc.nombre")
-    List<RecordFactorXConteo> findGroupedByTipoComponenteAprobadoWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-
-
-
 
 
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +

@@ -2,7 +2,6 @@ package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 
 import java.util.Base64;
 import java.util.List;

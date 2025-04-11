@@ -72,15 +72,6 @@ public class DashboardService {
         return ticketRepository.findTicketCountByClasificacionUrgencia();
     }
 
-    // ✅ Conteo de componentes adjuntos aprobados por tipo con filtro de fechas
-    public List<RecordFactorXConteo> obtenerConteoDeComponentesAdjuntosAprobados(LocalDate fechaInicio, LocalDate fechaFin) {
-        if (fechaInicio != null && fechaFin != null) {
-            return ticketRepository.findGroupedByTipoComponenteAprobadoWithDates(fechaInicio, fechaFin);
-        }
-        return ticketRepository.findGroupedByTipoComponenteAprobado();
-    }
-
-
     public double obtenerPromedioSegundosR_S() {
         return ticketRepository.obtenerPromedioSegundosRS();
     }

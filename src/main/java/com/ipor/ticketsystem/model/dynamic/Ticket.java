@@ -44,10 +44,6 @@ public class Ticket {
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TipoComponenteAdjunto> listaComponenteAdjunto = new ArrayList<>();
-
-
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Servicio servicio;
 

@@ -1,10 +1,7 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 
 import java.util.Base64;
 import java.util.List;
@@ -29,8 +26,7 @@ public record RecepcionRecordWS(
         String nombreClasificacionTicket,
         String nombreUrgenciaRecepcion,
 
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntos,
-        List<TipoComponenteAdjuntoDTO> listaComponentesAdjuntos
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 )
 {
     public RecepcionRecordWS(AtencionTicketDTO atencionTicketDTO) {
@@ -57,9 +53,6 @@ public record RecepcionRecordWS(
 
                 atencionTicketDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
-                        .collect(Collectors.toList()),
-                atencionTicketDTO.getTicket().getListaComponentesAdjuntos().stream()
-                        .map(TipoComponenteAdjuntoDTO::new) //Convierte TipoComponenteAdjunto a ComponenteAdjuntoDTO
                         .collect(Collectors.toList())
         );
     }
@@ -83,21 +76,4 @@ public record RecepcionRecordWS(
         }
     }
 
-
-    // Clase interna para representar los detalles del archivo adjunto
-    public static record TipoComponenteAdjuntoDTO(
-            Long id,
-            String nombre,
-            Integer cantidad,
-            Boolean aprobado
-    ) {
-        public TipoComponenteAdjuntoDTO(TipoComponenteAdjunto adjunto) {
-            this(
-                    adjunto.getId(),
-                    adjunto.getTipoComponente().getNombre(),
-                    adjunto.getCantidad(),
-                    adjunto.getAprobado()
-            );
-        }
-    }
 }

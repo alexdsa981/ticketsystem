@@ -513,39 +513,6 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </button>
         </td>
     `;
-
-    // Verificar si hay componentes adjuntos
-    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-    const componentesList = newRow.querySelector('#componentes');
-
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-
-        // Crear un elemento strong en lugar de usar innerHTML
-        const respuestaTexto = document.createElement('strong');
-        respuestaTexto.textContent = "Respuesta de Dirección:";
-        respuestaDireccion.appendChild(respuestaTexto);
-
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            // Agregar estado al componente
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-
-
-
     // Insertar la nueva fila al inicio de la tabla
     ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
@@ -678,37 +645,6 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
         </td>
 
     `;
-
-    // Verificar si hay componentes adjuntos
-    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-    const componentesList = newRow.querySelector('#componentes');
-
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-
-        // Crear un elemento strong en lugar de usar innerHTML
-        const respuestaTexto = document.createElement('strong');
-        respuestaTexto.textContent = "Respuesta de Dirección:";
-        respuestaDireccion.appendChild(respuestaTexto);
-
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            // Agregar estado al componente
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-
 
 
     // Insertar la nueva fila al inicio de la tabla
@@ -941,35 +877,6 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
        });
    });
 
-    // Verificar si hay componentes adjuntos
-    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-    const componentesList = newRow.querySelector('#componentes');
-
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-
-        // Crear un elemento strong en lugar de usar innerHTML
-        const respuestaTexto = document.createElement('strong');
-        respuestaTexto.textContent = "Respuesta de Dirección:";
-        respuestaDireccion.appendChild(respuestaTexto);
-
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            // Agregar estado al componente
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
 }
 
 
@@ -1041,37 +948,6 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
 
     `;
-
-    // Verificar si hay componentes adjuntos
-    const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-    const componentesList = newRow.querySelector('#componentes');
-
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-
-        // Crear un elemento strong en lugar de usar innerHTML
-        const respuestaTexto = document.createElement('strong');
-        respuestaTexto.textContent = "Respuesta de Dirección:";
-        respuestaDireccion.appendChild(respuestaTexto);
-
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            // Agregar estado al componente
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-
 
 
     // Insertar la nueva fila al inicio de la tabla

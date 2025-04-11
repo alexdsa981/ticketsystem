@@ -22,9 +22,6 @@ public class ClasificadoresService {
     @Autowired
     private ClasificacionDesestimacionRepository clasificacionDesestimacionRepository;
 
-    @Autowired
-    private TipoComponenteRepository tipoComponenteRepository;
-
     //GUARDAR CLASIFICADOR EN BASE DE DATOS
     public void saveCIncidencia(ClasificacionIncidencia clasificacionIncidencia) {
         clasificacionIncidenciaRepository.save(clasificacionIncidencia);
@@ -42,9 +39,6 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(clasificacionDesestimacion);
     }
 
-    public void saveTipoComponente(TipoComponente tipoComponente) {
-        tipoComponenteRepository.save(tipoComponente);
-    }
 
     //LISTAR CLASIFICADORES SIN IMPORTAR EL ESTADO (ACTIVADO/DESACTIVADO)
     public List<ClasificacionIncidencia> getListaClasIncidencia() {
@@ -61,10 +55,6 @@ public class ClasificadoresService {
 
     public List<ClasificacionDesestimacion> getListaClasDesestimacion() {
         return clasificacionDesestimacionRepository.findAll();
-    }
-
-    public List<TipoComponente> getListaTipoComponente() {
-        return tipoComponenteRepository.findAll();
     }
 
 
@@ -85,10 +75,6 @@ public class ClasificadoresService {
         return clasificacionDesestimacionRepository.findById(id).get();
     }
 
-    public TipoComponente getTipoComponentePorId(Long id) {
-        return tipoComponenteRepository.findById(id).get();
-    }
-
 
     //LISTAR CLASIFICADORES ESTADO (ACTIVO)
     public List<ClasificacionIncidencia> getListaTiposDeIncidenciaActivos() {
@@ -105,10 +91,6 @@ public class ClasificadoresService {
 
     public List<ClasificacionDesestimacion> getListaClasificacionDesestimacionActivos() {
         return clasificacionDesestimacionRepository.findByIsActiveTrue();
-    }
-
-    public List<TipoComponente> getListaTiposDeComponentesActivos() {
-        return tipoComponenteRepository.findByIsActiveTrue();
     }
 
 
@@ -137,12 +119,6 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(desestimacion); // Persistir los cambios
     }
 
-    public void actualizarTipoComponente(Long id, TipoComponente tipoComponenteActualizado) {
-        TipoComponente tipoComponente = tipoComponenteRepository.findById(id).get();
-        tipoComponente.setNombre(tipoComponenteActualizado.getNombre());
-        tipoComponenteRepository.save(tipoComponente); // Persistir los cambios
-    }
-
 
     //CAMBIAR ESTADO DE UN CLASIFICADOR EXISTENTE (ACTIVADO/DESACTIVADO)
     public void cambiarEstadoIncidencia(Long id, boolean isActive) {
@@ -169,10 +145,5 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(desestimacion);
     }
 
-    public void cambiarEstadoTipoComponente(Long id, boolean isActive) {
-        TipoComponente tipoComponente = tipoComponenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Tipo componente no encontrado"));
-        tipoComponente.setIsActive(isActive);
-        tipoComponenteRepository.save(tipoComponente);
-    }
 
 }

@@ -7,7 +7,6 @@ import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
-import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,8 +32,6 @@ public class AtencionController {
     UsuarioService usuarioService;
     @Autowired
     ClasificadoresService clasificadoresService;
-    @Autowired
-    TipoComponenteAdjuntoRepository tipoComponenteAdjuntoRepository;
     @Autowired
     NotificacionesService notificacionesService;
     @Autowired
@@ -266,13 +263,6 @@ public class AtencionController {
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
 
-
-
-            //eliminar los componentes adjuntos
-            List<TipoComponenteAdjunto> componentesAdjuntos = tipoComponenteAdjuntoRepository.BuscarPorIdTicket(id);
-            for (TipoComponenteAdjunto componente : componentesAdjuntos) {
-                tipoComponenteAdjuntoRepository.delete(componente);
-            }
             if (atencionService.findRecepcionByTicketID(id) != null) {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
             }
@@ -296,160 +286,6 @@ public class AtencionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al desestimar el ticket.");
         }
 
-    }
-
-    @PostMapping("/RedirigirADireccion/{id}")
-    public ResponseEntity<String> redirigirTicketADireccion(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> datos,
-            HttpServletResponse response) throws IOException {
-
-        Ticket ticket = ticketService.getObtenerTicketPorID(id);
-        if (ticket.getFaseTicket().getId() == 1L) {
-            // Extraer listas de componentes y cantidades
-            List<String> componentes = (List<String>) datos.get("componentes");
-            List<String> cantidades = (List<String>) datos.get("cantidades");
-
-            for (int i = 0; i < componentes.size(); i++) {
-                Long componenteId = Long.valueOf(componentes.get(i));
-                Integer cantidad = Integer.valueOf(cantidades.get(i));
-
-                TipoComponenteAdjunto tipoComponenteAdjunto = new TipoComponenteAdjunto();
-                tipoComponenteAdjunto.setTipoComponente(clasificadoresService.getTipoComponentePorId(componenteId));
-                tipoComponenteAdjunto.setCantidad(cantidad);
-                tipoComponenteAdjunto.setTicket(ticketService.getObtenerTicketPorID(id));
-                tipoComponenteAdjunto.setAprobado(null);
-                ticketService.saveComponenteAdjunto(tipoComponenteAdjunto);
-            }
-
-            Notificacion notificacion = new Notificacion();
-            notificacion.setTicket(ticket);
-            notificacion.setHora(notificacion.getHora());
-            notificacion.setFecha(notificacion.getFecha());
-            notificacion.setAbierto(Boolean.FALSE);
-            notificacion.setLeido(Boolean.FALSE);
-            notificacion.setUsuario(ticket.getUsuario());
-            notificacion.setMensaje(" En espera de aprobación por Dirección");
-            notificacion.setUrl("/inicio");
-            notificacionesService.saveNotiicacion(notificacion);
-            WSNotificacionesService.enviarNotificacion(notificacion);
-
-            List<Usuario> listaDireccion = usuarioService.ListaUsuariosPorRol(4L);
-            for (Usuario direccion : listaDireccion) {
-                Notificacion notificacionDireccion = new Notificacion();
-                notificacionDireccion.setTicket(ticket);
-                notificacionDireccion.setHora(notificacionDireccion.getHora());
-                notificacionDireccion.setFecha(notificacionDireccion.getFecha());
-                notificacionDireccion.setAbierto(Boolean.FALSE);
-                notificacionDireccion.setLeido(Boolean.FALSE);
-                notificacionDireccion.setUsuario(direccion);
-                notificacionDireccion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
-                notificacionDireccion.setUrl("/direccion/Recibidos");
-                notificacionesService.saveNotiicacion(notificacionDireccion);
-                WSNotificacionesService.enviarNotificacion(notificacionDireccion);
-            }
-            // Cambiar fase del ticket
-            atencionService.updateFaseTicket(id, 5L);
-            WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
-            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
-            TicketDTO ticketDTO = new TicketDTO(ticket);
-            WSNotificacionesService.enviarTicketAVistaDireccionRevision(ticketDTO);
-            WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
-
-            response.sendRedirect("/soporte/Recepcionar?successful=redireccion");
-            return ResponseEntity.ok("Ticket redireccionado a dirección correctamente");
-        } else {
-            response.sendRedirect("/soporte/Recepcionar?error=redireccion-moved");
-            return ResponseEntity.ok("Ticket se encuentra en otra fase");
-        }
-    }
-
-
-    //metodo para recepcionar un ticket, crea un recepcionado y cambia la fase del ticket:
-    @PostMapping("/recepcionDireccion/{id}")
-    public ResponseEntity<Map<String, String>> recepcionarTicketDirección(
-            @RequestParam("componentesSeleccionados") String componentesJson,
-            @PathVariable Long id) throws IOException {
-
-        try{
-            Ticket ticket = ticketService.getObtenerTicketPorID(id);
-
-            //desaprueba todos los componentes adjuntos
-            List<TipoComponenteAdjunto> listaComponentesTicket = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
-            for (TipoComponenteAdjunto componenteAdjunto : listaComponentesTicket) {
-                if (componenteAdjunto.getAprobado() == null){
-                    componenteAdjunto.setAprobado(false);
-                    ticketService.saveComponenteAdjunto(componenteAdjunto);
-                }else{
-                    Map<String, String> response = new HashMap<>();
-                    response.put("status", "error duplicated");
-                    response.put("redirectUrl", "/direccion/Recibidos?error=revision-duplicated");
-                    return ResponseEntity.ok(response);
-                }
-            }
-            //aprueba los componentes adjuntos seleccionados, el resto quedan desaprobados
-            List<Long> componentesSeleccionados = new ObjectMapper().readValue(componentesJson, new TypeReference<List<Long>>() {
-            });
-            for (Long idcomponente : componentesSeleccionados) {
-                System.out.println(idcomponente);
-                TipoComponenteAdjunto componenteAdjuntoAprobado = ticketService.getComponenteAdjuntoPorId(idcomponente);
-                componenteAdjuntoAprobado.setAprobado(true);
-                ticketService.saveComponenteAdjunto(componenteAdjuntoAprobado);
-            }
-            //cambiar fase de ticket
-            atencionService.updateFaseTicket(id, 1L);
-
-            //avisar a usuario que direccion ha revisado la solicitud
-
-            Notificacion notificacion = new Notificacion();
-            notificacion.setTicket(ticket);
-            notificacion.setHora(notificacion.getHora());
-            notificacion.setFecha(notificacion.getFecha());
-            notificacion.setAbierto(Boolean.FALSE);
-            notificacion.setLeido(Boolean.FALSE);
-            notificacion.setUsuario(ticket.getUsuario());
-            notificacion.setMensaje(" Dirección ha revisado la solicitud");
-            notificacion.setUrl("/inicio");
-            notificacionesService.saveNotiicacion(notificacion);
-            WSNotificacionesService.enviarNotificacion(notificacion);
-
-            //avisar a soportes que direccion a revisado la solicitud
-            //NOTIFICACION EN BASE DE DATOS
-            List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
-            for (Usuario soporte : listaSoportes) {
-                Notificacion notificacionS = new Notificacion();
-                notificacionS.setTicket(ticket);
-                notificacionS.setHora(notificacionS.getHora());
-                notificacionS.setFecha(notificacionS.getFecha());
-                notificacionS.setAbierto(Boolean.FALSE);
-                notificacionS.setLeido(Boolean.FALSE);
-                notificacionS.setUsuario(soporte);
-                notificacionS.setMensaje(" Dirección ha revisado la solicitud");
-                notificacionS.setUrl("/soporte/Recepcionar");
-                notificacionesService.saveNotiicacion(notificacionS);
-                //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
-                WSNotificacionesService.enviarNotificacion(notificacion);
-            }
-
-            TicketDTO ticketDTO = new TicketDTO(ticket);
-            WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
-            WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
-            WSNotificacionesService.enviarTicketAVistaDireccionHistorial(ticketDTO);
-            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
-            WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
-
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("redirectUrl", "/direccion/Recibidos?successful=revision");
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Captura otros errores
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "error");
-            response.put("redirectUrl", "/direccion/Recibidos?error=revision-general");
-            return ResponseEntity.ok(response);
-        }
     }
 
 

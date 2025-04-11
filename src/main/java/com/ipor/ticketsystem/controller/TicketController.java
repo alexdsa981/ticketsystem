@@ -193,11 +193,4 @@ public class TicketController {
                 .body(recurso); // El cuerpo de la respuesta es el recurso
     }
 
-    @GetMapping("/componentes/{id}")
-    public ResponseEntity<List<TipoComponenteAdjunto>> getComponentesPorTicketID(@PathVariable Long id) {
-        List<TipoComponenteAdjunto> listaComponentes = ticketService.geComponentesAdjuntosDeTicketPorTicketID(id);
-        return ResponseEntity.ok(listaComponentes);
-    }
-
-
 }

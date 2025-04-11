@@ -1,19 +1,13 @@
 package com.ipor.ticketsystem.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
-import com.ipor.ticketsystem.model.dynamic.TipoComponenteAdjunto;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
-import com.ipor.ticketsystem.repository.dynamic.TipoComponenteAdjuntoRepository;
 import com.ipor.ticketsystem.repository.fixed.ClasificacionIncidenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
-import com.ipor.ticketsystem.repository.fixed.TipoComponenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,18 +28,12 @@ public class TicketService {
     private ClasificacionIncidenciaRepository clasificacionIncidenciaRepository;
     @Autowired
     private FaseTicketRepository faseTicketRepository;
-    @Autowired
-    private TipoComponenteRepository tipoComponenteRepository;
-    @Autowired
-    private TipoComponenteAdjuntoRepository tipoComponenteAdjuntoRepository;
-
 
     // Método para obtener todos los tickets, además junta los tickets y sus archivos adjuntos en TicketDTO
     public List<TicketDTO> getAllTicketsSinRecepcionar() {
         List<Ticket> Tickets = ticketRepository.findByFaseTicketId(1);
         List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : Tickets) {
-            List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
@@ -58,7 +46,6 @@ public class TicketService {
         List<Ticket> Tickets = ticketRepository.findByFaseTicketId(5);
         List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : Tickets) {
-            List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
@@ -80,20 +67,10 @@ public class TicketService {
 
         // Procesar los tickets de fase 1
         for (Ticket ticket : MisTickets) {
-            List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             TicketDTO ticketDTO = new TicketDTO(ticket);
             MisTicketsDTO.add(ticketDTO);
         }
-
-        // Procesar los tickets de fase 5
-        for (Ticket ticket : MisTicketsCompra) {
-            List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
-            List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket);
-            MisTicketsDTO.add(ticketDTO);
-        }
-
 
         return MisTicketsDTO;
     }
@@ -103,7 +80,6 @@ public class TicketService {
         List<Ticket> listaRevisados = ticketRepository.findTicketsConAdjuntosNoNulos();
         List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : listaRevisados) {
-            List<TipoComponenteAdjunto> componentesAdjuntos = geComponentesAdjuntosDeTicketPorTicketID(ticket.getId());
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             TicketDTO ticketDTO = new TicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
@@ -123,25 +99,12 @@ public class TicketService {
     public List<ArchivoAdjunto> getArchivosAdjuntosDeTicketPorTicketID(Long TicketId) {
         return archivoAdjuntoRepository.BuscarPorIdTicket(TicketId);
     }
-    public List<TipoComponenteAdjunto> geComponentesAdjuntosDeTicketPorTicketID(Long TicketId) {
-        return tipoComponenteAdjuntoRepository.BuscarPorIdTicket(TicketId);
-    }
-
-    public void saveComponenteAdjunto(TipoComponenteAdjunto TipoComponenteAdjunto) {
-        tipoComponenteAdjuntoRepository.save(TipoComponenteAdjunto);
-    }
 
     //obtener archivo adjunto por ID
     public ArchivoAdjunto getArchivoPorId(Long id) {
         return archivoAdjuntoRepository.findById(id)
                 .get();
     }
-    //obtener componente adjunto por ID
-    public TipoComponenteAdjunto getComponenteAdjuntoPorId(Long id) {
-        return tipoComponenteAdjuntoRepository.findById(id)
-                .get();
-    }
-
 
     public Ticket getObtenerTicketPorID(Long id) {
         return ticketRepository.findById(id).get();
