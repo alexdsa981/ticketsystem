@@ -87,7 +87,6 @@ public class TicketController {
                 url = "/soporte/Recepcionar";
             }
 
-            // Formato HTML mejorado con un botón para redirigir
             return "<div>" +
                     "<h5><strong>Detalles del Ticket</strong></h5>" +
                     "<p><strong>ID:</strong> " + t.getIdConFormato() + "</p>" +
@@ -124,6 +123,7 @@ public class TicketController {
         ticket.setHora(ticket.getHora());
 
         ticketService.saveTicket(ticket);
+
 
 
         List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();

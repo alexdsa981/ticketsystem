@@ -81,14 +81,14 @@
 </div>
 
 
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/app/tickets/crearTicket" method="POST" enctype="multipart/form-data">
+            <form action="/app/tickets/crearTicket" method="POST" enctype="multipart/form-data" id="formulario-ticket">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-plus-square"></i> NUEVO TICKET</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-plus-square"></i> NUEVO TICKET
+                    </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -100,16 +100,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="archivo" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO: (opcional)</label>
-                        <input class="form-control" type="file" id="archivo" name="archivo">
+                        <label for="archivo" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO:
+                            (opcional)</label>
+                        <input class="form-control" type="file" id="archivo" name="archivo"
+                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.rar,.zip"
+                               onchange="validarArchivo(this)">
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <p class="text-warning"><i class="bi bi-exclamation-triangle"></i> Este Ticket no podrá ser eliminado ni modificado</p>
+                    <p class="text-warning"><i class="bi bi-exclamation-triangle"></i> Este Ticket no podrá ser
+                        eliminado ni modificado</p>
                     <div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary submit-btn" >Crear Ticket</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Crear Ticket</button>
                     </div>
                 </div>
             </form>
@@ -119,15 +123,9 @@
 </div>
 
 
-
-
-
-
-
-
-
 <!-- Modal para cambiar la contraseña -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -153,12 +151,6 @@
 </div>
 
 
-
-
-
-
-
-
 <div id="customNotification" class="custom-notification" style="display: none;">
     <p id="notificationMessage"></p>
 </div>
@@ -166,7 +158,6 @@
 
 <div th:insert="~{common/imports :: bodyImportsAndNotification}">
 </div>
-
 
 
 <script>
@@ -197,10 +188,44 @@
             }
         });
     });
+
 </script>
 
 
+<script>
+    const archivoInput = document.getElementById('archivo');
+    const formulario = document.getElementById('formulario-ticket');
+    const submitBtn = formulario.querySelector('.submit-btn');
 
+    // Crear mensaje de error dinámico
+    const mensajeError = document.createElement('div');
+    mensajeError.id = 'mensaje-error-archivo';
+    mensajeError.className = 'form-text text-danger mt-1';
+    archivoInput.parentNode.appendChild(mensajeError);
+
+    archivoInput.addEventListener('change', function () {
+        const archivo = archivoInput.files[0];
+        if (archivo && archivo.size > 10 * 1024 * 1024) {
+            mensajeError.textContent = 'El archivo no debe superar los 10MB.';
+            submitBtn.disabled = true;
+        } else {
+            mensajeError.textContent = '';
+            submitBtn.disabled = false;
+        }
+    });
+
+    formulario.addEventListener('submit', function (e) {
+        const archivo = archivoInput.files[0];
+        if (archivo && archivo.size > 10 * 1024 * 1024) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo demasiado grande',
+                text: 'El archivo no debe superar los 10MB.',
+            });
+        }
+    });
+</script>
 
 
 </body>
