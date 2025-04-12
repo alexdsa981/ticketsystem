@@ -15,6 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class ClasificacionDesestimacion {
+
+    public ClasificacionDesestimacion(String noombre, Boolean isActive){
+        this.nombre = noombre;
+        this.isActive = isActive;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

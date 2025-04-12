@@ -16,6 +16,10 @@ import java.util.List;
 @Entity
 public class ClasificacionUrgencia {
 
+    public ClasificacionUrgencia(String nombre, Boolean isActive){
+        this.nombre = nombre;
+        this.isActive = isActive;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

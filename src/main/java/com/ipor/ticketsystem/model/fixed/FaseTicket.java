@@ -14,6 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class FaseTicket {
+
+    public FaseTicket(String nombre){
+        this.nombre = nombre;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
