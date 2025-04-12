@@ -46,7 +46,14 @@ public class UsuarioService {
     public List<Usuario> getListaUsuarios() {
         return usuarioRepository.findAll();
     }
-
+    //activos
+    public List<Usuario> getListaUsuariosActivos() {
+        return usuarioRepository.findByIsActiveTrue();
+    }
+    //desactivados
+    public List<Usuario> getListaUsuariosDesactivados() {
+        return usuarioRepository.findByIsActiveFalse();
+    }
     // Actualizar un usuario existente
     public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findById(id);

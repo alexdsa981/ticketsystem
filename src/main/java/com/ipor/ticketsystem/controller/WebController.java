@@ -88,7 +88,8 @@ public class WebController {
 
     @GetMapping("/admin/Usuarios")
     public String redirigePaginaUsuarios(Model model) {
-        usuariosCRUDController.listarUsuarios(model);
+        usuariosCRUDController.listarUsuariosDesactivados(model);
+        usuariosCRUDController.listarUsuariosActivos(model);
         usuariosCRUDController.listarRoles(model);
         model.addAttribute("Titulo", "HelpDesk | Admin - Gestion de Usuarios");
 
@@ -119,6 +120,7 @@ public class WebController {
         clasificadoresController.getListaClasificacionIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaClasificacionesAreaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Atender Tickets");
         return "soporte/ticketsRecepcionados";
     }

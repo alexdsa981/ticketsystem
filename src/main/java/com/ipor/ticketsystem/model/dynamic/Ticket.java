@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.dynamic;
 
+import com.ipor.ticketsystem.model.fixed.ClasificacionArea;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import jakarta.persistence.*;
@@ -35,6 +36,11 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "id_clasificacion_incidencia", nullable = true)
     private ClasificacionIncidencia clasificacionIncidencia;
+
+    @ManyToOne
+    @JoinColumn(name = "id_clasificacion_area", nullable = true)
+    private ClasificacionArea clasificacionArea;
+
 
     @ManyToOne
     @JoinColumn(name = "id_fase_ticket", nullable = false)

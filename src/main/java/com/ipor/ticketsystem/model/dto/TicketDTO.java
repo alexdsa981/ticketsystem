@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.model.dto;
 
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.ClasificacionArea;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 
@@ -28,6 +29,7 @@ public class TicketDTO {
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
     private ClasificacionIncidencia clasificacionIncidencia;
+    private ClasificacionArea clasificacionArea;
     private FaseTicket faseTicket;
     private List<ArchivoAdjunto> listaArchivosAdjuntos;
 
@@ -42,6 +44,7 @@ public class TicketDTO {
         this.descripcion = ticket.getDescripcion();
         this.usuario = ticket.getUsuario();
         this.clasificacionIncidencia = ticket.getClasificacionIncidencia();
+        this.clasificacionArea = ticket.getClasificacionArea();
         this.faseTicket = ticket.getFaseTicket();
         this.listaArchivosAdjuntos = ticket.getListaArchivosAdjuntos();
     }

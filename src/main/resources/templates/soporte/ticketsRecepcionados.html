@@ -158,6 +158,15 @@
                                         th:text="${tipo.nombre}"></option>
                                 </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="clasificacionArea" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA ATENDIDA:</strong></label>
+                            <select class="form-select" id="clasificacionArea" name="clasificacion_area"
+                                    required>
+                                <option selected disabled value="">Selecciona un área</option>
+                                <option th:each="tipo : ${Lista_clasificacion_area}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
                     </div>
 
 

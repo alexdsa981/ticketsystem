@@ -22,6 +22,9 @@ public class ClasificadoresService {
     @Autowired
     private ClasificacionDesestimacionRepository clasificacionDesestimacionRepository;
 
+    @Autowired
+    private ClasificacionAreaRepository clasificacionAreaRepository;
+
     //GUARDAR CLASIFICADOR EN BASE DE DATOS
     public void saveCIncidencia(ClasificacionIncidencia clasificacionIncidencia) {
         clasificacionIncidenciaRepository.save(clasificacionIncidencia);
@@ -39,17 +42,24 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(clasificacionDesestimacion);
     }
 
+    public void saveCArea(ClasificacionArea clasificacionArea) {
+        clasificacionAreaRepository.save(clasificacionArea);
+    }
+
 
     //LISTAR CLASIFICADORES SIN IMPORTAR EL ESTADO (ACTIVADO/DESACTIVADO)
+
     public List<ClasificacionIncidencia> getListaClasIncidencia() {
         return clasificacionIncidenciaRepository.findAll();
     }
 
     public List<ClasificacionUrgencia> getListaClasUrgencia() {
+
         return clasificacionUrgenciaRepository.findAll();
     }
 
     public List<ClasificacionServicio> getListaClasServicio() {
+
         return clasificacionServicioRepository.findAll();
     }
 
@@ -57,6 +67,9 @@ public class ClasificadoresService {
         return clasificacionDesestimacionRepository.findAll();
     }
 
+    public List<ClasificacionArea> getListaClasArea() {
+        return clasificacionAreaRepository.findAll();
+    }
 
     //OBTENER CLASIFICADORES POR ID
     public ClasificacionIncidencia getClasificacionIncidenciaPorID(Long id) {
@@ -75,6 +88,10 @@ public class ClasificadoresService {
         return clasificacionDesestimacionRepository.findById(id).get();
     }
 
+    public ClasificacionArea getClasificacionAreaPorId(Long id) {
+        return clasificacionAreaRepository.findById(id).get();
+    }
+
 
     //LISTAR CLASIFICADORES ESTADO (ACTIVO)
     public List<ClasificacionIncidencia> getListaTiposDeIncidenciaActivos() {
@@ -91,6 +108,10 @@ public class ClasificadoresService {
 
     public List<ClasificacionDesestimacion> getListaClasificacionDesestimacionActivos() {
         return clasificacionDesestimacionRepository.findByIsActiveTrue();
+    }
+
+    public List<ClasificacionArea> getListaClasificacionAreaActivos() {
+        return clasificacionAreaRepository.findByIsActiveTrue();
     }
 
 
@@ -119,6 +140,11 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(desestimacion); // Persistir los cambios
     }
 
+    public void actualizarArea(Long id, ClasificacionArea areaActualizada) {
+        ClasificacionArea area = clasificacionAreaRepository.findById(id).get();
+        area.setNombre(areaActualizada.getNombre());
+        clasificacionAreaRepository.save(area); // Persistir los cambios
+    }
 
     //CAMBIAR ESTADO DE UN CLASIFICADOR EXISTENTE (ACTIVADO/DESACTIVADO)
     public void cambiarEstadoIncidencia(Long id, boolean isActive) {
@@ -145,5 +171,10 @@ public class ClasificadoresService {
         clasificacionDesestimacionRepository.save(desestimacion);
     }
 
+    public void cambiarEstadoArea(Long id, boolean isActive) {
+        ClasificacionArea area = clasificacionAreaRepository.findById(id).orElseThrow(() -> new RuntimeException("Area no encontrada"));
+        area.setIsActive(isActive);
+        clasificacionAreaRepository.save(area);
+    }
 
 }

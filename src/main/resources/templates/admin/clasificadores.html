@@ -11,226 +11,250 @@
 </div>
 <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
     <div class="row justify-content-center">
-        <!-- Clasificadores de Incidencia -->
-        <div class="col-12 mb-3" style="margin-bottom: 30px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Clasificadores Incidencia</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#newIncidenciaModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo
-                </button>
-            </div>
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>N°</th>
-                    <th>Nombre Incidencia</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="clasificador, iter: ${incidencias}"
-                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
-                    <td th:text="${iter.count}">#</td>
-                    <td th:text="${clasificador.nombre}">Nombre</td>
-                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                    <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
-                                data-bs-toggle="modal" data-bs-target="#incidenciaModal"
-                                th:data-incidencia-id="${clasificador.id}"
-                                th:data-incidencia-nombre="${clasificador.nombre}"
-                                onclick="openIncidenciaModal(this)">
-                            Editar
-                        </button>
-                        <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger"
-                               th:href="@{'/app/clasificadores/desactivar/incidencia/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Incidencia?');">
-                                Desactivar
-                            </a>
-                        </th:block>
-
-                        <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success"
-                               th:href="@{'/app/clasificadores/activar/incidencia/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Incidencia?');">
-                                Activar
-                            </a>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Clasificadores de Servicio -->
-        <div class="col-12 mb-3" style="margin-bottom: 30px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Clasificadores Servicio</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#newServicioModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo
-                </button>
-            </div>
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>N°</th>
-                    <th>Nombre Servicio</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="clasificador, iter: ${servicios}"
-                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
-                    <td th:text="${iter.count}">#</td>
-                    <td th:text="${clasificador.nombre}">Nombre</td>
-                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                    <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
-                                data-bs-toggle="modal" data-bs-target="#servicioModal"
-                                th:data-servicio-id="${clasificador.id}"
-                                th:data-servicio-nombre="${clasificador.nombre}"
-                                onclick="openServicioModal(this)">
-                            Editar
-                        </button>
-                        <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger"
-                               th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Servicio?');">
-                                Desactivar
-                            </a>
-                        </th:block>
-                        <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success"
-                               th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Servicio?');">
-                                Activar
-                            </a>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
 
 
-        <!-- Clasificadores de Desestimacion -->
-        <div class="col-12 mb-3" style="margin-bottom: 30px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Clasificadores Desestimación</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#newDesestimacionModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo
-                </button>
-            </div>
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>N°</th>
-                    <th>Nombre Desestimacion</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="clasificador, iter: ${desestimaciones}"
-                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
-                    <td th:text="${iter.count}">#</td>
-                    <td th:text="${clasificador.nombre}">Nombre</td>
-                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                    <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
-                                data-bs-toggle="modal" data-bs-target="#desestimacionModal"
-                                th:data-desestimacion-id="${clasificador.id}"
-                                th:data-desestimacion-nombre="${clasificador.nombre}"
-                                onclick="openDesestimacionModal(this)">
-                            Editar
-                        </button>
-                        <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger"
-                               th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Desestimacion?');">
-                                Desactivar
-                            </a>
-                        </th:block>
-                        <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success"
-                               th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Desestimacion?');">
-                                Activar
-                            </a>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
 
-
-        <div class="modal fade" id="newDesestimacionModal" tabindex="-1" aria-labelledby="newDesestimacionModal"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación
-                                de Desestimación</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
-                                <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required
-                                       autocomplete="off">
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                        </div>
-                    </form>
-
+        <div class="container my-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                    <h5 class="mb-0">Clasificadores Incidencia</h5>
+                    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
+                        <i class="bi bi-plus-lg"></i> Nuevo
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover table-bordered text-center mb-0">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>N°</th>
+                            <th>Nombre Incidencia</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="clasificador, iter: ${incidencias}" th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                            <td th:text="${iter.count}">#</td>
+                            <td th:text="${clasificador.nombre}">Nombre</td>
+                            <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#incidenciaModal"
+                                        th:data-incidencia-id="${clasificador.id}"
+                                        th:data-incidencia-nombre="${clasificador.nombre}"
+                                        onclick="openIncidenciaModal(this)">
+                                    Editar
+                                </button>
+                                <th:block th:if="${clasificador.isActive}">
+                                    <a class="btn btn-danger btn-sm"
+                                       th:href="@{'/app/clasificadores/desactivar/incidencia/' + ${clasificador.id}}"
+                                       onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Incidencia?');">
+                                        Desactivar
+                                    </a>
+                                </th:block>
+                                <th:block th:if="${!clasificador.isActive}">
+                                    <a class="btn btn-success btn-sm"
+                                       th:href="@{'/app/clasificadores/activar/incidencia/' + ${clasificador.id}}"
+                                       onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Incidencia?');">
+                                        Activar
+                                    </a>
+                                </th:block>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
 
-        <div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de
-                                Servicio</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
 
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
-                                <input type="text" class="form-control" id="nombreservicio" name="nombre" required
-                                       autocomplete="off">
-                            </div>
-                        </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                        </div>
-                    </form>
-
-                </div>
+        <!-- Clasificadores Atencion -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                <h5 class="mb-0">Clasificadores Atención</h5>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newServicioModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Servicio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clasificador, iter: ${servicios}" th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${clasificador.nombre}">Nombre</td>
+                        <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#servicioModal"
+                                    th:data-servicio-id="${clasificador.id}"
+                                    th:data-servicio-nombre="${clasificador.nombre}"
+                                    onclick="openServicioModal(this)">
+                                Editar
+                            </button>
+                            <th:block th:if="${clasificador.isActive}">
+                                <a class="btn btn-danger btn-sm"
+                                   th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Servicio?');">
+                                    Desactivar
+                                </a>
+                            </th:block>
+                            <th:block th:if="${!clasificador.isActive}">
+                                <a class="btn btn-success btn-sm"
+                                   th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar este Servicio?');">
+                                    Activar
+                                </a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
 
-        <!-- Modal -->
+
+        <!-- Clasificadores Desestimación -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                <h5 class="mb-0">Clasificadores Desestimación</h5>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newDesestimacionModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Desestimación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clasificador, iter: ${desestimaciones}" th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${clasificador.nombre}">Nombre</td>
+                        <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#desestimacionModal"
+                                    th:data-desestimacion-id="${clasificador.id}"
+                                    th:data-desestimacion-nombre="${clasificador.nombre}"
+                                    onclick="openDesestimacionModal(this)">
+                                Editar
+                            </button>
+                            <th:block th:if="${clasificador.isActive}">
+                                <a class="btn btn-danger btn-sm"
+                                   th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Desestimación?');">
+                                    Desactivar
+                                </a>
+                            </th:block>
+                            <th:block th:if="${!clasificador.isActive}">
+                                <a class="btn btn-success btn-sm"
+                                   th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Desestimación?');">
+                                    Activar
+                                </a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Clasificadores Área -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                <h5 class="mb-0">Áreas</h5>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newAreaModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Área</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clasificador, iter: ${areas}" th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${clasificador.nombre}">Nombre</td>
+                        <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#areaModal"
+                                    th:data-area-id="${clasificador.id}"
+                                    th:data-area-nombre="${clasificador.nombre}"
+                                    onclick="openAreaModal(this)">
+                                Editar
+                            </button>
+                            <th:block th:if="${clasificador.isActive}">
+                                <a class="btn btn-danger btn-sm"
+                                   th:href="@{'/app/clasificadores/desactivar/area/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Área?');">
+                                    Desactivar
+                                </a>
+                            </th:block>
+                            <th:block th:if="${!clasificador.isActive}">
+                                <a class="btn btn-success btn-sm"
+                                   th:href="@{'/app/clasificadores/activar/area/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Área?');">
+                                    Activar
+                                </a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Modal CREAR NUEVA INCIDENCIA-->
         <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal"
              aria-hidden="true">
             <div class="modal-dialog">
@@ -261,35 +285,7 @@
         </div>
 
 
-
-
-
-        <!-- Modal para Clasificador de Desestimacion -->
-        <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="desestimacionForm" method="post">
-                            <input type="hidden" id="desestimacionId" name="id"/>
-                            <div class="mb-3">
-                                <label for="desestimacionNombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required
-                                       autocomplete="off"/>
-                            </div>
-                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Modal para Clasificador de Incidencia -->
+        <!-- Modal para EDITAR INCIDENCIA -->
         <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
@@ -314,7 +310,40 @@
         </div>
 
 
-        <!-- Modal para Clasificador de Servicio -->
+
+
+        <!--MODAL PARA CREAR SERVICIO-->
+        <div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de
+                                Servicio</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombreservicio" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal para EDITAR de Servicio -->
         <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
@@ -340,6 +369,120 @@
 
 
 
+        <!--MODAL PARA CREAR DESESTIMACION-->
+        <div class="modal fade" id="newDesestimacionModal" tabindex="-1" aria-labelledby="newDesestimacionModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación
+                                de Desestimación</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal para EDITAR Clasificador de Desestimacion -->
+        <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="desestimacionForm" method="post">
+                            <input type="hidden" id="desestimacionId" name="id"/>
+                            <div class="mb-3">
+                                <label for="desestimacionNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required
+                                       autocomplete="off"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--CREAR NUEVA AREA-->
+        <div class="modal fade" id="newAreaModal" tabindex="-1" aria-labelledby="newAreaModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/area/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newAreaModalLabel">Nombra la Nueva Área</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombreArea" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombreArea" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="areaModal" tabindex="-1" aria-labelledby="areaModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="areaModalLabel">Editar Área</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="areaForm" method="post">
+                            <input type="hidden" id="areaId" name="id"/>
+                            <div class="mb-3">
+                                <label for="areaNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="areaNombre" name="nombre" required
+                                       autocomplete="off"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
         <!--SweetAlert-->
         <script>
             function confirmAction(url, message) {
@@ -360,6 +503,20 @@
         </script>
 
         <script>
+            function openAreaModal(button) {
+            var id = button.getAttribute("data-area-id");
+            var nombre = button.getAttribute("data-area-nombre");
+
+            document.getElementById("areaId").value = id;
+            document.getElementById("areaNombre").value = nombre;
+
+            // Configurar la acción del formulario
+            const form = document.getElementById('areaForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/area/${id}`);
+            }
+
+
+
             function openDesestimacionModal(button) {
             var id = button.getAttribute("data-desestimacion-id");
             var nombre = button.getAttribute("data-desestimacion-nombre");
@@ -395,33 +552,12 @@
             form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
         }
 
-        function openUrgenciaModal(button) {
-            var id = button.getAttribute("data-urgencia-id");
-            var nombre = button.getAttribute("data-urgencia-nombre");
-
-            document.getElementById("urgenciaId").value = id;
-            document.getElementById("urgenciaNombre").value = nombre;
-
-            // Configurar la acción del formulario
-            const form = document.getElementById('urgenciaForm');
-            form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
-        }
-        function openTipoComponenteModal(button) {
-            var id = button.getAttribute("data-tipocomponente-id");
-            var nombre = button.getAttribute("data-tipocomponente-nombre");
-
-            document.getElementById("tipocomponenteId").value = id;
-            document.getElementById("tipocomponenteNombre").value = nombre;
-
-            // Configurar la acción del formulario
-            const form = document.getElementById('tipocomponenteForm');
-            form.setAttribute('action', `/app/clasificadores/actualizar/tipoComponente/${id}`);
-        }
         </script>
 
 
         <div th:insert="~{common/imports :: bodyImportsAndNotification}">
         </div>
-
+    </div>
+</div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
 import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.ClasificacionArea;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -86,7 +87,7 @@ public class AtencionController {
     public ResponseEntity<String> recepcionarTicket(
             @RequestParam("mensaje") String mensaje,
             @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
-            @RequestParam("clasificacion") Long clasificacion,
+            @RequestParam("clasificacion_incidencia") Long ID_clasificacion_incidencia,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -106,7 +107,7 @@ public class AtencionController {
             atencionService.saveRecepcion(recepcion);
 
             // Modificar el ticket
-            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(clasificacion);
+            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(ID_clasificacion_incidencia);
             recepcion.getTicket().setClasificacionIncidencia(clasificacionIncidencia);
             ticketService.saveTicket(recepcion.getTicket());
 
@@ -150,6 +151,7 @@ public class AtencionController {
     @PostMapping("/atencion/{id}")
     public ResponseEntity<String> atenderTicket(
             @RequestParam("descripcion") String descripcion,
+            @RequestParam("clasificacion_area") Long IDclasificacion_area,
             @RequestParam("clasificacion_servicio") Long IDclasificacion_servicio,
             @PathVariable Long id,
             HttpServletRequest request,
@@ -157,7 +159,7 @@ public class AtencionController {
         try {
             //cambiar fase de ticket
             atencionService.updateFaseTicket(id, 3L);
-            // Lógica para crear la recepcion
+            // Lógica para crear la atencion
             Servicio servicio = new Servicio();
             servicio.setDescripcion(descripcion);
             servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
@@ -166,6 +168,12 @@ public class AtencionController {
             servicio.setHora(servicio.getHora());
             servicio.setFecha(servicio.getFecha());
             atencionService.saveServicio(servicio);
+
+            // Modificar el ticket
+            ClasificacionArea clasificacionArea = clasificadoresService.getClasificacionAreaPorId(IDclasificacion_area);
+            servicio.getTicket().setClasificacionArea(clasificacionArea);
+            ticketService.saveTicket(servicio.getTicket());
+
 
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(servicio.getTicket());

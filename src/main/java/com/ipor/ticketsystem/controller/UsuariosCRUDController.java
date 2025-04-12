@@ -41,7 +41,16 @@ public class UsuariosCRUDController {
     private ClasificadoresService clasificadoresService;
 
     // Mostrar la lista de usuarios
-    @GetMapping
+    public Model listarUsuariosActivos(Model model) {
+        List<Usuario> listaUsuariosActivos = usuarioService.getListaUsuariosActivos();
+        model.addAttribute("ListaUsuariosActivos", listaUsuariosActivos);
+        return model;
+    }
+    public Model listarUsuariosDesactivados(Model model) {
+        List<Usuario> listaUsuariosDesactivados = usuarioService.getListaUsuariosDesactivados();
+        model.addAttribute("ListaUsuariosDesactivados", listaUsuariosDesactivados);
+        return model;
+    }
     public Model listarUsuarios(Model model) {
         List<Usuario> listaUsuarios = usuarioService.getListaUsuarios();
         model.addAttribute("ListaUsuarios", listaUsuarios);

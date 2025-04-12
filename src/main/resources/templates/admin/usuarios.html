@@ -6,70 +6,114 @@
 <body>
 <div th:replace="~{common/header :: header}">
 </div>
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>ADMIN: Gestión de Usuarios</h2>
-        <!-- Contenedor para los dos botones alineados a la derecha -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
-            <i class="bi bi-plus-lg"></i> Nuevo Usuario
-        </button>
+<div class="container" style="margin-bottom:10px;">
+    <h2>ADMIN: Gestión de Usuarios</h2>
+</div>
+<div class="container border shadow p-3 px-4 mb-5 bg-body rounded">
+
+    <div class="card  border-0 mb-4">
+        <div class="card-header bg-white text-success fw-bold">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    Usuarios Activos
+                </div>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo Usuario
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
+                    <thead class="table-success text-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Username</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="usuario, iter : ${ListaUsuariosActivos}">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${usuario.username}">Username</td>
+                        <td th:text="${usuario.nombre}">Nombre</td>
+                        <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+                        <td class="fw-bold">Activo</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-edit-user"
+                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    th:data-usuario-id="${usuario.id}"
+                                    th:data-usuario-username="${usuario.username}"
+                                    th:data-usuario-nombre="${usuario.nombre}"
+                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
+                                Editar
+                            </button>
+
+                            <a style="width: 120px;" class="btn btn-danger btn-active-user"
+                               th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Usuario?');">
+                                Desactivar
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 
-    <div class="table-responsive">
-        <!-- Tabla de usuarios -->
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-            <tr>
-                <th>N°</th>
-                <th>Username</th>
-                <th>Nombre</th>
-                <th>Rol</th>
-                <th>Estado</th>
-                <th>Acciones</th> <!-- Nueva columna para los botones CRUD -->
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Iterar sobre los usuarios con un solo bucle th:each -->
-            <tr th:each="usuario, iter: ${ListaUsuarios}"
-                th:classappend="${!usuario.isActive} ? 'row-desactivado' : ''">
-                <td th:text="${iter.count}">#</td>
-                <td th:text="${usuario.username}">Username</td>
-                <td th:text="${usuario.nombre}">Nombre</td>
-                <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
-                <td th:text="${usuario.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                <!-- Columna con los botones de acción -->
-                <td>
-                    <!-- Botón para editar el usuario, usar data-* atributos -->
-                    <button type="button" class="btn btn-primary btn-edit-user"
-                            data-bs-toggle="modal" data-bs-target="#editUserModal"
-                            th:data-usuario-id="${usuario.id}"
-                            th:data-usuario-username="${usuario.username}"
-                            th:data-usuario-nombre="${usuario.nombre}"
-                            th:data-usuario-rol="${usuario.rolUsuario.nombre}">
-                        Editar
-                    </button>
 
-                    <!-- Botón para Activar o Desactivar el usuario según su estado -->
-                    <th:block th:if="${usuario.isActive}">
-                        <a style="width: 120px;" class="btn btn-danger btn-active-user"
-                           th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
-                           onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Usuario?');">
-                            Desactivar
-                        </a>
-                    </th:block>
-                    <th:block th:if="${!usuario.isActive}">
-                        <a style="width: 120px;" class="btn btn-success btn-active-user"
-                           th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
-                           onclick="return confirmAction(this.href, '¿Estás seguro de activar este Usuario? Esta acción desestimará sus tickets pendientes.');">
-                            Activar
-                        </a>
-                    </th:block>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="card border-0  mb-4">
+        <div class="card-header bg-white text-secondary fw-bold">
+            Usuarios Desactivados
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
+                    <thead class="table-secondary text-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Username</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="usuario, iter : ${ListaUsuariosDesactivados}">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${usuario.username}">Username</td>
+                        <td th:text="${usuario.nombre}">Nombre</td>
+                        <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+                        <td class="text-muted fw-bold">Desactivado</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-edit-user"
+                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    th:data-usuario-id="${usuario.id}"
+                                    th:data-usuario-username="${usuario.username}"
+                                    th:data-usuario-nombre="${usuario.nombre}"
+                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
+                                Editar
+                            </button>
+
+                            <a style="width: 120px;" class="btn btn-success btn-active-user"
+                               th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Usuario? Esta acción desestimará sus tickets pendientes.');">
+                                Activar
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
 
 
 </div>

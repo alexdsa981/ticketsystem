@@ -175,8 +175,8 @@
                                     required></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="clasificacion" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
-                                <select class="form-select" id="clasificacion" name="clasificacion" required>
+                                <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
+                                <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia" required>
                                     <option selected disabled value="">Selecciona la clasificación</option>
                                     <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
@@ -185,8 +185,7 @@
                             <div class="mb-3">
                                 <label for="clasificacionUrgencia" class="form-label"><strong><i class="bi bi-exclamation-triangle"></i>
                                     CLASIFICACIÓN DE URGENCIA:</strong></label>
-                                <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
-                                    required>
+                                <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia" required>
                                     <option selected disabled value="">Selecciona Urgencia</option>
                                     <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
