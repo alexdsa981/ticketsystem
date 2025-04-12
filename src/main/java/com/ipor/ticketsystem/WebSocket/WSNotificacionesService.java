@@ -65,22 +65,6 @@ public class WSNotificacionesService {
     }
 
 
-
-
-    //ENVIA Y OCULTA TICKET DE VISTA DIRECCIÓN REVISION
-    public void ocultarRegistroEnVistaDireccionRevision(Long idTicket) {
-        String message = String.valueOf(idTicket);
-        messagingTemplate.convertAndSend("/topic/ocultar/direccion-revision", message);
-    }
-    public void enviarTicketAVistaDireccionRevision(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/direccion-revision", ticketRecordWS);
-    }
-    public void enviarTicketAVistaDireccionHistorial(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/direccion-historial", ticketRecordWS);
-    }
-
     //DESESTIMACIÓN
     public void enviarAtencionAVistaSoporteHistorialDesestimacion(Desestimacion desestimacion, TicketService ticketService) {
         AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(desestimacion, ticketService);

@@ -52,18 +52,7 @@ public class TicketController {
         model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
     }
-    public Model retornaTicketsRecibidosAVistaDireccion(Model model) {
-        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionarDireccion();
-        Collections.reverse(AllTicketsDTO);
-        model.addAttribute("AllTickets", AllTicketsDTO);
-        return model;
-    }
-    public Model getListaTodosLosTicketsRevisadosPorDireccionAVista(Model model) {
-        List<TicketDTO> AllRevisadosDireccion = ticketService.getListaRevisadosDireccion();
-        Collections.reverse(AllRevisadosDireccion);
-        model.addAttribute("AllRevisadosDireccion", AllRevisadosDireccion);
-        return model;
-    }
+
 
     @GetMapping("/buscar-ticket")
     @ResponseBody
@@ -171,7 +160,7 @@ public class TicketController {
         //NOTIFICACIONES EN TIEMPO REAL A TRAVES DE WEB SOCKETS
         TicketDTO ticketDTO = new TicketDTO(ticket);
         WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
-
+        WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");

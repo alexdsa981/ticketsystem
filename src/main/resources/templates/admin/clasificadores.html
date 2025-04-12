@@ -15,7 +15,8 @@
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Incidencia</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newIncidenciaModal">
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#newIncidenciaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
@@ -67,7 +68,8 @@
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Servicio</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newServicioModal">
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#newServicioModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
@@ -95,13 +97,15 @@
                             Editar
                         </button>
                         <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
+                            <a style="width: 100px;" class="btn btn-danger"
+                               th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
                                onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Servicio?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
+                            <a style="width: 100px;" class="btn btn-success"
+                               th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
                                onclick="return confirmAction(this.href, '¿Estás seguro de activar este Servicio?');">
                                 Activar
                             </a>
@@ -117,7 +121,8 @@
         <div class="col-12 mb-3" style="margin-bottom: 30px;">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Clasificadores Desestimación</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newDesestimacionModal">
+                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#newDesestimacionModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
@@ -145,13 +150,15 @@
                             Editar
                         </button>
                         <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
+                            <a style="width: 100px;" class="btn btn-danger"
+                               th:href="@{'/app/clasificadores/desactivar/desestimacion/' + ${clasificador.id}}"
                                onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Desestimacion?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
+                            <a style="width: 100px;" class="btn btn-success"
+                               th:href="@{'/app/clasificadores/activar/desestimacion/' + ${clasificador.id}}"
                                onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Desestimacion?');">
                                 Activar
                             </a>
@@ -162,359 +169,259 @@
             </table>
         </div>
 
-        <!-- Tipo Componentes -->
-        <div class="col-12 mb-3" style="margin-bottom: 30px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>Tipos de Componentes</h5>
-                <button style="margin-bottom:10px" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newtipocomponenteModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo
-                </button>
-            </div>
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>N°</th>
-                    <th>Nombre Componente</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="clasificador, iter: ${tipoComponentes}"
-                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
-                    <td th:text="${iter.count}">#</td>
-                    <td th:text="${clasificador.nombre}">Nombre</td>
-                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
-                    <td>
-                        <button style="width: 100px;" type="button" class="btn btn-primary btn-edit-clasificador"
-                                data-bs-toggle="modal" data-bs-target="#tipocomponenteModal"
-                                th:data-tipocomponente-id="${clasificador.id}"
-                                th:data-tipocomponente-nombre="${clasificador.nombre}"
-                                onclick="openTipoComponenteModal(this)">
-                            Editar
-                        </button>
-                        <th:block th:if="${clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-danger" th:href="@{'/app/clasificadores/desactivar/tipoComponente/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Tipo Componente?');">
-                                Desactivar
-                            </a>
-                        </th:block>
-                        <th:block th:if="${!clasificador.isActive}">
-                            <a style="width: 100px;" class="btn btn-success" th:href="@{'/app/clasificadores/activar/tipoComponente/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Tipo Componente?');">
-                                Activar
-                            </a>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="newDesestimacionModal" tabindex="-1" aria-labelledby="newDesestimacionModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación de Desestimación</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal fade" id="newDesestimacionModal" tabindex="-1" aria-labelledby="newDesestimacionModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación
+                                de Desestimación</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
                 </div>
+            </div>
+        </div>
 
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required autocomplete="off">
+
+        <div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de
+                                Servicio</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombreservicio" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/app/clasificadores/incidencia/nuevo" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Nombra la Nueva Clasificación de
+                                Incidencia</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombreincidencia" class="form-label">Nuevo clasificador:</label>
+                                <input type="text" class="form-control" id="nombreincidencia" name="nombre" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- Modal para Clasificador de Desestimacion -->
+        <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="desestimacionForm" method="post">
+                            <input type="hidden" id="desestimacionId" name="id"/>
+                            <div class="mb-3">
+                                <label for="desestimacionNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required
+                                       autocomplete="off"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                </div>
-            </form>
-
+            </div>
         </div>
-    </div>
-</div>
 
 
-
-
-<div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de Servicio</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreservicio" name="nombre" required autocomplete="off">
+        <!-- Modal para Clasificador de Incidencia -->
+        <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="incidenciaModalLabel">Editar Clasificador de Incidencia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="incidenciaForm" method="post">
+                            <input type="hidden" id="incidenciaId" name="id"/>
+                            <div class="mb-3">
+                                <label for="incidenciaNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="incidenciaNombre" name="nombre" required
+                                       autocomplete="off"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                </div>
-            </form>
-
+            </div>
         </div>
-    </div>
-</div>
 
 
-
-<!-- Modal -->
-<div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/incidencia/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nombra la Nueva Clasificación de Incidencia</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreincidencia" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreincidencia" name="nombre" required autocomplete="off">
+        <!-- Modal para Clasificador de Servicio -->
+        <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="servicioModalLabel">Editar Clasificador de Servicio</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="servicioForm" method="post">
+                            <input type="hidden" id="servicioId" name="id"/>
+                            <div class="mb-3">
+                                <label for="servicioNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="servicioNombre" name="nombre" required
+                                       autocomplete="off"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="newtipocomponenteModal" tabindex="-1" aria-labelledby="newtipocomponenteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/app/clasificadores/tipoComponente/nuevo" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabell">Nombra el nuevo Tipo Componente</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombretipocomponente" class="form-label">Nuevo Clasificador:</label>
-                        <input type="text" class="form-control" id="nombretipocomponente" name="nombre" required autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Crear</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
-
-
-<!-- Modal para Clasificador de Desestimacion -->
-<div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="desestimacionForm" method="post">
-                    <input type="hidden" id="desestimacionId" name="id" />
-                    <div class="mb-3">
-                        <label for="desestimacionNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required autocomplete="off"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                </form>
             </div>
         </div>
-    </div>
-</div>
 
 
 
-
-
-
-
-
-<!-- Modal para Clasificador de Incidencia -->
-<div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="incidenciaModalLabel">Editar Clasificador de Incidencia</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="incidenciaForm" method="post">
-                    <input type="hidden" id="incidenciaId" name="id" />
-                    <div class="mb-3">
-                        <label for="incidenciaNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="incidenciaNombre" name="nombre" required autocomplete="off"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- Modal para Clasificador de Servicio -->
-<div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="servicioModalLabel">Editar Clasificador de Servicio</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="servicioForm" method="post">
-                    <input type="hidden" id="servicioId" name="id" />
-                    <div class="mb-3">
-                        <label for="servicioNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="servicioNombre" name="nombre" required autocomplete="off"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Modal para Tipo Componente -->
-<div class="modal fade" id="tipocomponenteModal" tabindex="-1" aria-labelledby="tipocomponenteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tipocomponenteModalLabel">Editar Tipo Componente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="tipocomponenteForm" method="post">
-                    <input type="hidden" id="tipocomponenteId" name="id" />
-                    <div class="mb-3">
-                        <label for="tipocomponenteNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="tipocomponenteNombre" name="nombre" required autocomplete="off"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--SweetAlert-->
-<script>
-    function confirmAction(url, message) {
-        Swal.fire({
-            title: 'Confirmación',
-            text: message,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, continuar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = url;
+        <!--SweetAlert-->
+        <script>
+            function confirmAction(url, message) {
+                Swal.fire({
+                    title: 'Confirmación',
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+                return false; // Evita que el enlace se abra automáticamente
             }
-        });
-        return false; // Evita que el enlace se abra automáticamente
-    }
-</script>
+        </script>
 
-<script>
-    function openDesestimacionModal(button) {
-    var id = button.getAttribute("data-desestimacion-id");
-    var nombre = button.getAttribute("data-desestimacion-nombre");
+        <script>
+            function openDesestimacionModal(button) {
+            var id = button.getAttribute("data-desestimacion-id");
+            var nombre = button.getAttribute("data-desestimacion-nombre");
 
-    document.getElementById("desestimacionId").value = id;
-    document.getElementById("desestimacionNombre").value = nombre;
+            document.getElementById("desestimacionId").value = id;
+            document.getElementById("desestimacionNombre").value = nombre;
 
-    // Configurar la acción del formulario
-    const form = document.getElementById('desestimacionForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/desestimacion/${id}`);
-}
-function openIncidenciaModal(button) {
-    var id = button.getAttribute("data-incidencia-id");
-    var nombre = button.getAttribute("data-incidencia-nombre");
+            // Configurar la acción del formulario
+            const form = document.getElementById('desestimacionForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/desestimacion/${id}`);
+        }
+        function openIncidenciaModal(button) {
+            var id = button.getAttribute("data-incidencia-id");
+            var nombre = button.getAttribute("data-incidencia-nombre");
 
-    document.getElementById("incidenciaId").value = id;
-    document.getElementById("incidenciaNombre").value = nombre;
+            document.getElementById("incidenciaId").value = id;
+            document.getElementById("incidenciaNombre").value = nombre;
 
-    // Configurar la acción del formulario
-    const form = document.getElementById('incidenciaForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
-}
+            // Configurar la acción del formulario
+            const form = document.getElementById('incidenciaForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
+        }
 
-function openServicioModal(button) {
-    var id = button.getAttribute("data-servicio-id");
-    var nombre = button.getAttribute("data-servicio-nombre");
+        function openServicioModal(button) {
+            var id = button.getAttribute("data-servicio-id");
+            var nombre = button.getAttribute("data-servicio-nombre");
 
-    document.getElementById("servicioId").value = id;
-    document.getElementById("servicioNombre").value = nombre;
+            document.getElementById("servicioId").value = id;
+            document.getElementById("servicioNombre").value = nombre;
 
-    // Configurar la acción del formulario
-    const form = document.getElementById('servicioForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
-}
+            // Configurar la acción del formulario
+            const form = document.getElementById('servicioForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
+        }
 
-function openUrgenciaModal(button) {
-    var id = button.getAttribute("data-urgencia-id");
-    var nombre = button.getAttribute("data-urgencia-nombre");
+        function openUrgenciaModal(button) {
+            var id = button.getAttribute("data-urgencia-id");
+            var nombre = button.getAttribute("data-urgencia-nombre");
 
-    document.getElementById("urgenciaId").value = id;
-    document.getElementById("urgenciaNombre").value = nombre;
+            document.getElementById("urgenciaId").value = id;
+            document.getElementById("urgenciaNombre").value = nombre;
 
-    // Configurar la acción del formulario
-    const form = document.getElementById('urgenciaForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
-}
-function openTipoComponenteModal(button) {
-    var id = button.getAttribute("data-tipocomponente-id");
-    var nombre = button.getAttribute("data-tipocomponente-nombre");
+            // Configurar la acción del formulario
+            const form = document.getElementById('urgenciaForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/urgencia/${id}`);
+        }
+        function openTipoComponenteModal(button) {
+            var id = button.getAttribute("data-tipocomponente-id");
+            var nombre = button.getAttribute("data-tipocomponente-nombre");
 
-    document.getElementById("tipocomponenteId").value = id;
-    document.getElementById("tipocomponenteNombre").value = nombre;
+            document.getElementById("tipocomponenteId").value = id;
+            document.getElementById("tipocomponenteNombre").value = nombre;
 
-    // Configurar la acción del formulario
-    const form = document.getElementById('tipocomponenteForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/tipoComponente/${id}`);
-}
-</script>
+            // Configurar la acción del formulario
+            const form = document.getElementById('tipocomponenteForm');
+            form.setAttribute('action', `/app/clasificadores/actualizar/tipoComponente/${id}`);
+        }
+        </script>
 
 
-
-
-
-<div th:insert="~{common/imports :: bodyImportsAndNotification}">
-</div>
+        <div th:insert="~{common/imports :: bodyImportsAndNotification}">
+        </div>
 
 </body>
 </html>

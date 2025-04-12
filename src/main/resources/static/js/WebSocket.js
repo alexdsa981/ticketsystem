@@ -1,7 +1,5 @@
 import { mostrarNotificacionPersonalizada } from './notificacionPersonalizada.js';
 import { ActualizaTablasSoporteRecepcion } from './wsActualizaTabla.js';
-import { ActualizaTablaDireccionRecibidos } from './wsActualizaTabla.js';
-import { ActualizaTablaDireccionHistorial } from './wsActualizaTabla.js';
 import { ActualizaTablaAtencionSoporte } from './wsActualizaTabla.js';
 import { ActualizaTablaSoporteHistorial } from './wsActualizaTabla.js';
 import { ActualizaTablaDesestimacionHistorial } from './wsActualizaTabla.js';
@@ -61,26 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             stompClient.subscribe('/topic/actualizar/soporte-historial', (message) => {
                 const ticketRecord = JSON.parse(message.body);
                 ActualizaTablaSoporteHistorial(ticketRecord);
-            });
-        }
-        // DIRECCION REVISION: OCULTA O ACTUALIZA REGISTROS
-        if (window.location.pathname === '/direccion/Recibidos') {
-            // Suscripción para actualizar la tabla cuando se agregan tickets
-            stompClient.subscribe('/topic/actualizar/direccion-revision', (message) => {
-                const ticketRecord = JSON.parse(message.body);
-                ActualizaTablaDireccionRecibidos(ticketRecord);
-            });
-            // Suscripción para ocultar un ticket cuando sea revisado
-            stompClient.subscribe('/topic/ocultar/direccion-revision', (message) => {
-                const ticketId = message.body.trim(); // Este es el ID sin formato
-                EliminarTicketDeTabla(ticketId);
-            });
-        }
-        if (window.location.pathname === '/direccion/Historial') {
-            // Suscripción para actualizar la tabla de historial cuando se revisan tickets
-            stompClient.subscribe('/topic/actualizar/direccion-historial', (message) => {
-                const ticketRecord = JSON.parse(message.body);
-                ActualizaTablaDireccionHistorial(ticketRecord);
             });
         }
 

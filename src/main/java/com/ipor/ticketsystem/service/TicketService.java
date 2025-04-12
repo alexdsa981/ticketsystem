@@ -40,27 +40,14 @@ public class TicketService {
         }
         return ListaTicketsDTO;
     }
-    // Método para obtener todos los tickets, además junta los tickets y sus archivos adjuntos en TicketDTO
-    public List<TicketDTO> getAllTicketsSinRecepcionarDireccion() {
 
-        List<Ticket> Tickets = ticketRepository.findByFaseTicketId(5);
-        List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
-        for (Ticket ticket : Tickets) {
-            List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket);
-            ListaTicketsDTO.add(ticketDTO);
-        }
-        return ListaTicketsDTO;
-    }
 
     // Método para obtener tickets propios enviados y en espera de aprobación de compra,
     // además junta los tickets y sus archivos adjuntos en TicketDTO
     public List<TicketDTO> getMyTickets() {
         Long idUsuario = usuarioService.getIDdeUsuarioLogeado();
 
-        // Obtener tickets de las dos fases
         List<Ticket> MisTickets = ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario, 1L);
-        List<Ticket> MisTicketsCompra = ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario, 5L);
 
         // Crear una lista para almacenar los DTOs
         List<TicketDTO> MisTicketsDTO = new ArrayList<>();
@@ -75,17 +62,6 @@ public class TicketService {
         return MisTicketsDTO;
     }
 
-    //metodo para retornar todos los tickets en proceso en Direccion:
-    public List<TicketDTO> getListaRevisadosDireccion() {
-        List<Ticket> listaRevisados = ticketRepository.findTicketsConAdjuntosNoNulos();
-        List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
-        for (Ticket ticket : listaRevisados) {
-            List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket);
-            ListaTicketsDTO.add(ticketDTO);
-        }
-        return ListaTicketsDTO;
-    }
 
     public void saveTicket(Ticket ticket) {
         ticketRepository.save(ticket);

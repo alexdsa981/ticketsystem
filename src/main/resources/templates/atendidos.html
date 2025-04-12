@@ -63,13 +63,6 @@
                     <td>
                         <span class="nombreClasificacionIncidencia" th:utext="${atendido.clasificacionServicio.nombre + ':<br>'}"></span>
                         <span th:text="${atendido.descripcion}"></span><br>
-                        <ul>
-                            <li th:each="componente: ${atendido.ticket.listaComponentesAdjuntos}">
-                                <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
-                                <span th:text="${componente.cantidad}"></span>
-                                <span th:text="${componente.tipoComponente.nombre}"></span>
-                            </li>
-                        </ul>
                     </td>
                     <td th:text="${atendido.ticket.faseTicket.nombre}">Fase</td>
                 </tr>

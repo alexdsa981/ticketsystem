@@ -53,13 +53,6 @@ public class DashboardController {
         return ResponseEntity.ok(ntotal);
     }
 
-    // Endpoint para obtener el número total de atendidos
-    @GetMapping("/contador/redireccionados")
-    public ResponseEntity<Long> getTotalRedireccionados() {
-        Long ntotal = dashboardService.obtenerNTotalRedireccionados();
-        return ResponseEntity.ok(ntotal);
-    }
-
     @GetMapping("/grafico/EstadoActual")
     public ResponseEntity<Map<String, Object>> getGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,

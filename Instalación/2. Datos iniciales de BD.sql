@@ -6,20 +6,19 @@ INSERT INTO [ticketSystem].[dbo].[rol_usuario] ([nombre])
 VALUES 
 ('Usuario'),
 ('Soporte'),
-('Admin'),
-('Dirección');
+('Admin');
 
 
 /*
-3.CREAR CUENTA N°1 ADMINISTRADOR:
+3.CREAR CUENTA Nï¿½1 ADMINISTRADOR:
 
-	CONTRASEÑA: password = $2a$12$7SW6dd16qcrYSdV0L4Uzp.qzCEe6ricYOH9fdr1r/bGlF2ItBun4a
-	ENCRIPTADOR DE CONTRASEÑA: https://bcrypt-generator.com/
+	CONTRASEï¿½A: password = $2a$12$7SW6dd16qcrYSdV0L4Uzp.qzCEe6ricYOH9fdr1r/bGlF2ItBun4a
+	ENCRIPTADOR DE CONTRASEï¿½A: https://bcrypt-generator.com/
 
 	USUARIO ADMINISTRADOR: 
 		-USERNAME: admin
 		-NOMBRE: ADMINISTRADOR
-		-CONTRASEÑA: password
+		-CONTRASEï¿½A: password
 	
 */
 INSERT INTO [ticketSystem].[dbo].[usuario] (is_active, nombre, password, username, id_rol_usuario, changed_pass)
@@ -34,8 +33,7 @@ VALUES
 ('Enviado'),
 ('Recepcionado - En Proceso'),
 ('Cerrado - Atendido'),
-('Desestimado'),
-('Espera en Dirección');
+('Desestimado');
 GO
 /*
 5. CREA TIPOS DE URGENCIA
@@ -53,7 +51,7 @@ GO
 
 
 /*
-6. CREA VISTA PARA FUNCIÓN EXPORTAR TICKETS
+6. CREA VISTA PARA FUNCIï¿½N EXPORTAR TICKETS
 */
 
 USE [ticketSystem];

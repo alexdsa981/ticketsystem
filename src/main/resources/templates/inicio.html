@@ -46,18 +46,6 @@
                 <td th:text="${ticket.horaFormateada}">Hora</td>
                 <td>
                     <span th:text="${ticket.descripcion}"></span><br>
-                    <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
-                    <span th:if="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)}"><strong>Respuesta de Dirección:</strong></span><br>
-
-                    <ul>
-                        <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
-                                <span class="status-componente"
-                                      th:text="${componente != null && componente.aprobado != null ?
-                                      (componente.aprobado ? '[Aprobado]' : '[Desestimado]') : '[Sin estado]'}"></span>
-                            <span th:text="${componente.cantidad}"></span>
-                            <span th:text="${componente.tipoComponente.nombre}"></span>
-                        </li>
-                    </ul>
                 </td>
 
                 <td>

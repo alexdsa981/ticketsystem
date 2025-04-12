@@ -11,9 +11,6 @@
                     case 'recepcion':
                         successMessage = 'El ticket fue recepcionado correctamente.';
                         break;
-                    case 'redireccion':
-                        successMessage = 'Redirección realizada con éxito.';
-                        break;
                     case 'desestimacion':
                         successMessage = 'Desestimación realizada con éxito.';
                         break;
@@ -58,10 +55,6 @@
                     break;
                 case 'recepcion-general':
                     errorMessage = 'Error inesperado al recepcionar el ticket.';
-                    break;
-
-                case 'redireccion-moved':
-                    errorMessage = 'El ticket ya se encuentra en otra fase.';
                     break;
 
                 case 'desestimacion-duplicated':

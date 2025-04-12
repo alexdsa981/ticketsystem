@@ -62,18 +62,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
         <td>${ticketRecord.nombreUsuario}</td>
 
         <td>
-            <!-- Descripción truncada -->
-            <span>${ticketRecord.descripcion.length > 150
-            ? ticketRecord.descripcion.substring(0, 150) + '...'
-            : ticketRecord.descripcion}</span><br>
-
-            <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
-            <span id="respuestaDireccion"></span><br>
-
-            <ul id="componentes"></ul>
-        </td>
-
-        <td>
             <ul>
                 ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
                     <li>
@@ -96,18 +84,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
                     <i class="bi bi-pencil-square"></i>
             </button>
 
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                    data-bs-target="#redireccionModal" data-ticket-id="${ticketRecord.id}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
-                    data-ticket-descripcion="${ticketRecord.descripcion}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
-                    data-ticket-hora="${ticketRecord.horaFormateada}"
-                    onclick="fillRedirectModal(this)">
-                <i class="bi bi-send"></i>
-            </button>
-
-
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
@@ -120,12 +96,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
         </td>
     `;
-
-    // Verificar si tiene componentes adjuntos
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Añadir la clase "tr-con-componentes" al <tr>
-        newRow.classList.add('tr-con-componentes');
-    }
 
     // Insertar la nueva fila al inicio de la tabla
     ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
@@ -158,40 +128,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
         }
     });
 
-    // Verificar si hay componentes adjuntos y mostrar la "Respuesta de Dirección"
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Mostrar "Respuesta de Dirección"
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-        respuestaDireccion.innerHTML = "<strong>Respuesta de Dirección:</strong>";
-
-        // Mostrar los componentes adjuntos
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-    // Verificar si el ticket tiene componentes
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Deshabilitar el botón si tiene componentes
-        const redirectButton = newRow.querySelector('.btn-secondary');
-        if (redirectButton) {
-            redirectButton.disabled = true;
-        }
-
-        // Añadir clase de fila con componentes
-        newRow.classList.add('tr-con-componentes');
-    }
     // Actualiza la lista de filas filtradas
     filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
 
@@ -201,235 +137,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 }
 
 
-
-
-
-//
-//
-//
-//AGREGA REGISTRO A TABLA RECIBIDOS DIRECCION:
-//
-//
-//
-
-
-export function ActualizaTablaDireccionRecibidos(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
-
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
-
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
-        <td></td> <!-- Este número se actualizará luego -->
-
-        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
-
-        <td>${ticketRecord.fechaFormateada}</td>
-        <td>${ticketRecord.horaFormateada}</td>
-        <td>${ticketRecord.nombreUsuario}</td>
-
-        <td>
-            <span>${ticketRecord.descripcion.length > 150
-            ? ticketRecord.descripcion.substring(0, 150) + '...'
-            : ticketRecord.descripcion}</span><br>
-        </td>
-
-        <td>
-            <ul id="componentes"></ul> <!-- Lista de componentes -->
-        </td>
-
-        <td>
-            <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
-                    <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
-                        ${adjunto.pesoContenido}
-                    </li>
-                `).join('')}
-            </ul>
-        </td>
-
-        <td>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#recepcionModal"
-                    data-ticket-id="${ticketRecord.id}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
-                    data-ticket-descripcion="${ticketRecord.descripcion}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
-                    data-ticket-hora="${ticketRecord.horaFormateada}">
-                    <i class="bi bi-pencil-square"></i>
-            </button>
-
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuario}"
-                    data-ticket-descripcion="${ticketRecord.descripcion}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateada}"
-                    data-ticket-hora="${ticketRecord.horaFormateada}">
-                <i class="bi bi-trash"></i>
-            </button>
-
-        </td>
-    `;
-
-    // Verificar si tiene componentes adjuntos
-    const componentesList = newRow.querySelector('#componentes');
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Añadir la clase "tr-con-componentes" al <tr>
-        newRow.classList.add('tr-con-componentes');
-
-        // Mostrar los componentes adjuntos
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            listItem.innerHTML = `
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
-
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
-    });
-
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
-
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
-}
-
-
-
-
-//
-//
-//
-//AGREGA REGISTRO A TABLA RECIBIDOS DIRECCION:
-//
-//
-//
-
-
-export function ActualizaTablaDireccionHistorial(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
-
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
-
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
-        <td></td> <!-- Este número se actualizará luego -->
-
-        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
-
-        <td>${ticketRecord.fechaFormateada}</td>
-        <td>${ticketRecord.horaFormateada}</td>
-        <td>${ticketRecord.nombreUsuario}</td>
-
-        <td>
-            <span>${ticketRecord.descripcion.length > 150
-            ? ticketRecord.descripcion.substring(0, 150) + '...'
-            : ticketRecord.descripcion}</span><br>
-        </td>
-
-        <td>
-            <ul id="componentes"></ul> <!-- Lista de componentes -->
-        </td>
-
-        <td>
-            <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
-                    <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
-                        ${adjunto.pesoContenido}
-                    </li>
-                `).join('')}
-            </ul>
-        </td>
-    `;
-
-    // Verificar si tiene componentes adjuntos
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Mostrar los componentes adjuntos
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
-
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
-    });
-
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
-
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
-}
 
 
 
@@ -486,9 +193,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
             : ticketRecord.mensajeRecepcion}
             </span>
-            <br>
-            <span id="respuestaDireccion"></span>
-            <ul id="componentes"></ul>
+
         </td>
         <td class="td-accion">
             <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -602,9 +307,6 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
             ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
             : ticketRecord.mensajeRecepcion}
             </span>
-            <br>
-            <span id="respuestaDireccion"></span>
-            <ul id="componentes"></ul>
         </td>
 
                 <td>
@@ -844,9 +546,6 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
             ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
             : ticketRecord.mensajeRecepcion}
             </span>
-            <br>
-            <span id="respuestaDireccion"></span>
-            <ul id="componentes"></ul>
         </td>
         <td>
         ${ticketRecord.nombreFaseTicket}
@@ -938,9 +637,6 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
             ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
             : ticketRecord.descripcionAtencion}
             </span>
-            <br>
-            <span id="respuestaDireccion"></span>
-            <ul id="componentes"></ul>
         </td>
         <td>
         Cerrado - Atendido
@@ -1102,10 +798,6 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
             <span>${ticketRecord.descripcion.length > 150
             ? ticketRecord.descripcion.substring(0, 150) + '...'
             : ticketRecord.descripcion}</span><br>
-
-            <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
-            <span id="respuestaDireccion"></span><br>
-            <ul id="componentes"></ul>
         </td>
 
         <td>
@@ -1123,12 +815,6 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
         </td>
 
     `;
-
-    // Verificar si tiene componentes adjuntos
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Añadir la clase "tr-con-componentes" al <tr>
-        newRow.classList.add('tr-con-componentes');
-    }
 
     // Insertar la nueva fila al inicio de la tabla
     ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
@@ -1161,40 +847,6 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
         }
     });
 
-    // Verificar si hay componentes adjuntos y mostrar la "Respuesta de Dirección"
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Mostrar "Respuesta de Dirección"
-        const respuestaDireccion = newRow.querySelector('#respuestaDireccion');
-        respuestaDireccion.innerHTML = "<strong>Respuesta de Dirección:</strong>";
-
-        // Mostrar los componentes adjuntos
-        const componentesList = newRow.querySelector('#componentes');
-        ticketRecord.listaComponentesAdjuntos.forEach(componente => {
-            const listItem = document.createElement("li");
-
-            const estado = componente.aprobado !== null
-                ? componente.aprobado ? '[Aprobado]' : '[Desestimado]'
-                : '[Sin estado]';
-
-            listItem.innerHTML = `
-                <span class="status-componente">${estado}</span>
-                <span>${componente.cantidad}</span>
-                <span>${componente.nombre}</span>
-            `;
-            componentesList.appendChild(listItem);
-        });
-    }
-    // Verificar si el ticket tiene componentes
-    if (ticketRecord.listaComponentesAdjuntos && ticketRecord.listaComponentesAdjuntos.length > 0) {
-        // Deshabilitar el botón si tiene componentes
-        const redirectButton = newRow.querySelector('.btn-secondary');
-        if (redirectButton) {
-            redirectButton.disabled = true;
-        }
-
-        // Añadir clase de fila con componentes
-        newRow.classList.add('tr-con-componentes');
-    }
     // Actualiza la lista de filas filtradas
     filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
 

@@ -85,18 +85,7 @@
                             <span class="nombreClasificacionIncidencia urgencia"
                                   th:utext="${recepcionado.clasificacionUrgencia.nombre + ':<br>'}"></span>
                             <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
-                            <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
-                            <span th:if="${!#lists.isEmpty(recepcionado.ticket.listaComponentesAdjuntos)}"><strong>Respuesta de Dirección:</strong></span><br>
 
-                            <ul>
-                                <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
-                            <span class="status-componente"
-                                  th:text="${componente != null && componente.aprobado != null ?
-                                  (componente.aprobado ? '[Aprobado]' : '[Desestimado]') : '[Sin estado]'}"></span>
-                                    <span th:text="${componente.cantidad}"></span>
-                                    <span th:text="${componente.tipoComponente.nombre}"></span>
-                                </li>
-                            </ul>
                         </td>
 
                         <td class="td-accion">
@@ -280,7 +269,6 @@
 
                     <div class="modal-body">
                         <div class="mb-3 text-secondary">
-                            <span style="display:none" id="redireccionTicketId"></span>
                             <p><strong>USUARIO:</strong> <span id="desestimacionTicketUsuario"></span></p>
                             <p><strong>DESCRIPCIÓN:</strong> <span id="desestimacionTicketDescripcion"></span></p>
                         </div>

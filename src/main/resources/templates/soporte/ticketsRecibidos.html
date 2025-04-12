@@ -59,8 +59,7 @@
                     </tr>
                 </thead>
                 <tbody id="ticketTableBody">
-                <tr th:each="ticket, iter: ${AllTickets}" id="ticket-${ticket.id}"
-                    th:classappend="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)} ? 'tr-con-componentes' : ''">
+                <tr th:each="ticket, iter: ${AllTickets}" id="ticket-${ticket.id}">
                         <td th:text="${iter.count}">#</td>
                         <td th:id="${ticket.id}" th:text="${ticket.idFormateado}">#</td>
                         <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
@@ -69,18 +68,6 @@
                         <td>
                             <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span><br>
 
-                            <!-- Mostrar "Respuesta de Dirección" solo si hay componentes -->
-                            <span th:if="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)}"><strong>Respuesta de Dirección:</strong></span><br>
-
-                            <ul>
-                                <li th:each="componente: ${ticket.listaComponentesAdjuntos}">
-                            <span class="status-componente"
-                                  th:text="${componente != null && componente.aprobado != null ?
-                                  (componente.aprobado ? '[Aprobado]' : '[Desestimado]') : '[Sin estado]'}"></span>
-                                    <span th:text="${componente.cantidad}"></span>
-                                    <span th:text="${componente.tipoComponente.nombre}"></span>
-                                </li>
-                            </ul>
                         </td>
                         <td>
                             <ul>
@@ -100,17 +87,6 @@
                                 th:data-ticket-fecha="${ticket.fechaFormateada}"
                                 th:data-ticket-hora="${ticket.horaFormateada}">
                                 <i class="bi bi-pencil-square"></i>
-                            </button>
-
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#redireccionModal" th:data-ticket-id="${ticket.id}"
-                                    th:data-ticket-usuario="${ticket.usuario.nombre}"
-                                    th:data-ticket-descripcion="${ticket.descripcion}"
-                                    th:data-ticket-fase="${ticket.faseTicket.nombre}"
-                                    th:data-ticket-fecha="${ticket.fechaFormateada}"
-                                    th:data-ticket-hora="${ticket.horaFormateada}"
-                                    th:disabled="${!#lists.isEmpty(ticket.listaComponentesAdjuntos)}" onclick="fillRedirectModal(this)">
-                                <i class="bi bi-send"></i>
                             </button>
 
 
@@ -269,7 +245,6 @@
 
                     <div class="modal-body">
                         <div class="mb-3 text-secondary">
-                            <span style="display:none" id="redireccionTicketId"></span>
                             <p><strong>USUARIO:</strong> <span id="desestimacionTicketUsuario"></span></p>
                             <p><strong>DESCRIPCIÓN:</strong> <span id="desestimacionTicketDescripcion"></span></p>
                         </div>
@@ -327,196 +302,10 @@
         });
     </script>
 
-    <!-- Modal para Redirección -->
-    <div class="modal fade" id="redireccionModal" tabindex="-1" aria-labelledby="redireccionModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-md"> <!-- Aumentar tamaño si es necesario -->
-            <div class="modal-content">
-                <form id="redireccionForm" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="redireccionModalLabel"><i class="bi bi-send"></i> Redirección a Dirección <span id="redireccionTicketIdFormateado"></span>:</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3 text-secondary">
-                            <p><strong>USUARIO:</strong> <span id="redireccionTicketUsuario"></span></p>
-                            <p><strong>DESCRIPCIÓN:</strong> <span id="redireccionTicketDescripcion"></span></p>
-                        </div>
-
-                        <p style="text-align:center;"><strong><i class="bi bi-motherboard"></i> AGREGAR COMPONENTES</strong></p>
-                        <!-- Componentes y cantidades -->
-                        <div id="componentesContainer">
-                            <div class="row mb-2 align-items-center componente-fila">
-                                <div class="col-md-7">
-                                    <select class="form-select componente-select" name="componentes[]" required>
-                                        <option selected disabled value="">Selecciona un componente</option>
-                                        <option th:each="componente : ${Lista_tipo_componentes}"
-                                                th:value="${componente.id}" th:text="${componente.nombre}"></option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1"
-                                           placeholder="1" value="1" required>
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
-                                        <i class="bi bi-x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Plantilla oculta para el select -->
-                        <div id="templateSelect" style="display: none;">
-                            <select class="form-select componente-select" name="componentes[]" required>
-                                <option selected disabled value="">Selecciona un componente</option>
-                                <option th:each="componente : ${Lista_tipo_componentes}" th:value="${componente.id}"
-                                        th:text="${componente.nombre}">
-                                </option>
-                            </select>
-                        </div>
-
-                        <button type="button" class="btn btn-secondary mt-2" onclick="agregarFila()">Agregar
-                            Componente</button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary submit-btn"
-                                onclick="submitRedireccionForm()">Redirigir</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function submitRedireccionForm() {
-            const ticketId = document.getElementById('redireccionTicketId').innerText;
-
-            if (!ticketId) {
-                console.error('Error: No se encontró el ID del ticket.');
-                return;
-            }
-
-            const componentes = [];
-            const cantidades = [];
-
-            // Recolectar los datos de los componentes y cantidades
-            const filas = document.querySelectorAll('#componentesContainer .row'); // Selecciona todas las filas
-            filas.forEach(fila => {
-                const componenteSelect = fila.querySelector('.componente-select');
-                const cantidadInput = fila.querySelector('.cantidad-input');
-
-                if (componenteSelect && cantidadInput) {
-                    const componenteId = componenteSelect.value;
-                    const cantidad = cantidadInput.value;
-
-                    if (componenteId && cantidad) {
-                        componentes.push(componenteId);
-                        cantidades.push(cantidad);
-                    }
-                }
-            });
-
-            if (componentes.length === 0 || cantidades.length === 0) {
-                console.error('Debes agregar al menos un componente y su cantidad.');
-                return;
-            }
-
-            console.log('Componentes:', componentes); // Depuración
-            console.log('Cantidades:', cantidades); // Depuración
-
-            // Crear el objeto a enviar
-            const datos = {
-                componentes,
-                cantidades
-            };
-
-            // Enviar los datos al backend
-            fetch(`/app/tickets/RedirigirADireccion/${ticketId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datos)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // El backend se encarga de redirigir
-                        window.location.href = response.url; // Redirigir a la URL proporcionada por el backend
-                    } else {
-                        console.error('Error al redirigir el ticket.');
-                        window.location.href = response.url;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    console.error('Ocurrió un error inesperado.');
-                });
-        }
-
-
-
-            function agregarFila() {
-                const container = document.getElementById('componentesContainer');
-                const templateSelect = document.getElementById('templateSelect');
-
-                if (!templateSelect) {
-                    console.error("No se encontró el elemento 'templateSelect'.");
-                    alert("Ocurrió un error al intentar agregar un nuevo componente.");
-                    return;
-                }
-
-                const nuevaFila = document.createElement('div');
-                nuevaFila.classList.add('row', 'mb-2', 'align-items-center', 'componente-fila'); // Asegura la clase componente-fila
-                nuevaFila.innerHTML = `
-            <div class="col-md-7">
-                ${templateSelect.innerHTML} <!-- Usar el select ya procesado -->
-            </div>
-            <div class="col-md-2">
-                <input type="number" class="form-control cantidad-input" name="cantidades[]" min="1" placeholder="1" value="1" required>
-            </div>
-            <div class="col-md-1">
-                <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
-                    <i class="bi bi-x"></i>
-                </button>
-            </div>
-        `;
-                container.appendChild(nuevaFila);
-            }
 
 
 
 
-            function eliminarFila(button) {
-                const fila = button.parentElement.parentElement;
-                fila.remove();
-            }
-
-
-    </script>
-
-
-    <script>
-        function fillRedirectModal(button) {
-            // Extraer los datos del botón
-            const ticketId = button.getAttribute('data-ticket-id');
-            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
-            const usuario = button.getAttribute('data-ticket-usuario');
-            const descripcion = button.getAttribute('data-ticket-descripcion');
-            const fecha = button.getAttribute('data-ticket-fecha');
-            const hora = button.getAttribute('data-ticket-hora');
-
-            // Llenar el modal de redirección con los datos extraídos
-
-            document.getElementById('redireccionTicketId').textContent = ticketId;
-            document.getElementById('redireccionTicketIdFormateado').textContent = formattedTicketId;
-            document.getElementById('redireccionTicketUsuario').innerText = usuario;
-            document.getElementById('redireccionTicketDescripcion').innerText = descripcion;
-
-        }
-
-    </script>
 
 
 

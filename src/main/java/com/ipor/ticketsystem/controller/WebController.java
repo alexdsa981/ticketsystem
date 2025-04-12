@@ -149,30 +149,6 @@ public class WebController {
     }
 
 
-
-
-
-    @GetMapping("/direccion/Dashboard")
-    public String redirigePaginaDashboardDireccion(Model model) {
-        model.addAttribute("Titulo", "HelpDesk | Dirección - Dashboard");
-        return "direccion/dashboard";
-    }
-    //Metodo para manejar fragment expression
-    @GetMapping("/direccion/Recibidos")
-    public String redirigePaginaTicketsRecibidosDireccion(Model model) {
-        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
-        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
-        ticketController.retornaTicketsRecibidosAVistaDireccion(model);
-        model.addAttribute("Titulo", "HelpDesk | Dirección - Tickets Recibidos");
-        return "direccion/ticketsRedirigidos";
-    }
-    //Metodo para manejar fragment expression
-    @GetMapping("/direccion/Historial")
-    public String redirigePaginaHistorialDireccion(Model model) {
-        ticketController.getListaTodosLosTicketsRevisadosPorDireccionAVista(model);
-        model.addAttribute("Titulo", "HelpDesk | Dirección - Recepciones Realizadas");
-        return "direccion/historialRecepcion";
-    }
     //Metodo para manejar fragment expression
     @GetMapping("/fragment-expression")
     public String fragmentExpression() {

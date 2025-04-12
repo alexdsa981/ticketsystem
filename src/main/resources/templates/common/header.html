@@ -12,8 +12,10 @@
 <header th:fragment="header">
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/inicio" style="margin-right: 10px;">Help<span
-                    style="color: #ff6666;">Desk</span></a>
+            <img style="width:35px; margin-right:5px;" src="/images/blanco.png" alt="logo">
+            <a class="navbar-brand" href="/inicio" style="margin-right: 10px;">
+                Help<span style="color: #2b93a6;">Desk</span>
+            </a>
 
 
             <!-- Botón para abrir el Offcanvas -->
@@ -25,25 +27,8 @@
 
             <div class="collapse navbar-collapse " id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul-direcciones">
-                    <li class="nav-item" sec:authorize="hasAnyAuthority('Usuario','Admin', 'Dirección','Soporte')">
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Usuario','Admin','Soporte')">
                         <a class="nav-link" href="/inicio">Mis Tickets</a>
-                    </li>
-                    <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección')">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Dirección
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/direccion/Dashboard">Dashboard</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/direccion/Recibidos">Tickets Recibidos</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/direccion/Historial">Historial Aprobaciones</a></li>
-                        </ul>
                     </li>
                     <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -90,10 +75,15 @@
                     </li>
                     <li sec:authorize="hasAnyAuthority('Admin','Soporte')">
                         <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
-                            <input type="text" id="ticketId" name="ticketId" placeholder="Buscar por ID de ticket"
-                                   class="form-control" required autocomplete="off">
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                            <div class="input-group">
+                                <input type="text" id="ticketId" name="ticketId" placeholder="Buscar por ID de ticket"
+                                       class="form-control" required autocomplete="off">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
                         </form>
+
                         <script>
                             document.getElementById("ticketSearchForm").addEventListener("submit", function(event) {
                                 event.preventDefault(); // Evitar que se recargue la página
@@ -186,7 +176,7 @@
                         </li>
 
 
-                        <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección','Soporte')">
+                        <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin','Soporte')">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                aria-expanded="false">
                                 Mis Tickets
@@ -205,25 +195,6 @@
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item" href="/TicketsDesestimados">Tickets Desestimados</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Menú Dirección -->
-                        <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Dirección')">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Dirección
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/direccion/Dashboard">Dashboard</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/direccion/Recibidos">Tickets Recibidos</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/direccion/Historial">Historial Aprobaciones</a></li>
                             </ul>
                         </li>
                         <!-- Menú Soporte -->

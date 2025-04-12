@@ -43,10 +43,6 @@ public class DashboardService {
         return ticketRepository.countByFaseTicketNombre("Desestimado");
     }
 
-    public long obtenerNTotalRedireccionados() {
-        return ticketRepository.countByFaseTicketNombre("Espera en Dirección");
-    }
-
 
     // ✅ Conteo de tickets por fase con filtro de fechas
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(LocalDate fechaInicio, LocalDate fechaFin) {

@@ -257,8 +257,6 @@ public class AtencionController {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             } else if (lastFaseTicket == 2L) {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
-            } else if (lastFaseTicket == 5L) {
-                WSNotificacionesService.ocultarRegistroEnVistaDireccionRevision(id);
             }
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);

@@ -85,13 +85,6 @@
                                 <span class="nombreClasificacionIncidencia urgencia"
                                       th:utext="${atendido.recepcionHistorial.clasificacionUrgencia.nombre + ':<br>'}"></span>
                                 <span th:text="${#strings.length(atendido.recepcionHistorial.mensaje) > 150 ? atendido.recepcionHistorial.mensaje.substring(0, 150) + '...' : atendido.recepcionHistorial.mensaje}"></span>
-                                <ul>
-                                    <li th:each="componente: ${atendido.ticket.listaComponentesAdjuntos}">
-                                        <span th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
-                                        <span th:text="${componente.cantidad}"></span>
-                                        <span th:text="${componente.tipoComponente.nombre}"></span>
-                                    </li>
-                                </ul>
                             </td>
 
                             <td>

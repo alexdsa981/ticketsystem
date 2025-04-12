@@ -51,13 +51,6 @@
                     </td>
                     <td>
                         <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
-                        <ul>
-                            <li th:each="componente: ${recepcionado.ticket.listaComponentesAdjuntos}">
-                                <span class="status-componente" th:text="${componente.aprobado ? '[Aprobado]' : '[Desestimado]'}"></span>
-                                <span th:text="${componente.cantidad}"></span>
-                                <span th:text="${componente.tipoComponente.nombre}"></span>
-                            </li>
-                        </ul>
                     </td>
                     <td th:text="${recepcionado.ticket.faseTicket.nombre}">Fase</td>
                 </tr>
