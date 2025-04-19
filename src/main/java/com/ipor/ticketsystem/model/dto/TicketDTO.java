@@ -36,7 +36,7 @@ public class TicketDTO {
 
     public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();
-        this.idFormateado = getIdConFormato();
+        this.idFormateado = ticket.getCodigoTicket();
         this.fecha = ticket.getFecha();
         this.fechaFormateada = getFechaConFormato();
         this.hora = ticket.getHora();
@@ -57,10 +57,5 @@ public class TicketDTO {
     // Método para formatear la hora como cadena
     public String getHoraConFormato() {
         return this.hora.format(FORMATO_HORA);
-    }
-
-    // Método para obtener el ID formateado
-    public String getIdConFormato() {
-        return this.fechaFormateada = String.format("TK-%04d", id);
     }
 }

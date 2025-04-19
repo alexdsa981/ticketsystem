@@ -21,6 +21,10 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    private String codigoTicket;
+
     @Column(nullable = false)
     private LocalDate fecha;
     @Column(nullable = false)
@@ -58,6 +62,7 @@ public class Ticket {
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Desestimacion desestimacion;
+
 
     // Método para establecer fecha y hora actuales antes de persistir
     @PrePersist

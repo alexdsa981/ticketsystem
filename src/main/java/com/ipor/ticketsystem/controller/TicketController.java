@@ -78,7 +78,7 @@ public class TicketController {
 
             return "<div>" +
                     "<h5><strong>Detalles del Ticket</strong></h5>" +
-                    "<p><strong>ID:</strong> " + t.getIdConFormato() + "</p>" +
+                    "<p><strong>ID:</strong> " + t.getIdFormateado() + "</p>" +
                     "<p><strong>Descripción:</strong> " + t.getDescripcion() + "</p>" +
                     "<p><strong>Usuario:</strong> " + t.getUsuario().getNombre() + "</p>" +
                     "<p><strong>Fecha:</strong> " + t.getFechaConFormato() + "</p>" +
@@ -105,6 +105,16 @@ public class TicketController {
 
         // Lógica para crear el ticket
         Ticket ticket = new Ticket();
+
+        Integer ultimoNumero = ticketRepository.obtenerUltimoNumeroTicket();
+        if (ultimoNumero == null) {
+            ultimoNumero = 0;
+        }
+        String codigo = String.format("TK-%04d", ultimoNumero + 1);
+        ticket.setCodigoTicket(codigo);
+
+
+        ticket.setCodigoTicket(codigo);
         ticket.setDescripcion(descripcion);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
         ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
