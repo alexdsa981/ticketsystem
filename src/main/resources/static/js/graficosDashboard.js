@@ -110,7 +110,9 @@ async function actualizarDashboard(fechaInicio, fechaFin) {
 
     const urls = [
         '/app/dashboard/grafico/TicketsporIncidencia',
-        '/app/dashboard/grafico/TicketsporUrgencia'
+        '/app/dashboard/grafico/TicketsporUrgencia',
+        '/app/dashboard/grafico/TicketsporArea'
+
     ];
 
     for (const url of urls) {
@@ -198,6 +200,8 @@ function actualizarTabla(canvasId, etiquetas, datos) {
 function inicializarDashboard() {
     inicializarGrafico('TicketsporIncidencia', 'TicketsporIncidenciaTabla', '/app/dashboard/grafico/TicketsporIncidencia', 'Tickets por Clasificación de Incidencia');
     inicializarGrafico('TicketsporUrgencia', 'TicketsporUrgenciaTabla', '/app/dashboard/grafico/TicketsporUrgencia', 'Tickets por Urgencia');
+    inicializarGrafico('TicketsporArea', 'TicketsporAreaTabla', '/app/dashboard/grafico/TicketsporArea', 'Tickets por Area');
+
 }
 
 // Evento de filtro

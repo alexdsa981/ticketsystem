@@ -53,13 +53,14 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
-        <td></td> <!-- Este número se actualizará luego -->
+        <td></td>
 
         <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
 
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>
         <td>${ticketRecord.nombreUsuario}</td>
+        <td>${ticketRecord.descripcion}</td>
 
         <td>
             <ul>

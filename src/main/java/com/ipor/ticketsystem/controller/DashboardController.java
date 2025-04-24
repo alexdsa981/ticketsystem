@@ -25,41 +25,30 @@ public class DashboardController {
     @Autowired
     DashboardService dashboardService;
 
-    // Endpoint para obtener el número total de tickets
+    //INFO PARA DASHBOARD DE ADMIN
+    //NUMERO TOTAL DE TICKETS POR AREA
     @GetMapping("/contador/total")
     public ResponseEntity<Long> getTotalTickets() {
         Long ntotal = dashboardService.obtenerNTotalTickets();
         return ResponseEntity.ok(ntotal);
     }
-
-    // Endpoint para obtener el número total de desestimados
     @GetMapping("/contador/desestimados")
     public ResponseEntity<Long> getTotalDesestimados() {
         Long ntotal = dashboardService.obtenerNTotalDesestimados();
         return ResponseEntity.ok(ntotal);
     }
-
-    // Endpoint para obtener el número total de recepcionados
     @GetMapping("/contador/recepcionados")
     public ResponseEntity<Long> getTotalRecepcionados() {
         Long ntotal = dashboardService.obtenerNTotalRecepcionados();
         return ResponseEntity.ok(ntotal);
     }
-
-    // Endpoint para obtener el número total de atendidos
     @GetMapping("/contador/atendidos")
     public ResponseEntity<Long> getTotalAtendidos() {
         Long ntotal = dashboardService.obtenerNTotalAtendidos();
         return ResponseEntity.ok(ntotal);
     }
 
-    @GetMapping("/grafico/EstadoActual")
-    public ResponseEntity<Map<String, Object>> getGraficoData(
-            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase(fechaInicio, fechaFin);
-        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
-    }
+
 
     @GetMapping("/grafico/TicketsporIncidencia")
     public ResponseEntity<Map<String, Object>> getTxIGraficoData(
@@ -77,6 +66,24 @@ public class DashboardController {
         return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
+    @GetMapping("/grafico/TicketsporArea")
+    public ResponseEntity<Map<String, Object>> getTxAGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorArea(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
+    }
+
+
+
+
+    @GetMapping("/grafico/EstadoActual")
+    public ResponseEntity<Map<String, Object>> getGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorFase(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
+    }
 
     private Map<String, Object> mapearDatosFactorxConteo(List<RecordFactorXConteo> lista){
         // Mapear nombres de fase y conteos en listas separadas
@@ -93,29 +100,43 @@ public class DashboardController {
         return response;
     }
 
+
+
+
+
     @GetMapping("/promedioRecepcion")
     @ResponseBody
-    public String obtenerPromedioRecepcion() {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_R();
-        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
-        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    public String obtenerPromedioRecepcion(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_R(fechaInicio, fechaFin);
+        double promedioMinutos = promedioSegundos / 60;
+        return String.format("%.2f", promedioMinutos);
     }
 
     @GetMapping("/promedioAtencion")
     @ResponseBody
-    public String obtenerPromedioAtencion() {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosR_S();
-        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
-        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    public String obtenerPromedioAtencion(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosR_S(fechaInicio, fechaFin);
+        double promedioMinutos = promedioSegundos / 60;
+        return String.format("%.2f", promedioMinutos);
     }
 
     @GetMapping("/promedioInicioFin")
     @ResponseBody
-    public String obtenerPromedioInicioFin() {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_S();
-        double promedioMinutos = promedioSegundos / 60;  // Convertir a minutos
-        return String.format("%.2f", promedioMinutos);  // Formato de 2 decimales
+    public String obtenerPromedioInicioFin(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_S(fechaInicio, fechaFin);
+        double promedioMinutos = promedioSegundos / 60;
+        return String.format("%.2f", promedioMinutos);
     }
+
+
+
+
 
 
 }

@@ -299,7 +299,9 @@ h2 {
     display:none;
 }
 
-
+.inputRangoFechas{
+    cursor: pointer;
+}
 
 
 

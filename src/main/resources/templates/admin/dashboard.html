@@ -31,17 +31,22 @@
                         <!-- Filtros dentro del modal -->
                         <form id="formFiltrado">
                             <div class="container">
+
                                 <div class="row g-3 align-items-center">
+
+                                    <!-- Inputs ocultos para enviar -->
+                                    <input type="hidden" id="fechaInicio" name="fechaInicio">
+                                    <input type="hidden" id="fechaFin" name="fechaFin">
+
+                                    <!-- Input visible con Litepicker -->
                                     <div class="col-md-12">
-                                        <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
-                                        <input type="date" id="fechaInicio" class="form-control" name="fechaInicio">
+                                        <label for="rangoFechas" class="form-label">Rango de Fechas:</label>
+                                        <input type="text" id="rangoFechas" class="form-control inputRangoFechas"
+                                               name="rangoFechas" placeholder="Selecciona el rango" readonly>
                                     </div>
 
-                                    <div class="col-md-12">
-                                        <label for="fechaFin" class="form-label">Fecha de Fin:</label>
-                                        <input type="date" id="fechaFin" class="form-control" name="fechaFin">
-                                    </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
@@ -213,10 +218,12 @@
         </script>
 
 
+        <!--PROMEDIO DE TIEMPOS-->
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded contenedor-promedios">
             <div class="row">
-                <h3 class="col-12" style="margin-bottom:10px;"><i class="bi bi-clock-history"></i> Promedio de tiempos:</h3>
-                <div class="col-12 col-md-4" >
+                <h3 class="col-12" style="margin-bottom:10px;"><i class="bi bi-clock-history"></i> Promedio de tiempos:
+                </h3>
+                <div class="col-12 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title"><i class="bi bi-clock"></i> Promedio de Recepción</h5>
@@ -254,6 +261,35 @@
         </div>
 
 
+        <!--TICKETS POR AREA-->
+        <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
+            <h3><i class="bi bi-building"></i> Tickets por Area:</h3>
+            <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
+                <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-2 order-md-1">
+                    <table class="table table-bordered table-hover" style="font-size:14px;">
+                        <thead>
+                        <tr>
+                            <th>Urgencia</th>
+                            <th>Conteo de Tickets</th>
+                            <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                        </tr>
+                        </thead>
+                        <tbody id="TicketsporAreaTabla">
+                        <!-- Filas se agregarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
+                <div class="col-12 col-md-6 order-1 order-md-2">
+                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
+                    <canvas id="TicketsporArea"
+                            style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!--TICKETS POR INCIDENCIA-->
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
             <h3><i class="bi bi-flag"></i> Tickets por Incidencia:</h3>
             <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
@@ -281,7 +317,7 @@
             </div>
         </div>
 
-
+        <!--TICKETS POR URGENCIA-->
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
             <h3><i class="bi bi-exclamation-triangle"></i> Tickets por Urgencia:</h3>
             <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
@@ -336,39 +372,56 @@
 </script>
 <script>
     function actualizarPromedios() {
-        fetch('/app/dashboard/promedioRecepcion')
-            .then(response => response.text())  // Usamos text() ya que estamos esperando un String formateado
-            .then(data => {
-                document.getElementById('promedioRecepcion').innerText = `Promedio de Recepción: ${data} minutos. Creación de ticket hasta Recepción de ticket.`;
-            })
-            .catch(error => {
-                document.getElementById('promedioRecepcion').innerText = 'Error al obtener el promedio.';
-            });
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
 
-        fetch('/app/dashboard/promedioAtencion')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('promedioAtencion').innerText = `Promedio de Atención: ${data} minutos. Recepción de ticket hasta Atención/Cierre de ticket.`;
-            })
-            .catch(error => {
-                document.getElementById('promedioAtencion').innerText = 'Error al obtener el promedio.';
-            });
+        // Construir query string
+        let queryParams = '';
+        if (fechaInicio && fechaFin) {
+            queryParams = `?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        }
 
-        fetch('/app/dashboard/promedioInicioFin')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('promedioInicioFin').innerText = `Promedio General: ${data} minutos. Creación de ticket hasta Atención/Cierre de ticket.`;
-            })
-            .catch(error => {
-                document.getElementById('promedioInicioFin').innerText = 'Error al obtener el promedio.';
-            });
+        const endpoints = [
+            { url: '/app/dashboard/promedioRecepcion', target: 'promedioRecepcion', mensaje: 'Promedio de Recepción: {data} minutos. Creación de ticket hasta Recepción de ticket.' },
+            { url: '/app/dashboard/promedioAtencion', target: 'promedioAtencion', mensaje: 'Promedio de Atención: {data} minutos. Recepción de ticket hasta Atención/Cierre de ticket.' },
+            { url: '/app/dashboard/promedioInicioFin', target: 'promedioInicioFin', mensaje: 'Promedio General: {data} minutos. Creación de ticket hasta Atención/Cierre de ticket.' }
+        ];
+
+        endpoints.forEach(({ url, target, mensaje }) => {
+            fetch(url + queryParams)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(target).innerText = mensaje.replace('{data}', data);
+                })
+                .catch(() => {
+                    document.getElementById(target).innerText = 'Error al obtener el promedio.';
+                });
+        });
     }
 
-    // Actualización periódica
+
+
+    const picker = new Litepicker({
+        element: document.getElementById('rangoFechas'),
+        singleMode: false,
+        format: 'YYYY-MM-DD',
+        setup: (picker) => {
+            picker.on('selected', (startDate, endDate) => {
+                document.getElementById('fechaInicio').value = startDate.format('YYYY-MM-DD');
+                document.getElementById('fechaFin').value = endDate.format('YYYY-MM-DD');
+            });
+        }
+    });
+
+
+        // Carga inicial
+document.addEventListener('DOMContentLoaded', function () {
     actualizarPromedios();
     setInterval(actualizarPromedios, 10000);
+});
 
 </script>
+
 </body>
 
 </html>
