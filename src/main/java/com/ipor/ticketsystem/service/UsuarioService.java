@@ -111,4 +111,16 @@ public class UsuarioService {
     public Usuario getUsuarioPorUsername(String username){
         return usuarioRepository.findByUsername(username).get();
     }
+
+    public Boolean existeUsuarioPorUsername(String username){
+        Optional<Usuario> usuarioOpt =  usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isPresent()){
+            System.out.println("Existe en bd Tickets");
+            return true;
+        }else{
+            System.out.println("No existe en bd tickets");
+            return false;
+        }
+
+    }
 }

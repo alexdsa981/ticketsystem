@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.model.dto.UsuarioSpringDTO;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
@@ -18,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,6 +28,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/app")
 public class LoginController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     private AuthenticationManager authenticationManager;
     private UsuarioRepository usuarioRepository;
@@ -43,14 +50,47 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
+
+        //1. verificar si el usuario existe en SPRING
+        String url = "http://localhost:9000/api/usuarios/validar?username=" + username + "&password=" + password;
+        Boolean esValido;
+        try {
+            esValido = restTemplate.getForObject(url, Boolean.class);
+            if (esValido){
+                //2. verificar si el usuario existe en BD Tickets
+                boolean existeEnBDtickets = usuarioService.existeUsuarioPorUsername(username);
+                if (existeEnBDtickets){
+                    //logica de login
+                    Usuario usuario = usuarioService.getUsuarioPorUsername(username);
+
+
+
+
+                }else{
+                    response.sendRedirect("/login?error=badCredentials&username=" + username);
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
+            }
+
+
+
+
+        } catch (HttpClientErrorException e) {
+            System.out.println("Error api?");
+            // Usuario no encontrado o credenciales incorrectas
+            response.sendRedirect("/login?error=badCredentials&username=" + username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
         if (usuarioOpt.isEmpty()) {
-            // Usuario no existe
+            // Usuario no existe en BD local
             response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (!usuarioOpt.get().getIsActive()) {
-            // Usuario desactivado
+            // Usuario desactivado en BD local
             response.sendRedirect("/login?error=inactive&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
