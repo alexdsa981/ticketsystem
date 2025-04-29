@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.service;
 
+import com.ipor.ticketsystem.model.dto.UsuarioSpringDTO;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -10,6 +11,7 @@ import com.ipor.ticketsystem.security.JwtAuthenticationFilter;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,8 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
     @Autowired
     RolUsuarioRepository rolUsuarioRepository;
+    @Autowired
+    RestTemplate restTemplate;
 
     public Long getIDdeUsuarioLogeado(){
 
@@ -112,6 +116,8 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username).get();
     }
 
+
+
     public Boolean existeUsuarioPorUsername(String username){
         Optional<Usuario> usuarioOpt =  usuarioRepository.findByUsername(username);
         if (usuarioOpt.isPresent()){
@@ -123,4 +129,17 @@ public class UsuarioService {
         }
 
     }
+
+
+    // Ejemplo: Encriptar contraseña usando el endpoint remoto
+    public String obtenerPasswordSpringEncriptada(String inputPass) {
+        String url = "http://localhost:9000/api/usuarios/encriptar?password=" + inputPass;
+        return restTemplate.postForObject(url, null, String.class);
+    }
+
+    public UsuarioSpringDTO obtenerUsuarioSpring(String nombreUsuario) {
+        String url = "http://localhost:9000/api/usuarios/" + nombreUsuario;
+        return restTemplate.getForObject(url, UsuarioSpringDTO.class);
+    }
+
 }

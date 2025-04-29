@@ -54,25 +54,84 @@ public class LoginController {
 
         //1. verificar si el usuario existe en SPRING
         String url = "http://localhost:9000/api/usuarios/validar?username=" + username + "&password=" + password;
+        System.out.println(url);
         Boolean esValido;
         try {
             esValido = restTemplate.getForObject(url, Boolean.class);
             if (esValido){
                 //2. verificar si el usuario existe en BD Tickets
                 boolean existeEnBDtickets = usuarioService.existeUsuarioPorUsername(username);
+                UsuarioSpringDTO usuarioSpringDTO = usuarioService.obtenerUsuarioSpring(username);
                 if (existeEnBDtickets){
-                    //logica de login
+                    //reemplazar datos de la bd tickets con datos de la bd
                     Usuario usuario = usuarioService.getUsuarioPorUsername(username);
-
-
-
-
+                    usuario.setChangedPass(true);
+                    usuario.setNombre(usuarioSpringDTO.getNombre());
+                    usuario.encriptarPassword(password);
                 }else{
+                    //2. si no existe en la BD tickets pero si en la BD SPRING, se creará en la BD TICKETS
+                    Usuario usuario = new Usuario();
+                    usuario.setIsActive(true);
+                    usuario.setRolUsuario(rolUsuarioRepository.findById(1l).get());
+                    usuario.setChangedPass(true);
+                    usuario.setNombre(usuarioSpringDTO.getNombre());
+                    usuario.setUsername(usuarioSpringDTO.getUsuario());
+                    usuario.setPassword(password);
+                    usuarioService.guardarUsuario(usuario);
+                }
+
+
+
+                Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+                if (usuarioOpt.isEmpty()) {
+                    // Usuario no existe en BD local
                     response.sendRedirect("/login?error=badCredentials&username=" + username);
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                } else if (!usuarioOpt.get().getIsActive()) {
+                    // Usuario desactivado en BD local
+                    response.sendRedirect("/login?error=inactive&username=" + username);
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
-            }
 
+                try {
+                    Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(username, password));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                    String token = jwtTokenProvider.generarToken(authentication);
+
+                    Cookie jwtCookie = new Cookie("JWT", token);
+                    jwtCookie.setHttpOnly(true);
+                    jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
+                    jwtCookie.setPath("/");
+                    response.addCookie(jwtCookie);
+
+
+                    if (!usuarioOpt.get().getChangedPass()) {
+                        // Usuario debe cambiar su contraseña
+                        response.sendRedirect("/inicio?changePassword");
+                        return ResponseEntity.ok().build();
+                    }
+
+
+                    response.sendRedirect("/inicio");
+                    return ResponseEntity.ok().build();
+                } catch (BadCredentialsException e) {
+                    // Credenciales incorrectas
+                    response.sendRedirect("/login?error=badCredentials&username=" + username);
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                } catch (Exception e) {
+                    // Otro error
+                    response.sendRedirect("/login?error=unknown&username=" + username);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+
+
+            }else{
+                response.sendRedirect("/login?error=badCredentials&username=" + username);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
 
 
 
@@ -83,51 +142,6 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
-        if (usuarioOpt.isEmpty()) {
-            // Usuario no existe en BD local
-            response.sendRedirect("/login?error=badCredentials&username=" + username);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!usuarioOpt.get().getIsActive()) {
-            // Usuario desactivado en BD local
-            response.sendRedirect("/login?error=inactive&username=" + username);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            String token = jwtTokenProvider.generarToken(authentication);
-
-            Cookie jwtCookie = new Cookie("JWT", token);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
-            jwtCookie.setPath("/");
-            response.addCookie(jwtCookie);
-
-
-            if (!usuarioOpt.get().getChangedPass()) {
-                // Usuario debe cambiar su contraseña
-                response.sendRedirect("/inicio?changePassword");
-                return ResponseEntity.ok().build();
-            }
-
-
-            response.sendRedirect("/inicio");
-            return ResponseEntity.ok().build();
-        } catch (BadCredentialsException e) {
-            // Credenciales incorrectas
-            response.sendRedirect("/login?error=badCredentials&username=" + username);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            // Otro error
-            response.sendRedirect("/login?error=unknown&username=" + username);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
 
