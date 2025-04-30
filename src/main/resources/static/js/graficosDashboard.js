@@ -118,7 +118,7 @@ async function actualizarDashboard(fechaInicio, fechaFin) {
     for (const url of urls) {
         const response = await fetch(`${url}?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
         const datos = await response.json();
-        actualizarGrafico(url, datos);
+        await actualizarGrafico(url, datos);
     }
 }
 
@@ -205,9 +205,22 @@ function inicializarDashboard() {
 }
 
 // Evento de filtro
-document.getElementById('btnFiltrar').addEventListener('click', function () {
+//spinner para boton filtrar
+    document.getElementById('btnFiltrar').addEventListener('click', async function () {
+    const btn = document.getElementById('btnFiltrar');
+    const btnTexto = document.getElementById('btnFiltrarTexto');
+
     const fechaInicio = document.getElementById('fechaInicio').value;
     const fechaFin = document.getElementById('fechaFin').value;
 
-    actualizarDashboard(fechaInicio, fechaFin);
+    // Mostrar spinner y desactivar botón
+    btn.disabled = true;
+    btnTexto.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Filtrando...`;
+
+    // Ejecutar el filtrado
+    await actualizarDashboard(fechaInicio, fechaFin);
+
+    // Restaurar texto y habilitar botón
+    btnTexto.innerHTML = 'Filtrar';
+    btn.disabled = false;
 });

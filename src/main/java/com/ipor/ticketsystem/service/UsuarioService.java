@@ -3,16 +3,25 @@ package com.ipor.ticketsystem.service;
 import com.ipor.ticketsystem.model.dto.UsuarioSpringDTO;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.model.fixed.RolUsuario;
-import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
-import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
+import com.ipor.ticketsystem.security.ConstantesSeguridad;
 import com.ipor.ticketsystem.security.JwtAuthenticationFilter;
 import com.ipor.ticketsystem.security.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,21 +37,23 @@ public class UsuarioService {
     RolUsuarioRepository rolUsuarioRepository;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    public Long getIDdeUsuarioLogeado(){
+    public Long getIDdeUsuarioLogeado() {
 
         String token = jwtAuthenticationFilter.tokenActual;
         String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
         Usuario usuario = usuarioRepository.findByUsername(username).get();
         return usuario.getId();
     }
-    public Usuario getUsuarioPorId(Long id){
+
+    public Usuario getUsuarioPorId(Long id) {
         return usuarioRepository.findById(id).get();
     }
 
     // Crear un nuevo usuario
     public Usuario guardarUsuario(Usuario usuario) {
-        usuario.encriptarPassword(usuario.getPassword());
         return usuarioRepository.save(usuario);
     }
 
@@ -50,14 +61,17 @@ public class UsuarioService {
     public List<Usuario> getListaUsuarios() {
         return usuarioRepository.findAll();
     }
+
     //activos
     public List<Usuario> getListaUsuariosActivos() {
         return usuarioRepository.findByIsActiveTrue();
     }
+
     //desactivados
     public List<Usuario> getListaUsuariosDesactivados() {
         return usuarioRepository.findByIsActiveFalse();
     }
+
     // Actualizar un usuario existente
     public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findById(id);
@@ -93,6 +107,7 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
         }
     }
+
     public void activarUsuario(Long id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isPresent()) {
@@ -101,41 +116,117 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
         }
     }
+
     //retorna lista de usuarios por rol
-    public List<Usuario> ListaUsuariosPorRol(Long idRolUsuario){
+    public List<Usuario> ListaUsuariosPorRol(Long idRolUsuario) {
         return usuarioRepository.findByRolUsuarioId(idRolUsuario);
     }
-//    //retorna todos los roles:
-    public List<RolUsuario> getListaRoles(){
+
+    //    //retorna todos los roles:
+    public List<RolUsuario> getListaRoles() {
         return rolUsuarioRepository.findAll();
     }
-    public RolUsuario getRolPorId(Long id){
+
+    public RolUsuario getRolPorId(Long id) {
         return rolUsuarioRepository.findById(id).get();
     }
-    public Usuario getUsuarioPorUsername(String username){
-        return usuarioRepository.findByUsername(username).get();
+
+    public Optional<Usuario> getUsuarioPorUsername(String username) {
+        return usuarioRepository.findByUsername(username);
     }
 
-
-
-    public Boolean existeUsuarioPorUsername(String username){
-        Optional<Usuario> usuarioOpt =  usuarioRepository.findByUsername(username);
-        if (usuarioOpt.isPresent()){
+    public Boolean existeUsuarioPorUsername(String username) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isPresent()) {
             System.out.println("Existe en bd Tickets");
             return true;
-        }else{
+        } else {
             System.out.println("No existe en bd tickets");
             return false;
         }
 
     }
 
+    public ResponseEntity<Void> logearUsuarioAlSistema(String username, String password, HttpServletResponse response) throws IOException {
+        try {
+            Boolean existeEnSpring = obtenerValidacionLoginSpring(username, password);
+            Usuario usuarioTicket;
+            if (existeEnSpring == null) {
+                if (getUsuarioPorUsername(username).isPresent()) {
+                    usuarioTicket = getUsuarioPorUsername(username).get();
+                } else {
+                    response.sendRedirect("/login?error=unknown&username=" + username);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            } else {
+                Boolean existeEnTickets = existeUsuarioPorUsername(username);
+                UsuarioSpringDTO usuarioSpringDTO = obtenerUsuarioSpring(username);
 
-    // Ejemplo: Encriptar contraseña usando el endpoint remoto
-    public String obtenerPasswordSpringEncriptada(String inputPass) {
-        String url = "http://localhost:9000/api/usuarios/encriptar?password=" + inputPass;
-        return restTemplate.postForObject(url, null, String.class);
+                if (existeEnSpring && existeEnTickets) {
+                    Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+                    //reemplazar datos de la bd tickets con datos de la bd
+                    usuarioTicket = getUsuarioPorUsername(username).get();
+                    usuarioTicket.setChangedPass(true);
+                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
+                    usuarioTicket.encriptarPassword(password);
+                    guardarUsuario(usuarioTicket);
+                } else if (existeEnSpring && !existeEnTickets) {
+                    usuarioTicket = new Usuario();
+                    usuarioTicket.setIsActive(true);
+                    usuarioTicket.setRolUsuario(rolUsuarioRepository.findById(1l).get());
+                    usuarioTicket.setChangedPass(true);
+                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
+                    usuarioTicket.setUsername(usuarioSpringDTO.getUsuario());
+                    usuarioTicket.encriptarPassword(password);
+                    guardarUsuario(usuarioTicket);
+                } else {
+                    if (getUsuarioPorUsername(username).isPresent()) {
+                        usuarioTicket = getUsuarioPorUsername(username).get();
+                    } else {
+                        response.sendRedirect("/login?error=badCredentials&username=" + username);
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    }
+                }
+            }
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtTokenProvider.generarToken(authentication);
+            Cookie jwtCookie = new Cookie("JWT", token);
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
+            jwtCookie.setPath("/");
+            response.addCookie(jwtCookie);
+
+            if (!usuarioTicket.getChangedPass()) {
+                response.sendRedirect("/inicio?changePassword");
+                return ResponseEntity.ok().build();
+            }
+            //LOGIN EXITOSO
+            response.sendRedirect("/inicio");
+            return ResponseEntity.ok().build();
+        } catch (BadCredentialsException e) {
+            System.out.println(e.getMessage());
+            response.sendRedirect("/login?error=badCredentials&username=" + username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            response.sendRedirect("/login?error=unknown&username=" + username);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+    public Boolean obtenerValidacionLoginSpring(String username, String password) {
+        String url = "http://localhost:9000/api/usuarios/validar?username=" + username + "&password=" + password;
+        try {
+            return restTemplate.getForObject(url, Boolean.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 
     public UsuarioSpringDTO obtenerUsuarioSpring(String nombreUsuario) {
         String url = "http://localhost:9000/api/usuarios/" + nombreUsuario;

@@ -51,7 +51,9 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+                        <button id="btnFiltrar" class="btn btn-primary" type="button">
+                            <span id="btnFiltrarTexto">Filtrar</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -419,6 +421,10 @@ document.addEventListener('DOMContentLoaded', function () {
     actualizarPromedios();
     setInterval(actualizarPromedios, 10000);
 });
+
+
+
+
 
 </script>
 

@@ -29,119 +29,20 @@ import java.util.Optional;
 @RequestMapping("/app")
 public class LoginController {
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-
-    private AuthenticationManager authenticationManager;
     private UsuarioRepository usuarioRepository;
     private RolUsuarioRepository rolUsuarioRepository;
-    private JwtTokenProvider jwtTokenProvider;
     private UsuarioService usuarioService;
 
     @Autowired
-    public LoginController(UsuarioService usuarioService, AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository, RolUsuarioRepository rolUsuarioRepository, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
+    public LoginController(UsuarioService usuarioService, UsuarioRepository usuarioRepository, RolUsuarioRepository rolUsuarioRepository) {
         this.usuarioRepository = usuarioRepository;
         this.rolUsuarioRepository = rolUsuarioRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
         this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
-
-
-        //1. verificar si el usuario existe en SPRING
-        String url = "http://localhost:9000/api/usuarios/validar?username=" + username + "&password=" + password;
-        System.out.println(url);
-        Boolean esValido;
-        try {
-            esValido = restTemplate.getForObject(url, Boolean.class);
-            if (esValido){
-                //2. verificar si el usuario existe en BD Tickets
-                boolean existeEnBDtickets = usuarioService.existeUsuarioPorUsername(username);
-                UsuarioSpringDTO usuarioSpringDTO = usuarioService.obtenerUsuarioSpring(username);
-                if (existeEnBDtickets){
-                    //reemplazar datos de la bd tickets con datos de la bd
-                    Usuario usuario = usuarioService.getUsuarioPorUsername(username);
-                    usuario.setChangedPass(true);
-                    usuario.setNombre(usuarioSpringDTO.getNombre());
-                    usuario.encriptarPassword(password);
-                }else{
-                    //2. si no existe en la BD tickets pero si en la BD SPRING, se creará en la BD TICKETS
-                    Usuario usuario = new Usuario();
-                    usuario.setIsActive(true);
-                    usuario.setRolUsuario(rolUsuarioRepository.findById(1l).get());
-                    usuario.setChangedPass(true);
-                    usuario.setNombre(usuarioSpringDTO.getNombre());
-                    usuario.setUsername(usuarioSpringDTO.getUsuario());
-                    usuario.setPassword(password);
-                    usuarioService.guardarUsuario(usuario);
-                }
-
-
-
-                Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
-                if (usuarioOpt.isEmpty()) {
-                    // Usuario no existe en BD local
-                    response.sendRedirect("/login?error=badCredentials&username=" + username);
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                } else if (!usuarioOpt.get().getIsActive()) {
-                    // Usuario desactivado en BD local
-                    response.sendRedirect("/login?error=inactive&username=" + username);
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                }
-
-                try {
-                    Authentication authentication = authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(username, password));
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    String token = jwtTokenProvider.generarToken(authentication);
-
-                    Cookie jwtCookie = new Cookie("JWT", token);
-                    jwtCookie.setHttpOnly(true);
-                    jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
-                    jwtCookie.setPath("/");
-                    response.addCookie(jwtCookie);
-
-
-                    if (!usuarioOpt.get().getChangedPass()) {
-                        // Usuario debe cambiar su contraseña
-                        response.sendRedirect("/inicio?changePassword");
-                        return ResponseEntity.ok().build();
-                    }
-
-
-                    response.sendRedirect("/inicio");
-                    return ResponseEntity.ok().build();
-                } catch (BadCredentialsException e) {
-                    // Credenciales incorrectas
-                    response.sendRedirect("/login?error=badCredentials&username=" + username);
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                } catch (Exception e) {
-                    // Otro error
-                    response.sendRedirect("/login?error=unknown&username=" + username);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                }
-
-
-            }else{
-                response.sendRedirect("/login?error=badCredentials&username=" + username);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-
-
-        } catch (HttpClientErrorException e) {
-            System.out.println("Error api?");
-            // Usuario no encontrado o credenciales incorrectas
-            response.sendRedirect("/login?error=badCredentials&username=" + username);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
+        return usuarioService.logearUsuarioAlSistema(username, password, response);
     }
 
 

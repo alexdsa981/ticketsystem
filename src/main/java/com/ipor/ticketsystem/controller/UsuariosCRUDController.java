@@ -198,7 +198,7 @@ public class UsuariosCRUDController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Usuario usuario = usuarioService.getUsuarioPorUsername(userDetails.getUsername());
+            Usuario usuario = usuarioService.getUsuarioPorUsername(userDetails.getUsername()).get();
 
             if (usuario != null && usuario.getRolUsuario().getId() == 2L) {
                 return ResponseEntity.ok("soporte");

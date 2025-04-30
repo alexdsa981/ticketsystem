@@ -49,6 +49,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Recepcion> listaRecepciones;
 
+    //en SERVICE SE USA PARA ENCRIPTAR DIRECTAMENTE
     public void encriptarPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
