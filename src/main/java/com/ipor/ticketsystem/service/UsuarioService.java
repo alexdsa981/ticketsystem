@@ -159,14 +159,15 @@ public class UsuarioService {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             } else {
+
                 Boolean existeEnTickets = existeUsuarioPorUsername(username);
                 UsuarioSpringDTO usuarioSpringDTO = obtenerUsuarioSpring(username);
 
                 if (existeEnSpring && existeEnTickets) {
-                    Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
                     //reemplazar datos de la bd tickets con datos de la bd
                     usuarioTicket = getUsuarioPorUsername(username).get();
                     usuarioTicket.setChangedPass(true);
+                    usuarioTicket.setIsSpringUser(Boolean.TRUE);
                     usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
                     usuarioTicket.encriptarPassword(password);
                     guardarUsuario(usuarioTicket);
@@ -174,6 +175,7 @@ public class UsuarioService {
                     usuarioTicket = new Usuario();
                     usuarioTicket.setIsActive(true);
                     usuarioTicket.setRolUsuario(rolUsuarioRepository.findById(1l).get());
+                    usuarioTicket.setIsSpringUser(true);
                     usuarioTicket.setChangedPass(true);
                     usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
                     usuarioTicket.setUsername(usuarioSpringDTO.getUsuario());
@@ -188,7 +190,10 @@ public class UsuarioService {
                     }
                 }
             }
-
+            if (!usuarioTicket.getIsActive()) {
+                response.sendRedirect("/login?error=inactive&username=" + username);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
 

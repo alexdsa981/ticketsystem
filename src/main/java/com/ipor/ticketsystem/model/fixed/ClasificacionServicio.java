@@ -14,7 +14,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class ClasificacionServicio {
-
+    public ClasificacionServicio(String nombre, Boolean isActive){
+        this.nombre = nombre;
+        this.isActive = isActive;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

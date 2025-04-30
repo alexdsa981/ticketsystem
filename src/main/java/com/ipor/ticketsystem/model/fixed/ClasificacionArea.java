@@ -14,6 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class ClasificacionArea {
+    public ClasificacionArea(String nombre, Boolean isActive) {
+        this.nombre = nombre;
+        this.isActive = isActive;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

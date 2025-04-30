@@ -48,8 +48,9 @@
                                     th:data-usuario-id="${usuario.id}"
                                     th:data-usuario-username="${usuario.username}"
                                     th:data-usuario-nombre="${usuario.nombre}"
-                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
-                                Editar
+                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}"
+                                    th:data-usuario-spring="${usuario.isSpringUser}">
+                            Editar
                             </button>
 
                             <a style="width: 120px;" class="btn btn-danger btn-active-user"
@@ -97,7 +98,8 @@
                                     th:data-usuario-id="${usuario.id}"
                                     th:data-usuario-username="${usuario.username}"
                                     th:data-usuario-nombre="${usuario.nombre}"
-                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}">
+                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}"
+                                    th:data-usuario-spring="${usuario.isSpringUser}">
                                 Editar
                             </button>
 
@@ -234,38 +236,43 @@
         return false; // Evita que el enlace se abra automáticamente
     }
 </script>
-<!-- Script JavaScript para manejar el modal -->
+
 <script>
-    // Al abrir el modal, actualizar su contenido con los datos del usuario seleccionado
     const editUserModal = document.getElementById('editUserModal');
     editUserModal.addEventListener('show.bs.modal', function (event) {
-        // Botón que disparó el modal
         const button = event.relatedTarget;
 
-        // Extraer información del usuario desde los atributos data-*
         const usuarioId = button.getAttribute('data-usuario-id');
         const usuarioUsername = button.getAttribute('data-usuario-username');
-
         const usuarioNombre = button.getAttribute('data-usuario-nombre');
         const usuarioRol = button.getAttribute('data-usuario-rol');
+        const isSpringUser = button.getAttribute('data-usuario-spring') === 'true';
 
-        // Actualizar los elementos del modal con la información del usuario
-        document.getElementById('usernameEdit').value = usuarioUsername;
-
-        document.getElementById('nombreEdit').value = usuarioNombre;
-
-        // Seleccionar el rol correcto en el select
+        const usernameInput = document.getElementById('usernameEdit');
+        const passwordInput = document.getElementById('passwordEdit');
+        const nombreInput = document.getElementById('nombreEdit');
         const rolSelect = document.getElementById('rolEdit');
+
+        // Llenar valores
+        usernameInput.value = usuarioUsername;
+        nombreInput.value = usuarioNombre;
+
+        // Habilitar o deshabilitar campos según sea usuario Spring
+        usernameInput.disabled = isSpringUser;
+        passwordInput.disabled = isSpringUser;
+        nombreInput.disabled = isSpringUser;
+
+        // Seleccionar el rol actual
         Array.from(rolSelect.options).forEach(option => {
             option.selected = option.text === usuarioRol;
         });
 
-        // Actualizar la acción del formulario para que envíe el usuario correspondiente
+        // Actualizar la acción del formulario
         const form = document.getElementById('editUserForm');
         form.setAttribute('action', `/app/usuarios/actualizar/${usuarioId}`);
     });
-
 </script>
+
 
 
 <div th:insert="~{common/imports :: bodyImportsAndNotification}">

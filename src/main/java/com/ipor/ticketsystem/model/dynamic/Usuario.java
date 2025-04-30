@@ -30,6 +30,8 @@ public class Usuario {
     @Column(nullable = false)
     private Boolean isActive;
     @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
+    private Boolean isSpringUser;
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     private Boolean changedPass;
 
     @JsonIgnore
