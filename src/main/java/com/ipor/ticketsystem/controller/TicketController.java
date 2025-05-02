@@ -38,7 +38,6 @@ public class TicketController {
 
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
-
     public Model retornaTicketsPropiosAVista(Model model) {
         List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         Collections.reverse(MisTicketsDTO);
@@ -53,45 +52,63 @@ public class TicketController {
         return model;
     }
 
+    public Model retornaTickets(Model model, String codigo) {
+        Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
+
+
+
+
+
+        List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
+        Collections.reverse(MisTicketsDTO);
+        model.addAttribute("MyTickets", MisTicketsDTO);
+        return model;
+    }
+
 
     @GetMapping("/buscar-ticket")
     @ResponseBody
-    public String buscarTicket(@RequestParam("ticketId") Long ticketId) {
-        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+    public String buscarTicket(@RequestParam("codigoTicket") Integer codigoTicket) {
+        String codigo = String.format("TK-%04d", codigoTicket);
+        Optional<Ticket> optionalTicket = ticketRepository.findByCodigoTicket(codigo);
 
-        if (ticket.isPresent()) {
-            TicketDTO t = new TicketDTO(ticket.get());
-            String url = "/inicio";
+        Usuario usuarioLogeado = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
+        boolean esSoporteOAdmin = usuarioLogeado.getRolUsuario().getId() == 2 || usuarioLogeado.getRolUsuario().getId() == 3;
 
-            // Determinar el URL dependiendo de la fase del ticket
-            if (t.getFaseTicket().getId() == 1){
-                url = "/soporte/Recepcionar";
-            } else if (t.getFaseTicket().getId() == 2) {
-                url = "/soporte/Atender";
-            } else if (t.getFaseTicket().getId() == 3) {
-                url = "/soporte/Tickets-Cerrados";
-            } else if (t.getFaseTicket().getId() == 4) {
-                url = "/soporte/Tickets-Desestimados";
-            } else if (t.getFaseTicket().getId() == 5) {
-                url = "/soporte/Recepcionar";
-            }
-
-            return "<div>" +
-                    "<h5><strong>Detalles del Ticket</strong></h5>" +
-                    "<p><strong>ID:</strong> " + t.getIdFormateado() + "</p>" +
-                    "<p><strong>Descripción:</strong> " + t.getDescripcion() + "</p>" +
-                    "<p><strong>Usuario:</strong> " + t.getUsuario().getNombre() + "</p>" +
-                    "<p><strong>Fecha:</strong> " + t.getFechaConFormato() + "</p>" +
-                    "<p><strong>Hora:</strong> " + t.getHoraConFormato() + "</p>" +
-                    "<p><strong>Estado:</strong> " + t.getFaseTicket().getNombre() + "</p>" +
-                    "<a href='" + url + "' class='btn btn-primary' target='_blank'>Ir a la Página del Ticket</a>" +
-                    "</div>";
-        } else {
-            // Si no se encuentra el ticket
-            return "<p>Ticket no encontrado.</p>";
+        if (optionalTicket.isEmpty()) {
+            // Usuarios comunes no deben saber si existe o no
+            return esSoporteOAdmin ? "<p>Ticket no existente.</p>" : "<p>No se encontró un ticket asociado a tu cuenta con ese código.</p>";
         }
-    }
 
+        TicketDTO t = new TicketDTO(optionalTicket.get());
+
+        if (!esSoporteOAdmin && !Objects.equals(t.getUsuario().getId(), usuarioLogeado.getId())) {
+            return "<p>No se encontró un ticket asociado a tu cuenta con ese código.</p>";
+        }
+
+        String url;
+        switch (t.getFaseTicket().getId().intValue()) {
+            case 1 -> url = esSoporteOAdmin ? "/soporte/Recepcionar" : "/inicio";
+            case 2 -> url = esSoporteOAdmin ? "/soporte/Atender" : "/TicketsEnProceso";
+            case 3 -> url = esSoporteOAdmin ? "/soporte/Tickets-Cerrados" : "/TicketsAtendidos";
+            case 4 -> url = esSoporteOAdmin ? "/soporte/Tickets-Desestimados" : "/TicketsDesestimados";
+            default -> url = "/inicio";
+        }
+
+        // Generar HTML
+        StringBuilder html = new StringBuilder();
+        html.append("<div>")
+                .append("<p><strong>ID:</strong> ").append(t.getIdFormateado()).append("</p>")
+                .append("<p><strong>Descripción:</strong> ").append(t.getDescripcion()).append("</p>")
+                .append("<p><strong>Usuario:</strong> ").append(t.getUsuario().getNombre()).append("</p>")
+                .append("<p><strong>Fecha:</strong> ").append(t.getFechaConFormato()).append("</p>")
+                .append("<p><strong>Hora:</strong> ").append(t.getHoraConFormato()).append("</p>")
+                .append("<p><strong>Estado:</strong> ").append(t.getFaseTicket().getNombre()).append("</p>")
+                //.append("<a disabled href='").append("/ticket/").append(t.getIdFormateado()).append("' class='btn btn-primary' target='_blank'>Ver Ticket</a>")
+                .append("</div>");
+
+        return html.toString();
+    }
 
 
 
@@ -124,7 +141,6 @@ public class TicketController {
         ticketService.saveTicket(ticket);
 
 
-
         List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
         // Si el archivo no es nulo y no está vacío, guardarlo
         if (archivo != null && !archivo.isEmpty()) {
@@ -152,7 +168,7 @@ public class TicketController {
 
         //NOTIFICACION EN BASE DE DATOS
         List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
-        for (Usuario soporte : listaSoportes){
+        for (Usuario soporte : listaSoportes) {
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(ticket);
             notificacion.setHora(notificacion.getHora());

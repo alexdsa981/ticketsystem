@@ -73,10 +73,10 @@
                             <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
                         </ul>
                     </li>
-                    <li sec:authorize="hasAnyAuthority('Admin','Soporte')">
+                    <li sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')">
                         <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
-                                <input type="text" id="ticketId" name="ticketId" placeholder="Buscar por ID de ticket"
+                                <input type="number" id="codigoTicket" name="codigoTicket" placeholder="Buscar por ID de ticket"
                                        class="form-control" required autocomplete="off">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-search"></i>
@@ -89,10 +89,10 @@
                                 event.preventDefault(); // Evitar que se recargue la página
 
                                 // Obtener el ID del ticket del formulario
-                                const ticketId = document.getElementById("ticketId").value;
+                                const codigoTicket = document.getElementById("codigoTicket").value;
 
                                 // Realizar la solicitud GET para buscar el ticket
-                                fetch(`/app/tickets/buscar-ticket?ticketId=${ticketId}`)
+                                fetch(`/app/tickets/buscar-ticket?codigoTicket=${codigoTicket}`)
                                     .then(response => response.text())
                                     .then(data => {
                                         // Llenar el modal con los datos recibidos

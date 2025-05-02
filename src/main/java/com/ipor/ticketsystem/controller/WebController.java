@@ -1,12 +1,22 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
+import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
+import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 public class WebController {
@@ -20,6 +30,17 @@ public class WebController {
     private ClasificadoresController clasificadoresController;
     @Autowired
     private LoginController loginController;
+
+
+
+    @Autowired
+    RecepcionRepository recepcionRepository;
+    @Autowired
+    ServicioRepository servicioRepository;
+    @Autowired
+    private TicketRepository ticketRepository;
+    @Autowired
+    private TicketService ticketService;
 
     //redirige / a /login
     @GetMapping("/")
@@ -72,6 +93,7 @@ public class WebController {
         model.addAttribute("Titulo", "HelpDesk | Atendidos");
         return "atendidos";
     }
+
     @GetMapping("/TicketsDesestimados")
     public String redirigePaginaMisTicketsDesestimados(Model model) {
         atencionController.getListaMisTicketsDesestimadosAVista(model);
@@ -134,6 +156,7 @@ public class WebController {
         model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets Cerrados");
         return "soporte/ticketsAtendidos";
     }
+
     @GetMapping("/soporte/Tickets-Desestimados")
     public String redirigePaginaTicketsDesestimados(Model model) {
         atencionController.getListaTodosLosTicketsDesestimadosAVista(model);
@@ -150,12 +173,33 @@ public class WebController {
         return "soporte/dashboard";
     }
 
+//    @GetMapping("/ticket/{codigo}")
+//    public String verTicketPorCodigo(@PathVariable("codigo") String codigo, Model model) {
+//        Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
+//        if (ticketOptional.isPresent()) {
+//            TicketDTO ticketDTO = new TicketDTO(ticketOptional.get());
+//            AtencionTicketDTO atencionTicketDTO;
+//            switch (ticketDTO.getFaseTicket().getId().intValue()) {
+//                case 1:
+//                    model.addAttribute("ticket", ticketDTO);
+//                    break;
+//                case 2:
+//                    atencionTicketDTO = new AtencionTicketDTO(recepcionRepository.findByTicketId(ticketDTO.getId()),ticketService);
+//                    model.addAttribute("ticket", atencionTicketDTO);
+//                    break;
+//                case 3:
+//                    atencionTicketDTO = new AtencionTicketDTO();
+//                    model.addAttribute("ticket", atencionTicketDTO);
+//                    break;
+//                case 4:
+//                    break;
+//            }
+//            model.addAttribute("Titulo", "HelpDesk | " + ticketDTO.getIdFormateado());
+//            return "general/ticket";
+//        }
+//
+//        return "redirect:/error-ticket-no-encontrado";
+//    }
 
-    //Metodo para manejar fragment expression
-    @GetMapping("/fragment-expression")
-    public String fragmentExpression() {
-
-        return "fragment-expression";
-    }
 
 }

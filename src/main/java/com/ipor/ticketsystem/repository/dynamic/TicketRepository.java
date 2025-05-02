@@ -8,12 +8,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     //obtener tickets por fase id
     List<Ticket> findByFaseTicketId(int faseId);
     //obtener tickets propios
     List<Ticket> findByUsuarioIdAndFaseTicketId(Long usuarioId, Long faseTicketId);
+    //obtener ticket por codigo ticket ej: TK-0003
+    Optional<Ticket> findByCodigoTicket(String codigo);
 
     @Query("SELECT MAX(CAST(SUBSTRING(t.codigoTicket, 4) AS int)) FROM Ticket t")
     Integer obtenerUltimoNumeroTicket();
@@ -170,8 +173,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerPromedioSegundosTSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-
-
 
 
 }
