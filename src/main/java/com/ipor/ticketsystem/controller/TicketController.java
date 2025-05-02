@@ -52,19 +52,6 @@ public class TicketController {
         return model;
     }
 
-    public Model retornaTickets(Model model, String codigo) {
-        Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
-
-
-
-
-
-        List<DetalleTicketDTO> MisTicketsDTO = ticketService.getMyTickets();
-        Collections.reverse(MisTicketsDTO);
-        model.addAttribute("MyTickets", MisTicketsDTO);
-        return model;
-    }
-
 
     @GetMapping("/buscar-ticket")
     @ResponseBody
@@ -104,7 +91,7 @@ public class TicketController {
                 .append("<p><strong>Fecha:</strong> ").append(detalleTicketDTO.getFechaFormateadaTicket()).append("</p>")
                 .append("<p><strong>Hora:</strong> ").append(detalleTicketDTO.getHoraFormateadaTicket()).append("</p>")
                 .append("<p><strong>Estado:</strong> ").append(detalleTicketDTO.getTicket().getFaseTicket().getNombre()).append("</p>")
-                //.append("<a disabled href='").append("/ticket/").append(t.getIdFormateado()).append("' class='btn btn-primary' target='_blank'>Ver Ticket</a>")
+                .append("<a disabled href='").append("/ticket/").append(detalleTicketDTO.getTicket().getCodigoTicket()).append("' class='btn btn-primary' target='_blank'>Ver Ticket</a>")
                 .append("</div>");
 
         return html.toString();

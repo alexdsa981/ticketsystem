@@ -114,12 +114,10 @@ public class AtencionService {
     //guardar servicio en base de datos
     public void saveDesestimacion(Desestimacion desestimacion){
         desestimacionRepository.save(desestimacion);
-        System.out.println("guardando desestimacion:" + desestimacion.getId());
     }
 
     public void deleteRecepcion(Recepcion recepcion){
         recepcionRepository.deleteByTicketId(recepcion.getTicket().getId());
-        System.out.println("Service: " + recepcion.getTicket().getId());
     }
     public Recepcion findRecepcionByTicketID(Long TicketID){
         return recepcionRepository.findByTicketId(TicketID);

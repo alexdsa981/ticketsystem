@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head th:insert="~{common/imports :: headImports}">
     <title th:text="${titulo}">HelpDesk | Ticket</title>
@@ -19,7 +19,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="text-primary">
             <i class="bi bi-envelope text-info"></i>
-            Ticket Código: <span th:text="${ticket.codigoTicket}">TK-0000</span>
+            Ticket Código: <span th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
         </h2>
     </div>
 
@@ -30,29 +30,40 @@
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title mb-3">Datos de Envío</h5>
-                    <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${ticket.descripcion}">Descripción</span></p>
-                    <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${ticket.usuario.nombre}">Usuario</span></p>
-                    <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${ticket.fechaFormateada}">Fecha</span> <span th:text="${ticket.horaFormateada}">Hora</span></p>
-                    <p class="mb-0"><i class="bi bi-tag"></i> <span th:text="${ticket.faseTicket.nombre}">Fase</span></p>
+                    <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${detalle.ticket.descripcion}">Descripción</span></p>
+                    <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${detalle.ticket.usuario.nombre}">Usuario</span></p>
+                    <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${detalle.fechaFormateadaTicket}">Fecha</span> <span th:text="${detalle.horaFormateadaTicket}">Hora</span></p>
+                    <p class="mb-1"><i class="bi bi-tag"></i> <span th:text="${detalle.ticket.faseTicket.nombre}">Fase</span></p>
+                    <p class="mb-0" th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
+                        <i class="bi bi-paperclip"></i>
+                        <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                           th:text="${adjunto.nombre}">Archivo</a> - <span
+                            th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Cards visibles si NO está desestimado -->
-        <div th:if="${!#strings.equals(ticket.faseTicket.nombre, 'Desestimado')}" class="col-md-8">
+        <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado')}" class="col-md-8">
             <div class="row g-4">
                 <!-- Card 2 - Recepción -->
                 <div class="col-md-6">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Datos de Recepción</h5>
-                            <div th:if="${#strings.equals(ticket.faseTicket.nombre, 'Enviado')}">
-                                <p class="text-muted">Aún no hay recepción.</p>
+                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado')}">
+                                <p class="text-muted">Aún no se ha recepcionado el Ticket.</p>
                             </div>
-                            <div th:if="${#strings.equals(ticket.faseTicket.nombre, 'Recepcionado - En Proceso') or #strings.equals(ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
-                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${ticket.descripcion}">Descripción</span></p>
-                                <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${ticket.usuario.nombre}">Usuario</span></p>
-                                <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${ticket.fechaFormateada}">Fecha</span> <span th:text="${ticket.horaFormateada}">Hora</span></p>
+                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') or #strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
+                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${detalle.recepcion.mensaje}">Mensaje</span></p>
+                                <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${detalle.recepcion.usuario.nombre}">Receptor</span></p>
+
+                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span th:text="${detalle.ticket.clasificacionIncidencia.nombre}">Clasificacion Incidencia</span></p>
+                                <p class="mb-1"><i class="bi bi-alarm-fill"></i> <span th:text="${detalle.recepcion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span></p>
+
+
+                                <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${detalle.fechaFormateadaRecepcion}">Fecha</span> <span th:text="${detalle.horaFormateadaRecepcion}">Hora</span></p>
                                 <p class="mb-0"><i class="bi bi-tag"></i> <span>Recepcionado</span></p>
                             </div>
                         </div>
@@ -64,14 +75,19 @@
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Datos de Atención</h5>
-                            <div th:if="${#strings.equals(ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
-                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${ticket.descripcion}">Descripción</span></p>
-                                <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${ticket.usuario.nombre}">Usuario</span></p>
-                                <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${ticket.fechaFormateada}">Fecha</span> <span th:text="${ticket.horaFormateada}">Hora</span></p>
+                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
+                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${detalle.servicio.descripcion}">Descripción</span></p>
+                                <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${detalle.servicio.usuario.nombre}">Usuario</span></p>
+
+                                <p class="mb-1"><i class="bi bi-building"></i> <span th:text="${detalle.ticket.clasificacionArea.nombre}">Clasificacion Área</span></p>
+                                <p class="mb-1"><i class="bi bi-tools"></i> <span th:text="${detalle.servicio.clasificacionServicio.nombre}">Clasificacion Servicio</span></p>
+
+
+                                <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${detalle.fechaFormateadaServicio}">Fecha</span> <span th:text="${detalle.horaFormateadaServicio}">Hora</span></p>
                                 <p class="mb-0"><i class="bi bi-tag"></i> <span>Atendido</span></p>
                             </div>
-                            <div th:if="${!#strings.equals(ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
-                                <p class="text-muted">Aún no se ha atendido el ticket.</p>
+                            <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
+                                <p class="text-muted">Aún no se ha atendido el Ticket.</p>
                             </div>
                         </div>
                     </div>
@@ -80,26 +96,70 @@
         </div>
 
         <!-- Card 4 - Desestimación (Solo si está desestimado) -->
-        <div class="col-md-4" th:if="${#strings.equals(ticket.faseTicket.nombre, 'Desestimado')}">
+        <div class="col-md-4" th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado')}">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title mb-3">Datos de Desestimación</h5>
-                    <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${ticket.descripcion}">Descripción</span></p>
-                    <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${ticket.usuario.nombre}">Usuario</span></p>
-                    <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${ticket.fechaFormateada}">Fecha</span> <span th:text="${ticket.horaFormateada}">Hora</span></p>
+                    <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span th:text="${detalle.desestimacion.descripcion}">Descripción</span></p>
+                    <p class="mb-1"><i class="bi bi-person"></i> <span th:text="${detalle.desestimacion.usuario.nombre}">Usuario</span></p>
+                    <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${detalle.fechaFormateadaDesestimacion}">Fecha</span> <span th:text="${detalle.horaFormateadaDesestimacion}">Hora</span></p>
                     <p class="mb-0"><i class="bi bi-tag"></i> <span>Desestimado</span></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Botón de redirección -->
-    <div class="text-center mt-4">
+    <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Admin','Soporte')">
+
+        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado')}"
+                type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
+                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+            <i class="bi bi-pencil-square"></i>
+            Recepcionar
+        </button>
+
+        <button th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado') and !#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}"
+                type="button" class="btn btn-danger" data-bs-toggle="modal"
+                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+            <i class="bi bi-trash"></i>
+            Desestimar
+        </button>
+        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso')}"
+                type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+            <i class="bi bi-check2-square"></i>
+            Atender
+        </button>
         <a class="btn btn-outline-primary"
-           th:href="@{${#strings.equals(ticket.faseTicket.nombre, 'Enviado') ? '/soporte/Recepcionar' :
-                      (#strings.equals(ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/soporte/Atender' :
-                      (#strings.equals(ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/soporte/Tickets-Cerrados' :
+           th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/soporte/Recepcionar' :
+                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/soporte/Atender' :
+                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/soporte/Tickets-Cerrados' :
                       '/soporte/Tickets-Desestimados'))}}">
+            Ir a la página del ticket
+        </a>
+    </div>
+    <!-- Botón de redirección -->
+    <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Usuario')">
+        <a class="btn btn-outline-primary"
+           th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/inicio' :
+                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/TicketsEnProceso' :
+                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/TicketsAtendidos' :
+                      '/TicketsDesestimados'))}}">
             Ir a la página del ticket
         </a>
     </div>
