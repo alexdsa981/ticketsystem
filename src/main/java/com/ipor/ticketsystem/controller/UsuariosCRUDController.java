@@ -75,8 +75,9 @@ public class UsuariosCRUDController {
             Usuario usuario = new Usuario();
             usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
             usuario.setNombre(nombre);
-            usuario.setPassword(password);
+            usuario.asignarYEncriptarPassword(password);
             usuario.setUsername(username);
+            usuario.setIsSpringUser(Boolean.FALSE);
             usuario.setIsActive(Boolean.TRUE);
             usuario.setChangedPass(Boolean.FALSE);
 
@@ -109,6 +110,7 @@ public class UsuariosCRUDController {
                                     @RequestParam("rol") Long rolId) {
         try {
             // Lógica para actualizar el usuario
+
             Usuario usuario = new Usuario();
             usuario.setUsername(username);
             if (password != null && !password.isEmpty()) {

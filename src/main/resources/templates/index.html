@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/imports/sweetalert2.min.css">
+    <script src="/imports/sweetalert2.all.min.js"></script>
     <link rel="icon" type="image/png" th:href="@{/images/blanco.png}">
     <title>HelpDesk - Login</title>
     <style>
@@ -66,7 +68,17 @@
             </form>
         </div>
     </section>
-
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('session-invalid') === 'user-not-found') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sesión inválida',
+                text: 'Tu usuario ha sido modificado o desactivado. Por favor, vuelve a iniciar sesión.',
+                confirmButtonColor: '#3085d6'
+            });
+        }
+    </script>
 </main>
 <script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -52,7 +52,7 @@ public class Usuario {
     private List<Recepcion> listaRecepciones;
 
     //en SERVICE SE USA PARA ENCRIPTAR DIRECTAMENTE
-    public void encriptarPassword(String password) {
+    public void asignarYEncriptarPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
     }

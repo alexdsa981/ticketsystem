@@ -40,11 +40,10 @@ public class CustomUsersDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> {
-                    CookieUtil.removeJwtCookie(response); // Limpiar cookie al no encontrar usuario
-                    return new UsernameNotFoundException("User not found");
-                });
-
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (!usuario.getIsActive()) {
+            throw new UsernameNotFoundException("User not found"); // Se maneja igual
+        }
         Collection<RolUsuario> roles = Collections.singletonList(usuario.getRolUsuario());
         return new User(usuario.getUsername(), usuario.getPassword(), mapAuthority(roles));
     }

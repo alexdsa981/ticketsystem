@@ -1,26 +1,15 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.model.dto.UsuarioSpringDTO;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.RolUsuarioRepository;
-import com.ipor.ticketsystem.security.ConstantesSeguridad;
-import com.ipor.ticketsystem.security.JwtTokenProvider;
 import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -69,7 +58,7 @@ public class LoginController {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(iDUsuarioLogeado);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            usuario.encriptarPassword(newPassword);
+            usuario.asignarYEncriptarPassword(newPassword);
             usuario.setChangedPass(true); // Actualiza el estado
             usuarioRepository.save(usuario); // Guarda los cambios en la BD
             return ResponseEntity.ok().build();

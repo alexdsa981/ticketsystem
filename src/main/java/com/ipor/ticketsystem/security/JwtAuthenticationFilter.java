@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.security;
 
+import com.ipor.ticketsystem.service.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -50,21 +52,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String token = obtenerTokenDeSolicitud(request);
-        if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token)) {
-            String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
-            UserDetails userDetails = customUsersDetailsService.loadUserByUsername(username);
-            List<String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        try {
+            String token = obtenerTokenDeSolicitud(request);
+            if (StringUtils.hasText(token) && jwtTokenProvider.validarToken(token)) {
+                String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
 
-            if (userRoles.contains("Usuario") || userRoles.contains("Soporte")|| userRoles.contains("Admin")) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UserDetails userDetails = customUsersDetailsService.loadUserByUsername(username); // <- puede lanzar excepción
+                List<String> userRoles = userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).toList();
+
+                if (userRoles.contains("Usuario") || userRoles.contains("Soporte") || userRoles.contains("Admin")) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
 
-        }
+            filterChain.doFilter(request, response);
 
-        filterChain.doFilter(request, response);
+        } catch (UsernameNotFoundException ex) {
+            CookieUtil.removeJwtCookie(response);
+            response.sendRedirect("/login?session-invalid=user-not-found");
+        }
     }
+
 
 }

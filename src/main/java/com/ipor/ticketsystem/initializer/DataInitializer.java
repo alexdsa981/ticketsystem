@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // 2. Crear usuario ADMINISTRADOR si no existe y usuario SISTEMAS
-        if (usuarioRepository.findByUsername("ADMIN").isEmpty()) {
+        if (usuarioRepository.count() == 0) {
             RolUsuario rolAdmin = rolUsuarioRepository.findByNombre("Admin");
             Usuario admin = new Usuario();
             admin.setNombre("ADMINISTRADOR");
@@ -56,8 +56,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setChangedPass(false);
             admin.setIsSpringUser(false);
             usuarioRepository.save(admin);
-        }
-        if (usuarioRepository.count() == 1){
+
             RolUsuario rolSoporte = rolUsuarioRepository.findByNombre("Soporte");
             Usuario soporte = new Usuario();
             soporte.setIsSpringUser(false);
@@ -65,11 +64,11 @@ public class DataInitializer implements CommandLineRunner {
             soporte.setChangedPass(false);
             soporte.setPassword("$2a$12$7SW6dd16qcrYSdV0L4Uzp.qzCEe6ricYOH9fdr1r/bGlF2ItBun4a"); // Contraseña ya encriptada
             soporte.setRolUsuario(rolSoporte);
-            soporte.setNombre("SISTEMAS");
-            soporte.setUsername("SISTEMAS");
+            soporte.setNombre("SOPORTE");
+            soporte.setUsername("SOPORTE");
             usuarioRepository.save(soporte);
-
         }
+
 
         // 3. Crear fases de ticket
         if (faseTicketRepository.count() == 0) {

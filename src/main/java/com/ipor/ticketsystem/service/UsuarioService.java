@@ -82,7 +82,7 @@ public class UsuarioService {
             usuario.setRolUsuario(usuarioActualizado.getRolUsuario());
             // Encriptar la nueva contraseña si es que se actualiza
             if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().isEmpty()) {
-                usuario.encriptarPassword(usuarioActualizado.getPassword());
+                usuario.asignarYEncriptarPassword(usuarioActualizado.getPassword());
                 usuario.setChangedPass(Boolean.FALSE);
             }
             return usuarioRepository.save(usuario);
@@ -169,7 +169,7 @@ public class UsuarioService {
                     usuarioTicket.setChangedPass(true);
                     usuarioTicket.setIsSpringUser(Boolean.TRUE);
                     usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
-                    usuarioTicket.encriptarPassword(password);
+                    usuarioTicket.asignarYEncriptarPassword(password);
                     guardarUsuario(usuarioTicket);
                 } else if (existeEnSpring && !existeEnTickets) {
                     usuarioTicket = new Usuario();
@@ -179,7 +179,7 @@ public class UsuarioService {
                     usuarioTicket.setChangedPass(true);
                     usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
                     usuarioTicket.setUsername(usuarioSpringDTO.getUsuario());
-                    usuarioTicket.encriptarPassword(password);
+                    usuarioTicket.asignarYEncriptarPassword(password);
                     guardarUsuario(usuarioTicket);
                 } else {
                     if (getUsuarioPorUsername(username).isPresent()) {

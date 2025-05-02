@@ -55,7 +55,7 @@
 
                             <a style="width: 120px;" class="btn btn-danger btn-active-user"
                                th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Usuario?');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de deactivar este usuario? Esta acción desestimará sus tickets pendientes.');">
                                 Desactivar
                             </a>
                         </td>
@@ -105,7 +105,7 @@
 
                             <a style="width: 120px;" class="btn btn-success btn-active-user"
                                th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Usuario? Esta acción desestimará sus tickets pendientes.');">
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este usuario?');">
                                 Activar
                             </a>
                         </td>
