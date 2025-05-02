@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.service;
 
-import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
@@ -30,12 +30,12 @@ public class TicketService {
     private FaseTicketRepository faseTicketRepository;
 
     // Método para obtener todos los tickets, además junta los tickets y sus archivos adjuntos en TicketDTO
-    public List<TicketDTO> getAllTicketsSinRecepcionar() {
+    public List<DetalleTicketDTO> getAllTicketsSinRecepcionar() {
         List<Ticket> Tickets = ticketRepository.findByFaseTicketId(1);
-        List<TicketDTO> ListaTicketsDTO = new ArrayList<>();
+        List<DetalleTicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : Tickets) {
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket);
+            DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
         }
         return ListaTicketsDTO;
@@ -44,18 +44,18 @@ public class TicketService {
 
     // Método para obtener tickets propios enviados y en espera de aprobación de compra,
     // además junta los tickets y sus archivos adjuntos en TicketDTO
-    public List<TicketDTO> getMyTickets() {
+    public List<DetalleTicketDTO> getMyTickets() {
         Long idUsuario = usuarioService.getIDdeUsuarioLogeado();
 
         List<Ticket> MisTickets = ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario, 1L);
 
         // Crear una lista para almacenar los DTOs
-        List<TicketDTO> MisTicketsDTO = new ArrayList<>();
+        List<DetalleTicketDTO> MisTicketsDTO = new ArrayList<>();
 
         // Procesar los tickets de fase 1
         for (Ticket ticket : MisTickets) {
             List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
-            TicketDTO ticketDTO = new TicketDTO(ticket);
+            DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
             MisTicketsDTO.add(ticketDTO);
         }
 
@@ -82,7 +82,7 @@ public class TicketService {
                 .get();
     }
 
-    public Ticket getObtenerTicketPorID(Long id) {
+    public Ticket getTicketPorID(Long id) {
         return ticketRepository.findById(id).get();
     }
 

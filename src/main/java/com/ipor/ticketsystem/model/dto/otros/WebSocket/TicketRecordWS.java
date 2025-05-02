@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
-import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 
 import java.util.Base64;
@@ -18,16 +18,16 @@ public record TicketRecordWS(
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 )
 {
-    public TicketRecordWS(TicketDTO ticketDTO) {
+    public TicketRecordWS(DetalleTicketDTO detalleDTO) {
         this(
-                ticketDTO.getId(),
-                ticketDTO.getIdFormateado(),
-                ticketDTO.getFechaFormateada(),
-                ticketDTO.getHoraFormateada(),
-                ticketDTO.getDescripcion(),
-                ticketDTO.getUsuario().getNombre(),
-                ticketDTO.getFaseTicket().getNombre(),
-                ticketDTO.getListaArchivosAdjuntos().stream()
+                detalleDTO.getTicket().getId(),
+                detalleDTO.getTicket().getCodigoTicket(),
+                detalleDTO.getFechaFormateadaTicket(),
+                detalleDTO.getHoraFormateadaTicket(),
+                detalleDTO.getTicket().getDescripcion(),
+                detalleDTO.getTicket().getUsuario().getNombre(),
+                detalleDTO.getTicket().getFaseTicket().getNombre(),
+                detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
         );

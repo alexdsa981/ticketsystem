@@ -1,10 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionArea;
 import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
@@ -20,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 @Controller
@@ -42,40 +41,40 @@ public class AtencionController {
     // ATENDIDO O DESESTIMADO EN LAS VISTAS
 
     public Model getListaMisTicketsRecepcionadosAVista(Model model) {
-        List<AtencionTicketDTO> MyRecepcionados = atencionService.getMyListaRecepcionados();
+        List<DetalleTicketDTO> MyRecepcionados = atencionService.getMyListaRecepcionados();
         Collections.reverse(MyRecepcionados);
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return model;
     }
 
     public Model getListaTodosLosTicketsRecepcionadosAVista(Model model) {
-        List<AtencionTicketDTO> AllRecepcionados = atencionService.getListaRecepcionados();
+        List<DetalleTicketDTO> AllRecepcionados = atencionService.getListaRecepcionados();
         model.addAttribute("AllRecepcionados", AllRecepcionados);
         return model;
     }
 
 
     public Model getListaMisTicketsAtendidosAVista(Model model) {
-        List<AtencionTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
+        List<DetalleTicketDTO> MyAtendidos = atencionService.getMyListaAtendidos();
         model.addAttribute("MyAtendidos", MyAtendidos);
         return model;
     }
 
     public Model getListaTodosLosTicketsAtendidosAVista(Model model) {
-        List<AtencionTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
+        List<DetalleTicketDTO> AllAtendidos = atencionService.getListaHistorialAtencion();
         model.addAttribute("AllAtendidos", AllAtendidos);
         return model;
     }
 
     public Model getListaMisTicketsDesestimadosAVista(Model model) {
-        List<AtencionTicketDTO> MyDesestimados = atencionService.getMyListaDesestimados();
+        List<DetalleTicketDTO> MyDesestimados = atencionService.getMyListaDesestimados();
         Collections.reverse(MyDesestimados);
         model.addAttribute("MyDesestimados", MyDesestimados);
         return model;
     }
 
     public Model getListaTodosLosTicketsDesestimadosAVista(Model model) {
-        List<AtencionTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
+        List<DetalleTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
         Collections.reverse(AllDesestimados);
         model.addAttribute("AllDesestimados", AllDesestimados);
         return model;
@@ -96,26 +95,27 @@ public class AtencionController {
             // Cambiar fase de ticket
             atencionService.updateFaseTicket(id, 2L);
 
+            Ticket ticket = ticketService.getTicketPorID(id);
+
             // Crear la recepción
             Recepcion recepcion = new Recepcion();
             recepcion.setMensaje(mensaje);
             recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
-            recepcion.setTicket(ticketService.getObtenerTicketPorID(id));
+            recepcion.setTicket(ticket);
             recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-            recepcion.setHora(recepcion.getHora());
-            recepcion.setFecha(recepcion.getFecha());
             atencionService.saveRecepcion(recepcion);
 
             // Modificar el ticket
             ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(ID_clasificacion_incidencia);
-            recepcion.getTicket().setClasificacionIncidencia(clasificacionIncidencia);
-            ticketService.saveTicket(recepcion.getTicket());
+            ticket.setClasificacionIncidencia(clasificacionIncidencia);
+            ticket.setRecepcion(recepcion);
+            ticketService.saveTicket(ticket);
+
 
             // Crear notificación
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(recepcion.getTicket());
-            notificacion.setHora(notificacion.getHora());
-            notificacion.setFecha(notificacion.getFecha());
+
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(recepcion.getTicket().getUsuario());
@@ -124,8 +124,8 @@ public class AtencionController {
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
-            WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(recepcion, ticketService);
-            WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(recepcion, ticketService);
+            WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(ticket);
+            WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(ticket);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
 
             // Redirigir a la URL actual
@@ -139,6 +139,11 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=recepcion-duplicated" : "/fallbackUrl?error=recepcion-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido recepcionado por otro usuario.");
         } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+            System.out.println(stackTrace);
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=recepcion-general" : "/fallbackUrl?recepcion-error=general");
@@ -159,26 +164,25 @@ public class AtencionController {
         try {
             //cambiar fase de ticket
             atencionService.updateFaseTicket(id, 3L);
+
+            Ticket ticket = ticketService.getTicketPorID(id);
             // Lógica para crear la atencion
             Servicio servicio = new Servicio();
             servicio.setDescripcion(descripcion);
             servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
-            servicio.setTicket(ticketService.getObtenerTicketPorID(id));
+            servicio.setTicket(ticket);
             servicio.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-            servicio.setHora(servicio.getHora());
-            servicio.setFecha(servicio.getFecha());
             atencionService.saveServicio(servicio);
 
             // Modificar el ticket
             ClasificacionArea clasificacionArea = clasificadoresService.getClasificacionAreaPorId(IDclasificacion_area);
             servicio.getTicket().setClasificacionArea(clasificacionArea);
+            ticket.setServicio(servicio);
             ticketService.saveTicket(servicio.getTicket());
 
 
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(servicio.getTicket());
-            notificacion.setHora(notificacion.getHora());
-            notificacion.setFecha(notificacion.getFecha());
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(servicio.getTicket().getUsuario());
@@ -188,9 +192,8 @@ public class AtencionController {
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
-            Recepcion recepcion = atencionService.findRecepcionByTicketID(id);
-            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(servicio, recepcion, ticketService);
-            WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(servicio, recepcion, ticketService);
+            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(ticket);
+            WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(ticket);
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
@@ -222,7 +225,7 @@ public class AtencionController {
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         try {
-            Ticket ticket = ticketService.getObtenerTicketPorID(id);
+            Ticket ticket = ticketService.getTicketPorID(id);
 
             Long lastFaseTicket = ticket.getFaseTicket().getId();
 
@@ -241,16 +244,15 @@ public class AtencionController {
             Desestimacion desestimacion = new Desestimacion();
             desestimacion.setDescripcion(mensaje);
             desestimacion.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(IDclasificacion_desestimacion));
-            desestimacion.setTicket(ticketService.getObtenerTicketPorID(id));
+            desestimacion.setTicket(ticket);
             desestimacion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-            desestimacion.setHora(desestimacion.getHora());
-            desestimacion.setFecha(desestimacion.getFecha());
             atencionService.saveDesestimacion(desestimacion);
+
+            ticket.setDesestimacion(desestimacion);
+            ticketService.saveTicket(ticket);
 
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(desestimacion.getTicket());
-            notificacion.setHora(notificacion.getHora());
-            notificacion.setFecha(notificacion.getFecha());
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(desestimacion.getTicket().getUsuario());
@@ -259,8 +261,8 @@ public class AtencionController {
 
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
-            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialDesestimacion(desestimacion, ticketService);
-            WSNotificacionesService.enviarAtencionAVistaUsuarioDesestimados(desestimacion, ticketService);
+            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialDesestimacion(ticket);
+            WSNotificacionesService.enviarAtencionAVistaUsuarioDesestimados(ticket);
             if (lastFaseTicket == 1L) {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             } else if (lastFaseTicket == 2L) {

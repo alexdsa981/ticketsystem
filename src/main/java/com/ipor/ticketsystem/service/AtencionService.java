@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.service;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
@@ -25,22 +25,22 @@ public class AtencionService {
     UsuarioService usuarioService;
 
     //metodo para retornar todos los tickets en proceso:
-    public List<AtencionTicketDTO> getListaRecepcionados() {
+    public List<DetalleTicketDTO> getListaRecepcionados() {
         List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketFaseID2();
-        List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
+            DetalleTicketDTO recepcionadoDTO = new DetalleTicketDTO(recepcion.getTicket());
             listaRecepcionadosDTO.add(recepcionadoDTO);
         }
         return listaRecepcionadosDTO;
     }
 
     //metodo para retornar Mis tickets en proceso:
-    public List<AtencionTicketDTO> getMyListaRecepcionados() {
+    public List<DetalleTicketDTO> getMyListaRecepcionados() {
         List<Recepcion> listaRecepcionados = recepcionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
-        List<AtencionTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaRecepcionadosDTO = new ArrayList<>();
         for (Recepcion recepcion : listaRecepcionados) {
-            AtencionTicketDTO recepcionadoDTO = new AtencionTicketDTO(recepcion, ticketService);
+            DetalleTicketDTO recepcionadoDTO = new DetalleTicketDTO(recepcion.getTicket());
             listaRecepcionadosDTO.add(recepcionadoDTO);
         }
         return listaRecepcionadosDTO;
@@ -48,44 +48,44 @@ public class AtencionService {
 
 
     //metodo para retornar todos los tickets desestimados:
-    public List<AtencionTicketDTO> getListaDesestimados() {
+    public List<DetalleTicketDTO> getListaDesestimados() {
         List<Desestimacion> listaDesestimados = desestimacionRepository.findAllByTicketFaseID4();
-        List<AtencionTicketDTO> listaDesestimadosDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaDesestimadosDTO = new ArrayList<>();
         for (Desestimacion desestimacion : listaDesestimados) {
-            AtencionTicketDTO desestimadoDTO = new AtencionTicketDTO(desestimacion, ticketService);
+            DetalleTicketDTO desestimadoDTO = new DetalleTicketDTO(desestimacion.getTicket());
             listaDesestimadosDTO.add(desestimadoDTO);
         }
         return listaDesestimadosDTO;
     }
     //metodo para retornar Mis tickets desestimados:
-    public List<AtencionTicketDTO> getMyListaDesestimados() {
+    public List<DetalleTicketDTO> getMyListaDesestimados() {
         List<Desestimacion> listaDesestimaciones = desestimacionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
-        List<AtencionTicketDTO> listaDesestimacionesDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaDesestimacionesDTO = new ArrayList<>();
         for (Desestimacion desestimacion : listaDesestimaciones) {
-            AtencionTicketDTO desestimacionDTO = new AtencionTicketDTO(desestimacion, ticketService);
+            DetalleTicketDTO desestimacionDTO = new DetalleTicketDTO(desestimacion.getTicket());
             listaDesestimacionesDTO.add(desestimacionDTO);
         }
         return listaDesestimacionesDTO;
     }
     //metodo para retornar Mis tickets atendidos:
-    public List<AtencionTicketDTO> getMyListaAtendidos() {
+    public List<DetalleTicketDTO> getMyListaAtendidos() {
         List<Servicio> listaServicios = servicioRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
-        List<AtencionTicketDTO> listaServiciosDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaServiciosDTO = new ArrayList<>();
         for (Servicio servicio : listaServicios) {
-            AtencionTicketDTO servicioDTO = new AtencionTicketDTO(servicio, ticketService);
+            DetalleTicketDTO servicioDTO = new DetalleTicketDTO(servicio.getTicket());
             listaServiciosDTO.add(servicioDTO);
         }
         return listaServiciosDTO;
     }
 
     //metodo para retornar historial de atencion:
-    public List<AtencionTicketDTO> getListaHistorialAtencion() {
+    public List<DetalleTicketDTO> getListaHistorialAtencion() {
         List<Servicio> listaAtendidos = servicioRepository.findAllByTicketFaseID3();
-        List<AtencionTicketDTO> listaServiciosDTO = new ArrayList<>();
+        List<DetalleTicketDTO> listaServiciosDTO = new ArrayList<>();
 
         for (Servicio servicio : listaAtendidos) {
             Recepcion recepcion = recepcionRepository.findByTicketId(servicio.getTicket().getId());
-            AtencionTicketDTO servicioDTO = new AtencionTicketDTO(servicio, recepcion,ticketService);
+            DetalleTicketDTO servicioDTO = new DetalleTicketDTO(servicio.getTicket());
             listaServiciosDTO.add(servicioDTO);
         }
         return listaServiciosDTO;
@@ -94,7 +94,7 @@ public class AtencionService {
     //cambiar fase de ticket para recepcion o atención
     public void updateFaseTicket(Long idTicket, Long idFaseTicket) {
         // Buscar el ticket existente por ID
-        Ticket ticketExistente = ticketService.getObtenerTicketPorID(idTicket);
+        Ticket ticketExistente = ticketService.getTicketPorID(idTicket);
         ticketExistente.setFaseTicket(ticketService.getFaseTicketPorID(idFaseTicket));
         ticketService.guardarTicketEnBaseDeDatos(ticketExistente);
     }

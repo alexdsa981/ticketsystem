@@ -1,8 +1,5 @@
 package com.ipor.ticketsystem.controller;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
-import com.ipor.ticketsystem.model.dto.TicketDTO;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -13,10 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Optional;
 
 @Controller
 public class WebController {

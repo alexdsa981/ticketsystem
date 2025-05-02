@@ -1,7 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
-import com.ipor.ticketsystem.model.dto.TicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
@@ -39,14 +39,14 @@ public class TicketController {
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
     public Model retornaTicketsPropiosAVista(Model model) {
-        List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
+        List<DetalleTicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         Collections.reverse(MisTicketsDTO);
         model.addAttribute("MyTickets", MisTicketsDTO);
         return model;
     }
 
     public Model retornaTicketsRecibidosAVista(Model model) {
-        List<TicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
+        List<DetalleTicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
         Collections.reverse(AllTicketsDTO);
         model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
@@ -59,7 +59,7 @@ public class TicketController {
 
 
 
-        List<TicketDTO> MisTicketsDTO = ticketService.getMyTickets();
+        List<DetalleTicketDTO> MisTicketsDTO = ticketService.getMyTickets();
         Collections.reverse(MisTicketsDTO);
         model.addAttribute("MyTickets", MisTicketsDTO);
         return model;
@@ -80,14 +80,14 @@ public class TicketController {
             return esSoporteOAdmin ? "<p>Ticket no existente.</p>" : "<p>No se encontró un ticket asociado a tu cuenta con ese código.</p>";
         }
 
-        TicketDTO t = new TicketDTO(optionalTicket.get());
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(optionalTicket.get());
 
-        if (!esSoporteOAdmin && !Objects.equals(t.getUsuario().getId(), usuarioLogeado.getId())) {
+        if (!esSoporteOAdmin && !Objects.equals(detalleTicketDTO.getTicket().getUsuario().getId(), usuarioLogeado.getId())) {
             return "<p>No se encontró un ticket asociado a tu cuenta con ese código.</p>";
         }
 
         String url;
-        switch (t.getFaseTicket().getId().intValue()) {
+        switch (detalleTicketDTO.getTicket().getFaseTicket().getId().intValue()) {
             case 1 -> url = esSoporteOAdmin ? "/soporte/Recepcionar" : "/inicio";
             case 2 -> url = esSoporteOAdmin ? "/soporte/Atender" : "/TicketsEnProceso";
             case 3 -> url = esSoporteOAdmin ? "/soporte/Tickets-Cerrados" : "/TicketsAtendidos";
@@ -98,12 +98,12 @@ public class TicketController {
         // Generar HTML
         StringBuilder html = new StringBuilder();
         html.append("<div>")
-                .append("<p><strong>ID:</strong> ").append(t.getIdFormateado()).append("</p>")
-                .append("<p><strong>Descripción:</strong> ").append(t.getDescripcion()).append("</p>")
-                .append("<p><strong>Usuario:</strong> ").append(t.getUsuario().getNombre()).append("</p>")
-                .append("<p><strong>Fecha:</strong> ").append(t.getFechaConFormato()).append("</p>")
-                .append("<p><strong>Hora:</strong> ").append(t.getHoraConFormato()).append("</p>")
-                .append("<p><strong>Estado:</strong> ").append(t.getFaseTicket().getNombre()).append("</p>")
+                .append("<p><strong>ID:</strong> ").append(detalleTicketDTO.getTicket().getCodigoTicket()).append("</p>")
+                .append("<p><strong>Descripción:</strong> ").append(detalleTicketDTO.getTicket().getDescripcion()).append("</p>")
+                .append("<p><strong>Usuario:</strong> ").append(detalleTicketDTO.getTicket().getUsuario().getNombre()).append("</p>")
+                .append("<p><strong>Fecha:</strong> ").append(detalleTicketDTO.getFechaFormateadaTicket()).append("</p>")
+                .append("<p><strong>Hora:</strong> ").append(detalleTicketDTO.getHoraFormateadaTicket()).append("</p>")
+                .append("<p><strong>Estado:</strong> ").append(detalleTicketDTO.getTicket().getFaseTicket().getNombre()).append("</p>")
                 //.append("<a disabled href='").append("/ticket/").append(t.getIdFormateado()).append("' class='btn btn-primary' target='_blank'>Ver Ticket</a>")
                 .append("</div>");
 
@@ -184,7 +184,7 @@ public class TicketController {
         }
 
         //NOTIFICACIONES EN TIEMPO REAL A TRAVES DE WEB SOCKETS
-        TicketDTO ticketDTO = new TicketDTO(ticket);
+        DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
         WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
         WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
 

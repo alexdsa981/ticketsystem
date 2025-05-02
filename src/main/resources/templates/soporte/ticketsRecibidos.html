@@ -59,19 +59,19 @@
                     </tr>
                 </thead>
                 <tbody id="ticketTableBody">
-                <tr th:each="ticket, iter: ${AllTickets}" id="ticket-${ticket.id}">
+                <tr th:each="detalle, iter: ${AllTickets}" id="ticket-${ticket.id}">
                         <td th:text="${iter.count}">#</td>
-                        <td th:id="${ticket.id}" th:text="${ticket.idFormateado}">#</td>
-                        <td class="fecha" th:text="${ticket.fechaFormateada}">Fecha</td>
-                        <td th:text="${ticket.horaFormateada}">Hora</td>
-                        <td class="usuario-emisor" th:text="${ticket.usuario.nombre}">Usuario Emisor</td>
+                        <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
+                        <td class="fecha" th:text="${detalle.fechaFormateadaTicket}">Fecha</td>
+                        <td th:text="${detalle.horaFormateadaTicket}">Hora</td>
+                        <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                         <td>
-                            <span th:text="${#strings.length(ticket.descripcion) > 150 ? ticket.descripcion.substring(0, 150) + '...' : ticket.descripcion}"></span><br>
+                            <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span><br>
 
                         </td>
                         <td>
                             <ul>
-                                <li th:each="adjunto: ${ticket.listaArchivosAdjuntos}">
+                                <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
                                     <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
                                         th:text="${adjunto.nombre}">Archivo</a> - <span
                                         th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
@@ -80,23 +80,23 @@
                         </td>
                         <td class="td-accion">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#recepcionModal" th:data-ticket-id="${ticket.id}"
-                                th:data-ticket-usuario="${ticket.usuario.nombre}"
-                                th:data-ticket-descripcion="${ticket.descripcion}"
-                                th:data-ticket-fase="${ticket.faseTicket.nombre}"
-                                th:data-ticket-fecha="${ticket.fechaFormateada}"
-                                th:data-ticket-hora="${ticket.horaFormateada}">
+                                data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
 
 
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#desestimacionModal" th:data-ticket-id="${ticket.id}"
-                                th:data-ticket-usuario="${ticket.usuario.nombre}"
-                                th:data-ticket-descripcion="${ticket.descripcion}"
-                                th:data-ticket-fase="${ticket.faseTicket.nombre}"
-                                th:data-ticket-fecha="${ticket.fechaFormateada}"
-                                th:data-ticket-hora="${ticket.horaFormateada}">
+                                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>

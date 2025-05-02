@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 
 import java.util.Base64;
@@ -13,6 +13,7 @@ public record DesestimacionRecordWS(
 
         String fechaFormateadaTicket,
         String horaFormateadaTicket,
+
         String fechaFormateadaDesestimacion,
         String horaFormateadaDesestimacion,
 
@@ -29,24 +30,27 @@ public record DesestimacionRecordWS(
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 )
 {
-    public DesestimacionRecordWS(AtencionTicketDTO atencionTicketDTO) {
+    public DesestimacionRecordWS(DetalleTicketDTO detalleDTO) {
         this(
-                atencionTicketDTO.getTicket().getId(),
-                atencionTicketDTO.getTicket().getIdFormateado(),
+                detalleDTO.getTicket().getId(),
+                detalleDTO.getTicket().getCodigoTicket(),
 
-                atencionTicketDTO.getTicket().getFechaFormateada(),
-                atencionTicketDTO.getTicket().getHoraFormateada(),
-                atencionTicketDTO.getFechaFormateadaDesestimacion(),
-                atencionTicketDTO.getHoraFormateadaDesestimacion(),
+                detalleDTO.getFechaFormateadaTicket(),
+                detalleDTO.getHoraFormateadaTicket(),
 
-                atencionTicketDTO.getTicket().getDescripcion(),
-                atencionTicketDTO.getDescripcion(),//aqui maneja la desc desestimacion en el dto
-                atencionTicketDTO.getTicket().getUsuario().getNombre(),
-                atencionTicketDTO.getUsuario().getNombre(),
-                atencionTicketDTO.getTicket().getFaseTicket().getNombre(),
-                atencionTicketDTO.getClasificacionDesestimacion().getNombre(),
+                detalleDTO.getFechaFormateadaDesestimacion(),
+                detalleDTO.getHoraFormateadaDesestimacion(),
 
-                atencionTicketDTO.getTicket().getListaArchivosAdjuntos().stream()
+                detalleDTO.getTicket().getDescripcion(),
+                detalleDTO.getDesestimacion().getDescripcion(),
+
+                detalleDTO.getTicket().getUsuario().getNombre(),
+                detalleDTO.getDesestimacion().getUsuario().getNombre(),
+
+                detalleDTO.getTicket().getFaseTicket().getNombre(),
+                detalleDTO.getDesestimacion().getClasificacionDesestimacion().getNombre(),
+
+                detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
 

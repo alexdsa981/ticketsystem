@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 
 import java.util.Base64;
@@ -29,29 +29,30 @@ public record RecepcionRecordWS(
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 )
 {
-    public RecepcionRecordWS(AtencionTicketDTO atencionTicketDTO) {
+    public RecepcionRecordWS(DetalleTicketDTO detalleDTO) {
         this(
-                atencionTicketDTO.getTicket().getId(),
-                atencionTicketDTO.getTicket().getIdFormateado(),
+                detalleDTO.getTicket().getId(),
+                detalleDTO.getTicket().getCodigoTicket(),
 
-                atencionTicketDTO.getTicket().getFechaFormateada(),
-                atencionTicketDTO.getTicket().getHoraFormateada(),
-                atencionTicketDTO.getFechaFormateadaRecepcion(),
-                atencionTicketDTO.getHoraFormateadaRecepcion(),
+                detalleDTO.getFechaFormateadaTicket(),
+                detalleDTO.getHoraFormateadaTicket(),
 
-                atencionTicketDTO.getTicket().getDescripcion(),
-                atencionTicketDTO.getMensaje(),
+                detalleDTO.getFechaFormateadaRecepcion(),
+                detalleDTO.getHoraFormateadaRecepcion(),
+
+                detalleDTO.getTicket().getDescripcion(),
+                detalleDTO.getRecepcion().getMensaje(),
 
 
-                atencionTicketDTO.getTicket().getUsuario().getNombre(),
-                atencionTicketDTO.getUsuario().getNombre(),
+                detalleDTO.getTicket().getUsuario().getNombre(),
+                detalleDTO.getRecepcion().getUsuario().getNombre(),
 
-                atencionTicketDTO.getTicket().getFaseTicket().getNombre(),
+                detalleDTO.getTicket().getFaseTicket().getNombre(),
 
-                atencionTicketDTO.getTicket().getClasificacionIncidencia().getNombre(),
-                atencionTicketDTO.getClasificacionUrgencia().getNombre(),
+                detalleDTO.getTicket().getClasificacionIncidencia().getNombre(),
+                detalleDTO.getRecepcion().getClasificacionUrgencia().getNombre(),
 
-                atencionTicketDTO.getTicket().getListaArchivosAdjuntos().stream()
+                detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
         );

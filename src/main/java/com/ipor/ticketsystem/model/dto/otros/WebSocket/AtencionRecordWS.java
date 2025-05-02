@@ -1,6 +1,6 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
 
 import java.util.Base64;
@@ -36,34 +36,34 @@ public record AtencionRecordWS(
 
 )
 {
-    public AtencionRecordWS(AtencionTicketDTO atencionTicketDTO) {
+    public AtencionRecordWS(DetalleTicketDTO detalleDTO) {
         this(
-                atencionTicketDTO.getTicket().getId(),
-                atencionTicketDTO.getTicket().getIdFormateado(),
+                detalleDTO.getTicket().getId(),
+                detalleDTO.getTicket().getCodigoTicket(),
 
-                atencionTicketDTO.getTicket().getFechaFormateada(),
-                atencionTicketDTO.getTicket().getHoraFormateada(),
-                atencionTicketDTO.getFechaFormateadaRecepcion(),
-                atencionTicketDTO.getHoraFormateadaRecepcion(),
-                atencionTicketDTO.getFechaFormateadaServicio(),
-                atencionTicketDTO.getHoraFormateadaServicio(),
+                detalleDTO.getFechaFormateadaTicket(),
+                detalleDTO.getHoraFormateadaTicket(),
+                detalleDTO.getFechaFormateadaRecepcion(),
+                detalleDTO.getHoraFormateadaRecepcion(),
+                detalleDTO.getFechaFormateadaServicio(),
+                detalleDTO.getHoraFormateadaServicio(),
 
 
-                atencionTicketDTO.getTicket().getDescripcion(),
-                atencionTicketDTO.getRecepcionHistorial().getMensaje(),
-                atencionTicketDTO.getServicioHistorial().getDescripcion(),
+                detalleDTO.getTicket().getDescripcion(),
+                detalleDTO.getRecepcion().getMensaje(),
+                detalleDTO.getServicio().getDescripcion(),
 
-                atencionTicketDTO.getTicket().getUsuario().getNombre(),
-                atencionTicketDTO.getRecepcionHistorial().getUsuario().getNombre(),
-                atencionTicketDTO.getServicioHistorial().getUsuario().getNombre(),
+                detalleDTO.getTicket().getUsuario().getNombre(),
+                detalleDTO.getRecepcion().getUsuario().getNombre(),
+                detalleDTO.getServicio().getUsuario().getNombre(),
 
-                atencionTicketDTO.getTicket().getFaseTicket().getNombre(),
+                detalleDTO.getTicket().getFaseTicket().getNombre(),
 
-                atencionTicketDTO.getTicket().getClasificacionIncidencia().getNombre(),
-                atencionTicketDTO.getRecepcionHistorial().getClasificacionUrgencia().getNombre(),
-                atencionTicketDTO.getServicioHistorial().getClasificacionServicio().getNombre(),
+                detalleDTO.getTicket().getClasificacionIncidencia().getNombre(),
+                detalleDTO.getRecepcion().getClasificacionUrgencia().getNombre(),
+                detalleDTO.getServicio().getClasificacionServicio().getNombre(),
 
-                atencionTicketDTO.getTicket().getListaArchivosAdjuntos().stream()
+                detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
         );

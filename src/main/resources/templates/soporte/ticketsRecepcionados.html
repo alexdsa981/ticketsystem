@@ -57,23 +57,23 @@
 
                 <tbody id="ticketTableBody">
                     <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                    <tr th:each="recepcionado, iter: ${AllRecepcionados}" id="ticket-${ticket.id}"
-                        th:class="${recepcionado.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
-                       (recepcionado.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
+                    <tr th:each="detalle, iter: ${AllRecepcionados}" id="ticket-${detalle.ticket.id}"
+                        th:class="${detalle.recepcion.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
+                       (detalle.recepcion.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
                         <td th:text="${iter.count}">#</td>
-                        <td th:id="${recepcionado.ticket.id}" th:text="${recepcionado.ticket.idFormateado}">#</td>
-                        <td class="fecha" th:text="${recepcionado.fechaFormateadaRecepcion}">Fecha</td>
-                        <td th:text="${recepcionado.horaFormateadaRecepcion}">Hora</td>
-                        <td class="usuario-emisor" th:text="${recepcionado.ticket.usuario.nombre}">Usuario Emisor</td>
-                        <td class="usuario-receptor" th:text="${recepcionado.usuario.nombre}">Usuario Receptor</td>
+                        <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
+                        <td class="fecha" th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
+                        <td th:text="${detalle.horaFormateadaRecepcion}">Hora</td>
+                        <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
+                        <td class="usuario-receptor" th:text="${detalle.recepcion.usuario.nombre}">Usuario Receptor</td>
                         <td>
                             <span class="nombreClasificacionIncidencia clasificacion"
-                                th:utext="${recepcionado.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
-                            <span th:text="${#strings.length(recepcionado.ticket.descripcion) > 150 ? recepcionado.ticket.descripcion.substring(0, 150) + '...' : recepcionado.ticket.descripcion}"></span>
+                                th:utext="${detalle.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                            <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                             <br>
                             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                             <ul>
-                                <li th:each="adjunto: ${recepcionado.ticket.listaArchivosAdjuntos}">
+                                <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
                                     <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
                                        th:text="${adjunto.nombre}">Archivo</a> -
                                     <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
@@ -83,31 +83,31 @@
                         </td>
                         <td>
                             <span class="nombreClasificacionIncidencia urgencia"
-                                  th:utext="${recepcionado.clasificacionUrgencia.nombre + ':<br>'}"></span>
-                            <span th:text="${#strings.length(recepcionado.mensaje) > 150 ? recepcionado.mensaje.substring(0, 150) + '...' : recepcionado.mensaje}"></span><br>
+                                  th:utext="${detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
+                            <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>
 
                         </td>
 
                         <td class="td-accion">
                             <!-- Botón de recepción que abre el modal -->
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#atencionModal" th:data-ticket-id="${recepcionado.ticket.id}"
-                                th:data-ticket-usuario="${recepcionado.ticket.usuario.nombre}"
-                                th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
-                                th:data-ticket-clasificacion="${recepcionado.ticket.clasificacionIncidencia.nombre}"
-                                th:data-ticket-fase="${recepcionado.ticket.faseTicket.nombre}"
-                                th:data-ticket-fecha="${recepcionado.ticket.fechaFormateada}"
-                                th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
+                                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-clasificacion="${detalle.ticket.clasificacionIncidencia.nombre}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
                                 <i class="bi bi-check2-square"></i>
                             </button>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#desestimacionModal" th:data-ticket-id="${recepcionado.ticket.id}"
-                                    th:data-ticket-usuario="${recepcionado.ticket.usuario.nombre}"
-                                    th:data-ticket-descripcion="${recepcionado.ticket.descripcion}"
-                                    th:data-ticket-clasificacion="${recepcionado.ticket.clasificacionIncidencia.nombre}"
-                                    th:data-ticket-fase="${recepcionado.ticket.faseTicket.nombre}"
-                                    th:data-ticket-fecha="${recepcionado.ticket.fechaFormateada}"
-                                    th:data-ticket-hora="${recepcionado.ticket.horaFormateada}">
+                                    data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                    th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                    th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                    th:data-ticket-clasificacion="${detalle.ticket.clasificacionIncidencia.nombre}"
+                                    th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                    th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                    th:data-ticket-hora="${detalle.horaFormateadaTicket}">
                                 <i class="bi bi-trash"></i>
 
                             </button>

@@ -49,19 +49,19 @@
                     </thead>
                     <tbody id="ticketTableBody">
                         <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                        <tr th:each="desestimado, iter: ${AllDesestimados}">
+                        <tr th:each="detalle, iter: ${AllDesestimados}">
                             <td th:text="${iter.count}">#</td>
-                            <td th:text="${desestimado.ticket.idFormateado}">#</td>
-                            <td class="fecha" th:text="${desestimado.fechaFormateadaDesestimacion}">Fecha</td>
-                            <td th:text="${desestimado.horaFormateadaDesestimacion}">Hora</td>
-                            <td class="usuario-atencion" th:text="${desestimado.usuario.nombre}">Usuario Desestimación</td>
-                            <td class="usuario-emisor" th:text="${desestimado.ticket.usuario.nombre}">Usuario Emisor</td>
+                            <td th:text="${detalle.ticket.codigoTicket}">#</td>
+                            <td class="fecha" th:text="${detalle.fechaFormateadaDesestimacion}">Fecha</td>
+                            <td th:text="${detalle.horaFormateadaDesestimacion}">Hora</td>
+                            <td class="usuario-atencion" th:text="${detalle.desestimacion.usuario.nombre}">Usuario Desestimación</td>
+                            <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                             <td>
-                                <span th:text="${#strings.length(desestimado.ticket.descripcion) > 150 ? desestimado.ticket.descripcion.substring(0, 150) + '...' : desestimado.ticket.descripcion}"></span>
+                                <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                                 <br>
                                 <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
                                 <ul>
-                                    <li th:each="adjunto: ${desestimado.ticket.listaArchivosAdjuntos}">
+                                    <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
                                         <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
                                            th:text="${adjunto.nombre}">Archivo</a> - <span
                                             th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
@@ -71,24 +71,24 @@
 
                             <td>
                                 <span class="nombreClasificacionIncidencia clasificacion urgencia"
-                                      th:utext="${desestimado.clasificacionDesestimacion.nombre + ':<br>'}"></span>
-                                <span th:text="${#strings.length(desestimado.descripcion) > 150 ? desestimado.descripcion.substring(0, 150) + '...' : desestimado.descripcion}"></span>
+                                      th:utext="${detalle.desestimacion.clasificacionDesestimacion.nombre + ':<br>'}"></span>
+                                <span th:text="${#strings.length(detalle.desestimacion.descripcion) > 150 ? detalle.desestimacion.descripcion.substring(0, 150) + '...' : detalle.desestimacion.descripcion}"></span>
                             </td>
 
 
                             <td>
                                 <!-- Botón de recepción que abre el modal -->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#desestimacionModal" th:data-ticket-id="${desestimado.ticket.id}"
-                                    th:data-ticket-usuario="${desestimado.ticket.usuario.nombre}"
-                                    th:data-ticket-descripcion="${desestimado.ticket.descripcion}"
-                                    th:data-ticket-fecha="${desestimado.ticket.fechaFormateada}"
-                                    th:data-ticket-hora="${desestimado.ticket.horaFormateada}"
-                                    th:data-desestimacion-usuario="${desestimado.usuario.nombre}"
-                                    th:data-desestimacion-mensaje="${desestimado.descripcion}"
-                                    th:data-desestimacion-clasificacion="${desestimado.clasificacionDesestimacion.nombre}"
-                                    th:data-desestimacion-fecha="${desestimado.fechaFormateadaDesestimacion}"
-                                    th:data-desestimacion-hora="${desestimado.horaFormateadaDesestimacion}">
+                                    data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                    th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                    th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                    th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                    th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                                    th:data-desestimacion-usuario="${detalle.desestimacion.usuario.nombre}"
+                                    th:data-desestimacion-mensaje="${detalle.desestimacion.descripcion}"
+                                    th:data-desestimacion-clasificacion="${detalle.desestimacion.clasificacionDesestimacion.nombre}"
+                                    th:data-desestimacion-fecha="${detalle.fechaFormateadaDesestimacion}"
+                                    th:data-desestimacion-hora="${detalle.horaFormateadaDesestimacion}">
                                     <i class="bi bi-clock-history"></i>
                                 </button>
                             </td>

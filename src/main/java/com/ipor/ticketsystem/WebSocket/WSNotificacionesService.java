@@ -1,16 +1,13 @@
 package com.ipor.ticketsystem.WebSocket;
 
-import com.ipor.ticketsystem.model.dto.AtencionTicketDTO;
+
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dto.NotificacionDTO;
-import com.ipor.ticketsystem.model.dto.TicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.AtencionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
-import com.ipor.ticketsystem.model.dynamic.Desestimacion;
-import com.ipor.ticketsystem.model.dynamic.Notificacion;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.service.TicketService;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -38,13 +35,14 @@ public class WSNotificacionesService {
         String message = String.valueOf(idTicket);
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-recepcion", message);
     }
-    public void enviarTicketAVistaSoporteRecepcion(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
+    public void enviarTicketAVistaSoporteRecepcion(DetalleTicketDTO detalle) {
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(detalle);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-recepcion", ticketRecordWS);
     }
 
-    public void enviarRecepcionAVistaSoporteAtencion(Recepcion recepcion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(recepcion, ticketService);
+    public void enviarRecepcionAVistaSoporteAtencion(Ticket ticket) {
+
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(atencionTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-atencion", ticketRecordWS);
     }
@@ -58,16 +56,16 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-atencion", message);
     }
 
-    public void enviarAtencionAVistaSoporteHistorialAtencion(Servicio servicio, Recepcion recepcion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(servicio,recepcion, ticketService);
+    public void enviarAtencionAVistaSoporteHistorialAtencion(Ticket ticket) {
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         AtencionRecordWS ticketRecordWS = new AtencionRecordWS(atencionTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-historial", ticketRecordWS);
     }
 
 
     //DESESTIMACIÓN
-    public void enviarAtencionAVistaSoporteHistorialDesestimacion(Desestimacion desestimacion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(desestimacion, ticketService);
+    public void enviarAtencionAVistaSoporteHistorialDesestimacion(Ticket ticket ) {
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(atencionTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/desestimacion-historial", ticketRecordWS);
     }
@@ -76,37 +74,37 @@ public class WSNotificacionesService {
     //VISTA ENVIADOS ENVIA Y OCULTA REGISTROS
     public void ocultarRegistroEnVistaEnviadosUsuario(Long idTicket) {
         String message = String.valueOf(idTicket);
-        Long idUsuario = ticketService.getObtenerTicketPorID(idTicket).getUsuario().getId();
+        Long idUsuario = ticketService.getTicketPorID(idTicket).getUsuario().getId();
         messagingTemplate.convertAndSend("/topic/ocultar/usuario-enviados/"+ idUsuario, message);
     }
-    public void enviarTicketAVistaEnviadosUsuario(TicketDTO ticketDTO) {
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(ticketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/usuario-enviados/"+ticketDTO.getUsuario().getId(), ticketRecordWS);
+    public void enviarTicketAVistaEnviadosUsuario(DetalleTicketDTO detalle) {
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(detalle);
+        messagingTemplate.convertAndSend("/topic/actualizar/usuario-enviados/"+detalle.getTicket().getUsuario().getId(), ticketRecordWS);
     }
 
 
     //VISTA RECEPCIONADOS USUARIO
-    public void enviarRecepcionAVistaUsuarioRecepcionados(Recepcion recepcion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(recepcion, ticketService);
+    public void enviarRecepcionAVistaUsuarioRecepcionados(Ticket ticket) {
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(atencionTicketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/usuario-recepcionados/"+recepcion.getTicket().getUsuario().getId(), ticketRecordWS);
+        messagingTemplate.convertAndSend("/topic/actualizar/usuario-recepcionados/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
     public void ocultarRegistroEnVistaUsuarioRecepcionados(Long idTicket) {
         String message = String.valueOf(idTicket);
-        Long idUsuario = ticketService.getObtenerTicketPorID(idTicket).getUsuario().getId();
+        Long idUsuario = ticketService.getTicketPorID(idTicket).getUsuario().getId();
         messagingTemplate.convertAndSend("/topic/ocultar/usuario-recepcionados/"+idUsuario, message);
     }
     //VISTA ATENDIDOS USUARIO
-    public void enviarAtencionAVistaUsuarioAtendidos(Servicio servicio, Recepcion recepcion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(servicio,recepcion, ticketService);
+    public void enviarAtencionAVistaUsuarioAtendidos(Ticket ticket) {
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         AtencionRecordWS ticketRecordWS = new AtencionRecordWS(atencionTicketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/usuario-atendidos/"+recepcion.getTicket().getUsuario().getId(), ticketRecordWS);
+        messagingTemplate.convertAndSend("/topic/actualizar/usuario-atendidos/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
     //VISTA DESESTIMADOS USUARIO
-    public void enviarAtencionAVistaUsuarioDesestimados(Desestimacion desestimacion, TicketService ticketService) {
-        AtencionTicketDTO atencionTicketDTO = new AtencionTicketDTO(desestimacion, ticketService);
+    public void enviarAtencionAVistaUsuarioDesestimados(Ticket ticket) {
+        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
         DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(atencionTicketDTO);
-        messagingTemplate.convertAndSend("/topic/actualizar/usuario-desestimados/"+desestimacion.getTicket().getUsuario().getId(), ticketRecordWS);
+        messagingTemplate.convertAndSend("/topic/actualizar/usuario-desestimados/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
 
 
