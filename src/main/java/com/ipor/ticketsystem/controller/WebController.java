@@ -175,11 +175,21 @@ public class WebController {
     @GetMapping("/ticket/{codigo}")
     public String verTicketPorCodigo(@PathVariable("codigo") String codigo, Model model) {
         Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
+        clasificadoresController.getListaClasificacionesServicioActivos(model);
+        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaClasificacionesAreaActivos(model);
+
 
         if (ticketOptional.isPresent()){
             DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticketOptional.get());
             model.addAttribute("detalle", detalleTicketDTO);
             model.addAttribute("Titulo", "HelpDesk | " + detalleTicketDTO.getTicket().getCodigoTicket());
+
+
+
+
         }
             return "general/ticket";
         }

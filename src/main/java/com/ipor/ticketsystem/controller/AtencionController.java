@@ -130,7 +130,8 @@ public class AtencionController {
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
-            response.sendRedirect("/soporte/Recepcionar?successful=recepcion");
+            String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=atencion";
+            response.sendRedirect(redirectUrl);
             return ResponseEntity.ok("Ticket recepcionado correctamente");
 
         } catch (DataIntegrityViolationException e) {
@@ -224,6 +225,8 @@ public class AtencionController {
 
             Long lastFaseTicket = ticket.getFaseTicket().getId();
 
+            System.out.println("-" + lastFaseTicket);
+            System.out.println("+" + fase);
             if (fase != lastFaseTicket) {
                 String referer = request.getHeader("Referer");
                 String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?error=desestimacion-moved";
