@@ -77,6 +77,13 @@
                 text: 'Tu usuario ha sido modificado o desactivado. Por favor, vuelve a iniciar sesión.',
                 confirmButtonColor: '#3085d6'
             });
+        }else if(urlParams.get('session-invalid') === 'expired'){
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sesión inválida',
+                text: 'Tu sesión ha expirado, por favor vuelve a iniciar sesión.',
+                confirmButtonColor: '#3085d6'
+            });
         }
     </script>
 </main>

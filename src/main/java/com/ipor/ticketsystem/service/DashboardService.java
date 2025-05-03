@@ -30,20 +30,32 @@ public class DashboardService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //para obtener el numero en las tablas
-    public long obtenerNTotalTickets() {
+    //PARA OBTENER EL NUMERO TOTAL DE REGISTROS EN LA BD
+    public long obtenerNTotalTickets(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.countTicketsByFechaBetween(fechaInicio, fechaFin);
+        }
         return ticketRepository.count();
     }
 
-    public long obtenerNTotalRecepcionados() {
+    public long obtenerNTotalRecepcionados(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return recepcionRepository.countRecepcionadosByFechaBetween(fechaInicio, fechaFin);
+        }
         return recepcionRepository.count();
     }
 
-    public long obtenerNTotalAtendidos() {
+    public long obtenerNTotalAtendidos(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return servicioRepository.countAtendidosByFechaBetween(fechaInicio, fechaFin);
+        }
         return servicioRepository.count();
     }
 
-    public long obtenerNTotalDesestimados() {
+    public long obtenerNTotalDesestimados(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return desestimacionRepository.countDesestimadosByFechaBetween(fechaInicio, fechaFin);
+        }
         return desestimacionRepository.count();
     }
 

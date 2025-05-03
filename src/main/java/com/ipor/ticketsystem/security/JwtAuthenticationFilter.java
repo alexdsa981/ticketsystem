@@ -74,6 +74,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (UsernameNotFoundException ex) {
             CookieUtil.removeJwtCookie(response);
             response.sendRedirect("/login?session-invalid=user-not-found");
+        }catch (AuthenticationCredentialsNotFoundException ex){
+            response.sendRedirect("/login?session-invalid=expired");
         }
     }
 

@@ -31,10 +31,9 @@ public class TicketService {
 
     // Método para obtener todos los tickets, además junta los tickets y sus archivos adjuntos en TicketDTO
     public List<DetalleTicketDTO> getAllTicketsSinRecepcionar() {
-        List<Ticket> Tickets = ticketRepository.findByFaseTicketId(1);
+        List<Ticket> Tickets = ticketRepository.findAllSinRecepcionar();
         List<DetalleTicketDTO> ListaTicketsDTO = new ArrayList<>();
         for (Ticket ticket : Tickets) {
-            List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
             ListaTicketsDTO.add(ticketDTO);
         }
@@ -47,14 +46,13 @@ public class TicketService {
     public List<DetalleTicketDTO> getMyTickets() {
         Long idUsuario = usuarioService.getIDdeUsuarioLogeado();
 
-        List<Ticket> MisTickets = ticketRepository.findByUsuarioIdAndFaseTicketId(idUsuario, 1L);
+        List<Ticket> MisTickets = ticketRepository.findAllByTicketUsuarioId(idUsuario);
 
         // Crear una lista para almacenar los DTOs
         List<DetalleTicketDTO> MisTicketsDTO = new ArrayList<>();
 
         // Procesar los tickets de fase 1
         for (Ticket ticket : MisTickets) {
-            List<ArchivoAdjunto> adjuntosPorTicket = getArchivosAdjuntosDeTicketPorTicketID(ticket.getId());
             DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
             MisTicketsDTO.add(ticketDTO);
         }

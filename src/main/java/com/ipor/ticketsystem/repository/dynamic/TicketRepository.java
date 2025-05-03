@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.repository.dynamic;
 
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
+import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    //obtener tickets por fase id
-    List<Ticket> findByFaseTicketId(int faseId);
+    
+
+    // Consulta para obtener los 300 tickets recibidos más recientes
+    @Query(value = "SELECT TOP 300 t.* FROM ticket t WHERE t.id_usuario = :idUsuario AND t.id_fase_ticket = 1 ORDER BY t.fecha DESC, t.hora DESC", nativeQuery = true)
+    List<Ticket> findAllByTicketUsuarioId(@Param("idUsuario") Long idUsuario);
+
+    @Query(value = "SELECT TOP 300 t.* FROM ticket t WHERE t.id_fase_ticket = 1 ORDER BY t.fecha DESC, t.hora DESC", nativeQuery = true)
+    List<Ticket> findAllSinRecepcionar();
+
+
     //obtener tickets propios
     List<Ticket> findByUsuarioIdAndFaseTicketId(Long usuarioId, Long faseTicketId);
     //obtener ticket por codigo ticket ej: TK-0003
@@ -24,10 +33,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     //para dashboard
     //numero total de ticket
     long count();
-
-
-
-
+    
 
     /*
     INFORMACION PARA DASHBOARD SOPORTE
@@ -175,4 +181,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Double obtenerPromedioSegundosTSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
+    @Query("SELECT COUNT(t) FROM Ticket t WHERE t.fecha BETWEEN :inicio AND :fin")
+    long countTicketsByFechaBetween(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
 }

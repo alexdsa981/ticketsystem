@@ -40,14 +40,12 @@ public class TicketController {
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
     public Model retornaTicketsPropiosAVista(Model model) {
         List<DetalleTicketDTO> MisTicketsDTO = ticketService.getMyTickets();
-        Collections.reverse(MisTicketsDTO);
         model.addAttribute("MyTickets", MisTicketsDTO);
         return model;
     }
 
     public Model retornaTicketsRecibidosAVista(Model model) {
         List<DetalleTicketDTO> AllTicketsDTO = ticketService.getAllTicketsSinRecepcionar();
-        Collections.reverse(AllTicketsDTO);
         model.addAttribute("AllTickets", AllTicketsDTO);
         return model;
     }

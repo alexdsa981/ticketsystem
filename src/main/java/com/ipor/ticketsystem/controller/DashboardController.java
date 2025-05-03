@@ -25,31 +25,41 @@ public class DashboardController {
     @Autowired
     DashboardService dashboardService;
 
-    //INFO PARA DASHBOARD DE ADMIN
-    //NUMERO TOTAL DE TICKETS POR AREA
     @GetMapping("/contador/total")
-    public ResponseEntity<Long> getTotalTickets() {
-        Long ntotal = dashboardService.obtenerNTotalTickets();
+    public ResponseEntity<Long> getTotalTickets(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        Long ntotal = dashboardService.obtenerNTotalTickets(fechaInicio, fechaFin);
         return ResponseEntity.ok(ntotal);
     }
+
     @GetMapping("/contador/desestimados")
-    public ResponseEntity<Long> getTotalDesestimados() {
-        Long ntotal = dashboardService.obtenerNTotalDesestimados();
+    public ResponseEntity<Long> getTotalDesestimados(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        Long ntotal = dashboardService.obtenerNTotalDesestimados(fechaInicio, fechaFin);
         return ResponseEntity.ok(ntotal);
     }
+
     @GetMapping("/contador/recepcionados")
-    public ResponseEntity<Long> getTotalRecepcionados() {
-        Long ntotal = dashboardService.obtenerNTotalRecepcionados();
+    public ResponseEntity<Long> getTotalRecepcionados(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        Long ntotal = dashboardService.obtenerNTotalRecepcionados(fechaInicio, fechaFin);
         return ResponseEntity.ok(ntotal);
     }
+
     @GetMapping("/contador/atendidos")
-    public ResponseEntity<Long> getTotalAtendidos() {
-        Long ntotal = dashboardService.obtenerNTotalAtendidos();
+    public ResponseEntity<Long> getTotalAtendidos(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        Long ntotal = dashboardService.obtenerNTotalAtendidos(fechaInicio, fechaFin);
         return ResponseEntity.ok(ntotal);
     }
 
 
 
+    //INFO DASHBOARD ADMIN
     @GetMapping("/grafico/TicketsporIncidencia")
     public ResponseEntity<Map<String, Object>> getTxIGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
@@ -76,7 +86,7 @@ public class DashboardController {
 
 
 
-
+//DAHBOARD SOPORTE
     @GetMapping("/grafico/EstadoActual")
     public ResponseEntity<Map<String, Object>> getGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,

@@ -143,7 +143,18 @@
             <i class="bi bi-pencil-square"></i>
             Recepcionar
         </button>
-
+        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso')}"
+                type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
+            <i class="bi bi-check2-square"></i>
+            Atender
+        </button>
         <button th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado') and !#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}"
                 type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
@@ -157,18 +168,7 @@
             <i class="bi bi-trash"></i>
             Desestimar
         </button>
-        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso')}"
-                type="button" class="btn btn-success" data-bs-toggle="modal"
-                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
-                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
-            <i class="bi bi-check2-square"></i>
-            Atender
-        </button>
+
         <a class="btn btn-outline-primary"
            th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/soporte/Recepcionar' :
                       (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/soporte/Atender' :

@@ -42,7 +42,6 @@ public class AtencionController {
 
     public Model getListaMisTicketsRecepcionadosAVista(Model model) {
         List<DetalleTicketDTO> MyRecepcionados = atencionService.getMyListaRecepcionados();
-        Collections.reverse(MyRecepcionados);
         model.addAttribute("MyRecepcionados", MyRecepcionados);
         return model;
     }
@@ -68,14 +67,12 @@ public class AtencionController {
 
     public Model getListaMisTicketsDesestimadosAVista(Model model) {
         List<DetalleTicketDTO> MyDesestimados = atencionService.getMyListaDesestimados();
-        Collections.reverse(MyDesestimados);
         model.addAttribute("MyDesestimados", MyDesestimados);
         return model;
     }
 
     public Model getListaTodosLosTicketsDesestimadosAVista(Model model) {
         List<DetalleTicketDTO> AllDesestimados = atencionService.getListaDesestimados();
-        Collections.reverse(AllDesestimados);
         model.addAttribute("AllDesestimados", AllDesestimados);
         return model;
     }
@@ -225,8 +222,6 @@ public class AtencionController {
 
             Long lastFaseTicket = ticket.getFaseTicket().getId();
 
-            System.out.println("-" + lastFaseTicket);
-            System.out.println("+" + fase);
             if (fase != lastFaseTicket) {
                 String referer = request.getHeader("Referer");
                 String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?error=desestimacion-moved";

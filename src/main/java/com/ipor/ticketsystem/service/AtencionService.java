@@ -84,7 +84,6 @@ public class AtencionService {
         List<DetalleTicketDTO> listaServiciosDTO = new ArrayList<>();
 
         for (Servicio servicio : listaAtendidos) {
-            Recepcion recepcion = recepcionRepository.findByTicketId(servicio.getTicket().getId());
             DetalleTicketDTO servicioDTO = new DetalleTicketDTO(servicio.getTicket());
             listaServiciosDTO.add(servicioDTO);
         }
