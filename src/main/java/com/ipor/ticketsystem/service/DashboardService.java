@@ -92,6 +92,8 @@ public class DashboardService {
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(LocalDate fechaInicio, LocalDate fechaFin) {
 
         if (fechaInicio != null && fechaFin != null) {
+            System.out.println(fechaInicio);
+            System.out.println(fechaFin);
             return ticketRepository.findTicketCountByFaseWithDates(fechaInicio, fechaFin);
         }
         return ticketRepository.findTicketCountByFase();

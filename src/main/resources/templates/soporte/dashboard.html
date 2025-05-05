@@ -8,7 +8,7 @@
 <main>
     <script src="/imports/chart.min.js"></script>
     <div class="container" style="margin-top: 10px">
-        <h2>SOPORTE: Dashboard</h2>
+        <h2 id="tituloDashboard">SOPORTE:</h2>
         <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
                 data-bs-target="#filterModal">
             <i class="bi bi-filter"></i> Filtrar
@@ -49,188 +49,78 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnFiltrar" class="btn btn-primary" type="button">
-                            <span id="btnFiltrarTexto">Filtrar</span>
-                        </button>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
 
-            <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/soporte/Recepcionar" class="btn-dashboard">
-                    <div class="rounded text-dark card" style="background-color: #f8d7da;">
-                        <p class="mb-0">Tickets Solicitados</p>
-                        <div class="info-container">
-                            <span id="nRecibidos" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-ticket icon"></i>
-                        </div>
+        <div class="container border shadow p-3 px-4 mb-5 bg-body rounded" style="margin-top: 10px">
+                <div class="row justify-content-center align-items-start">
+                    <!-- Contadores (columna izquierda) -->
+                    <div class="col-12 col-md-4 mb-4 d-flex flex-column gap-3">
+                        <a href="/soporte/Recepcionar" class="btn-dashboard d-block mb-3">
+                            <div class="rounded text-dark card py-3" style="background-color: #f8d7da;">
+                                <div class="info-container d-flex justify-content-between align-items-center px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-ticket icon fs-4"></i>
+                                        <p class="mb-0">Tickets Solicitados</p>
+                                    </div>
+                                    <span id="nRecibidos" class="h4 mb-0">0</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="/soporte/Atender" class="btn-dashboard d-block mb-3">
+                            <div class="rounded text-dark card py-3" style="background-color: #fff3cd;">
+                                <div class="info-container d-flex justify-content-between align-items-center px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-check-circle icon fs-4"></i>
+                                        <p class="mb-0">Tickets Recepcionados</p>
+                                    </div>
+                                    <span id="ntotalRecepcionados" class="h4 mb-0">0</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="/soporte/Tickets-Cerrados" class="btn-dashboard d-block mb-3">
+                            <div class="rounded text-dark card py-3" style="background-color: #d4edda; color: #6c757d;">
+                                <div class="info-container d-flex justify-content-between align-items-center px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-check2-circle icon fs-4"></i>
+                                        <p class="mb-0">Tickets Atendidos</p>
+                                    </div>
+                                    <span id="ntotalAtendidos" class="h4 mb-0">0</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="/soporte/Tickets-Desestimados" class="btn-dashboard d-block mb-3">
+                            <div class="rounded text-dark card py-3" style="background-color: #C8C8C8; color: #6c757d;">
+                                <div class="info-container d-flex justify-content-between align-items-center px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-x-circle icon fs-4"></i>
+                                        <p class="mb-0">Tickets Desestimados</p>
+                                    </div>
+                                    <span id="ntotalDesestimados" class="h4 mb-0">0</span>
+                                </div>
+                            </div>
+                        </a>
+
                     </div>
-                </a>
-            </div>
 
-
-            <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/soporte/Atender" class="btn-dashboard">
-                    <div class="rounded text-dark card" style="background-color: #fff3cd;">
-                        <p class="mb-0">Tickets Recepcionados</p>
-                        <div class="info-container">
-                            <span id="ntotalRecepcionados" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check-circle icon"></i>
-                        </div>
+                    <!-- Gráfico (columna derecha) -->
+                    <div class="col-12 col-md-8 d-flex justify-content-center">
+                        <canvas id="graficoEstadoActualTickets" width="500" height="450" style="max-width: 100%;"></canvas>
                     </div>
-                </a>
+
+                </div>
             </div>
-            <div class="col-12 col-md-4 text-center mb-4">
-                <a href="/soporte/Tickets-Cerrados" class="btn-dashboard">
-                    <div class="rounded text-dark card" style="background-color: #d4edda; color: #6c757d;">
-                        <p class="mb-0">Total: Tickets Atendidos</p>
-                        <div class="info-container">
-                            <span id="ntotalAtendidos" class="h4 mb-0">0</span> <!-- ID agregado -->
-                            <i class="bi bi-check2-circle icon"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
 
-    <div class="container text-center mt-4">
-        <div class="d-flex justify-content-center align-items-center gap-3">
-            <div style="width: 500px;">
-                <canvas id="graficoEstadoActualTickets" style="width: 100%; height: 400px;"></canvas>
-            </div>
-            <div style="width: 300px;">
-                <canvas id="graficoTotalAtendidos" style="width: 100%; height: 400px;"></canvas>
-            </div>
-        </div>
-    </div>
-
-
-    <script th:inline="javascript">
-        let graficoEstadoActualTickets = null;
-        let graficoTotalAtendidos = null;
-
-        // Función para crear o actualizar los gráficos
-        function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
-            const ctx = document.getElementById(idCanvas).getContext('2d');
-
-            if (idCanvas === 'graficoEstadoActualTickets') {
-                if (graficoEstadoActualTickets) {
-                    graficoEstadoActualTickets.data.labels = etiquetas;
-                    graficoEstadoActualTickets.data.datasets[0].data = datos;
-                    graficoEstadoActualTickets.update();
-                } else {
-                    graficoEstadoActualTickets = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: etiquetas,
-                            datasets: [{
-                                label: label,
-                                data: datos,
-                                backgroundColor: colores.background,
-                                borderColor: colores.border,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1,
-                                        callback: function(value) {
-                                            return Number.isInteger(value) ? value : null;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            } else if (idCanvas === 'graficoTotalAtendidos') {
-                if (graficoTotalAtendidos) {
-                    graficoTotalAtendidos.data.labels = etiquetas;
-                    graficoTotalAtendidos.data.datasets[0].data = datos;
-                    graficoTotalAtendidos.update();
-                } else {
-                    graficoTotalAtendidos = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: etiquetas,
-                            datasets: [{
-                                label: label,
-                                data: datos,
-                                backgroundColor: colores.background,
-                                borderColor: colores.border,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true
-                        }
-                    });
-                }
-            }
-        }
-
-        // Función para obtener los datos del endpoint y actualizar los gráficos
-        function actualizarDatos() {
-            fetch('/app/dashboard/grafico/EstadoActual')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Error en la respuesta del servidor");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const etiquetas = data.etiquetas.slice(0, 3); // Tomamos las primeras 3 etiquetas
-                    etiquetas[0] = "Solicitados";
-                    etiquetas[1] = "Recepcionado";
-                    const datos = data.datos.slice(0, 3); // Tomamos los primeros 3 valores de datos
-
-                    // Actualizamos contadores individuales en el DOM
-                    document.getElementById("nRecibidos").textContent = datos[0] || 0;
-                    document.getElementById("ntotalRecepcionados").textContent = datos[1] || 0;
-                    document.getElementById("ntotalAtendidos").textContent = datos[2] || 0;
-
-                    // Crear/actualizar gráficos
-                    crearGrafico(
-                        etiquetas.slice(0, 2),
-                        datos.slice(0, 2),
-                        'graficoEstadoActualTickets',
-                        'Tickets',
-                        {
-                            background: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 206, 86, 0.2)'],
-                            border: ['rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)']
-                        }
-                    );
-
-                    crearGrafico(
-                        [etiquetas[2]],
-                        [datos[2]],
-                        'graficoTotalAtendidos',
-                        'Total Tickets Atendidos',
-                        {
-                            background: ['rgba(75, 192, 192, 0.2)'],
-                            border: ['rgba(75, 192, 192, 1)']
-                        }
-                    );
-                })
-                .catch(error => console.error('Error al obtener los datos:', error));
-        }
-
-        // Llamamos a la función para actualizar los datos y crear los gráficos
-        actualizarDatos();
-
-        // Actualiza los datos cada 5 segundos
-        setInterval(actualizarDatos, 5000);
-    </script>
 
     <script src="/js/soporteDashboard.js"></script>
+</div>
 
 </main>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>

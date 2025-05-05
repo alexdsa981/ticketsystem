@@ -19,6 +19,7 @@ const picker = new Litepicker({
       fechaFinGlobal = endDate.format("YYYY-MM-DD");
       document.getElementById("fechaInicio").value = fechaInicioGlobal;
       document.getElementById("fechaFin").value = fechaFinGlobal;
+       actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
     });
   },
 });
@@ -239,29 +240,6 @@ tituloDashboard.textContent = `ADMIN: Dashboard (${inicioFormateado} - ${finForm
 
 }
 
-// ==========================
-// EVENTO FILTRO
-// ==========================
-document.getElementById("btnFiltrar").addEventListener("click", async () => {
-  const btn = document.getElementById("btnFiltrar");
-  const btnTexto = document.getElementById("btnFiltrarTexto");
-
-  const fechaInicio = document.getElementById("fechaInicio").value;
-  const fechaFin = document.getElementById("fechaFin").value;
-
-  if (!fechaInicio || !fechaFin) {
-    alert("Debe seleccionar un rango de fechas válido.");
-    return;
-  }
-
-  btn.disabled = true;
-  btnTexto.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Filtrando...`;
-
-  await actualizarDashboardCompleto(fechaInicio, fechaFin);
-
-  btnTexto.innerHTML = "Filtrar";
-  btn.disabled = false;
-});
 
 
 // ==========================
@@ -302,34 +280,7 @@ function inicializarDashboard() {
       "/app/dashboard/grafico/TicketsporArea",
       "Tickets por Área Responsable"
     );
-  
-    // Registrar evento del botón filtrar
-    document.getElementById("btnFiltrar").addEventListener("click", async () => {
-      const btn = document.getElementById("btnFiltrar");
-      const btnTexto = document.getElementById("btnFiltrarTexto");
-  
-      const fechaInicio = document.getElementById("fechaInicio").value;
-      const fechaFin = document.getElementById("fechaFin").value;
-  
-      if (!fechaInicio || !fechaFin) {
-        Swal.fire("Error", "Debes seleccionar un rango de fechas válido.", "warning");
-        return;
-      }
-  
-      // Mostrar spinner
-      btn.disabled = true;
-      btnTexto.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Filtrando...`;
-  
-      // Actualizar fechas globales y dashboard
-      fechaInicioGlobal = fechaInicio;
-      fechaFinGlobal = fechaFin;
-  
-      await actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
-  
-      // Restaurar botón
-      btnTexto.innerHTML = "Filtrar";
-      btn.disabled = false;
-    });
-  }
+
+}
   
   document.addEventListener("DOMContentLoaded", inicializarDashboard);
