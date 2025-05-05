@@ -9,7 +9,7 @@
 <header th:replace="~{common/header :: header}"></header>
 <main>
     <div class="container">
-        <h2>ADMIN: Dashboard</h2>
+        <h2 id="tituloDashboard">ADMIN: Dashboard</h2>
 
         <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
                 data-bs-target="#filterModal">
@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="/soporte/Recepcionar" class="btn-dashboard">
-                        <div class="rounded bg-light text-dark card">
+                        <div class="rounded text-dark card" style="background-color: #d1ecf1;">
                             <p class="mb-0">Total: Tickets Creados</p>
                             <div class="info-container">
                                 <span id="ntotalTickets" class="h4 mb-0">0</span> <!-- ID agregado -->
@@ -77,7 +77,7 @@
                 </div>
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="/soporte/Atender" class="btn-dashboard">
-                        <div class="rounded bg-info text-white card">
+                        <div class="rounded text-dark card" style="background-color: #d4edda;">
                             <p class="mb-0">Total: Recepciones Realizadas</p>
                             <div class="info-container">
                                 <span id="ntotalRecepcionados" class="h4 mb-0">0</span> <!-- ID agregado -->
@@ -88,7 +88,7 @@
                 </div>
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="/soporte/Tickets-Cerrados" class="btn-dashboard">
-                        <div class="rounded bg-success text-white card">
+                        <div class="rounded text-dark card" style="background-color: #fff3cd;">
                             <p class="mb-0">Total: Tickets Atendidos</p>
                             <div class="info-container">
                                 <span id="ntotalAtendidos" class="h4 mb-0">0</span> <!-- ID agregado -->
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="/soporte/Tickets-Desestimados" class="btn-dashboard">
-                        <div class="rounded bg-secondary text-white card">
+                        <div class="rounded text-dark card" style="background-color: #f8d7da;">
                             <p class="mb-0">Total: Tickets Desestimados</p>
                             <div class="info-container">
                                 <span id="ntotalDesestimados" class="h4 mb-0">-</span> <!-- ID agregado -->
@@ -110,11 +110,10 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
                 <canvas id="graficoTicketsxFase" style="max-width: 100%; height: 300px;"></canvas>
             </div>
 
-            <div class="row justify-content-center mt-4"> <!-- Centra el contenido dentro de la fila -->
+            <div class="row justify-content-center mt-4">
                 <div class="col-12 col-md-3 text-center mb-4">
                     <a href="#" class="btn-dashboard" onclick="window.location.href='/admin/exportar-tickets'">
                         <div class="rounded bg-primary text-white card">
@@ -129,94 +128,6 @@
 
 
         <script th:inline="javascript">
-            let graficoTickets = null;
-            // Variables para las etiquetas y los datos
-            var etiquetas = ["Creados", "Recepcionados", "Atendidos", "Desestimados"];
-            var datos = [0, 0, 0, 0];  // Inicialmente a 0 hasta que se obtengan los datos reales
-
-            // Función para crear o actualizar el gráfico
-            function crearGrafico() {
-                const ctx = document.getElementById('graficoTicketsxFase').getContext('2d');
-
-                // Si el gráfico ya existe, actualizamos los datos
-                if (graficoTickets !== null) {
-                    // Actualizamos los datos del gráfico con los valores actuales
-                    graficoTickets.data.datasets[0].data = datos;
-                    graficoTickets.update();  // Actualiza el gráfico sin destruirlo
-                } else {
-                    // Si el gráfico no existe, lo creamos
-                    graficoTickets = new Chart(ctx, {
-                        type: 'bar', // Cambia a 'pie' si prefieres un gráfico de pastel
-                        data: {
-                            labels: etiquetas,
-                            datasets: [{
-                                label: 'Tickets',
-                                data: datos,
-                                backgroundColor: [
-                                    'rgba(169, 169, 169, 0.2)',  // gris para la primera barra
-                                    'rgba(135, 206, 235, 0.2)',  // Celeste para la segunda barra
-                                    'rgba(75, 192, 192, 0.2)',  // Verde para la tercera barra
-                                    'rgba(169, 169, 169, 0.2)'  // Gris para la cuarta barra
-                                ],
-                                borderColor: [
-                                    'rgba(169, 169, 169, 1)',  // gris
-                                    'rgba(135, 206, 235, 1)',  // Amarillo
-                                    'rgba(75, 192, 192, 1)',  // Verde
-                                    'rgba(169, 169, 169, 1)'  // Gris
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: false,  // Evita que el gráfico se ajuste automáticamente
-                            maintainAspectRatio: false, // Evita que el gráfico mantenga la relación de aspecto
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1,
-                                        callback: function (value) {
-                                            return Number.isInteger(value) ? value : null;  // Muestra solo enteros
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Función para obtener los datos de los contadores
-            function actualizarContadores() {
-                return Promise.all([
-                    fetch('/app/dashboard/contador/total').then(response => response.json()), // Total tickets
-                    fetch('/app/dashboard/contador/recepcionados').then(response => response.json()), // Recepcionados
-                    fetch('/app/dashboard/contador/atendidos').then(response => response.json()), // Atendidos
-                    fetch('/app/dashboard/contador/desestimados').then(response => response.json()) // Desestimados
-                ]).then(([total, recepcionados, atendidos, desestimados]) => {
-                    // Actualiza los contadores con los datos obtenidos
-                    document.getElementById("ntotalTickets").textContent = total;
-                    document.getElementById("ntotalRecepcionados").textContent = recepcionados;
-                    document.getElementById("ntotalAtendidos").textContent = atendidos;
-                    document.getElementById("ntotalDesestimados").textContent = desestimados;
-                    // Actualiza los datos del gráfico
-                    datos[0] = total;
-                    datos[1] = recepcionados;
-                    datos[2] = atendidos;
-                    datos[3] = desestimados;
-
-                    // Llama a la función para crear o actualizar el gráfico con los datos ya cargados
-                    crearGrafico();
-                }).catch(error => {
-                    console.error('Error al obtener los contadores:', error);
-                });
-            }
-
-            // Llamamos a la función para actualizar los contadores y luego crear el gráfico
-            actualizarContadores();
-
-            // Actualiza los contadores cada 5 segundos (5000 milisegundos)
-            setInterval(actualizarContadores, 5000);
         </script>
 
 
@@ -267,25 +178,21 @@
         <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded">
             <h3><i class="bi bi-building"></i> Tickets por Area:</h3>
             <div class="d-flex justify-content-center align-items-center flex-column flex-md-row">
-                <!-- Div que contiene la tabla, con order-2 para que aparezca después en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-2 order-md-1">
                     <table class="table table-bordered table-hover" style="font-size:14px;">
                         <thead>
                         <tr>
                             <th>Área</th>
                             <th>Conteo de Tickets</th>
-                            <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                            <th>Porcentaje (%)</th>
                         </tr>
                         </thead>
-                        <tbody id="TicketsporAreaTabla">
-                        <!-- Filas se agregarán dinámicamente aquí -->
+                        <tbody id="tablaArea">
                         </tbody>
                     </table>
                 </div>
-                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-1 order-md-2">
-                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                    <canvas id="TicketsporArea"
+                    <canvas id="graficoArea"
                             style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
                 </div>
             </div>
@@ -302,18 +209,15 @@
                         <tr>
                             <th>Clasificación de Incidencia</th>
                             <th>Conteo de Tickets</th>
-                            <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
+                            <th>Porcentaje (%)</th>
                         </tr>
                         </thead>
-                        <tbody id="TicketsporIncidenciaTabla">
-                        <!-- Filas se agregarán dinámicamente aquí -->
+                        <tbody id="tablaIncidencia">
                         </tbody>
                     </table>
                 </div>
-                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-1 order-md-2">
-                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                    <canvas id="TicketsporIncidencia"
+                    <canvas id="graficoIncidencia"
                             style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
                 </div>
             </div>
@@ -333,15 +237,12 @@
                             <th>Porcentaje (%)</th> <!-- Nueva columna para el porcentaje -->
                         </tr>
                         </thead>
-                        <tbody id="TicketsporUrgenciaTabla">
-                        <!-- Filas se agregarán dinámicamente aquí -->
+                        <tbody id="tablaUrgencia">
                         </tbody>
                     </table>
                 </div>
-                <!-- Div que contiene el gráfico, con order-1 para que aparezca primero en pantallas pequeñas -->
                 <div class="col-12 col-md-6 order-1 order-md-2">
-                    <!-- El canvas ahora ocupa el 100% del ancho disponible y mantiene la proporción -->
-                    <canvas id="TicketsporUrgencia"
+                    <canvas id="graficoUrgencia"
                             style="max-width: 100%; height: 300px; margin-top:10px; margin-bottom:10px;"></canvas>
                 </div>
             </div>
@@ -350,83 +251,9 @@
     </div>
 </main>
 
-<script src="/js/graficosDashboard.js"></script>
-<script>
-    inicializarDashboard();
-</script>
+<script src="/js/adminDashboard.js"></script>
+
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
-<script>
-    // Mostrar el botón "Quitar Filtro" cuando se aplica un filtro
-    document.getElementById('btnFiltrar').addEventListener('click', function () {
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value;
-
-        if (fechaInicio || fechaFin) {
-            document.getElementById('btnQuitarFiltro').classList.remove('d-none');
-        }
-    });
-
-    // Recargar la página al hacer clic en "Quitar Filtro"
-    document.getElementById('btnQuitarFiltro').addEventListener('click', function () {
-        location.reload();
-    });
-
-</script>
-<script>
-    function actualizarPromedios() {
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value;
-
-        // Construir query string
-        let queryParams = '';
-        if (fechaInicio && fechaFin) {
-            queryParams = `?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
-        }
-
-        const endpoints = [
-            { url: '/app/dashboard/promedioRecepcion', target: 'promedioRecepcion', mensaje: 'Promedio de Recepción: {data} minutos. Creación de ticket hasta Recepción de ticket.' },
-            { url: '/app/dashboard/promedioAtencion', target: 'promedioAtencion', mensaje: 'Promedio de Atención: {data} minutos. Recepción de ticket hasta Atención/Cierre de ticket.' },
-            { url: '/app/dashboard/promedioInicioFin', target: 'promedioInicioFin', mensaje: 'Promedio General: {data} minutos. Creación de ticket hasta Atención/Cierre de ticket.' }
-        ];
-
-        endpoints.forEach(({ url, target, mensaje }) => {
-            fetch(url + queryParams)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById(target).innerText = mensaje.replace('{data}', data);
-                })
-                .catch(() => {
-                    document.getElementById(target).innerText = 'Error al obtener el promedio.';
-                });
-        });
-    }
-
-
-
-    const picker = new Litepicker({
-        element: document.getElementById('rangoFechas'),
-        singleMode: false,
-        format: 'YYYY-MM-DD',
-        setup: (picker) => {
-            picker.on('selected', (startDate, endDate) => {
-                document.getElementById('fechaInicio').value = startDate.format('YYYY-MM-DD');
-                document.getElementById('fechaFin').value = endDate.format('YYYY-MM-DD');
-            });
-        }
-    });
-
-
-        // Carga inicial
-document.addEventListener('DOMContentLoaded', function () {
-    actualizarPromedios();
-    setInterval(actualizarPromedios, 10000);
-});
-
-
-
-
-
-</script>
 
 </body>
 
