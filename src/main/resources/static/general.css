@@ -407,4 +407,10 @@ h2 {
     .contenedor-promedios .card{
         margin-bottom:10px;
     }
+    .btn-ticket-accion{
+        margin-bottom: 10px;
+    }
+    .btn-pagina-ticket{
+        margin-bottom:30px;
+    }
 }

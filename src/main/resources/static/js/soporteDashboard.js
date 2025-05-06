@@ -122,12 +122,13 @@ function actualizarDatos(fechaInicio = null, fechaFin = null) {
             );
 
             // Actualizar el título con las fechas seleccionadas o el día actual
-            const tituloDashboard = document.getElementById("tituloDashboard");
+ const tituloDashboard = document.getElementById("tituloDashboard");
 if (fechaInicio && fechaFin) {
     const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
 
     const hoy = new Date();
-    const hoyStr = hoy.toISOString().split('T')[0];
+    const hoyStr = formatearFechaLocal(hoy);
+
 
     if (fechaInicio === hoyStr && fechaFin === hoyStr) {
         const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
@@ -137,7 +138,7 @@ if (fechaInicio && fechaFin) {
         const fin = new Date(fechaFin + 'T23:59:59');
         const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
         const finFormateado = fin.toLocaleDateString('es-ES', opciones);
-        tituloDashboard.textContent = `SOPORTE: Dashboard (${inicioFormateado} - ${finFormateado})`;
+        tituloDashboard.textContent = `Estado: Dashboard (${inicioFormateado} - ${finFormateado})`;
     }
 } else {
     const fechaHoy = new Date();
@@ -152,4 +153,25 @@ if (fechaInicio && fechaFin) {
 }
 
 // Llamar a la función para crear el gráfico al cargar, pasando las fechas predeterminadas (hoy)
-actualizarDatos(fechaInicioGlobal || new Date().toISOString().split('T')[0], fechaFinGlobal || new Date().toISOString().split('T')[0]);
+const hoyLocal = formatearFechaLocal(new Date());
+fechaInicioGlobal = hoyLocal;
+fechaFinGlobal = hoyLocal;
+actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
+
+function formatearFechaLocal(date) {
+  return date.getFullYear() + '-' +
+         String(date.getMonth() + 1).padStart(2, '0') + '-' +
+         String(date.getDate()).padStart(2, '0');
+}
+
+
+const socket = new SockJS('/ws');
+const stompClient = Stomp.over(socket);
+
+stompClient.connect({}, () => {
+    stompClient.subscribe('/topic/dashboard', function (mensaje) {
+        if (mensaje.body === 'actualizar') {
+            actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
+        }
+    });
+});

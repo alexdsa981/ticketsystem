@@ -210,6 +210,17 @@
     });
 </script>
 
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('error') === 'user-without-permissions'){
+        Swal.fire({
+            icon: 'warning',
+            title: 'No tienes permisos',
+            text: 'No tienes los permisos necesarios para acceder a esta sección. Por favor, contacta con un administrador si crees que esto es un error.',
+            confirmButtonColor: '#3085d6'
+        });
+    }
+</script>
 
 </body>
 </html>

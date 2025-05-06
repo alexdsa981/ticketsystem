@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Conectar al servidor
     stompClient.connect({}, (frame) => {
-        console.log('Conectado: ' + frame);
+        //console.log('Conectado: ' + frame);
 
         // SOPORTE RECEPCION: OCULTA O ACTUALIZA REGISTROS
         if (window.location.pathname === '/soporte/Recepcionar') {

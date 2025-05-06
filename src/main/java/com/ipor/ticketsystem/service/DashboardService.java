@@ -78,8 +78,7 @@ public class DashboardService {
 
     //Conteo Áreas (DASHBOARD ADMIN)
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorArea(LocalDate fechaInicio, LocalDate fechaFin) {
-        System.out.println(fechaInicio);
-        System.out.println(fechaFin);
+
         if (fechaInicio != null && fechaFin != null) {
             return ticketRepository.findTicketCountByAreaWithDates(fechaInicio, fechaFin);
         }
@@ -92,8 +91,7 @@ public class DashboardService {
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(LocalDate fechaInicio, LocalDate fechaFin) {
 
         if (fechaInicio != null && fechaFin != null) {
-            System.out.println(fechaInicio);
-            System.out.println(fechaFin);
+
             return ticketRepository.findTicketCountByFaseWithDates(fechaInicio, fechaFin);
         }
         return ticketRepository.findTicketCountByFase();

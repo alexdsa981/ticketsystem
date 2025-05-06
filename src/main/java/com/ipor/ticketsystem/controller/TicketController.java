@@ -162,7 +162,7 @@ public class TicketController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(soporte);
             notificacion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
-            notificacion.setUrl("/soporte/Recepcionar");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
             WSNotificacionesService.enviarNotificacion(notificacion);
@@ -172,6 +172,7 @@ public class TicketController {
         DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
         WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
         WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
+        WSNotificacionesService.notificarActualizacionDashboard();
 
         response.sendRedirect("/inicio");
         return ResponseEntity.ok("Ticket creado correctamente");

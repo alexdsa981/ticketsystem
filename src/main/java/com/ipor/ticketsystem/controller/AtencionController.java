@@ -117,13 +117,14 @@ public class AtencionController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(recepcion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Recepcionado");
-            notificacion.setUrl("/TicketsEnProceso");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(ticket);
             WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(ticket);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+            WSNotificacionesService.notificarActualizacionDashboard();
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
@@ -180,13 +181,14 @@ public class AtencionController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(servicio.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Atendido");
-            notificacion.setUrl("/TicketsAtendidos");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
             WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(ticket);
             WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(ticket);
+            WSNotificacionesService.notificarActualizacionDashboard();
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
@@ -250,7 +252,7 @@ public class AtencionController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(desestimacion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Desestimado");
-            notificacion.setUrl("/TicketsDesestimados");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
 
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
@@ -267,6 +269,7 @@ public class AtencionController {
             if (atencionService.findRecepcionByTicketID(id) != null) {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
             }
+            WSNotificacionesService.notificarActualizacionDashboard();
 
             String referer = request.getHeader("Referer");
             String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=desestimacion";

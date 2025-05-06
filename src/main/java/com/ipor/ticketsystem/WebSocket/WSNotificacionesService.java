@@ -107,6 +107,11 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/actualizar/usuario-desestimados/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
 
+    public void notificarActualizacionDashboard() {
+        messagingTemplate.convertAndSend("/topic/dashboard", "actualizar");
+    }
+
+
 
 
 

@@ -132,7 +132,7 @@
     <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Admin','Soporte')">
 
         <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado')}"
-                type="button" class="btn btn-primary" data-bs-toggle="modal"
+                type="button" class="btn btn-primary btn-ticket-accion" data-bs-toggle="modal"
                 data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
@@ -144,7 +144,7 @@
             Recepcionar
         </button>
         <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso')}"
-                type="button" class="btn btn-success" data-bs-toggle="modal"
+                type="button" class="btn btn-success btn-ticket-accion" data-bs-toggle="modal"
                 data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
@@ -156,7 +156,7 @@
             Atender
         </button>
         <button th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado') and !#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}"
-                type="button" class="btn btn-danger" data-bs-toggle="modal"
+                type="button" class="btn btn-danger btn-ticket-accion" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
@@ -169,22 +169,22 @@
             Desestimar
         </button>
 
-        <a class="btn btn-outline-primary"
+        <a class="btn btn-outline-primary btn-pagina-ticket"
            th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/soporte/Recepcionar' :
                       (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/soporte/Atender' :
                       (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/soporte/Tickets-Cerrados' :
                       '/soporte/Tickets-Desestimados'))}}">
-            Ir a la página del ticket
+            Ir a la sección del ticket
         </a>
     </div>
     <!-- Botón de redirección -->
-    <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Usuario')">
+    <div class="text-center mt-4 btn-pagina-ticket" sec:authorize="hasAnyAuthority('Usuario')">
         <a class="btn btn-outline-primary"
            th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/inicio' :
                       (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/TicketsEnProceso' :
                       (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/TicketsAtendidos' :
                       '/TicketsDesestimados'))}}">
-            Ir a la página del ticket
+            Ir a la sección del ticket
         </a>
     </div>
 </div>

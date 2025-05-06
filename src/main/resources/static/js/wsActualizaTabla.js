@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateTicketCount();
 });
 export function EliminarTicketDeTabla(ticketId) {
-    console.log("wsactualizatabla eliminar");
 
     // Buscar el <td> utilizando el ticketId
     const ticketCell = document.getElementById(ticketId);
@@ -12,7 +11,6 @@ export function EliminarTicketDeTabla(ticketId) {
         const row = ticketCell.closest('tr');
         if (row) {
             row.remove(); // Eliminar la fila del DOM
-            console.log(`Fila con ID ${ticketId} eliminada.`);
         } else {
             console.error(`No se encontró una fila para el ticket con ID ${ticketId}`);
         }
@@ -43,7 +41,6 @@ function updateTicketCount() {
 //
 //
 export function ActualizaTablasSoporteRecepcion(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -151,7 +148,6 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
 
 export function ActualizaTablaAtencionSoporte(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -262,7 +258,6 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
 
 
 export function ActualizaTablaSoporteHistorial(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -392,7 +387,6 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
 
 
 export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -506,7 +500,6 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
 
 
 export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -594,7 +587,6 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
 
 
 export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -690,7 +682,6 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
 
 export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');
@@ -778,7 +769,6 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
 //
 //
 export function ActualizaTablaUsuarioEnviados(ticketRecord) {
-    console.log('Ticket recibido en wsActualizaTabla.js con ws:', ticketRecord);
 
     // Obtener el cuerpo de la tabla donde se agregarán las filas
     const ticketTableBody = document.getElementById('ticketTableBody');

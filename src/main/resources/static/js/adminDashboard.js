@@ -166,7 +166,7 @@ function inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo
 // ==========================
 // ACTUALIZA TODO EL DASHBOARD
 // ==========================
-async function actualizarDashboardCompleto(fechaInicio = "", fechaFin = "") {
+ async function actualizarDashboardCompleto(fechaInicio = "", fechaFin = "") {
   const queryParams = (fechaInicio && fechaFin) ? `?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}` : "";
 
   try {
@@ -222,10 +222,10 @@ const fin = new Date(fechaFin + 'T23:59:59'); // Forzamos el fin del día en UTC
 const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
 const finFormateado = fin.toLocaleDateString('es-ES', opciones);
 
-console.log("Fecha Inicio:", fechaInicio);
-console.log("Fecha Fin:", fechaFin);
-console.log("Fecha Inicio:", inicioFormateado);
-console.log("Fecha Fin:", finFormateado);
+//console.log("Fecha Inicio:", fechaInicio);
+//console.log("Fecha Fin:", fechaFin);
+//console.log("Fecha Inicio:", inicioFormateado);
+//console.log("Fecha Fin:", finFormateado);
 
 tituloDashboard.textContent = `ADMIN: Dashboard (${inicioFormateado} - ${finFormateado})`;
 
@@ -252,10 +252,10 @@ function inicializarDashboard() {
     const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
     const ultimoDiaMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
 
-    fechaInicioGlobal = primerDiaMes.toISOString().split("T")[0];
-    fechaFinGlobal = ultimoDiaMes.toISOString().split("T")[0];
+    fechaInicioGlobal = formatearFechaLocal(primerDiaMes);
+    fechaFinGlobal = formatearFechaLocal(ultimoDiaMes);
 
-  
+
     document.getElementById("fechaInicio").value = fechaInicioGlobal;
     document.getElementById("fechaFin").value = fechaFinGlobal;
   
@@ -284,3 +284,21 @@ function inicializarDashboard() {
 }
   
   document.addEventListener("DOMContentLoaded", inicializarDashboard);
+
+
+function formatearFechaLocal(date) {
+  return date.getFullYear() + '-' +
+         String(date.getMonth() + 1).padStart(2, '0') + '-' +
+         String(date.getDate()).padStart(2, '0');
+}
+
+const socket = new SockJS('/ws');
+const stompClient = Stomp.over(socket);
+
+stompClient.connect({}, () => {
+    stompClient.subscribe('/topic/dashboard', function (mensaje) {
+        if (mensaje.body === 'actualizar') {
+            actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
+        }
+    });
+});
