@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ClasificacionAreaRepository extends JpaRepository<ClasificacionArea, Long> {
-    List<ClasificacionArea> findByIsActiveTrue();
+    List<ClasificacionArea> findByIsActiveTrueOrderByNombreAsc();
+    List<ClasificacionArea> findAllByOrderByNombreAsc();
+
     ClasificacionArea findByNombre(String nombre);
 }

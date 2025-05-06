@@ -49,7 +49,6 @@ function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
                     }]
                 },
                 options: {
-                    responsive: false,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {

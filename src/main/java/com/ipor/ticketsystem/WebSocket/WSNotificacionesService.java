@@ -111,6 +111,20 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/dashboard", "actualizar");
     }
 
+    public void notificarActualizacionPagTicket(Ticket ticket) {
+        DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
+        switch (ticketDTO.getId().intValue()){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+        messagingTemplate.convertAndSend("/topic/ticket", "actualizar");
+    }
 
 
 

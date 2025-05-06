@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ClasificacionIncidenciaRepository extends JpaRepository<ClasificacionIncidencia, Long> {
     List<ClasificacionIncidencia> findByIsActiveTrue();
+    List<ClasificacionIncidencia> findAllByOrderByNombreAsc();
     ClasificacionIncidencia findByNombre(String nombre);
 }

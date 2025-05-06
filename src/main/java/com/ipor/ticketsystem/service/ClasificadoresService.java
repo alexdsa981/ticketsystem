@@ -50,7 +50,7 @@ public class ClasificadoresService {
     //LISTAR CLASIFICADORES SIN IMPORTAR EL ESTADO (ACTIVADO/DESACTIVADO)
 
     public List<ClasificacionIncidencia> getListaClasIncidencia() {
-        return clasificacionIncidenciaRepository.findAll();
+        return clasificacionIncidenciaRepository.findAllByOrderByNombreAsc();
     }
 
     public List<ClasificacionUrgencia> getListaClasUrgencia() {
@@ -60,15 +60,15 @@ public class ClasificadoresService {
 
     public List<ClasificacionServicio> getListaClasServicio() {
 
-        return clasificacionServicioRepository.findAll();
+        return clasificacionServicioRepository.findAllByOrderByNombreAsc();
     }
 
     public List<ClasificacionDesestimacion> getListaClasDesestimacion() {
-        return clasificacionDesestimacionRepository.findAll();
+        return clasificacionDesestimacionRepository.findAllByOrderByNombreAsc();
     }
 
     public List<ClasificacionArea> getListaClasArea() {
-        return clasificacionAreaRepository.findAll();
+        return clasificacionAreaRepository.findAllByOrderByNombreAsc();
     }
 
     //OBTENER CLASIFICADORES POR ID
@@ -111,7 +111,7 @@ public class ClasificadoresService {
     }
 
     public List<ClasificacionArea> getListaClasificacionAreaActivos() {
-        return clasificacionAreaRepository.findByIsActiveTrue();
+        return clasificacionAreaRepository.findByIsActiveTrueOrderByNombreAsc();
     }
 
 
