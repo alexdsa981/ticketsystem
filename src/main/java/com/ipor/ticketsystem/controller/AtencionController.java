@@ -83,7 +83,6 @@ public class AtencionController {
     public ResponseEntity<String> recepcionarTicket(
             @RequestParam("mensaje") String mensaje,
             @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
-            @RequestParam("clasificacion_incidencia") Long ID_clasificacion_incidencia,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -103,8 +102,6 @@ public class AtencionController {
             atencionService.saveRecepcion(recepcion);
 
             // Modificar el ticket
-            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(ID_clasificacion_incidencia);
-            ticket.setClasificacionIncidencia(clasificacionIncidencia);
             ticket.setRecepcion(recepcion);
             ticketService.saveTicket(ticket);
 
@@ -138,7 +135,12 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=recepcion-duplicated" : "/fallbackUrl?error=recepcion-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido recepcionado por otro usuario.");
         } catch (Exception e) {
-            // Captura otros errores
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String fullStackTrace = sw.toString();
+
+            System.out.println(fullStackTrace);            // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=recepcion-general" : "/fallbackUrl?recepcion-error=general");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al recepcionar el ticket.");
@@ -151,6 +153,7 @@ public class AtencionController {
     public ResponseEntity<String> atenderTicket(
             @RequestParam("descripcion") String descripcion,
             @RequestParam("clasificacion_area") Long IDclasificacion_area,
+            @RequestParam("clasificacion_incidencia") Long ID_clasificacion_incidencia,
             @RequestParam("clasificacion_servicio") Long IDclasificacion_servicio,
             @PathVariable Long id,
             HttpServletRequest request,
@@ -169,6 +172,8 @@ public class AtencionController {
             atencionService.saveServicio(servicio);
 
             // Modificar el ticket
+            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(ID_clasificacion_incidencia);
+            ticket.setClasificacionIncidencia(clasificacionIncidencia);
             ClasificacionArea clasificacionArea = clasificadoresService.getClasificacionAreaPorId(IDclasificacion_area);
             servicio.getTicket().setClasificacionArea(clasificacionArea);
             ticket.setServicio(servicio);

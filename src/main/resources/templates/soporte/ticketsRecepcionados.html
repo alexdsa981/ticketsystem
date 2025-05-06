@@ -67,8 +67,6 @@
                         <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                         <td class="usuario-receptor" th:text="${detalle.recepcion.usuario.nombre}">Usuario Receptor</td>
                         <td>
-                            <span class="nombreClasificacionIncidencia clasificacion"
-                                th:utext="${detalle.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
                             <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                             <br>
                             <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
@@ -83,7 +81,7 @@
                         </td>
                         <td>
                             <span class="nombreClasificacionIncidencia urgencia"
-                                  th:utext="${detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
+                                  th:utext="${'Urgencia '+ detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                             <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>
 
                         </td>
@@ -94,7 +92,6 @@
                                 data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                                th:data-ticket-clasificacion="${detalle.ticket.clasificacionIncidencia.nombre}"
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}">
@@ -104,7 +101,6 @@
                                     data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
                                     th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                     th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                                    th:data-ticket-clasificacion="${detalle.ticket.clasificacionIncidencia.nombre}"
                                     th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                     th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                     th:data-ticket-hora="${detalle.horaFormateadaTicket}">
@@ -148,6 +144,14 @@
                             <label for="descripcionAtencion" class="form-label"><strong><i class="bi bi-check2-square"></i> DESCRIPCIÓN DE ATENCIÓN:</strong></label>
                             <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
                                 placeholder="Agrega algún comentario sobre la atención del ticket..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
+                            <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia" required>
+                                <option selected disabled value="">Selecciona la clasificación</option>
+                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
                         </div>
                         <div class="mb-3">
                                 <label for="clasificacionServicio" class="form-label"><strong><i class="bi bi-list-check"></i> CLASIFICACIÓN DE ATENCIÓN:</strong></label>
@@ -237,15 +241,6 @@
                             <div class="col-md-12">
                                 <label for="fechaFinFilter" class="form-label">Fecha de Fin:</label>
                                 <input type="date" id="fechaFinFilter" class="form-control">
-                            </div>
-                            <div class="col-md-12">
-                                <label for="clasificacionFilter" class="form-label">Clasificación:</label>
-                                <select class="form-select" id="clasificacionFilter" name="clasificacion_incidencia"
-                                    required>
-                                    <option selected disabled value="">Selecciona Incidencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.nombre}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
                             </div>
                             <div class="col-md-12">
                                 <label for="urgenciaFilter" class="form-label">Urgencia:</label>

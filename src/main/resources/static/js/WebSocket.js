@@ -18,6 +18,8 @@ import { EliminarTicketDeTabla } from './wsActualizaTabla.js';
 // Crear una conexión WebSocket
 const socket = new SockJS('/ws');
 const stompClient = Stomp.over(socket);
+//quita comentarios debug
+stompClient.debug = () => {};
 
 document.addEventListener('DOMContentLoaded', () => {
     const notificacionesContador = document.getElementById('notificaciones-contador');

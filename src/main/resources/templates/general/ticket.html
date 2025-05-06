@@ -61,9 +61,6 @@
                                 <p class="mb-1"><i class="bi bi-person"></i> <span
                                         th:text="${detalle.recepcion.usuario.nombre}">Receptor</span></p>
 
-                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
-                                        th:text="${detalle.ticket.clasificacionIncidencia.nombre}">Clasificacion Incidencia</span>
-                                </p>
                                 <p class="mb-1"><i class="bi bi-alarm-fill"></i> <span
                                         th:text="${detalle.recepcion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
                                 </p>
@@ -92,10 +89,14 @@
                                 <p class="mb-1"><i class="bi bi-building"></i> <span
                                         th:text="${detalle.ticket.clasificacionArea.nombre}">Clasificacion Área</span>
                                 </p>
+
+                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
+                                        th:text="${detalle.ticket.clasificacionIncidencia.nombre}">Clasificacion Incidencia</span>
+                                </p>
+
                                 <p class="mb-1"><i class="bi bi-tools"></i> <span
                                         th:text="${detalle.servicio.clasificacionServicio.nombre}">Clasificacion Servicio</span>
                                 </p>
-
 
                                 <p class="mb-1"><i class="bi bi-calendar"></i> <span
                                         th:text="${detalle.fechaFormateadaServicio}">Fecha</span> <span
@@ -215,6 +216,16 @@
                                   required></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
+                            CLASIFICACIÓN DE INCIDENCIA:</strong></label>
+                        <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia"
+                                required>
+                            <option selected disabled value="">Selecciona la clasificación</option>
+                            <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
+                                    th:text="${tipo.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="clasificacionServicio" class="form-label"><strong><i class="bi bi-list-check"></i>
                             CLASIFICACIÓN DE ATENCIÓN:</strong></label>
                         <select class="form-select" id="clasificacionServicio" name="clasificacion_servicio"
@@ -298,16 +309,6 @@
                             <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
                                       placeholder="Agrega algún comentario sobre la recepción del ticket..."
                                       required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
-                                CLASIFICACIÓN DE INCIDENCIA:</strong></label>
-                            <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia"
-                                    required>
-                                <option selected disabled value="">Selecciona la clasificación</option>
-                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="clasificacionUrgencia" class="form-label"><strong><i

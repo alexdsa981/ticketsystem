@@ -23,7 +23,6 @@ public record RecepcionRecordWS(
         String nombreUsuarioRecepcion,
 
         String nombreFaseTicket,
-        String nombreClasificacionTicket,
         String nombreUrgenciaRecepcion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
@@ -49,7 +48,6 @@ public record RecepcionRecordWS(
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
 
-                detalleDTO.getTicket().getClasificacionIncidencia().getNombre(),
                 detalleDTO.getRecepcion().getClasificacionUrgencia().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()

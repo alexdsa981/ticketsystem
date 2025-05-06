@@ -87,13 +87,13 @@
 
                     <td>
                                 <span class="nombreClasificacionIncidencia urgencia"
-                                      th:utext="${detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
+                                      th:utext="${'Urgencia ' + detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span>
                     </td>
 
                     <td>
                                 <span class="nombreClasificacionIncidencia clasificacion-servicio"
-                                      th:utext="${(detalle.ticket.clasificacionArea != null ? detalle.ticket.clasificacionArea.nombre : 'N/D') + ' - ' + detalle.servicio.clasificacionServicio.nombre + ':<br>'}">
+                                      th:utext="${(detalle.ticket.clasificacionArea != null ? 'Área ' +detalle.ticket.clasificacionArea.nombre : 'N/D') + ' - ' + detalle.servicio.clasificacionServicio.nombre + ':<br>'}">
                                 </span>
                         <span th:text="${#strings.length(detalle.servicio.descripcion) > 150
                                                 ? detalle.servicio.descripcion.substring(0, 150) + '...'
