@@ -53,7 +53,7 @@
                     <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
                     <td th:text="${detalle.horaFormateadaAtencion}">Hora</td>
                     <td>
-                        <span class="nombreTipoIncidencia" th:utext="${detalle.ticket.tipoIncidencia.nombre + ':<br>'}"></span>
+                        <span class="nombreTipoIncidencia" th:utext="${detalle.atencion.tipoIncidencia.nombre + ':<br>'}"></span>
                         <span th:text="${detalle.ticket.descripcion}"></span><br>
                         <ul>
                             <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">

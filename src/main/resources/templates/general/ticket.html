@@ -32,8 +32,6 @@
                     </p>
                     <p class="mb-1"><i class="bi bi-calendar"></i> <span th:text="${detalle.fechaFormateadaTicket}">Fecha</span>
                         <span th:text="${detalle.horaFormateadaTicket}">Hora</span></p>
-                    <p class="mb-1"><i class="bi bi-tag"></i> <span
-                            th:text="${detalle.ticket.faseTicket.nombre}">Fase</span></p>
                     <p class="mb-0" th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
                         <i class="bi bi-paperclip"></i>
                         <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
@@ -61,15 +59,10 @@
                                 <p class="mb-1"><i class="bi bi-person"></i> <span
                                         th:text="${detalle.recepcion.usuario.nombre}">Receptor</span></p>
 
-                                <p class="mb-1"><i class="bi bi-alarm-fill"></i> <span
-                                        th:text="${detalle.recepcion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
-                                </p>
-
 
                                 <p class="mb-1"><i class="bi bi-calendar"></i> <span
                                         th:text="${detalle.fechaFormateadaRecepcion}">Fecha</span> <span
                                         th:text="${detalle.horaFormateadaRecepcion}">Hora</span></p>
-                                <p class="mb-0"><i class="bi bi-tag"></i> <span>Recepcionado</span></p>
                             </div>
                         </div>
                     </div>
@@ -87,13 +80,16 @@
                                         th:text="${detalle.atencion.usuario.nombre}">Usuario</span></p>
 
                                 <p class="mb-1"><i class="bi bi-building"></i> <span
-                                        th:text="${detalle.ticket.areaAtencion.nombre}">Clasificacion Área</span>
+                                        th:text="${detalle.atencion.areaAtencion.nombre}">Clasificacion Área</span>
                                 </p>
 
                                 <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
-                                        th:text="${detalle.ticket.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
+                                        th:text="${detalle.atencion.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
                                 </p>
 
+                                <p class="mb-1"><i class="bi bi-alarm-fill"></i> <span
+                                        th:text="${detalle.atencion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
+                                </p>
                                 <p class="mb-1"><i class="bi bi-tools"></i> <span
                                         th:text="${detalle.atencion.clasificacionAtencion.nombre}">Clasificacion Atencion</span>
                                 </p>
@@ -216,12 +212,33 @@
                                   required></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
+                            ATENDIDA:</strong></label>
+                        <select class="form-select" id="areaAtencion" name="area_atencion"
+                                required>
+                            <option selected disabled value="">Selecciona un área</option>
+                            <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
+                                    th:text="${tipo.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
                             CLASIFICACIÓN DE INCIDENCIA:</strong></label>
                         <select class="form-select" id="tipo_incidencia" name="tipo_incidencia"
                                 required>
                             <option selected disabled value="">Selecciona la clasificación</option>
                             <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.id}"
+                                    th:text="${tipo.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clasificacionUrgencia" class="form-label"><strong><i
+                                class="bi bi-exclamation-triangle"></i>
+                            CLASIFICACIÓN DE URGENCIA:</strong></label>
+                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
+                                required>
+                            <option selected disabled value="">Selecciona Urgencia</option>
+                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
@@ -235,16 +252,7 @@
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
-                            ATENDIDA:</strong></label>
-                        <select class="form-select" id="areaAtencion" name="area_atencion"
-                                required>
-                            <option selected disabled value="">Selecciona un área</option>
-                            <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
-                    </div>
+
                 </div>
 
 
@@ -308,19 +316,9 @@
                                     class="bi bi-chat-left-text"></i> COMENTARIOS DE RECEPCIÓN:</strong></label>
                             <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
                                       placeholder="Agrega algún comentario sobre la recepción del ticket..."
-                                      required></textarea>
+                                      required>Por favor, espere un momento. Un técnico se dirigirá a su área en breve para atender su caso.</textarea>
                         </div>
-                        <div class="mb-3">
-                            <label for="clasificacionUrgencia" class="form-label"><strong><i
-                                    class="bi bi-exclamation-triangle"></i>
-                                CLASIFICACIÓN DE URGENCIA:</strong></label>
-                            <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
-                                    required>
-                                <option selected disabled value="">Selecciona Urgencia</option>
-                                <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                            </select>
-                        </div>
+
                     </div>
                 </div>
 

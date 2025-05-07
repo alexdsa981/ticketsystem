@@ -172,16 +172,8 @@
                                 <label for="comentariosRecepcion" class="form-label"><strong><i class="bi bi-chat-left-text"></i> COMENTARIOS DE RECEPCIÓN:</strong></label>
                                 <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
                                     placeholder="Agrega algún comentario sobre la recepción del ticket..."
-                                    required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="clasificacionUrgencia" class="form-label"><strong><i class="bi bi-exclamation-triangle"></i>
-                                    CLASIFICACIÓN DE URGENCIA:</strong></label>
-                                <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia" required>
-                                    <option selected disabled value="">Selecciona Urgencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
+                                    required>Por favor, espere un momento. Un técnico se dirigirá a su área en breve para atender su caso.
+                                </textarea>
                             </div>
                         </div>
                     </div>

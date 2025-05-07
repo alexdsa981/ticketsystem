@@ -10,6 +10,143 @@
     <h2>ADMIN: Gestión de Clasificadores</h2>
 </div>
 <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+    <!-- Clasificadores Categoria -->
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+            <h5 class="mb-0">Categorias Incidencia</h5>
+            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#newCatIncidenciaModal">
+                <i class="bi bi-plus-lg"></i> Nuevo
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered text-center mb-0">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre Categoria</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${catIncidencias}"
+                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#catIncidenciasModal"
+                                th:data-catIncidencias-id="${clasificador.id}"
+                                th:data-catIncidencias-nombre="${clasificador.nombre}"
+                                onclick="openCatIncidenciasModal(this)">
+                            Editar
+                        </button>
+                        <th:block th:if="${clasificador.isActive}">
+                            <a class="btn btn-danger btn-sm"
+                               th:href="@{'/app/clasificadores/desactivar/catIncidencias/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Incidencia?');">
+                                Desactivar
+                            </a>
+                        </th:block>
+                        <th:block th:if="${!clasificador.isActive}">
+                            <a class="btn btn-success btn-sm"
+                               th:href="@{'/app/clasificadores/activar/catIncidencias/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Incidencia?');">
+                                Activar
+                            </a>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Clasificadores Incidencia -->
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+            <h5 class="mb-0">SubCategoria Incidencia</h5>
+            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#newSubCategoriaIncidenciaModal">
+                <i class="bi bi-plus-lg"></i> Nuevo
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered text-center mb-0">
+                <thead class="table-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre SubCategoria</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clasificador, iter: ${subCatIncidencias}"
+                    th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                    <td th:text="${iter.count}">#</td>
+                    <td th:text="${clasificador.nombre}">Nombre</td>
+                    <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#subCatIncidenciasModal"
+                                th:data-subCatIncidencias-id="${clasificador.id}"
+                                th:data-subCatIncidencias-nombre="${clasificador.nombre}"
+                                onclick="opensubCatIncidenciasModal(this)">
+                            Editar
+                        </button>
+                        <th:block th:if="${clasificador.isActive}">
+                            <a class="btn btn-danger btn-sm"
+                               th:href="@{'/app/clasificadores/desactivar/subCatIncidencias/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Sub Categoria Incidencia?');">
+                                Desactivar
+                            </a>
+                        </th:block>
+                        <th:block th:if="${!clasificador.isActive}">
+                            <a class="btn btn-success btn-sm"
+                               th:href="@{'/app/clasificadores/activar/subCatIncidencias/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Sub Categoria Incidencia?');">
+                                Activar
+                            </a>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Clasificadores Incidencia -->
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
@@ -30,7 +167,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="clasificador, iter: ${incidencias}"
+                <tr th:each="clasificador, iter: ${tipoIncidencias}"
                     th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
                     <td th:text="${iter.count}">#</td>
                     <td th:text="${clasificador.nombre}">Nombre</td>

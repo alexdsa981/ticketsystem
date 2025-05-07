@@ -72,7 +72,7 @@
 
                     <td>
                                 <span class="nombreTipoIncidencia clasificacion"
-                                      th:utext="${detalle.ticket.tipoIncidencia.nombre + ':<br>'}"></span>
+                                      th:utext="${detalle.atencion.tipoIncidencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                         <br>
                         <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
@@ -87,13 +87,13 @@
 
                     <td>
                                 <span class="nombreTipoIncidencia urgencia"
-                                      th:utext="${'Urgencia ' + detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
+                                      th:utext="${'Urgencia ' + detalle.atencion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span>
                     </td>
 
                     <td>
                                 <span class="nombreTipoIncidencia clasificacion-atencion"
-                                      th:utext="${(detalle.ticket.areaAtencion != null ? 'Área ' +detalle.ticket.areaAtencion.nombre : 'N/D') + ' - ' + detalle.atencion.clasificacionAtencion.nombre + ':<br>'}">
+                                      th:utext="${(detalle.atencion.areaAtencion != null ? 'Área ' +detalle.atencion.areaAtencion.nombre : 'N/D') + ' - ' + detalle.atencion.clasificacionAtencion.nombre + ':<br>'}">
                                 </span>
                         <span th:text="${#strings.length(detalle.atencion.descripcion) > 150
                                                 ? detalle.atencion.descripcion.substring(0, 150) + '...'
@@ -107,19 +107,19 @@
                                 data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                                th:data-ticket-clasificacion="${detalle.ticket.tipoIncidencia.nombre}"
+                                th:data-ticket-clasificacion="${detalle.atencion.tipoIncidencia.nombre}"
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}"
                                 th:data-recepcion-usuario="${detalle.recepcion.usuario.nombre}"
                                 th:data-recepcion-mensaje="${detalle.recepcion.mensaje}"
-                                th:data-recepcion-clasificacion="${detalle.recepcion.clasificacionUrgencia.nombre}"
+                                th:data-recepcion-clasificacion="${detalle.atencion.clasificacionUrgencia.nombre}"
                                 th:data-recepcion-fecha="${detalle.fechaFormateadaRecepcion}"
                                 th:data-recepcion-hora="${detalle.horaFormateadaRecepcion}"
                                 th:data-atencion-usuario="${detalle.atencion.usuario.nombre}"
                                 th:data-atencion-descripcion="${detalle.atencion.descripcion}"
                                 th:data-atencion-clasificacion="${detalle.atencion.clasificacionAtencion.nombre}"
-                                th:data-area-clasificacion="${(detalle.ticket.areaAtencion != null ? detalle.ticket.areaAtencion.nombre : 'N/D')}"
+                                th:data-area-clasificacion="${(detalle.atencion.areaAtencion != null ? detalle.atencion.areaAtencion.nombre : 'N/D')}"
                                 th:data-atencion-fecha="${detalle.fechaFormateadaAtencion}"
                                 th:data-atencion-hora="${detalle.horaFormateadaAtencion}">
 

@@ -230,6 +230,7 @@ public class DataInitializer implements CommandLineRunner {
             areaAtencionRepository.save(new AreaAtencion("Radiografía", true));
             areaAtencionRepository.save(new AreaAtencion("Cochera", true));
             areaAtencionRepository.save(new AreaAtencion("Radioterapia", true));
+            areaAtencionRepository.save(new AreaAtencion("Braquiterapia", true));
             areaAtencionRepository.save(new AreaAtencion("Archivo", true));
             areaAtencionRepository.save(new AreaAtencion("Facturación", true));
             areaAtencionRepository.save(new AreaAtencion("Contabilidad", true));

@@ -14,6 +14,12 @@ public class ClasificadoresService {
     private TipoIncidenciaRepository tipoIncidenciaRepository;
 
     @Autowired
+    private SubCategoriaIncidenciaRepository subCategoriaIncidenciaRepository;
+
+    @Autowired
+    private CategoriaIncidenciaRepository categoriaIncidenciaRepository;
+
+    @Autowired
     private ClasificacionAtencionRepository clasificacionAtencionRepository;
 
     @Autowired
@@ -26,7 +32,7 @@ public class ClasificadoresService {
     private AreaAtencionRepository areaAtencionRepository;
 
     //GUARDAR CLASIFICADOR EN BASE DE DATOS
-    public void saveCIncidencia(TipoIncidencia tipoIncidencia) {
+    public void saveTIncidencia(TipoIncidencia tipoIncidencia) {
         tipoIncidenciaRepository.save(tipoIncidencia);
     }
 
@@ -46,11 +52,27 @@ public class ClasificadoresService {
         areaAtencionRepository.save(areaAtencion);
     }
 
+    public void saveCatIncidencia(CategoriaIncidencia categoriaIncidencia) {
+        categoriaIncidenciaRepository.save(categoriaIncidencia);
+    }
+
+    public void saveSubCatIncidencia(SubCategoriaIncidencia subCategoriaIncidencia) {
+        subCategoriaIncidenciaRepository.save(subCategoriaIncidencia);
+    }
+
 
     //LISTAR CLASIFICADORES SIN IMPORTAR EL ESTADO (ACTIVADO/DESACTIVADO)
 
-    public List<TipoIncidencia> getListaClasIncidencia() {
+    public List<TipoIncidencia> getListaTipoIncidencia() {
         return tipoIncidenciaRepository.findAllByOrderByNombreAsc();
+    }
+
+    public List<CategoriaIncidencia> getListaCatIncidencia() {
+        return categoriaIncidenciaRepository.findAllByOrderByNombreAsc();
+    }
+
+    public List<SubCategoriaIncidencia> getListaSubCatIncidencia() {
+        return subCategoriaIncidenciaRepository.findAllByOrderByNombreAsc();
     }
 
     public List<ClasificacionUrgencia> getListaClasUrgencia() {
@@ -67,13 +89,24 @@ public class ClasificadoresService {
         return clasificacionDesestimacionRepository.findAllByOrderByNombreAsc();
     }
 
-    public List<AreaAtencion> getListaClasArea() {
+    public List<AreaAtencion> getListaAreaAtencion() {
         return areaAtencionRepository.findAllByOrderByNombreAsc();
     }
+
+
+
 
     //OBTENER CLASIFICADORES POR ID
     public TipoIncidencia getTipoIncidenciaPorID(Long id) {
         return tipoIncidenciaRepository.findById(id).get();
+    }
+
+    public SubCategoriaIncidencia getSubCatIncidenciaPorID(Long id) {
+        return subCategoriaIncidenciaRepository.findById(id).get();
+    }
+
+    public CategoriaIncidencia getCatIncidenciaPorID(Long id) {
+        return categoriaIncidenciaRepository.findById(id).get();
     }
 
     public ClasificacionUrgencia getClasificacionUrgenciaPorId(Long id) {
@@ -97,6 +130,12 @@ public class ClasificadoresService {
     public List<TipoIncidencia> getListaTiposDeIncidenciaActivos() {
         return tipoIncidenciaRepository.findByIsActiveTrue();
     }
+    public List<SubCategoriaIncidencia> getListaSubCatIncidenciaActivos() {
+        return subCategoriaIncidenciaRepository.findByIsActiveTrue();
+    }
+    public List<CategoriaIncidencia> getListaCatIncidenciaActivos() {
+        return categoriaIncidenciaRepository.findByIsActiveTrue();
+    }
 
     public List<ClasificacionUrgencia> getListaClasificacionUrgenciaActivos() {
         return clasificacionUrgenciaRepository.findByIsActiveTrue();
@@ -116,10 +155,22 @@ public class ClasificadoresService {
 
 
     // MODIFICAR NOMBRE DE UN CLASIFICADOR EXISTENTE
-    public void actualizarIncidencia(Long id, TipoIncidencia incidenciaActualizada) {
+    public void actualizarTipoIncidencia(Long id, TipoIncidencia incidenciaActualizada) {
         TipoIncidencia incidencia = tipoIncidenciaRepository.findById(id).get();
         incidencia.setNombre(incidenciaActualizada.getNombre());
-        tipoIncidenciaRepository.save(incidencia); // Persistir los cambios
+        tipoIncidenciaRepository.save(incidencia);
+    }
+
+    public void actualizarSubCatIncidencia(Long id, SubCategoriaIncidencia subCatIncidenciaActualizada) {
+        SubCategoriaIncidencia incidencia = subCategoriaIncidenciaRepository.findById(id).get();
+        incidencia.setNombre(subCatIncidenciaActualizada.getNombre());
+        subCategoriaIncidenciaRepository.save(incidencia);
+    }
+
+    public void actualizarCatIncidencia(Long id, CategoriaIncidencia CatIncidenciaActualizada) {
+        CategoriaIncidencia incidencia = categoriaIncidenciaRepository.findById(id).get();
+        incidencia.setNombre(CatIncidenciaActualizada.getNombre());
+        categoriaIncidenciaRepository.save(incidencia);
     }
 
     public void actualizarUrgencia(Long id, ClasificacionUrgencia urgenciaActualizada) {
@@ -151,6 +202,18 @@ public class ClasificadoresService {
         TipoIncidencia incidencia = tipoIncidenciaRepository.findById(id).orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
         incidencia.setIsActive(isActive);
         tipoIncidenciaRepository.save(incidencia);
+    }
+
+    public void cambiarEstadoSubCatIncidencia(Long id, boolean isActive) {
+        SubCategoriaIncidencia incidencia = subCategoriaIncidenciaRepository.findById(id).orElseThrow(() -> new RuntimeException("Sub Categoria Incidencia no encontrada"));
+        incidencia.setIsActive(isActive);
+        subCategoriaIncidenciaRepository.save(incidencia);
+    }
+
+    public void cambiarEstadoCatIncidencia(Long id, boolean isActive) {
+        CategoriaIncidencia incidencia = categoriaIncidenciaRepository.findById(id).orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+        incidencia.setIsActive(isActive);
+        categoriaIncidenciaRepository.save(incidencia);
     }
 
     public void cambiarEstadoAtencion(Long id, boolean isActive) {

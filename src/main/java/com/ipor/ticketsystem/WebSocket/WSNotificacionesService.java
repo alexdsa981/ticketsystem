@@ -42,8 +42,8 @@ public class WSNotificacionesService {
 
     public void enviarRecepcionAVistaSoporteAtencion(Ticket ticket) {
 
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO TicketDTO = new DetalleTicketDTO(ticket);
+        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(TicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-atencion", ticketRecordWS);
     }
 

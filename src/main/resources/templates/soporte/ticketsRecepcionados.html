@@ -57,9 +57,7 @@
 
                 <tbody id="ticketTableBody">
                     <!-- Iterar sobre los tickets con un solo bucle th:each -->
-                    <tr th:each="detalle, iter: ${AllRecepcionados}" id="ticket-${detalle.ticket.id}"
-                        th:class="${detalle.recepcion.clasificacionUrgencia.nombre == 'Alta' ? 'high-urgency' :
-                       (detalle.recepcion.clasificacionUrgencia.nombre == 'Media' ? 'medium-urgency' : '')}">
+                    <tr th:each="detalle, iter: ${AllRecepcionados}" id="ticket-${detalle.ticket.id}">
                         <td th:text="${iter.count}">#</td>
                         <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
                         <td class="fecha" th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
@@ -80,8 +78,6 @@
 
                         </td>
                         <td>
-                            <span class="nombreTipoIncidencia urgencia"
-                                  th:utext="${'Urgencia '+ detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                             <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>
 
                         </td>
@@ -146,10 +142,30 @@
                                 placeholder="Agrega algún comentario sobre la atención del ticket..." required></textarea>
                         </div>
                         <div class="mb-3">
+                            <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA ATENDIDA:</strong></label>
+                            <select class="form-select" id="areaAtencion" name="area_atencion"
+                                    required>
+                                <option selected disabled value="">Selecciona un área</option>
+                                <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
                             <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
                                 <option selected disabled value="">Selecciona la clasificación</option>
                                 <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clasificacionUrgencia" class="form-label"><strong><i
+                                    class="bi bi-exclamation-triangle"></i>
+                                CLASIFICACIÓN DE URGENCIA:</strong></label>
+                            <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
+                                    required>
+                                <option selected disabled value="">Selecciona Urgencia</option>
+                                <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
@@ -162,15 +178,7 @@
                                         th:text="${tipo.nombre}"></option>
                                 </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA ATENDIDA:</strong></label>
-                            <select class="form-select" id="areaAtencion" name="area_atencion"
-                                    required>
-                                <option selected disabled value="">Selecciona un área</option>
-                                <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
-                            </select>
-                        </div>
+
                     </div>
 
 
@@ -241,14 +249,6 @@
                             <div class="col-md-12">
                                 <label for="fechaFinFilter" class="form-label">Fecha de Fin:</label>
                                 <input type="date" id="fechaFinFilter" class="form-control">
-                            </div>
-                            <div class="col-md-12">
-                                <label for="urgenciaFilter" class="form-label">Urgencia:</label>
-                                <select class="form-select" id="urgenciaFilter" name="clasificacion_urgencia" required>
-                                    <option selected disabled value="">Selecciona Urgencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.nombre}"
-                                        th:text="${tipo.nombre}"></option>
-                                </select>
                             </div>
                         </div>
                     </div>

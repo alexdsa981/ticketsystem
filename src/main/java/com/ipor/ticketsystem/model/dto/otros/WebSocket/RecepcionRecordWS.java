@@ -23,7 +23,6 @@ public record RecepcionRecordWS(
         String nombreUsuarioRecepcion,
 
         String nombreFaseTicket,
-        String nombreUrgenciaRecepcion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 )
@@ -47,8 +46,6 @@ public record RecepcionRecordWS(
                 detalleDTO.getRecepcion().getUsuario().getNombre(),
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
-
-                detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
