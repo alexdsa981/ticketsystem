@@ -18,8 +18,6 @@ public class Recepcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
-    private String mensaje;
     @Column(nullable = false)
     private LocalDate fecha;
     @Column(nullable = false)
@@ -33,9 +31,9 @@ public class Recepcion {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "id_clasificacion_urgencia", nullable = false)
-    private ClasificacionUrgencia clasificacionUrgencia;
+    @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
+    private String mensaje;
+
 
     // Método para establecer fecha y hora antes de persistir
     @PrePersist

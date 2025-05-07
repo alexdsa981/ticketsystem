@@ -48,7 +48,7 @@ public record RecepcionRecordWS(
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
 
-                detalleDTO.getRecepcion().getClasificacionUrgencia().getNombre(),
+                detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO

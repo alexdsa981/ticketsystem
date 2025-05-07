@@ -6,7 +6,7 @@ import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
-import com.ipor.ticketsystem.repository.fixed.ClasificacionIncidenciaRepository;
+import com.ipor.ticketsystem.repository.fixed.TipoIncidenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class TicketService {
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
-    private ClasificacionIncidenciaRepository clasificacionIncidenciaRepository;
+    private TipoIncidenciaRepository tipoIncidenciaRepository;
     @Autowired
     private FaseTicketRepository faseTicketRepository;
 

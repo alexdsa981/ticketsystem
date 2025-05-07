@@ -63,16 +63,16 @@
                     <td th:text="${iter.count}">#</td>
                     <td th:text="${detalle.ticket.codigoTicket}">#</td>
 
-                    <td class="fecha" th:text="${detalle.fechaFormateadaServicio}">Fecha</td>
-                    <td th:text="${detalle.horaFormateadaServicio}">Hora</td>
+                    <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
+                    <td th:text="${detalle.horaFormateadaAtencion}">Hora</td>
 
                     <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Emisor</td>
                     <td class="usuario-receptor" th:text="${detalle.recepcion.usuario.nombre}">Receptor</td>
-                    <td class="usuario-atencion" th:text="${detalle.servicio.usuario.nombre}">Soporte</td>
+                    <td class="usuario-atencion" th:text="${detalle.atencion.usuario.nombre}">Soporte</td>
 
                     <td>
-                                <span class="nombreClasificacionIncidencia clasificacion"
-                                      th:utext="${detalle.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                                <span class="nombreTipoIncidencia clasificacion"
+                                      th:utext="${detalle.ticket.tipoIncidencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                         <br>
                         <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
@@ -86,18 +86,18 @@
                     </td>
 
                     <td>
-                                <span class="nombreClasificacionIncidencia urgencia"
+                                <span class="nombreTipoIncidencia urgencia"
                                       th:utext="${'Urgencia ' + detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span>
                     </td>
 
                     <td>
-                                <span class="nombreClasificacionIncidencia clasificacion-servicio"
-                                      th:utext="${(detalle.ticket.clasificacionArea != null ? 'Área ' +detalle.ticket.clasificacionArea.nombre : 'N/D') + ' - ' + detalle.servicio.clasificacionServicio.nombre + ':<br>'}">
+                                <span class="nombreTipoIncidencia clasificacion-atencion"
+                                      th:utext="${(detalle.ticket.areaAtencion != null ? 'Área ' +detalle.ticket.areaAtencion.nombre : 'N/D') + ' - ' + detalle.atencion.clasificacionAtencion.nombre + ':<br>'}">
                                 </span>
-                        <span th:text="${#strings.length(detalle.servicio.descripcion) > 150
-                                                ? detalle.servicio.descripcion.substring(0, 150) + '...'
-                                                : detalle.servicio.descripcion}">
+                        <span th:text="${#strings.length(detalle.atencion.descripcion) > 150
+                                                ? detalle.atencion.descripcion.substring(0, 150) + '...'
+                                                : detalle.atencion.descripcion}">
                                 </span>
                     </td>
 
@@ -107,7 +107,7 @@
                                 data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                                th:data-ticket-clasificacion="${detalle.ticket.clasificacionIncidencia.nombre}"
+                                th:data-ticket-clasificacion="${detalle.ticket.tipoIncidencia.nombre}"
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}"
@@ -116,12 +116,12 @@
                                 th:data-recepcion-clasificacion="${detalle.recepcion.clasificacionUrgencia.nombre}"
                                 th:data-recepcion-fecha="${detalle.fechaFormateadaRecepcion}"
                                 th:data-recepcion-hora="${detalle.horaFormateadaRecepcion}"
-                                th:data-servicio-usuario="${detalle.servicio.usuario.nombre}"
-                                th:data-servicio-descripcion="${detalle.servicio.descripcion}"
-                                th:data-servicio-clasificacion="${detalle.servicio.clasificacionServicio.nombre}"
-                                th:data-area-clasificacion="${(detalle.ticket.clasificacionArea != null ? detalle.ticket.clasificacionArea.nombre : 'N/D')}"
-                                th:data-servicio-fecha="${detalle.fechaFormateadaServicio}"
-                                th:data-servicio-hora="${detalle.horaFormateadaServicio}">
+                                th:data-atencion-usuario="${detalle.atencion.usuario.nombre}"
+                                th:data-atencion-descripcion="${detalle.atencion.descripcion}"
+                                th:data-atencion-clasificacion="${detalle.atencion.clasificacionAtencion.nombre}"
+                                th:data-area-clasificacion="${(detalle.ticket.areaAtencion != null ? detalle.ticket.areaAtencion.nombre : 'N/D')}"
+                                th:data-atencion-fecha="${detalle.fechaFormateadaAtencion}"
+                                th:data-atencion-hora="${detalle.horaFormateadaAtencion}">
 
                             <i class="bi bi-clock-history"></i>
                         </button>
@@ -179,10 +179,10 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="clasificacionFilter" class="form-label">Clasificación Incidencia:</label>
-                                <select class="form-select" id="clasificacionFilter" name="clasificacion_incidencia"
+                                <select class="form-select" id="clasificacionFilter" name="tipo_incidencia"
                                         required>
                                     <option selected disabled value="">Selecciona Incidencia</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.nombre}"
+                                    <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.nombre}"
                                             th:text="${tipo.nombre}"></option>
                                 </select>
                             </div>
@@ -195,12 +195,12 @@
                                 </select>
                             </div>
                             <div class="col-md-12">
-                                <label for="clasificacionServicioFilter" class="form-label">Clasificacion
+                                <label for="clasificacionAtencionFilter" class="form-label">Clasificacion
                                     Atención:</label>
-                                <select class="form-select" id="clasificacionServicioFilter"
+                                <select class="form-select" id="clasificacionAtencionFilter"
                                         name="clasificacion_atencion" required>
                                     <option selected disabled value="">Selecciona Atención</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_servicio}" th:value="${tipo.nombre}"
+                                    <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.nombre}"
                                             th:text="${tipo.nombre}"></option>
                                 </select>
                             </div>
@@ -274,24 +274,24 @@
                             </tr>
                         </table>
 
-                        <!-- Sección de Servicio -->
+                        <!-- Sección de Atencion -->
                         <h5 class="mb-3 text-primary"><i class="bi bi-wrench"></i> DETALLES DE ATENCIÓN</h5>
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <th>TÉCNICO:</th>
-                                <td><span id="modalServicioUsuario"></span></td>
+                                <td><span id="modalAtencionUsuario"></span></td>
                             </tr>
                             <tr>
                                 <th>DESCRIPCIÓN:</th>
-                                <td><span id="modalServicioDescripcion"></span></td>
+                                <td><span id="modalAtencionDescripcion"></span></td>
                             </tr>
                             <tr>
                                 <th>CLASIFICACIÓN:</th>
-                                <td><span id="modalServicioClasificacion"></span></td>
+                                <td><span id="modalAtencionClasificacion"></span></td>
                             </tr>
                             <tr>
                                 <th>ATENDIDO:</th>
-                                <td><span id="modalServicioFecha"></span> | <span id="modalServicioHora"></span>
+                                <td><span id="modalAtencionFecha"></span> | <span id="modalAtencionHora"></span>
                                 </td>
                             </tr>
                         </table>
@@ -330,11 +330,11 @@
             const recepcionFecha = button.getAttribute('data-recepcion-fecha');
             const recepcionHora = button.getAttribute('data-recepcion-hora');
 
-            const servicioUsuario = button.getAttribute('data-servicio-usuario');
-            const servicioDescripcion = button.getAttribute('data-servicio-descripcion');
-            const servicioClasificacion = button.getAttribute('data-servicio-clasificacion');
-            const servicioFecha = button.getAttribute('data-servicio-fecha');
-            const servicioHora = button.getAttribute('data-servicio-hora');
+            const atencionUsuario = button.getAttribute('data-atencion-usuario');
+            const atencionDescripcion = button.getAttribute('data-atencion-descripcion');
+            const atencionClasificacion = button.getAttribute('data-atencion-clasificacion');
+            const atencionFecha = button.getAttribute('data-atencion-fecha');
+            const atencionHora = button.getAttribute('data-atencion-hora');
 
             // Actualizar los elementos del modal con la información del ticket
             document.getElementById('TicketIdFormateado').textContent = formattedTicketId;
@@ -352,12 +352,12 @@
             document.getElementById('modalRecepcionFecha').textContent = recepcionFecha;
             document.getElementById('modalRecepcionHora').textContent = recepcionHora;
 
-            // Actualizar los elementos del modal con la información de servicio
-            document.getElementById('modalServicioUsuario').textContent = servicioUsuario;
-            document.getElementById('modalServicioDescripcion').textContent = servicioDescripcion;
-            document.getElementById('modalServicioClasificacion').textContent = servicioClasificacion;
-            document.getElementById('modalServicioFecha').textContent = servicioFecha;
-            document.getElementById('modalServicioHora').textContent = servicioHora;
+            // Actualizar los elementos del modal con la información de atencion
+            document.getElementById('modalAtencionUsuario').textContent = atencionUsuario;
+            document.getElementById('modalAtencionDescripcion').textContent = atencionDescripcion;
+            document.getElementById('modalAtencionClasificacion').textContent = atencionClasificacion;
+            document.getElementById('modalAtencionFecha').textContent = atencionFecha;
+            document.getElementById('modalAtencionHora').textContent = atencionHora;
         });
     </script>
 

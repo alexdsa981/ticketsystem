@@ -82,25 +82,25 @@
                             <h5 class="card-title mb-3">Datos de Atención</h5>
                             <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
                                 <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span
-                                        th:text="${detalle.servicio.descripcion}">Descripción</span></p>
+                                        th:text="${detalle.atencion.descripcion}">Descripción</span></p>
                                 <p class="mb-1"><i class="bi bi-person"></i> <span
-                                        th:text="${detalle.servicio.usuario.nombre}">Usuario</span></p>
+                                        th:text="${detalle.atencion.usuario.nombre}">Usuario</span></p>
 
                                 <p class="mb-1"><i class="bi bi-building"></i> <span
-                                        th:text="${detalle.ticket.clasificacionArea.nombre}">Clasificacion Área</span>
+                                        th:text="${detalle.ticket.areaAtencion.nombre}">Clasificacion Área</span>
                                 </p>
 
                                 <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
-                                        th:text="${detalle.ticket.clasificacionIncidencia.nombre}">Clasificacion Incidencia</span>
+                                        th:text="${detalle.ticket.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
                                 </p>
 
                                 <p class="mb-1"><i class="bi bi-tools"></i> <span
-                                        th:text="${detalle.servicio.clasificacionServicio.nombre}">Clasificacion Servicio</span>
+                                        th:text="${detalle.atencion.clasificacionAtencion.nombre}">Clasificacion Atencion</span>
                                 </p>
 
                                 <p class="mb-1"><i class="bi bi-calendar"></i> <span
-                                        th:text="${detalle.fechaFormateadaServicio}">Fecha</span> <span
-                                        th:text="${detalle.horaFormateadaServicio}">Hora</span></p>
+                                        th:text="${detalle.fechaFormateadaAtencion}">Fecha</span> <span
+                                        th:text="${detalle.horaFormateadaAtencion}">Hora</span></p>
                                 <p class="mb-0"><i class="bi bi-tag"></i> <span>Atendido</span></p>
                             </div>
                             <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
@@ -216,32 +216,32 @@
                                   required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
+                        <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
                             CLASIFICACIÓN DE INCIDENCIA:</strong></label>
-                        <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia"
+                        <select class="form-select" id="tipo_incidencia" name="tipo_incidencia"
                                 required>
                             <option selected disabled value="">Selecciona la clasificación</option>
-                            <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
+                            <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.id}"
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="clasificacionServicio" class="form-label"><strong><i class="bi bi-list-check"></i>
+                        <label for="clasificacionAtencion" class="form-label"><strong><i class="bi bi-list-check"></i>
                             CLASIFICACIÓN DE ATENCIÓN:</strong></label>
-                        <select class="form-select" id="clasificacionServicio" name="clasificacion_servicio"
+                        <select class="form-select" id="clasificacionAtencion" name="clasificacion_atencion"
                                 required>
                             <option selected disabled value="">Selecciona una clasificación</option>
-                            <option th:each="tipo : ${Lista_clasificacion_servicio}" th:value="${tipo.id}"
+                            <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.id}"
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="clasificacionArea" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
+                        <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
                             ATENDIDA:</strong></label>
-                        <select class="form-select" id="clasificacionArea" name="clasificacion_area"
+                        <select class="form-select" id="areaAtencion" name="area_atencion"
                                 required>
                             <option selected disabled value="">Selecciona un área</option>
-                            <option th:each="tipo : ${Lista_clasificacion_area}" th:value="${tipo.id}"
+                            <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
@@ -250,7 +250,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-success submit-btn">Guardar Servicio</button>
+                    <button type="submit" class="btn btn-success submit-btn">Guardar Atencion</button>
                 </div>
             </form>
         </div>

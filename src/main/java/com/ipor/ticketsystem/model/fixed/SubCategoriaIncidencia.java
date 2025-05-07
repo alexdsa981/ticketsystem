@@ -1,9 +1,5 @@
 package com.ipor.ticketsystem.model.fixed;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ipor.ticketsystem.model.dynamic.Atencion;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,21 +11,27 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class ClasificacionUrgencia {
-
-    public ClasificacionUrgencia(String nombre, Boolean isActive){
+public class SubCategoriaIncidencia {
+    public SubCategoriaIncidencia(String nombre, CategoriaIncidencia categoria, Boolean isActive) {
         this.nombre = nombre;
         this.isActive = isActive;
+        this.categoria = categoria;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String nombre;
     @Column(nullable = false)
     private Boolean isActive;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "clasificacionUrgencia")
-    private List<Atencion> listaAtencion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_categoria_incidencia")
+    private CategoriaIncidencia categoria;
+
+    @OneToMany(mappedBy = "subcategoria", cascade = CascadeType.ALL)
+    private List<TipoIncidencia> tipos;
 }

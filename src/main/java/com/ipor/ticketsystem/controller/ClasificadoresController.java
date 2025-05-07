@@ -19,25 +19,25 @@ public class ClasificadoresController {
     ClasificadoresService clasificadoresService;
 
 
-    // Listar todos los clasificadores (Incidencias, Servicios, Urgencias)
+    // Listar todos los clasificadores (Incidencias, Atencion, Urgencias)
 
     public Model listarClasificadores(Model model) {
-        List<ClasificacionIncidencia> incidencias = clasificadoresService.getListaClasIncidencia();
-        List<ClasificacionServicio> servicios = clasificadoresService.getListaClasServicio();
+        List<TipoIncidencia> incidencias = clasificadoresService.getListaClasIncidencia();
+        List<ClasificacionAtencion> atencions = clasificadoresService.getListaClasAtencion();
         List<ClasificacionUrgencia> urgencias = clasificadoresService.getListaClasUrgencia();
         List<ClasificacionDesestimacion> desestimaciones = clasificadoresService.getListaClasDesestimacion();
-        List<ClasificacionArea> areas = clasificadoresService.getListaClasArea();
+        List<AreaAtencion> areas = clasificadoresService.getListaClasArea();
         model.addAttribute("desestimaciones", desestimaciones);
         model.addAttribute("incidencias", incidencias);
-        model.addAttribute("servicios", servicios);
+        model.addAttribute("atenciones", atencions);
         model.addAttribute("urgencias", urgencias);
         model.addAttribute("areas", areas);
         return model;
     }
 
-    public Model getListaClasificacionIncidenciaActivos(Model model) {
-        List<ClasificacionIncidencia> ListaTiposIncidencia = clasificadoresService.getListaTiposDeIncidenciaActivos();
-        model.addAttribute("Lista_clasificacion_incidencia", ListaTiposIncidencia);
+    public Model getListaTipoIncidenciaActivos(Model model) {
+        List<TipoIncidencia> ListaTiposIncidencia = clasificadoresService.getListaTiposDeIncidenciaActivos();
+        model.addAttribute("Lista_tipo_incidencia", ListaTiposIncidencia);
         return model;
     }
 
@@ -46,9 +46,9 @@ public class ClasificadoresController {
         model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
         return  model;
     }
-    public Model getListaClasificacionesServicioActivos(Model model){
-        List<ClasificacionServicio> listaServicios = clasificadoresService.getListaClasificacionServicioActivos();
-        model.addAttribute("Lista_clasificacion_servicio", listaServicios);
+    public Model getListaClasificacionesAtencionActivos(Model model){
+        List<ClasificacionAtencion> listaAtencions = clasificadoresService.getListaClasificacionAtencionActivos();
+        model.addAttribute("Lista_clasificacion_atencion", listaAtencions);
         return  model;
     }
     public Model getListaClasificacionesDesestimacionActivos(Model model){
@@ -57,8 +57,8 @@ public class ClasificadoresController {
         return  model;
     }
     public Model getListaClasificacionesAreaActivos(Model model){
-        List<ClasificacionArea> listaArea = clasificadoresService.getListaClasificacionAreaActivos();
-        model.addAttribute("Lista_clasificacion_area", listaArea);
+        List<AreaAtencion> listaArea = clasificadoresService.getListaAreaAtencionActivos();
+        model.addAttribute("Lista_area_atencion", listaArea);
         return  model;
     }
 
@@ -69,10 +69,10 @@ public class ClasificadoresController {
     public ResponseEntity<String> crearClasificacionAr(
             @RequestParam("nombre") String nombre,
             HttpServletResponse response) throws IOException {
-        ClasificacionArea clasificacionArea = new ClasificacionArea();
-        clasificacionArea.setNombre(nombre);
-        clasificacionArea.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCArea(clasificacionArea);
+        AreaAtencion areaAtencion = new AreaAtencion();
+        areaAtencion.setNombre(nombre);
+        areaAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCArea(areaAtencion);
         response.sendRedirect("/admin/Clasificadores");
         return ResponseEntity.ok("Clasificación Area creado correctamente");
     }
@@ -82,10 +82,10 @@ public class ClasificadoresController {
     public String actualizarArea(@PathVariable Long id,
                                        @RequestParam("nombre") String nombre
     ) {
-        ClasificacionArea clasificacionArea = new ClasificacionArea();
-        clasificacionArea.setNombre(nombre);
-        clasificacionArea.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarArea(id, clasificacionArea);
+        AreaAtencion areaAtencion = new AreaAtencion();
+        areaAtencion.setNombre(nombre);
+        areaAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarArea(id, areaAtencion);
         return "redirect:/admin/Clasificadores";
     }
 
@@ -119,13 +119,13 @@ public class ClasificadoresController {
 
     //crear incidencia nueva
     @PostMapping("/incidencia/nuevo")
-    public ResponseEntity<String> crearClasificacionIncidencia(
+    public ResponseEntity<String> crearTipoIncidenciaa(
             @RequestParam("nombre") String nombre,
             HttpServletResponse response) throws IOException {
-        ClasificacionIncidencia clasificacionIncidencia = new ClasificacionIncidencia();
-        clasificacionIncidencia.setNombre(nombre);
-        clasificacionIncidencia.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCIncidencia(clasificacionIncidencia);
+        TipoIncidencia tipoIncidencia = new TipoIncidencia();
+        tipoIncidencia.setNombre(nombre);
+        tipoIncidencia.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCIncidencia(tipoIncidencia);
         response.sendRedirect("/admin/Clasificadores");
         return ResponseEntity.ok("Clasificación Incidencia creado correctamente");
     }
@@ -135,35 +135,35 @@ public class ClasificadoresController {
     public String actualizarIncidencia(@PathVariable Long id,
                                     @RequestParam("nombre") String nombre
     ) {
-        ClasificacionIncidencia clasificacionIncidencia = new ClasificacionIncidencia();
-        clasificacionIncidencia.setNombre(nombre);
-        clasificacionIncidencia.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarIncidencia(id, clasificacionIncidencia);
+        TipoIncidencia tipoIncidencia = new TipoIncidencia();
+        tipoIncidencia.setNombre(nombre);
+        tipoIncidencia.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarIncidencia(id, tipoIncidencia);
         return "redirect:/admin/Clasificadores";
     }
 
-    //crear Clasificacion servicio nueva
-    @PostMapping("/servicio/nuevo")
-    public ResponseEntity<String> crearClasificacionServicio(
+    //crear Clasificacion atencion nueva
+    @PostMapping("/atencion/nuevo")
+    public ResponseEntity<String> crearClasificacionAtencion(
             @RequestParam("nombre") String nombre,
             HttpServletResponse response) throws IOException {
-        ClasificacionServicio clasificacionServicio = new ClasificacionServicio();
-        clasificacionServicio.setNombre(nombre);
-        clasificacionServicio.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCServicio(clasificacionServicio);
+        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
+        clasificacionAtencion.setNombre(nombre);
+        clasificacionAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCAtencion(clasificacionAtencion);
         response.sendRedirect("/admin/Clasificadores");
-        return ResponseEntity.ok("Clasificación Servicio creado correctamente");
+        return ResponseEntity.ok("Clasificación Atencion creado correctamente");
     }
 
-    // Actualizar un servicio existente
-    @PostMapping("/actualizar/servicio/{id}")
-    public String actualizarServicio(@PathVariable Long id,
+    // Actualizar un atencion existente
+    @PostMapping("/actualizar/atencion/{id}")
+    public String actualizarAtencion(@PathVariable Long id,
                                        @RequestParam("nombre") String nombre
     ) {
-        ClasificacionServicio clasificacionServicio = new ClasificacionServicio();
-        clasificacionServicio.setNombre(nombre);
-        clasificacionServicio.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarServicio(id, clasificacionServicio);
+        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
+        clasificacionAtencion.setNombre(nombre);
+        clasificacionAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarAtencion(id, clasificacionAtencion);
         return "redirect:/admin/Clasificadores";
     }
 
@@ -207,17 +207,17 @@ public class ClasificadoresController {
         return "redirect:/admin/Clasificadores";
     }
 
-    // Desactivar Clasificación Servicio
-    @GetMapping("/desactivar/servicio/{id}")
-    public String desactivarServicio(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoServicio(id, false);
+    // Desactivar Clasificación Atencion
+    @GetMapping("/desactivar/atencion/{id}")
+    public String desactivarAtencion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoAtencion(id, false);
         return "redirect:/admin/Clasificadores";
     }
 
-    // Activar Clasificación Servicio
-    @GetMapping("/activar/servicio/{id}")
-    public String activarServicio(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoServicio(id, true);
+    // Activar Clasificación Atencion
+    @GetMapping("/activar/atencion/{id}")
+    public String activarAtencion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoAtencion(id, true);
         return "redirect:/admin/Clasificadores";
     }
 

@@ -3,7 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
-import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
+import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class WebController {
     @Autowired
     RecepcionRepository recepcionRepository;
     @Autowired
-    ServicioRepository servicioRepository;
+    AtencionRepository atencionRepository;
     @Autowired
     private TicketRepository ticketRepository;
     @Autowired
@@ -129,7 +129,7 @@ public class WebController {
         ticketController.retornaTicketsRecibidosAVista(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Recepcionar Tickets");
         return "soporte/ticketsRecibidos";
     }
@@ -137,8 +137,8 @@ public class WebController {
     @GetMapping("/soporte/Atender")
     public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.getListaTodosLosTicketsRecepcionadosAVista(model);
-        clasificadoresController.getListaClasificacionesServicioActivos(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesAreaActivos(model);
@@ -149,8 +149,8 @@ public class WebController {
     @GetMapping("/soporte/Tickets-Cerrados")
     public String redirigePaginaTicketsAtendidos(Model model) {
         atencionController.getListaTodosLosTicketsAtendidosAVista(model);
-        clasificadoresController.getListaClasificacionesServicioActivos(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets Cerrados");
         return "soporte/ticketsAtendidos";
@@ -159,7 +159,7 @@ public class WebController {
     @GetMapping("/soporte/Tickets-Desestimados")
     public String redirigePaginaTicketsDesestimados(Model model) {
         atencionController.getListaTodosLosTicketsDesestimadosAVista(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets Desestimados");
         return "soporte/ticketsDesestimados";
@@ -175,8 +175,8 @@ public class WebController {
     @GetMapping("/ticket/{codigo}")
     public String verTicketPorCodigo(@PathVariable("codigo") String codigo, Model model) {
         Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
-        clasificadoresController.getListaClasificacionesServicioActivos(model);
-        clasificadoresController.getListaClasificacionIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesAreaActivos(model);

@@ -1,7 +1,5 @@
 package com.ipor.ticketsystem.model.dynamic;
 
-import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
-import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter

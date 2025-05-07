@@ -50,10 +50,10 @@
                 <tr th:each="detalle, iter: ${MyAtendidos}">
                     <td th:text="${iter.count}">#</td>
                     <td th:text="${detalle.ticket.codigoTicket}">#</td>
-                    <td class="fecha" th:text="${detalle.fechaFormateadaServicio}">Fecha</td>
-                    <td th:text="${detalle.horaFormateadaServicio}">Hora</td>
+                    <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
+                    <td th:text="${detalle.horaFormateadaAtencion}">Hora</td>
                     <td>
-                        <span class="nombreClasificacionIncidencia" th:utext="${detalle.ticket.clasificacionIncidencia.nombre + ':<br>'}"></span>
+                        <span class="nombreTipoIncidencia" th:utext="${detalle.ticket.tipoIncidencia.nombre + ':<br>'}"></span>
                         <span th:text="${detalle.ticket.descripcion}"></span><br>
                         <ul>
                             <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
@@ -64,8 +64,8 @@
                         </ul>
                     </td>
                     <td>
-                        <span class="nombreClasificacionIncidencia" th:utext="${detalle.servicio.clasificacionServicio.nombre + ':<br>'}"></span>
-                        <span th:text="${detalle.servicio.descripcion}"></span><br>
+                        <span class="nombreTipoIncidencia" th:utext="${detalle.atencion.clasificacionAtencion.nombre + ':<br>'}"></span>
+                        <span th:text="${detalle.atencion.descripcion}"></span><br>
                     </td>
                     <td th:text="${detalle.ticket.faseTicket.nombre}">Fase</td>
                 </tr>

@@ -71,7 +71,7 @@
         <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
             <h5 class="mb-0">Clasificadores Atención</h5>
             <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#newServicioModal">
+                    data-bs-target="#newAtencionModal">
                 <i class="bi bi-plus-lg"></i> Nuevo
             </button>
         </div>
@@ -80,36 +80,36 @@
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
-                    <th>Nombre Servicio</th>
+                    <th>Nombre Atencion</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="clasificador, iter: ${servicios}"
+                <tr th:each="clasificador, iter: ${atenciones}"
                     th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
                     <td th:text="${iter.count}">#</td>
                     <td th:text="${clasificador.nombre}">Nombre</td>
                     <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                     <td>
                         <button class="btn btn-primary btn-sm"
-                                data-bs-toggle="modal" data-bs-target="#servicioModal"
-                                th:data-servicio-id="${clasificador.id}"
-                                th:data-servicio-nombre="${clasificador.nombre}"
-                                onclick="openServicioModal(this)">
+                                data-bs-toggle="modal" data-bs-target="#atencionModal"
+                                th:data-atencion-id="${clasificador.id}"
+                                th:data-atencion-nombre="${clasificador.nombre}"
+                                onclick="openAtencionModal(this)">
                             Editar
                         </button>
                         <th:block th:if="${clasificador.isActive}">
                             <a class="btn btn-danger btn-sm"
-                               th:href="@{'/app/clasificadores/desactivar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Servicio?');">
+                               th:href="@{'/app/clasificadores/desactivar/atencion/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de desactivar este Atencion?');">
                                 Desactivar
                             </a>
                         </th:block>
                         <th:block th:if="${!clasificador.isActive}">
                             <a class="btn btn-success btn-sm"
-                               th:href="@{'/app/clasificadores/activar/servicio/' + ${clasificador.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Servicio?');">
+                               th:href="@{'/app/clasificadores/activar/atencion/' + ${clasificador.id}}"
+                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este Atencion?');">
                                 Activar
                             </a>
                         </th:block>
@@ -287,22 +287,22 @@
 </div>
 
 
-<!--CREAR SERVICIO-->
-<div class="modal fade" id="newServicioModal" tabindex="-1" aria-labelledby="newServicioModal"
+<!--CREAR ATENCION-->
+<div class="modal fade" id="newAtencionModal" tabindex="-1" aria-labelledby="newAtencionModal"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/app/clasificadores/servicio/nuevo" method="POST" enctype="multipart/form-data">
+            <form action="/app/clasificadores/atencion/nuevo" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newservicioModalLabel">Nombra la Nueva Clasificación de
-                        Servicio</h1>
+                    <h1 class="modal-title fs-5" id="newatencionModalLabel">Nombra la Nueva Clasificación de
+                        Atencion</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nombreservicio" class="form-label">Nuevo clasificador:</label>
-                        <input type="text" class="form-control" id="nombreservicio" name="nombre" required
+                        <label for="nombreatencion" class="form-label">Nuevo clasificador:</label>
+                        <input type="text" class="form-control" id="nombreatencion" name="nombre" required
                                autocomplete="off">
                     </div>
                 </div>
@@ -318,21 +318,21 @@
 </div>
 
 
-<!--EDITAR SERVICIO -->
-<div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel"
+<!--EDITAR ATENCION -->
+<div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="servicioModalLabel">Editar Clasificador de Servicio</h5>
+                <h5 class="modal-title" id="atencionModalLabel">Editar Clasificador de Atencion</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="servicioForm" method="post">
-                    <input type="hidden" id="servicioId" name="id"/>
+                <form id="atencionForm" method="post">
+                    <input type="hidden" id="atencionId" name="id"/>
                     <div class="mb-3">
-                        <label for="servicioNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="servicioNombre" name="nombre" required
+                        <label for="atencionNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="atencionNombre" name="nombre" required
                                autocomplete="off"/>
                     </div>
                     <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
@@ -510,16 +510,16 @@ function openIncidenciaModal(button) {
     form.setAttribute('action', `/app/clasificadores/actualizar/incidencia/${id}`);
 }
 
-function openServicioModal(button) {
-    var id = button.getAttribute("data-servicio-id");
-    var nombre = button.getAttribute("data-servicio-nombre");
+function openAtencionModal(button) {
+    var id = button.getAttribute("data-atencion-id");
+    var nombre = button.getAttribute("data-atencion-nombre");
 
-    document.getElementById("servicioId").value = id;
-    document.getElementById("servicioNombre").value = nombre;
+    document.getElementById("atencionId").value = id;
+    document.getElementById("atencionNombre").value = nombre;
 
     // Configurar la acción del formulario
-    const form = document.getElementById('servicioForm');
-    form.setAttribute('action', `/app/clasificadores/actualizar/servicio/${id}`);
+    const form = document.getElementById('atencionForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/atencion/${id}`);
 }
 
 </script>

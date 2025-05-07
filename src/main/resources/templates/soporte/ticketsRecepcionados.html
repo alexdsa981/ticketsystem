@@ -80,7 +80,7 @@
 
                         </td>
                         <td>
-                            <span class="nombreClasificacionIncidencia urgencia"
+                            <span class="nombreTipoIncidencia urgencia"
                                   th:utext="${'Urgencia '+ detalle.recepcion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                             <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>
 
@@ -146,28 +146,28 @@
                                 placeholder="Agrega algún comentario sobre la atención del ticket..." required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="clasificacion_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
-                            <select class="form-select" id="clasificacion_incidencia" name="clasificacion_incidencia" required>
+                            <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CLASIFICACIÓN DE INCIDENCIA:</strong></label>
+                            <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
                                 <option selected disabled value="">Selecciona la clasificación</option>
-                                <option th:each="tipo : ${Lista_clasificacion_incidencia}" th:value="${tipo.id}"
+                                <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
                         <div class="mb-3">
-                                <label for="clasificacionServicio" class="form-label"><strong><i class="bi bi-list-check"></i> CLASIFICACIÓN DE ATENCIÓN:</strong></label>
-                                <select class="form-select" id="clasificacionServicio" name="clasificacion_servicio"
+                                <label for="clasificacionAtencion" class="form-label"><strong><i class="bi bi-list-check"></i> CLASIFICACIÓN DE ATENCIÓN:</strong></label>
+                                <select class="form-select" id="clasificacionAtencion" name="clasificacion_atencion"
                                     required>
                                     <option selected disabled value="">Selecciona una clasificación</option>
-                                    <option th:each="tipo : ${Lista_clasificacion_servicio}" th:value="${tipo.id}"
+                                    <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                                 </select>
                         </div>
                         <div class="mb-3">
-                            <label for="clasificacionArea" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA ATENDIDA:</strong></label>
-                            <select class="form-select" id="clasificacionArea" name="clasificacion_area"
+                            <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA ATENDIDA:</strong></label>
+                            <select class="form-select" id="areaAtencion" name="area_atencion"
                                     required>
                                 <option selected disabled value="">Selecciona un área</option>
-                                <option th:each="tipo : ${Lista_clasificacion_area}" th:value="${tipo.id}"
+                                <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
@@ -176,7 +176,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success submit-btn">Guardar Servicio</button>
+                        <button type="submit" class="btn btn-success submit-btn">Guardar Atencion</button>
                     </div>
                 </form>
             </div>

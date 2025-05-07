@@ -47,8 +47,8 @@ public class ExcelExportService {
         Row headerRow = sheet.createRow(0);
         String[] headers = {"ID Ticket", "Fase", "Fecha Ticket", "Hora Ticket", "Usuario Ticket", "Clasificación Incidencia",
                 "Fecha Recepción", "Hora Recepción", "Usuario Recepción", "Clasificación Urgencia",
-                "Fecha Servicio", "Hora Servicio", "Usuario Servicio", "Clasificación Servicio",
-                "Tiempo Espera Recepción (seg.)", "Tiempo Espera Servicio (seg.)"};
+                "Fecha Atencion", "Hora Atencion", "Usuario Atencion", "Clasificación Atencion",
+                "Tiempo Espera Recepción (seg.)", "Tiempo Espera Atencion (seg.)"};
 
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
@@ -66,12 +66,12 @@ public class ExcelExportService {
         sheet.setColumnWidth(7, 15 * 256); // Hora Recepción
         sheet.setColumnWidth(8, 25 * 256); // Usuario Recepción
         sheet.setColumnWidth(9, 25 * 256); // Clasificación Urgencia
-        sheet.setColumnWidth(10, 25 * 256); // Fecha Servicio
-        sheet.setColumnWidth(11, 15 * 256); // Hora Servicio
-        sheet.setColumnWidth(12, 25 * 256); // Usuario Servicio
-        sheet.setColumnWidth(13, 25 * 256); // Clasificación Servicio
+        sheet.setColumnWidth(10, 25 * 256); // Fecha Atencion
+        sheet.setColumnWidth(11, 15 * 256); // Hora Atencion
+        sheet.setColumnWidth(12, 25 * 256); // Usuario Atencion
+        sheet.setColumnWidth(13, 25 * 256); // Clasificación Atencion
         sheet.setColumnWidth(14, 25 * 256); // Tiempo Espera Recepción
-        sheet.setColumnWidth(15, 25 * 256); // Tiempo Espera Servicio
+        sheet.setColumnWidth(15, 25 * 256); // Tiempo Espera Atencion
 
 
 
@@ -132,25 +132,25 @@ public class ExcelExportService {
 // Clasificación Urgencia
             row.createCell(9).setCellValue(ticket.getClasUrgencia());
 
-// Fecha Servicio
-            if (ticket.getFechaServicio() != null) {
-                row.createCell(10).setCellValue(dateFormat.format(ticket.getFechaServicio()));
+// Fecha Atencion
+            if (ticket.getFechaAtencion() != null) {
+                row.createCell(10).setCellValue(dateFormat.format(ticket.getFechaAtencion()));
             } else {
                 row.createCell(10).setBlank(); // Dejar la celda vacía
             }
 
-// Hora Servicio
-            if (ticket.getHoraServicio() != null) {
-                row.createCell(11).setCellValue(timeFormat.format(ticket.getHoraServicio()));
+// Hora Atencion
+            if (ticket.getHoraAtencion() != null) {
+                row.createCell(11).setCellValue(timeFormat.format(ticket.getHoraAtencion()));
             } else {
                 row.createCell(11).setBlank(); // Dejar la celda vacía
             }
 
-// Usuario Servicio
-            row.createCell(12).setCellValue(ticket.getUsuarioServicio());
+// Usuario Atencion
+            row.createCell(12).setCellValue(ticket.getUsuarioAtencion());
 
-// Clasificación Servicio
-            row.createCell(13).setCellValue(ticket.getClasServicio());
+// Clasificación Atencion
+            row.createCell(13).setCellValue(ticket.getClasAtencion());
 
             // Tiempo Espera Recepción
             if (ticket.getTiempoEsperaRecepcion() == null) {
@@ -159,11 +159,11 @@ public class ExcelExportService {
                 row.createCell(14).setCellValue(ticket.getTiempoEsperaRecepcion());
             }
 
-            // Tiempo Espera Servicio
-            if (ticket.getTiempoEsperaServicio() == null) {
+            // Tiempo Espera Atencion
+            if (ticket.getTiempoEsperaAtencion() == null) {
                 row.createCell(15).setCellValue("");  // Se establece como vacío en lugar de cero
             } else {
-                row.createCell(15).setCellValue(ticket.getTiempoEsperaServicio());
+                row.createCell(15).setCellValue(ticket.getTiempoEsperaAtencion());
             }
         }
 
@@ -187,17 +187,17 @@ public class ExcelExportService {
         ticket.setHoraRecepcion(rs.getTime("hora_recepcion"));
         ticket.setUsuarioRecepcion(rs.getString("usuario_recepcion"));
         ticket.setClasUrgencia(rs.getString("clas_urgencia"));
-        ticket.setFechaServicio(rs.getDate("fecha_servicio"));
-        ticket.setHoraServicio(rs.getTime("hora_servicio"));
-        ticket.setUsuarioServicio(rs.getString("usuario_servicio"));
-        ticket.setClasServicio(rs.getString("clas_servicio"));
+        ticket.setFechaAtencion(rs.getDate("fecha_atencion"));
+        ticket.setHoraAtencion(rs.getTime("hora_atencion"));
+        ticket.setUsuarioAtencion(rs.getString("usuario_atencion"));
+        ticket.setClasAtencion(rs.getString("clas_atencion"));
 
         // Cambios aquí para manejar nulos
         Integer tiempoEsperaRecepcion = (Integer) rs.getObject("tiempo_espera_recepcion");
-        Integer tiempoEsperaServicio = (Integer) rs.getObject("tiempo_espera_servicio");
+        Integer tiempoEsperaAtencion = (Integer) rs.getObject("tiempo_espera_atencion");
 
         ticket.setTiempoEsperaRecepcion(tiempoEsperaRecepcion); // Esto puede ser null
-        ticket.setTiempoEsperaServicio(tiempoEsperaServicio);   // Esto puede ser null
+        ticket.setTiempoEsperaAtencion(tiempoEsperaAtencion);   // Esto puede ser null
 
         return ticket;
     }

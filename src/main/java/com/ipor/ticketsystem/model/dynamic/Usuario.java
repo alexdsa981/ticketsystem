@@ -41,7 +41,7 @@ public class Usuario {
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario")
-    private Set<Servicio> listaServicios;
+    private Set<Atencion> listaAtencions;
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario")

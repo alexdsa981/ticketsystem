@@ -83,7 +83,7 @@ if (filterButton) {
 
         const clasificacionFilter = getValueOrDefault('clasificacionFilter');
         const urgenciaFilter = getValueOrDefault('urgenciaFilter');
-        const clasificacionServicioFilter = getValueOrDefault('clasificacionServicioFilter');
+        const clasificacionAtencionFilter = getValueOrDefault('clasificacionAtencionFilter');
 
         filteredRows = []; // Reiniciar el array de filas filtradas
         const tableBody = document.getElementById('ticketTableBody');
@@ -98,7 +98,7 @@ if (filterButton) {
             const usuarioEmisorCell = row.querySelector('.usuario-emisor') ? row.querySelector('.usuario-emisor').textContent.toLowerCase() : '';
             const clasificacionCell = row.querySelector('.clasificacion') ? row.querySelector('.clasificacion').textContent.toLowerCase() : '';
             const urgenciaCell = row.querySelector('.urgencia') ? row.querySelector('.urgencia').textContent.toLowerCase() : '';
-            const clasificacionServicioCell = row.querySelector('.clasificacion-servicio') ? row.querySelector('.clasificacion-servicio').textContent.toLowerCase() : '';
+            const clasificacionAtencionCell = row.querySelector('.clasificacion-atencion') ? row.querySelector('.clasificacion-atencion').textContent.toLowerCase() : '';
 
             const fechaCell = row.querySelector('.fecha') ? row.querySelector('.fecha').textContent : '';
             const cellFecha = new Date(fechaCell.split('/').reverse().join('/')); // Suponiendo que la fecha está en formato DD/MM/YYYY
@@ -111,10 +111,10 @@ if (filterButton) {
             const matchesUsuarioAtencion = usuarioAtencionFilter === '' || usuarioAtencionCell.includes(usuarioAtencionFilter);
             const matchesClasificacion = clasificacionFilter === '' || clasificacionCell.includes(clasificacionFilter);
             const matchesUrgencia = urgenciaFilter === '' || urgenciaCell.includes(urgenciaFilter);
-            const matchesClasificacionServicio = clasificacionServicioFilter === '' || clasificacionServicioCell.includes(clasificacionServicioFilter);
+            const matchesClasificacionAtencion = clasificacionAtencionFilter === '' || clasificacionAtencionCell.includes(clasificacionAtencionFilter);
 
             // Mostrar u ocultar fila
-            if (matchesUsuarioReceptor && matchesUsuarioEmisor && matchesUsuarioAtencion && matchesFecha && matchesClasificacion && matchesUrgencia && matchesClasificacionServicio) {
+            if (matchesUsuarioReceptor && matchesUsuarioEmisor && matchesUsuarioAtencion && matchesFecha && matchesClasificacion && matchesUrgencia && matchesClasificacionAtencion) {
                 row.style.display = ''; // Muestra la fila
                 filteredRows.push(row); // Añadir a las filas filtradas
             } else {
@@ -157,8 +157,8 @@ const clearFilterButton = document.getElementById('clearFilterButton');
             if (document.getElementById('urgenciaFilter')) {
                 document.getElementById('urgenciaFilter').value = '';
             }
-            if (document.getElementById('clasificacionServicioFilter')) {
-                document.getElementById('clasificacionServicioFilter').value = '';
+            if (document.getElementById('clasificacionAtencionFilter')) {
+                document.getElementById('clasificacionAtencionFilter').value = '';
             }
 
             // Muestra todas las filas de la tabla

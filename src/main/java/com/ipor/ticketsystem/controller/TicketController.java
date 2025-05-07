@@ -181,7 +181,6 @@ public class TicketController {
 
     @GetMapping("/adjunto/descargar/{id}")
     public ResponseEntity<Resource> descargarArchivo(@PathVariable Long id) {
-        // Obtener el archivo adjunto por su ID desde el servicio
         ArchivoAdjunto archivoAdjunto = ticketService.getArchivoPorId(id);
 
         // Crear un recurso basado en los bytes del archivo

@@ -1,6 +1,5 @@
 package com.ipor.ticketsystem.model.dynamic;
 import com.ipor.ticketsystem.model.fixed.ClasificacionDesestimacion;
-import com.ipor.ticketsystem.model.fixed.ClasificacionServicio;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

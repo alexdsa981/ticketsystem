@@ -3,8 +3,6 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
-import com.ipor.ticketsystem.model.fixed.ClasificacionArea;
-import com.ipor.ticketsystem.model.fixed.ClasificacionIncidencia;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -82,7 +80,6 @@ public class AtencionController {
     @PostMapping("/recepcion/{id}")
     public ResponseEntity<String> recepcionarTicket(
             @RequestParam("mensaje") String mensaje,
-            @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -96,7 +93,6 @@ public class AtencionController {
             // Crear la recepción
             Recepcion recepcion = new Recepcion();
             recepcion.setMensaje(mensaje);
-            recepcion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
             recepcion.setTicket(ticket);
             recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
             atencionService.saveRecepcion(recepcion);
@@ -148,13 +144,14 @@ public class AtencionController {
     }
 
 
-    //metodo para atender un ticket, crea un atendido(servicio) y cambia la fase del ticket:
+    //metodo para atender un ticket, crea una atencion y cambia la fase del ticket:
     @PostMapping("/atencion/{id}")
     public ResponseEntity<String> atenderTicket(
             @RequestParam("descripcion") String descripcion,
-            @RequestParam("clasificacion_area") Long IDclasificacion_area,
-            @RequestParam("clasificacion_incidencia") Long ID_clasificacion_incidencia,
-            @RequestParam("clasificacion_servicio") Long IDclasificacion_servicio,
+            @RequestParam("area_atencion") Long IDarea_atencion,
+            @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
+            @RequestParam("tipo_incidencia") Long ID_tipo_incidencia,
+            @RequestParam("clasificacion_atencion") Long IDclasificacion_atencion,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -164,27 +161,26 @@ public class AtencionController {
 
             Ticket ticket = ticketService.getTicketPorID(id);
             // Lógica para crear la atencion
-            Servicio servicio = new Servicio();
-            servicio.setDescripcion(descripcion);
-            servicio.setClasificacionServicio(clasificadoresService.getClasificacionServicioPorId(IDclasificacion_servicio));
-            servicio.setTicket(ticket);
-            servicio.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-            atencionService.saveServicio(servicio);
+            Atencion atencion = new Atencion();
+            atencion.setDescripcion(descripcion);
+            atencion.setClasificacionAtencion(clasificadoresService.getClasificacionAtencionPorId(IDclasificacion_atencion));
+            atencion.setClasificacionUrgencia(clasificadoresService.getClasificacionUrgenciaPorId(IDclasificacion_urgencia));
+            atencion.setTipoIncidencia(clasificadoresService.getTipoIncidenciaPorID(ID_tipo_incidencia));
+            atencion.setAreaAtencion(clasificadoresService.getAreaAtencionPorId(IDarea_atencion));
+            atencion.setTicket(ticket);
+            atencion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+            atencionService.saveAtencion(atencion);
 
             // Modificar el ticket
-            ClasificacionIncidencia clasificacionIncidencia = clasificadoresService.getClasificacionIncidenciaPorID(ID_clasificacion_incidencia);
-            ticket.setClasificacionIncidencia(clasificacionIncidencia);
-            ClasificacionArea clasificacionArea = clasificadoresService.getClasificacionAreaPorId(IDclasificacion_area);
-            servicio.getTicket().setClasificacionArea(clasificacionArea);
-            ticket.setServicio(servicio);
-            ticketService.saveTicket(servicio.getTicket());
+            ticket.setAtencion(atencion);
+            ticketService.saveTicket(ticket);
 
 
             Notificacion notificacion = new Notificacion();
-            notificacion.setTicket(servicio.getTicket());
+            notificacion.setTicket(atencion.getTicket());
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
-            notificacion.setUsuario(servicio.getTicket().getUsuario());
+            notificacion.setUsuario(atencion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Atendido");
             notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
@@ -248,6 +244,7 @@ public class AtencionController {
             desestimacion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
             atencionService.saveDesestimacion(desestimacion);
 
+            // Modificar el ticket
             ticket.setDesestimacion(desestimacion);
             ticketService.saveTicket(ticket);
 

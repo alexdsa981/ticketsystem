@@ -21,10 +21,10 @@ public class TicketExportDTO {
     private Time horaRecepcion;
     private String usuarioRecepcion;
     private String clasUrgencia;
-    private Date fechaServicio;
-    private Time horaServicio;
-    private String usuarioServicio;
-    private String clasServicio;
+    private Date fechaAtencion;
+    private Time horaAtencion;
+    private String usuarioAtencion;
+    private String clasAtencion;
     private Integer tiempoEsperaRecepcion;
-    private Integer tiempoEsperaServicio;
+    private Integer tiempoEsperaAtencion;
 }

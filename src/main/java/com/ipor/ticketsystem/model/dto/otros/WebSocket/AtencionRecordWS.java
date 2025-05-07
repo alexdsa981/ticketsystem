@@ -28,10 +28,10 @@ public record AtencionRecordWS(
         String nombreUsuarioAtencion,
 
         String nombreFaseTicket,
-        String nombreClasificacionTicket,
-        String nombreUrgenciaRecepcion,
+        String nombreTipoIncidencia,
+        String nombreUrgencia,
         String nombreClasificacionAtencion,
-        String nombreClasificacionArea,
+        String nombreAreaAtencion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
 
@@ -46,24 +46,24 @@ public record AtencionRecordWS(
                 detalleDTO.getHoraFormateadaTicket(),
                 detalleDTO.getFechaFormateadaRecepcion(),
                 detalleDTO.getHoraFormateadaRecepcion(),
-                detalleDTO.getFechaFormateadaServicio(),
-                detalleDTO.getHoraFormateadaServicio(),
+                detalleDTO.getFechaFormateadaAtencion(),
+                detalleDTO.getHoraFormateadaAtencion(),
 
 
                 detalleDTO.getTicket().getDescripcion(),
                 detalleDTO.getRecepcion().getMensaje(),
-                detalleDTO.getServicio().getDescripcion(),
+                detalleDTO.getAtencion().getDescripcion(),
 
                 detalleDTO.getTicket().getUsuario().getNombre(),
                 detalleDTO.getRecepcion().getUsuario().getNombre(),
-                detalleDTO.getServicio().getUsuario().getNombre(),
+                detalleDTO.getAtencion().getUsuario().getNombre(),
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
 
-                detalleDTO.getTicket().getClasificacionIncidencia().getNombre(),
-                detalleDTO.getRecepcion().getClasificacionUrgencia().getNombre(),
-                detalleDTO.getServicio().getClasificacionServicio().getNombre(),
-                detalleDTO.getTicket().getClasificacionArea().getNombre(),
+                detalleDTO.getAtencion().getTipoIncidencia().getNombre(),
+                detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
+                detalleDTO.getAtencion().getClasificacionAtencion().getNombre(),
+                detalleDTO.getAtencion().getAreaAtencion().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO

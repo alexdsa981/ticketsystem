@@ -1,7 +1,6 @@
 package com.ipor.ticketsystem.repository.dynamic;
 
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -57,32 +56,27 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     */
 
     //CONTEO POR INCIDENCIA SIN Y CON FECHA
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(t)) " +
-            "FROM Ticket t INNER JOIN t.clasificacionIncidencia ci WHERE t.faseTicket.id = 3 " +
-            "GROUP BY ci.nombre")
-    List<RecordFactorXConteo> findTicketCountByClasificacionIncidencia();
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(t)) " +
-            "FROM Ticket t INNER JOIN t.clasificacionIncidencia ci " +
-            "INNER JOIN t.servicio s " +
-            "WHERE (s.fecha BETWEEN :fechaInicio AND :fechaFin)  AND t.faseTicket.id = 3 " +
-            "GROUP BY ci.nombre")
-    List<RecordFactorXConteo> findTicketCountByClasificacionIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ti.nombre, COUNT(a)) " +
+            "FROM Atencion a INNER JOIN a.tipoIncidencia ti " +
+            "GROUP BY ti.nombre")
+    List<RecordFactorXConteo> findTicketCountByTipoIncidencia();
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ti.nombre, COUNT(a)) " +
+            "FROM Atencion a INNER JOIN a.tipoIncidencia ti " +
+            "WHERE (a.fecha BETWEEN :fechaInicio AND :fechaFin) " +
+            "GROUP BY ti.nombre")
+    List<RecordFactorXConteo> findTicketCountByTipoIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
     //CONTEO POR URGENCIA SIN Y CON FECHA
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(t)) " +
-            "FROM Ticket t " +
-            "INNER JOIN Recepcion r ON t = r.ticket " +
-            "INNER JOIN r.clasificacionUrgencia cu " +
-            "WHERE t.faseTicket.id = 3 " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.clasificacionUrgencia cu " +
             "GROUP BY cu.nombre")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgencia();
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(t)) " +
-            "FROM Ticket t " +
-            "INNER JOIN Recepcion r ON t = r.ticket " +
-            "INNER JOIN r.clasificacionUrgencia cu " +
-            "INNER JOIN t.servicio s " +
-            "WHERE s.fecha BETWEEN :fechaInicio AND :fechaFin  AND t.faseTicket.id = 3 " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.clasificacionUrgencia cu " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
             "GROUP BY cu.nombre")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
@@ -90,18 +84,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
     //CONTEO POR AREA SIN Y CON FECHA
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(a.nombre, COUNT(t)) " +
-            "FROM Ticket t " +
-            "INNER JOIN t.clasificacionArea a " +
-            "WHERE t.faseTicket.id = 3 " +
-            "GROUP BY a.nombre")
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(aa.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.areaAtencion aa " +
+            "GROUP BY aa.nombre")
     List<RecordFactorXConteo> findTicketCountByArea();
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(a.nombre, COUNT(t)) " +
-            "FROM Ticket t " +
-            "INNER JOIN t.clasificacionArea a " +
-            "INNER JOIN t.servicio s " +
-            "WHERE s.fecha BETWEEN :fechaInicio AND :fechaFin  AND t.faseTicket.id = 3 " +
-            "GROUP BY a.nombre")
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(aa.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.areaAtencion aa " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY aa.nombre")
     List<RecordFactorXConteo> findTicketCountByAreaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -110,22 +102,22 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     //MEDICION DE TIEMPO SIN Y CON FECHA
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
-            "FROM servicio s " +
-            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
             "INNER JOIN recepcion r ON t.id = r.id_ticket " +
             "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL",
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL",
             nativeQuery = true)
     Double obtenerPromedioSegundosRS();
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
-            "FROM servicio s " +
-            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
             "INNER JOIN recepcion r ON t.id = r.id_ticket " +
             "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerPromedioSegundosRSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
@@ -152,20 +144,20 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Double obtenerPromedioSegundosTRConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
-            "FROM servicio s " +
-            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL",
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL",
             nativeQuery = true)
     Double obtenerPromedioSegundosTS();
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME))) " +
-            "FROM servicio s " +
-            "INNER JOIN ticket t ON t.id = s.id_ticket " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(s.fecha, ' ', LEFT(s.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerPromedioSegundosTSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);

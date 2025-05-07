@@ -1,7 +1,7 @@
 package com.ipor.ticketsystem.model.fixed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ipor.ticketsystem.model.dynamic.Servicio;
+import com.ipor.ticketsystem.model.dynamic.Atencion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-public class ClasificacionServicio {
-    public ClasificacionServicio(String nombre, Boolean isActive){
+public class ClasificacionAtencion {
+    public ClasificacionAtencion(String nombre, Boolean isActive){
         this.nombre = nombre;
         this.isActive = isActive;
     }
@@ -25,7 +25,8 @@ public class ClasificacionServicio {
     private String nombre;
     @Column(nullable = false)
     private Boolean isActive;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "clasificacionServicio")
-    private Set<Servicio> listaServicios;
+    @OneToMany(mappedBy = "clasificacionAtencion")
+    private Set<Atencion> listaAtencion;
 }

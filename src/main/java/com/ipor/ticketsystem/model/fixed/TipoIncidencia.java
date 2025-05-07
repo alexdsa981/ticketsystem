@@ -2,34 +2,42 @@ package com.ipor.ticketsystem.model.fixed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.dynamic.Atencion;
-import com.ipor.ticketsystem.model.dynamic.Recepcion;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class ClasificacionUrgencia {
-
-    public ClasificacionUrgencia(String nombre, Boolean isActive){
-        this.nombre = nombre;
+public class TipoIncidencia {
+    public TipoIncidencia(String nombre, SubCategoriaIncidencia subcategoria, Boolean isActive) {
+        this.subcategoria = subcategoria;
         this.isActive = isActive;
+        this.nombre = nombre;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String nombre;
+
+
     @Column(nullable = false)
     private Boolean isActive;
 
+    @ManyToOne
+    @JoinColumn(name = "id_subcategoria_incidencia")
+    private SubCategoriaIncidencia subcategoria;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "clasificacionUrgencia")
+    @OneToMany(mappedBy = "tipoIncidencia")
     private List<Atencion> listaAtencion;
+
+
 }

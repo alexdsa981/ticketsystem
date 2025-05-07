@@ -179,7 +179,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </ul>
         </td>
         <td>
-            <span class="nombreClasificacionIncidencia urgencia">
+            <span class="nombreTipoIncidencia urgencia">
                 ${ticketRecord.nombreUrgenciaRecepcion}:<br>
             </span>
             <span>
@@ -272,7 +272,7 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
         <td>${ticketRecord.nombreUsuarioAtencion}</td>
 
         <td>
-            <span class="nombreClasificacionIncidencia clasificacion">
+            <span class="nombreTipoIncidencia clasificacion">
                 ${ticketRecord.nombreClasificacionTicket}:<br>
             </span>
             <span>
@@ -290,7 +290,7 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
             </ul>
         </td>
         <td>
-            <span class="nombreClasificacionIncidencia urgencia">
+            <span class="nombreTipoIncidencia urgencia">
                Urgencia ${ticketRecord.nombreUrgenciaRecepcion}:<br>
             </span>
             <span>
@@ -301,8 +301,8 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
         </td>
 
                 <td>
-            <span class="nombreClasificacionIncidencia clasificacion-servicio">
-             Área ${ticketRecord.nombreClasificacionArea} - ${ticketRecord.nombreClasificacionAtencion}:<br>
+            <span class="nombreTipoIncidencia clasificacion-atencion">
+             Área ${ticketRecord.nombreAreAtencion} - ${ticketRecord.nombreClasificacionAtencion}:<br>
             </span>
             <span>
                 ${ticketRecord.descripcionAtencion.length > 150
@@ -327,12 +327,12 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                 data-recepcion-clasificacion="${ticketRecord.nombreUrgenciaRecepcion}"
                 data-recepcion-fecha="${ticketRecord.fechaFormateadaRecepcion}"
                 data-recepcion-hora="${ticketRecord.horaFormateadaRecepcion}"
-                data-servicio-usuario="${ticketRecord.nombreUsuarioAtencion}"
-                data-servicio-descripcion="${ticketRecord.descripcionAtencion}"
-                data-area-clasificacion="${ticketRecord.nombreClasificacionArea}"
-                data-servicio-clasificacion="${ticketRecord.nombreClasificacionAtencion}"
-                data-servicio-fecha="${ticketRecord.fechaFormateadaAtencion}"
-                data-servicio-hora="${ticketRecord.horaFormateadaAtencion}">
+                data-atencion-usuario="${ticketRecord.nombreUsuarioAtencion}"
+                data-atencion-descripcion="${ticketRecord.descripcionAtencion}"
+                data-area-clasificacion="${ticketRecord.nombreAreaAtencion}"
+                data-atencion-clasificacion="${ticketRecord.nombreClasificacionAtencion}"
+                data-atencion-fecha="${ticketRecord.fechaFormateadaAtencion}"
+                data-atencion-hora="${ticketRecord.horaFormateadaAtencion}">
 
                 <i class="bi bi-clock-history"></i>
             </button>
@@ -416,7 +416,7 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
             </ul>
         </td>
         <td>
-            <span class="nombreClasificacionIncidencia urgencia">
+            <span class="nombreTipoIncidencia urgencia">
                 ${ticketRecord.nombreClasificacionDesestimacion}:<br>
             </span>
             <span>
@@ -525,7 +525,7 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
             </ul>
         </td>
         <td>
-            <span class="nombreClasificacionIncidencia urgencia">
+            <span class="nombreTipoIncidencia urgencia">
                 ${ticketRecord.nombreUrgenciaRecepcion}:<br>
             </span>
             <span>
@@ -596,7 +596,7 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
 
         <td>
-            <span class="nombreClasificacionIncidencia clasificacion">
+            <span class="nombreTipoIncidencia clasificacion">
                 ${ticketRecord.nombreClasificacionTicket}:<br>
             </span>
             <span>
@@ -615,7 +615,7 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
         </td>
 
         <td>
-            <span class="nombreClasificacionIncidencia clasificacion-servicio">
+            <span class="nombreTipoIncidencia clasificacion-atencion">
                 ${ticketRecord.nombreClasificacionAtencion}:<br>
             </span>
             <span>
@@ -706,7 +706,7 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
         </td>
 
         <td>
-            <span class="nombreClasificacionIncidencia clasificacion-servicio">
+            <span class="nombreTipoIncidencia clasificacion-atencion">
                 ${ticketRecord.nombreClasificacionDesestimacion}:<br>
             </span>
             <span>

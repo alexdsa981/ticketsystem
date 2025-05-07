@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,7 +63,7 @@ public class DashboardController {
     public ResponseEntity<Map<String, Object>> getTxIGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorClasificacionIncidencia(fechaInicio, fechaFin);
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorTipoIncidencia(fechaInicio, fechaFin);
         return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 

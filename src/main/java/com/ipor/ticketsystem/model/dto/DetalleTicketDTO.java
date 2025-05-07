@@ -16,7 +16,7 @@ public class DetalleTicketDTO {
     private Long id;
     private Ticket ticket;
     private Recepcion recepcion;
-    private Servicio servicio;
+    private Atencion atencion;
     private Desestimacion desestimacion;
 
     private String fechaFormateadaTicket;
@@ -25,8 +25,8 @@ public class DetalleTicketDTO {
     private String fechaFormateadaRecepcion;
     private String horaFormateadaRecepcion;
 
-    private String fechaFormateadaServicio;
-    private String horaFormateadaServicio;
+    private String fechaFormateadaAtencion;
+    private String horaFormateadaAtencion;
 
     private String fechaFormateadaDesestimacion;
     private String horaFormateadaDesestimacion;
@@ -62,9 +62,9 @@ public class DetalleTicketDTO {
                 this.fechaFormateadaRecepcion = ConvertirFechaConFormato(recepcion.getFecha());
                 this.horaFormateadaRecepcion = ConvertirHoraConFormato(recepcion.getHora());
 
-                this.servicio = ticket.getServicio();
-                this.fechaFormateadaServicio = ConvertirFechaConFormato(servicio.getFecha());
-                this.horaFormateadaServicio = ConvertirHoraConFormato(servicio.getHora());
+                this.atencion = ticket.getAtencion();
+                this.fechaFormateadaAtencion = ConvertirFechaConFormato(atencion.getFecha());
+                this.horaFormateadaAtencion = ConvertirHoraConFormato(atencion.getHora());
                 break;
             case 4:
                 this.ticket = ticket;

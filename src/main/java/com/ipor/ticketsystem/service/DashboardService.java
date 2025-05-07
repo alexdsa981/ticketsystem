@@ -4,7 +4,7 @@ package com.ipor.ticketsystem.service;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
-import com.ipor.ticketsystem.repository.dynamic.ServicioRepository;
+import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,7 +22,7 @@ public class DashboardService {
     @Autowired
     private RecepcionRepository recepcionRepository;
     @Autowired
-    private ServicioRepository servicioRepository;
+    private AtencionRepository atencionRepository;
     @Autowired
     DesestimacionRepository desestimacionRepository;
 
@@ -46,9 +46,9 @@ public class DashboardService {
 
     public long obtenerNTotalAtendidos(LocalDate fechaInicio, LocalDate fechaFin) {
         if (fechaInicio != null && fechaFin != null) {
-            return servicioRepository.countAtendidosByFechaBetween(fechaInicio, fechaFin);
+            return atencionRepository.countAtendidosByFechaBetween(fechaInicio, fechaFin);
         }
-        return servicioRepository.count();
+        return atencionRepository.count();
     }
 
     public long obtenerNTotalDesestimados(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -61,11 +61,11 @@ public class DashboardService {
 
     //INFO PARA TABLA Y GRAFICO CIRCULAR
     //Conteo Clasificaciones Incidencia (DASHBOARD ADMIN)
-    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorClasificacionIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorTipoIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
         if (fechaInicio != null && fechaFin != null) {
-            return ticketRepository.findTicketCountByClasificacionIncidenciaWithDates(fechaInicio, fechaFin);
+            return ticketRepository.findTicketCountByTipoIncidenciaWithDates(fechaInicio, fechaFin);
         }
-        return ticketRepository.findTicketCountByClasificacionIncidencia();
+        return ticketRepository.findTicketCountByTipoIncidencia();
     }
 
     //Conteo Clasificaciones Urgencia (DASHBOARD ADMIN)
