@@ -15,8 +15,11 @@
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="text-primary">
             <i class="bi bi-envelope text-info"></i>
-            Ticket Código: <span id="ticketInfo" th:data-codigo="${detalle.ticket.codigoTicket}" th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
+            Ticket Código: <span id="ticketInfo" th:data-codigo="${detalle.ticket.codigoTicket}"
+                                 th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
+
         </h2>
+        <div id="ticket-data" th:data-fase="${detalle.ticket.faseTicket.nombre}"></div>
     </div>
 
     <!-- Fila de cards -->
@@ -42,523 +45,663 @@
             </div>
         </div>
 
-        <!-- Cards visibles si NO está desestimado -->
-        <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado')}" class="col-md-8">
+        <!-- Contenedor principal (solo visible si no está desestimado) -->
+        <div id="cards-principales" class="col-md-8" style="display: none;">
             <div class="row g-4">
-                <!-- Card 2 - Recepción -->
-                <div class="col-md-6">
+                <!-- Card Recepción -->
+                <div class="col-md-6" id="card-recepcion">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Datos de Recepción</h5>
-                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado')}">
+                            <div class="pendiente-recepcion">
                                 <p class="text-muted">Aún no se ha recepcionado el Ticket.</p>
                             </div>
-                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') or #strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
-                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span
-                                        th:text="${detalle.recepcion.mensaje}">Mensaje</span></p>
-                                <p class="mb-1"><i class="bi bi-person"></i> <span
-                                        th:text="${detalle.recepcion.usuario.nombre}">Receptor</span></p>
-
-
-                                <p class="mb-1"><i class="bi bi-calendar"></i> <span
-                                        th:text="${detalle.fechaFormateadaRecepcion}">Fecha</span> <span
-                                        th:text="${detalle.horaFormateadaRecepcion}">Hora</span></p>
+                            <div class="info-recepcion" style="display: none;">
+                                <p class="mb-1"><i class="bi bi-chat-left-text"></i>
+                                    <span id="mensaje-recepcion">Mensaje</span></p>
+                                <p class="mb-1"><i class="bi bi-person"></i>
+                                    <span id="usuario-recepcion">Receptor</span></p>
+                                <p class="mb-1"><i class="bi bi-calendar"></i>
+                                    <span id="fecha-recepcion">Fecha</span>
+                                    <span id="hora-recepcion">Hora</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3 - Atención -->
-                <div class="col-md-6">
+
+                <!-- Card Atención -->
+                <div class="col-md-6" id="card-atencion">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Datos de Atención</h5>
-                            <div th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
-                                <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span
-                                        th:text="${detalle.atencion.descripcion}">Descripción</span></p>
-                                <p class="mb-1"><i class="bi bi-person"></i> <span
-                                        th:text="${detalle.atencion.usuario.nombre}">Usuario</span></p>
-
-                                <p class="mb-1"><i class="bi bi-building"></i> <span
-                                        th:text="${'Area: '+ detalle.atencion.areaAtencion.nombre}">Clasificacion Área</span>
-                                </p>
-
-                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
-                                        th:text="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre+ ': ' + detalle.atencion.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
-                                </p>
-
-                                <p class="mb-1"><i class="bi bi-alarm-fill" sec:authorize="hasAnyAuthority('Admin','Soporte')"></i> <span
-                                        th:text="${'Nivel Urgencia: '+ detalle.atencion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
-                                </p>
-                                <p class="mb-1"><i class="bi bi-tools"></i> <span
-                                        th:text="${detalle.atencion.clasificacionAtencion.nombre}">Clasificacion Atencion</span>
-                                </p>
-
-                                <p class="mb-1"><i class="bi bi-calendar"></i> <span
-                                        th:text="${detalle.fechaFormateadaAtencion}">Fecha</span> <span
-                                        th:text="${detalle.horaFormateadaAtencion}">Hora</span></p>
-                            </div>
-                            <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
+                            <div class="pendiente-atencion">
                                 <p class="text-muted">Aún no se ha atendido el Ticket.</p>
+                            </div>
+                            <div class="info-atencion" style="display: none;">
+                                <p class="mb-1"><i class="bi bi-chat-left-text"></i>
+                                    <span id="descripcion-atencion">Descripción</span></p>
+                                <p class="mb-1"><i class="bi bi-person"></i>
+                                    <span id="usuario-atencion">Usuario</span></p>
+                                <p class="mb-1"><i class="bi bi-building"></i>
+                                    <span id="area-atencion">Clasificación Área</span></p>
+                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i>
+                                    <span id="incidencia-atencion">Clasificación Incidencia</span></p>
+                                <p class="mb-1"><i class="bi bi-alarm-fill"
+                                                   sec:authorize="hasAnyAuthority('Admin','Soporte')"></i>
+                                    <span id="urgencia-atencion">Clasificación Urgencia</span></p>
+                                <p class="mb-1"><i class="bi bi-tools"></i>
+                                    <span id="clasificacion-atencion">Clasificación Atención</span></p>
+                                <p class="mb-1"><i class="bi bi-calendar"></i>
+                                    <span id="fecha-atencion">Fecha</span>
+                                    <span id="hora-atencion">Hora</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- Card 4 - Desestimación (Solo si está desestimado) -->
-        <div class="col-md-4" th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado')}">
+        <!-- Card Desestimación -->
+        <div class="col-md-4" id="card-desestimacion" style="display: none;">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title mb-3">Datos de Desestimación</h5>
-                    <p class="mb-1"><i class="bi bi-chat-left-text"></i> <span
-                            th:text="${detalle.desestimacion.descripcion}">Descripción</span></p>
-                    <p class="mb-1"><i class="bi bi-person"></i> <span
-                            th:text="${detalle.desestimacion.usuario.nombre}">Usuario</span></p>
-                    <p class="mb-1"><i class="bi bi-calendar"></i> <span
-                            th:text="${detalle.fechaFormateadaDesestimacion}">Fecha</span> <span
-                            th:text="${detalle.horaFormateadaDesestimacion}">Hora</span></p>
-                    <p class="mb-0"><i class="bi bi-tag"></i> <span>Desestimado</span></p>
+                    <p class="mb-1"><i class="bi bi-chat-left-text"></i>
+                        <span id="descripcion-desestimacion">Descripción</span></p>
+                    <p class="mb-1"><i class="bi bi-person"></i>
+                        <span id="usuario-desestimacion">Usuario</span></p>
+                    <p class="mb-1"><i class="bi bi-calendar"></i>
+                        <span id="fecha-desestimacion">Fecha</span>
+                        <span id="hora-desestimacion">Hora</span></p>
+                    <p class="mb-0"><i class="bi bi-tag"></i>
+                        <span id="clasificacion-desestimacion">Clasificación</span></p>
                 </div>
+            </div>
+        </div>
+
+
+        <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Admin','Soporte')">
+
+            <!-- Botón Recepcionar -->
+            <button id="btn-recepcionar" type="button" class="btn btn-primary btn-ticket-accion" data-bs-toggle="modal"
+                    data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}" style="display:none"
+                    th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                    th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                    th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                    th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                    th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                    th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
+                <i class="bi bi-pencil-square"></i>
+                Recepcionar
+            </button>
+
+            <!-- Botón Atender -->
+            <button id="btn-atender" type="button" class="btn btn-success btn-ticket-accion" data-bs-toggle="modal"
+                    data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}" style="display:none"
+                    th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                    th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                    th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                    th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                    th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                    th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
+                <i class="bi bi-check2-square"></i>
+                Atender
+            </button>
+
+            <!-- Botón Desestimar -->
+            <button id="btn-desestimar" type="button" class="btn btn-danger btn-ticket-accion" data-bs-toggle="modal"
+                    data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}" style="display:none"
+                    th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                    th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                    th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                    th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                    th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                    th:data-codigo-ticket="${detalle.ticket.codigoTicket}"
+                    th:data-numero-fase="${detalle.ticket.faseTicket.id}">
+                <i class="bi bi-trash"></i>
+                Desestimar
+            </button>
+
+
+            <a id="btn-ir-seccion-soporte" class="btn btn-outline-primary btn-pagina-ticket"
+               href="#">
+                Ir a la sección del ticket
+            </a>
+        </div>
+        <!-- Botón de redirección -->
+        <div class="text-center mt-4 btn-pagina-ticket" sec:authorize="hasAnyAuthority('Usuario')">
+            <a id="btn-ir-seccion-usuario" class="btn btn-outline-primary"
+               href="#">
+                Ir a la sección del ticket
+            </a>
+        </div>
+    </div>
+
+
+    <script>
+        const codigoTicket = document.getElementById('ticketInfo').dataset.codigo;
+
+        function actualizarVistaTicket() {
+            fetch(`/app/tickets/datos/${codigoTicket}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("No se pudo obtener el ticket");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Datos actualizados del ticket:", data);
+
+                    const fase = data.nombreFaseTicket;
+                    const cardRecepcion = document.getElementById("card-recepcion");
+                    const cardAtencion = document.getElementById("card-atencion");
+                    const cardDesestimacion = document.getElementById("card-desestimacion");
+
+                    // Ocultar todo inicialmente
+                    cardRecepcion.style.display = "none";
+                    cardAtencion.style.display = "none";
+                    cardDesestimacion.style.display = "none";
+                    document.getElementById("cards-principales").style.display = "none";
+
+
+                    const btnRecepcionar = document.getElementById('btn-recepcionar');
+                    const btnAtender = document.getElementById('btn-atender');
+                    const btnDesestimar = document.getElementById('btn-desestimar');
+                    if (btnRecepcionar) btnRecepcionar.style.display = 'none';
+                    if (btnAtender) btnAtender.style.display = 'none';
+                    if (btnDesestimar) btnDesestimar.style.display = 'none';
+
+
+                    const btnSoporte = document.getElementById('btn-ir-seccion-soporte');
+                    const btnUsuario = document.getElementById('btn-ir-seccion-usuario');
+                    const rutasSoporte = {
+                        'Enviado': '/soporte/Recepcionar',
+                        'Recepcionado - En Proceso': '/soporte/Atender',
+                        'Cerrado - Atendido': '/soporte/Tickets-Cerrados',
+                        'Desestimado': '/soporte/Tickets-Desestimados'
+                    };
+
+                    const rutasUsuario = {
+                        'Enviado': '/inicio',
+                        'Recepcionado - En Proceso': '/TicketsEnProceso',
+                        'Cerrado - Atendido': '/TicketsAtendidos',
+                        'Desestimado': '/TicketsDesestimados'
+                    };
+                    if (btnSoporte && rutasSoporte[fase]) {
+                        btnSoporte.setAttribute('href', rutasSoporte[fase]);
+                    }
+
+                    if (btnUsuario && rutasUsuario[fase]) {
+                        btnUsuario.setAttribute('href', rutasUsuario[fase]);
+                    }
+                    if (fase === "Desestimado") {
+                        cardRecepcion.style.display = "none";
+                        cardAtencion.style.display = "none";
+                        document.getElementById("card-desestimacion").style.display = "block";
+
+                        document.getElementById("descripcion-desestimacion").textContent = data.descripcionDesestimacion || "";
+                        document.getElementById("usuario-desestimacion").textContent = data.nombreUsuarioDesestimacion || "";
+                        document.getElementById("fecha-desestimacion").textContent = data.fechaFormateadaDesestimacion || "";
+                        document.getElementById("hora-desestimacion").textContent = data.horaFormateadaDesestimacion || "";
+                        document.getElementById("clasificacion-desestimacion").textContent = data.nombreClasificacionDesestimacion || "";
+
+                    } else {
+                        document.getElementById("cards-principales").style.display = "block";
+
+                        if (fase === "Enviado") {
+                            cardRecepcion.style.display = "block";
+                            cardRecepcion.querySelector(".info-recepcion").style.display = "none";
+                            cardRecepcion.querySelector(".pendiente-recepcion").style.display = "block";
+
+                            cardAtencion.style.display = "block";
+                            cardAtencion.querySelector(".info-atencion").style.display = "none";
+                            cardAtencion.querySelector(".pendiente-atencion").style.display = "block";
+
+                            if (btnRecepcionar) btnRecepcionar.style.display = 'inline-block';
+                            if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
+
+                        } else if (fase === "Recepcionado - En Proceso") {
+                            cardRecepcion.style.display = "block";
+                            cardRecepcion.querySelector(".info-recepcion").style.display = "block";
+                            cardRecepcion.querySelector(".pendiente-recepcion").style.display = "none";
+
+                            cardAtencion.style.display = "block";
+                            cardAtencion.querySelector(".info-atencion").style.display = "none";
+                            cardAtencion.querySelector(".pendiente-atencion").style.display = "block";
+
+                            document.getElementById("mensaje-recepcion").textContent = data.mensajeRecepcion || "";
+                            document.getElementById("usuario-recepcion").textContent = data.nombreUsuarioRecepcion || "";
+                            document.getElementById("fecha-recepcion").textContent = data.fechaFormateadaRecepcion || "";
+                            document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
+
+
+                            if (btnAtender) btnAtender.style.display = 'inline-block';
+                            if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
+                            console.log("EN PROCESOO");
+
+                        } else if (fase === "Cerrado - Atendido") {
+                            cardRecepcion.style.display = "block";
+                            cardRecepcion.querySelector(".info-recepcion").style.display = "block";
+                            cardRecepcion.querySelector(".pendiente-recepcion").style.display = "none";
+
+                            cardAtencion.style.display = "block";
+                            cardAtencion.querySelector(".info-atencion").style.display = "block";
+                            cardAtencion.querySelector(".pendiente-atencion").style.display = "none";
+
+
+
+                            document.getElementById("mensaje-recepcion").textContent = data.mensajeRecepcion || "";
+                            document.getElementById("usuario-recepcion").textContent = data.nombreUsuarioRecepcion || "";
+                            document.getElementById("fecha-recepcion").textContent = data.fechaFormateadaRecepcion || "";
+                            document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
+
+
+                            document.getElementById("descripcion-atencion").textContent = data.descripcionAtencion || "";
+                            document.getElementById("usuario-atencion").textContent = data.nombreUsuarioAtencion || "";
+                            document.getElementById("area-atencion").textContent = data.nombreAreaAtencion || "";
+                            document.getElementById("incidencia-atencion").textContent = `${data.nombreTipoIncidencia || ""}`; // Puedes formatear más si hay subcategoría
+                            document.getElementById("urgencia-atencion").textContent = `Nivel Urgencia: ${data.nombreUrgencia || ""}`;
+                            document.getElementById("clasificacion-atencion").textContent = data.nombreClasificacionAtencion || "";
+                            document.getElementById("fecha-atencion").textContent = data.fechaFormateadaAtencion || "";
+                            document.getElementById("hora-atencion").textContent = data.horaFormateadaAtencion || "";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al obtener datos del ticket:", error);
+                });
+        }
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            actualizarVistaTicket(); // Ejecutar al cargar la página
+
+            const codigoTicket = document.getElementById('ticketInfo').dataset.codigo;
+            let stompClient = null;
+            let conectado = false;
+            const destino = `/topic/actualizar/ticket/${codigoTicket}`;
+
+            function conectarWebSocket() {
+                const socket = new SockJS('/ws');
+                stompClient = Stomp.over(socket);
+                stompClient.heartbeat.outgoing = 20000; // 20s ping saliente
+                stompClient.heartbeat.incoming = 0;     // No esperamos ping del servidor
+
+                stompClient.connect({}, () => {
+                    conectado = true;
+                    console.log("WebSocket conectado");
+
+                    stompClient.subscribe(destino, function (mensaje) {
+                        if (mensaje.body === 'actualizar') {
+                            console.log("Se actualizó el ticket, recargando datos...");
+                            actualizarVistaTicket();
+                        }
+                    });
+                }, (error) => {
+                    conectado = false;
+                    console.warn("WebSocket desconectado. Reintentando conexión...", error);
+                });
+            }
+
+            function verificarConexionYReconectar() {
+                if (!conectado || !stompClient.connected) {
+                    console.log("Intentando reconectar WebSocket...");
+                    conectarWebSocket();
+                }
+            }
+
+            // Iniciar conexión
+            conectarWebSocket();
+
+            // Verificar cada 5 segundos si se desconectó y reconectar
+            setInterval(verificarConexionYReconectar, 5000);
+        });
+
+    </script>
+
+
+    <!-- Modal para atención -->
+    <div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="atencionForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-success" id="atencionModalLabel"><i class="bi bi-tools"></i>
+                            ATENCIÓN
+                            <span id="TicketIdFormateado"></span>: </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
+                        <!-- Sección de Detalles del Ticket -->
+                        <div class="mb-3 text-secondary">
+                            <p><strong>USUARIO: </strong> <span id="modalTicketUsuario"></span></p>
+                            <p><strong>DESCRIPCIÓN: </strong><span id="modalTicketDescripcion"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcionAtencion" class="form-label"><strong><i
+                                    class="bi bi-check2-square"></i>
+                                DESCRIPCIÓN DE ATENCIÓN:</strong></label>
+                            <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
+                                      placeholder="Agrega algún comentario sobre la atención del ticket..."
+                                      required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
+                                ATENDIDA:</strong></label>
+                            <select class="form-select" id="areaAtencion" name="area_atencion"
+                                    required>
+                                <option selected disabled value="">Selecciona un área</option>
+                                <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+
+
+                        <!-- CATEGORÍA -->
+                        <div class="mb-3">
+                            <label for="Lista_cat_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
+                                CATEGORÍA:</strong></label>
+                            <select class="form-select" id="Lista_cat_incidencia" name="Lista_cat_incidencia" required>
+                                <option selected disabled value="">Selecciona la categoría</option>
+                                <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+
+                        <!-- SUBCATEGORÍA (inicialmente oculta) -->
+                        <div class="mb-3 d-none" id="subcategoria-wrapper">
+                            <label for="Lista_subcat_incidencia" class="form-label"><strong><i
+                                    class="bi bi-flag-fill"></i> SUBCATEGORÍA:</strong></label>
+                            <select class="form-select" id="Lista_subcat_incidencia" name="subcat_incidencia" required>
+                                <option selected disabled value="">Selecciona la subcategoría</option>
+                            </select>
+                        </div>
+
+                        <!-- TIPO INCIDENCIA (inicialmente oculta) -->
+                        <div class="mb-3 d-none" id="tipo-wrapper">
+                            <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> TIPO
+                                DE INCIDENCIA:</strong></label>
+                            <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
+                                <option selected disabled value="">Selecciona el tipo de Incidencia</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="clasificacionUrgencia" class="form-label"><strong><i
+                                    class="bi bi-exclamation-triangle"></i>
+                                CLASIFICACIÓN DE URGENCIA:</strong></label>
+                            <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
+                                    required>
+                                <option selected disabled value="">Selecciona Urgencia</option>
+                                <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clasificacionAtencion" class="form-label"><strong><i
+                                    class="bi bi-list-check"></i>
+                                CLASIFICACIÓN DE ATENCIÓN:</strong></label>
+                            <select class="form-select" id="clasificacionAtencion" name="clasificacion_atencion"
+                                    required>
+                                <option selected disabled value="">Selecciona una clasificación</option>
+                                <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success submit-btn">Guardar Atencion</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-4" sec:authorize="hasAnyAuthority('Admin','Soporte')">
 
-        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado')}"
-                type="button" class="btn btn-primary btn-ticket-accion" data-bs-toggle="modal"
-                data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
-                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
-            <i class="bi bi-pencil-square"></i>
-            Recepcionar
-        </button>
-        <button th:if="${#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso')}"
-                type="button" class="btn btn-success btn-ticket-accion" data-bs-toggle="modal"
-                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
-                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                th:data-codigo-ticket="${detalle.ticket.codigoTicket}">
-            <i class="bi bi-check2-square"></i>
-            Atender
-        </button>
-        <button th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Desestimado') and !#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}"
-                type="button" class="btn btn-danger btn-ticket-accion" data-bs-toggle="modal"
-                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
-                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                th:data-codigo-ticket="${detalle.ticket.codigoTicket}"
-                th:data-numero-fase="${detalle.ticket.faseTicket.id}">
-            <i class="bi bi-trash"></i>
-            Desestimar
-        </button>
+    <script>
+        // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
+        const atencionModal = document.getElementById('atencionModal');
+        atencionModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que disparó el modal
+            const button = event.relatedTarget;
 
-        <a class="btn btn-outline-primary btn-pagina-ticket"
-           th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/soporte/Recepcionar' :
-                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/soporte/Atender' :
-                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/soporte/Tickets-Cerrados' :
-                      '/soporte/Tickets-Desestimados'))}}">
-            Ir a la sección del ticket
-        </a>
-    </div>
-    <!-- Botón de redirección -->
-    <div class="text-center mt-4 btn-pagina-ticket" sec:authorize="hasAnyAuthority('Usuario')">
-        <a class="btn btn-outline-primary"
-           th:href="@{${#strings.equals(detalle.ticket.faseTicket.nombre, 'Enviado') ? '/inicio' :
-                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Recepcionado - En Proceso') ? '/TicketsEnProceso' :
-                      (#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido') ? '/TicketsAtendidos' :
-                      '/TicketsDesestimados'))}}">
-            Ir a la sección del ticket
-        </a>
-    </div>
-</div>
+            // Extraer información del ticket desde los atributos data-*
+            const ticketId = button.getAttribute('data-ticket-id');
+        const formattedTicketId = button.getAttribute('data-codigo-ticket');
+            const ticketUsuario = button.getAttribute('data-ticket-usuario');
+            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+            const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
+            const ticketFase = button.getAttribute('data-ticket-fase');
+            const ticketFecha = button.getAttribute('data-ticket-fecha');
+            const ticketHora = button.getAttribute('data-ticket-hora');
 
-<!-- Modal para atención -->
-<div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="atencionForm" method="POST">
-                <div class="modal-header">
-                    <h5 class="modal-title text-success" id="atencionModalLabel"><i class="bi bi-tools"></i> ATENCIÓN
-                        <span id="TicketIdFormateado"></span>: </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+            // Actualizar los elementos del modal con la información del ticket
+            document.getElementById('TicketIdFormateado').textContent = formattedTicketId;
+            document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
+            document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
 
-                <div class="modal-body">
-                    <p style="text-align:center;"><strong>DETALLES DE TICKET</strong></p>
-                    <!-- Sección de Detalles del Ticket -->
-                    <div class="mb-3 text-secondary">
-                        <p><strong>USUARIO: </strong> <span id="modalTicketUsuario"></span></p>
-                        <p><strong>DESCRIPCIÓN: </strong><span id="modalTicketDescripcion"></span></p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcionAtencion" class="form-label"><strong><i class="bi bi-check2-square"></i>
-                            DESCRIPCIÓN DE ATENCIÓN:</strong></label>
-                        <textarea class="form-control" id="descripcionAtencion" name="descripcion" rows="4"
-                                  placeholder="Agrega algún comentario sobre la atención del ticket..."
-                                  required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
-                            ATENDIDA:</strong></label>
-                        <select class="form-select" id="areaAtencion" name="area_atencion"
-                                required>
-                            <option selected disabled value="">Selecciona un área</option>
-                            <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
+
+            // Actualizar la acción del formulario para que envíe el ticket correspondiente
+            const form = document.getElementById('atencionForm');
+            form.setAttribute('action', `/app/tickets/atencion/${ticketId}`);
+        });
+    </script>
+
+
+    <!-- Modal para Recepción -->
+    <div class="modal fade" id="recepcionModal" tabindex="-1" aria-labelledby="recepcionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="recepcionForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary" id="recepcionModalLabel"><i
+                                class="bi bi-ticket-detailed"></i>
+                            Recepción <span id="modalTicketIdFormateado"></span>:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
+                    <div class="modal-body">
+                        <div>
+                            <div class="mb-3 text-secondary">
+                                <p><strong>USUARIO:</strong> <span id="modalTicketUsuarioRecepcion"></span></p>
+                                <p><strong>DESCRIPCIÓN:</strong> <span id="modalTicketDescripcionRecepcion"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comentariosRecepcion" class="form-label"><strong><i
+                                        class="bi bi-chat-left-text"></i> COMENTARIOS DE RECEPCIÓN:</strong></label>
+                                <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
+                                          placeholder="Agrega algún comentario sobre la recepción del ticket..."
+                                          required>Por favor, espere un momento. Un técnico se dirigirá a su área en breve para atender su caso.</textarea>
+                            </div>
 
-
-
-
-
-                    <!-- CATEGORÍA -->
-                    <div class="mb-3">
-                        <label for="Lista_cat_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CATEGORÍA:</strong></label>
-                        <select class="form-select" id="Lista_cat_incidencia" name="Lista_cat_incidencia" required>
-                            <option selected disabled value="">Selecciona la categoría</option>
-                            <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
-                        </select>
+                        </div>
                     </div>
 
-                    <!-- SUBCATEGORÍA (inicialmente oculta) -->
-                    <div class="mb-3 d-none" id="subcategoria-wrapper">
-                        <label for="Lista_subcat_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> SUBCATEGORÍA:</strong></label>
-                        <select class="form-select" id="Lista_subcat_incidencia" name="subcat_incidencia" required>
-                            <option selected disabled value="">Selecciona la subcategoría</option>
-                        </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar Recepción</button>
                     </div>
-
-                    <!-- TIPO INCIDENCIA (inicialmente oculta) -->
-                    <div class="mb-3 d-none" id="tipo-wrapper">
-                        <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> TIPO DE INCIDENCIA:</strong></label>
-                        <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
-                            <option selected disabled value="">Selecciona el tipo de Incidencia</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="clasificacionUrgencia" class="form-label"><strong><i
-                                class="bi bi-exclamation-triangle"></i>
-                            CLASIFICACIÓN DE URGENCIA:</strong></label>
-                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
-                                required>
-                            <option selected disabled value="">Selecciona Urgencia</option>
-                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clasificacionAtencion" class="form-label"><strong><i class="bi bi-list-check"></i>
-                            CLASIFICACIÓN DE ATENCIÓN:</strong></label>
-                        <select class="form-select" id="clasificacionAtencion" name="clasificacion_atencion"
-                                required>
-                            <option selected disabled value="">Selecciona una clasificación</option>
-                            <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-
-                        </select>
-                    </div>
-
-                </div>
-
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-success submit-btn">Guardar Atencion</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
+        const recepcionModal = document.getElementById('recepcionModal');
+        recepcionModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que disparó el modal
+            const button = event.relatedTarget;
+
+            // Extraer información del ticket desde los atributos data-*
+            const ticketId = button.getAttribute('data-ticket-id');
+        const formattedTicketId = button.getAttribute('data-codigo-ticket');
+
+            const ticketUsuario = button.getAttribute('data-ticket-usuario');
+            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+            const ticketFase = button.getAttribute('data-ticket-fase');
+            const ticketFecha = button.getAttribute('data-ticket-fecha');
+            const ticketHora = button.getAttribute('data-ticket-hora');
+
+            // Actualizar los elementos del modal con la información del ticket
+            document.getElementById('modalTicketIdFormateado').textContent = formattedTicketId;
+            document.getElementById('modalTicketUsuarioRecepcion').textContent = ticketUsuario;
+            document.getElementById('modalTicketDescripcionRecepcion').textContent = ticketDescripcion;
+
+            // Actualizar la acción del formulario para que envíe el ticket correspondiente
+            const form = document.getElementById('recepcionForm');
+            form.setAttribute('action', `/app/tickets/recepcion/${ticketId}`);
+        });
+    </script>
 
 
+    <!-- Modal para Desestimación -->
+    <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="desestimacionForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="desestimacionModalLabel"><i class="bi bi-trash"></i>
+                            Desestimación <span id="desestimacionTicketIdFormateado"></span>:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-
-<script>
-    // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
-    const atencionModal = document.getElementById('atencionModal');
-    atencionModal.addEventListener('show.bs.modal', function (event) {
-        // Botón que disparó el modal
-        const button = event.relatedTarget;
-
-        // Extraer información del ticket desde los atributos data-*
-        const ticketId = button.getAttribute('data-ticket-id');
-    const formattedTicketId = button.getAttribute('data-codigo-ticket');
-        const ticketUsuario = button.getAttribute('data-ticket-usuario');
-        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-        const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
-        const ticketFase = button.getAttribute('data-ticket-fase');
-        const ticketFecha = button.getAttribute('data-ticket-fecha');
-        const ticketHora = button.getAttribute('data-ticket-hora');
-
-        // Actualizar los elementos del modal con la información del ticket
-        document.getElementById('TicketIdFormateado').textContent = formattedTicketId;
-        document.getElementById('modalTicketUsuario').textContent = ticketUsuario;
-        document.getElementById('modalTicketDescripcion').textContent = ticketDescripcion;
-
-
-        // Actualizar la acción del formulario para que envíe el ticket correspondiente
-        const form = document.getElementById('atencionForm');
-        form.setAttribute('action', `/app/tickets/atencion/${ticketId}`);
-    });
-</script>
-
-
-<!-- Modal para Recepción -->
-<div class="modal fade" id="recepcionModal" tabindex="-1" aria-labelledby="recepcionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="recepcionForm" method="POST">
-                <div class="modal-header">
-                    <h5 class="modal-title text-primary" id="recepcionModalLabel"><i class="bi bi-ticket-detailed"></i>
-                        Recepción <span id="modalTicketIdFormateado"></span>:</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div>
+                    <div class="modal-body">
                         <div class="mb-3 text-secondary">
-                            <p><strong>USUARIO:</strong> <span id="modalTicketUsuarioRecepcion"></span></p>
-                            <p><strong>DESCRIPCIÓN:</strong> <span id="modalTicketDescripcionRecepcion"></span></p>
+                            <p><strong>USUARIO:</strong> <span id="desestimacionTicketUsuario"></span></p>
+                            <p><strong>DESCRIPCIÓN:</strong> <span id="desestimacionTicketDescripcion"></span></p>
                         </div>
                         <div class="mb-3">
-                            <label for="comentariosRecepcion" class="form-label"><strong><i
-                                    class="bi bi-chat-left-text"></i> COMENTARIOS DE RECEPCIÓN:</strong></label>
-                            <textarea class="form-control" id="comentariosRecepcion" name="mensaje" rows="4"
-                                      placeholder="Agrega algún comentario sobre la recepción del ticket..."
-                                      required>Por favor, espere un momento. Un técnico se dirigirá a su área en breve para atender su caso.</textarea>
+                            <label for="comentariosDesestimacion" class="form-label"><strong><i
+                                    class="bi bi-chat-left-text"></i> COMENTARIOS DE DESESTIMACIÓN</strong></label>
+                            <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
+                                      placeholder="Agrega algún comentario sobre la desestimación del ticket..."
+                                      required></textarea>
                         </div>
-
+                        <div class="mb-3">
+                            <label for="clasificacionDesestimacion" class="form-label"><strong><i
+                                    class="bi bi-slash-circle"></i> CLASIFICACIÓN DE DESESTIMACIÓN</strong></label>
+                            <select class="form-select" id="clasificacionDesestimacion"
+                                    name="clasificacion_desestimacion" required>
+                                <option selected disabled value="">Selecciona Desestimacion</option>
+                                <option th:each="tipo : ${Lista_clasificacion_desestimacion}" th:value="${tipo.id}"
+                                        th:text="${tipo.nombre}"></option>
+                            </select>
+                        </div>
+                        <input type="number" id="desestimacionTicketNumeroFase" style="display:none" name="fase">
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Guardar Recepción</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger submit-btn">Desestimar Ticket</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
-    const recepcionModal = document.getElementById('recepcionModal');
-    recepcionModal.addEventListener('show.bs.modal', function (event) {
-        // Botón que disparó el modal
-        const button = event.relatedTarget;
 
-        // Extraer información del ticket desde los atributos data-*
-        const ticketId = button.getAttribute('data-ticket-id');
-    const formattedTicketId = button.getAttribute('data-codigo-ticket');
+    <script>
+        // Al abrir el modal de desestimación, actualizar su contenido con los datos del ticket seleccionado
+        const desestimacionModal = document.getElementById('desestimacionModal');
+        desestimacionModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que disparó el modal
+            const button = event.relatedTarget;
 
-        const ticketUsuario = button.getAttribute('data-ticket-usuario');
-        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-        const ticketFase = button.getAttribute('data-ticket-fase');
-        const ticketFecha = button.getAttribute('data-ticket-fecha');
-        const ticketHora = button.getAttribute('data-ticket-hora');
-
-        // Actualizar los elementos del modal con la información del ticket
-        document.getElementById('modalTicketIdFormateado').textContent = formattedTicketId;
-        document.getElementById('modalTicketUsuarioRecepcion').textContent = ticketUsuario;
-        document.getElementById('modalTicketDescripcionRecepcion').textContent = ticketDescripcion;
-
-        // Actualizar la acción del formulario para que envíe el ticket correspondiente
-        const form = document.getElementById('recepcionForm');
-        form.setAttribute('action', `/app/tickets/recepcion/${ticketId}`);
-    });
-</script>
+            // Extraer información del ticket desde los atributos data-*
+            const ticketId = button.getAttribute('data-ticket-id');
+            const formattedTicketId = button.getAttribute('data-codigo-ticket');
+            const ticketUsuario = button.getAttribute('data-ticket-usuario');
+            const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
+            const ticketFecha = button.getAttribute('data-ticket-fecha');
+            const ticketHora = button.getAttribute('data-ticket-hora');
+            const ticketNumeroFase = button.getAttribute('data-numero-fase');
 
 
-<!-- Modal para Desestimación -->
-<div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="desestimacionForm" method="POST">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="desestimacionModalLabel"><i class="bi bi-trash"></i>
-                        Desestimación <span id="desestimacionTicketIdFormateado"></span>:</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+            // Actualizar los elementos del modal con la información del ticket
+            document.getElementById('desestimacionTicketIdFormateado').textContent = formattedTicketId;
+            document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
+            document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
+            document.getElementById('desestimacionTicketNumeroFase').value = ticketNumeroFase;
 
-                <div class="modal-body">
-                    <div class="mb-3 text-secondary">
-                        <p><strong>USUARIO:</strong> <span id="desestimacionTicketUsuario"></span></p>
-                        <p><strong>DESCRIPCIÓN:</strong> <span id="desestimacionTicketDescripcion"></span></p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="comentariosDesestimacion" class="form-label"><strong><i
-                                class="bi bi-chat-left-text"></i> COMENTARIOS DE DESESTIMACIÓN</strong></label>
-                        <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
-                                  placeholder="Agrega algún comentario sobre la desestimación del ticket..."
-                                  required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clasificacionDesestimacion" class="form-label"><strong><i
-                                class="bi bi-slash-circle"></i> CLASIFICACIÓN DE DESESTIMACIÓN</strong></label>
-                        <select class="form-select" id="clasificacionDesestimacion"
-                                name="clasificacion_desestimacion" required>
-                            <option selected disabled value="">Selecciona Desestimacion</option>
-                            <option th:each="tipo : ${Lista_clasificacion_desestimacion}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
-                    </div>
-                    <input type="number" id="desestimacionTicketNumeroFase" style="display:none" name="fase">
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-danger submit-btn">Desestimar Ticket</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Al abrir el modal de desestimación, actualizar su contenido con los datos del ticket seleccionado
-    const desestimacionModal = document.getElementById('desestimacionModal');
-    desestimacionModal.addEventListener('show.bs.modal', function (event) {
-        // Botón que disparó el modal
-        const button = event.relatedTarget;
-
-        // Extraer información del ticket desde los atributos data-*
-        const ticketId = button.getAttribute('data-ticket-id');
-        const formattedTicketId = button.getAttribute('data-codigo-ticket');
-        const ticketUsuario = button.getAttribute('data-ticket-usuario');
-        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-        const ticketFecha = button.getAttribute('data-ticket-fecha');
-        const ticketHora = button.getAttribute('data-ticket-hora');
-        const ticketNumeroFase = button.getAttribute('data-numero-fase');
-
-
-        // Actualizar los elementos del modal con la información del ticket
-        document.getElementById('desestimacionTicketIdFormateado').textContent = formattedTicketId;
-        document.getElementById('desestimacionTicketUsuario').textContent = ticketUsuario;
-        document.getElementById('desestimacionTicketDescripcion').textContent = ticketDescripcion;
-        document.getElementById('desestimacionTicketNumeroFase').value = ticketNumeroFase;
-
-        // Actualizar la acción del formulario para que envíe el ticket correspondiente
-        const form = document.getElementById('desestimacionForm');
-        form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
-    });
-</script>
-
-
-
-
-<!--LOGICA SELECT DINAMICO EN ATENCION-->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const catSelect = document.getElementById("Lista_cat_incidencia");
-        const subCatSelect = document.getElementById("Lista_subcat_incidencia");
-        const tipoSelect = document.getElementById("tipo_incidencia");
-
-        const subcatWrapper = document.getElementById("subcategoria-wrapper");
-        const tipoWrapper = document.getElementById("tipo-wrapper");
-
-        catSelect.addEventListener("change", () => {
-            const idCategoria = catSelect.value;
-            fetch(`/app/clasificadores/listar/subCatIncidenciaActivos/${idCategoria}`)
-                .then(response => response.json())
-                .then(data => {
-                    subCatSelect.innerHTML = '<option selected disabled value="">Selecciona la subcategoría</option>';
-                    tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
-                    tipoWrapper.classList.add("d-none"); // ocultar tipo
-
-                    if (data.length > 0) {
-                        subcatWrapper.classList.remove("d-none");
-                        data.forEach(subcat => {
-                            const option = document.createElement("option");
-                            option.value = subcat.id;
-                            option.text = subcat.nombre;
-                            subCatSelect.appendChild(option);
-                        });
-                    } else {
-                        subcatWrapper.classList.add("d-none");
-                    }
-                });
+            // Actualizar la acción del formulario para que envíe el ticket correspondiente
+            const form = document.getElementById('desestimacionForm');
+            form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
         });
-
-        subCatSelect.addEventListener("change", () => {
-            const idSubCategoria = subCatSelect.value;
-            fetch(`/app/clasificadores/listar/tipoIncidenciaActivos/${idSubCategoria}`)
-                .then(response => response.json())
-                .then(data => {
-                    tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
-                    if (data.length > 0) {
-                        tipoWrapper.classList.remove("d-none");
-                        data.forEach(tipo => {
-                            const option = document.createElement("option");
-                            option.value = tipo.id;
-                            option.text = tipo.nombre;
-                            tipoSelect.appendChild(option);
-                        });
-                    } else {
-                        tipoWrapper.classList.add("d-none");
-                    }
-                });
-        });
-    });
-</script>
+    </script>
 
 
+    <!--LOGICA SELECT DINAMICO EN ATENCION-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const catSelect = document.getElementById("Lista_cat_incidencia");
+            const subCatSelect = document.getElementById("Lista_subcat_incidencia");
+            const tipoSelect = document.getElementById("tipo_incidencia");
 
+            const subcatWrapper = document.getElementById("subcategoria-wrapper");
+            const tipoWrapper = document.getElementById("tipo-wrapper");
 
-
-<script>
-    // Obtener el código del ticket desde el span
-const codigoTicket = document.getElementById('ticketInfo').dataset.codigo;
-
-    const socket = new SockJS('/ws');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, () => {
-        const destino = `/topic/actualizar/ticket/${codigoTicket}`;
-        stompClient.subscribe(destino, function (mensaje) {
-            if (mensaje.body === 'actualizar') {
-                console.log("Se actualizó el ticket, recargando datos...");
-
-                fetch(`/app/tickets/datos/${codigoTicket}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("No se pudo obtener el ticket");
-                        }
-                        return response.json();
-                    })
+            catSelect.addEventListener("change", () => {
+                const idCategoria = catSelect.value;
+                fetch(`/app/clasificadores/listar/subCatIncidenciaActivos/${idCategoria}`)
+                    .then(response => response.json())
                     .then(data => {
-                        console.log("Datos actualizados del ticket:", data);
-                        // Aquí puedes actualizar el DOM con los nuevos datos
-                        // Ejemplo: document.getElementById('fecha').textContent = data.fechaFormateadaTicket;
-                    })
-                    .catch(error => {
-                        console.error("Error al obtener datos del ticket:", error);
+                        subCatSelect.innerHTML = '<option selected disabled value="">Selecciona la subcategoría</option>';
+                        tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                        tipoWrapper.classList.add("d-none"); // ocultar tipo
+
+                        if (data.length > 0) {
+                            subcatWrapper.classList.remove("d-none");
+                            data.forEach(subcat => {
+                                const option = document.createElement("option");
+                                option.value = subcat.id;
+                                option.text = subcat.nombre;
+                                subCatSelect.appendChild(option);
+                            });
+                        } else {
+                            subcatWrapper.classList.add("d-none");
+                        }
                     });
-            }
+            });
+
+            subCatSelect.addEventListener("change", () => {
+                const idSubCategoria = subCatSelect.value;
+                fetch(`/app/clasificadores/listar/tipoIncidenciaActivos/${idSubCategoria}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                        if (data.length > 0) {
+                            tipoWrapper.classList.remove("d-none");
+                            data.forEach(tipo => {
+                                const option = document.createElement("option");
+                                option.value = tipo.id;
+                                option.text = tipo.nombre;
+                                tipoSelect.appendChild(option);
+                            });
+                        } else {
+                            tipoWrapper.classList.add("d-none");
+                        }
+                    });
+            });
         });
-    });
-</script>
+    </script>
 
 
-
-
-<div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
-<div th:insert="~{common/footer :: footer}">
+    <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+    <div th:insert="~{common/footer :: footer}">
+    </div>
 </div>
+
 </body>
 </html>

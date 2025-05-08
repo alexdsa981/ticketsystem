@@ -5,6 +5,7 @@ import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.AtencionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
@@ -112,6 +113,10 @@ public class TicketController {
 
         int idFase = detalleTicketDTO.getTicket().getFaseTicket().getId().intValue();
         switch (idFase) {
+            case 1 -> {
+                TicketRecordWS record = new TicketRecordWS(detalleTicketDTO);
+                return ResponseEntity.ok(record);
+            }
             case 2 -> {
                 RecepcionRecordWS record = new RecepcionRecordWS(detalleTicketDTO);
                 return ResponseEntity.ok(record);
