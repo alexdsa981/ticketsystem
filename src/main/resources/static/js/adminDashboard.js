@@ -292,13 +292,40 @@ function formatearFechaLocal(date) {
          String(date.getDate()).padStart(2, '0');
 }
 
-const socket = new SockJS('/ws');
-const stompClient = Stomp.over(socket);
+let stompClient = null;
+let socket = null;
+let reconnectInterval = 5000; // 5 segundos
+let wasDisconnected = false;
 
-stompClient.connect({}, () => {
-    stompClient.subscribe('/topic/dashboard', function (mensaje) {
-        if (mensaje.body === 'actualizar') {
+function conectarDashboardWebSocket() {
+    socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
+    stompClient.debug = () => {}; // Desactiva logs del STOMP
+
+    stompClient.connect({}, () => {
+        if (wasDisconnected) {
+            console.log('Reconectado. Actualizando dashboard...');
             actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
+            wasDisconnected = false;
         }
+
+        stompClient.subscribe('/topic/dashboard', function (mensaje) {
+            if (mensaje.body === 'actualizar') {
+                actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
+            }
+        });
+    }, (error) => {
+        if (!wasDisconnected) {
+            console.warn('WebSocket del dashboard desconectado. Reintentando en 5 segundos...');
+            wasDisconnected = true;
+        }
+
+        setTimeout(() => {
+            conectarDashboardWebSocket(); // Reintenta conexión
+        }, reconnectInterval);
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    conectarDashboardWebSocket();
 });
