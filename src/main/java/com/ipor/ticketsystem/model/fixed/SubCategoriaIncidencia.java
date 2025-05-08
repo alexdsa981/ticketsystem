@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.model.fixed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class SubCategoriaIncidencia {
     public SubCategoriaIncidencia(String nombre, CategoriaIncidencia categoria, Boolean isActive) {
         this.nombre = nombre;
         this.isActive = isActive;
-        this.categoria = categoria;
+        this.categoriaIncidencia = categoria;
     }
 
     @Id
@@ -30,8 +31,9 @@ public class SubCategoriaIncidencia {
 
     @ManyToOne
     @JoinColumn(name = "id_categoria_incidencia")
-    private CategoriaIncidencia categoria;
+    private CategoriaIncidencia categoriaIncidencia;
 
-    @OneToMany(mappedBy = "subcategoria", cascade = CascadeType.ALL)
-    private List<TipoIncidencia> tipos;
+    @JsonIgnore
+    @OneToMany(mappedBy = "subCategoriaIncidencia", cascade = CascadeType.ALL)
+    private List<TipoIncidencia> tiposIncidencia;
 }

@@ -29,6 +29,7 @@ public record RecepcionRecordWS(
 {
     public RecepcionRecordWS(DetalleTicketDTO detalleDTO) {
         this(
+
                 detalleDTO.getTicket().getId(),
                 detalleDTO.getTicket().getCodigoTicket(),
 

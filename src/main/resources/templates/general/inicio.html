@@ -10,7 +10,7 @@
 <header th:replace="~{common/header :: header}">
 </header>
 
-<div class="container">
+<div class="container content-wrapper">
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <h2 class=""><i class="bi bi-envelope text-info"></i> TICKETS ENVIADOS:</h2>
@@ -96,14 +96,16 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <p class="text-warning"><i class="bi bi-exclamation-triangle"></i> Este Ticket quedará registrado y no podrá ser
-                        eliminado ni modificado</p>
-                    <div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary submit-btn">Crear Ticket</button>
+                <div class="modal-footer d-flex flex-column align-items-start">
+                    <p class="text-muted mb-1"><i class="bi bi-exclamation-circle"></i> Este ticket no podrá ser editado ni eliminado una vez creado.</p>
+                    <p class="text-secondary mb-3"><i class="bi bi-info-circle"></i> Registra un ticket por cada solicitud o incidencia para facilitar su atención.</p>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-outline-primary submit-btn">Crear Ticket</button>
                     </div>
                 </div>
+
+
             </form>
 
         </div>
@@ -221,6 +223,7 @@ if(urlParams.get('error') === 'user-without-permissions'){
         });
     }
 </script>
-
+<div th:insert="~{common/footer :: footer}">
+</div>
 </body>
 </html>

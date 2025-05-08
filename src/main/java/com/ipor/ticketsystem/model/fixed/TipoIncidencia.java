@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class TipoIncidencia {
     public TipoIncidencia(String nombre, SubCategoriaIncidencia subcategoria, Boolean isActive) {
-        this.subcategoria = subcategoria;
+        this.subCategoriaIncidencia = subcategoria;
         this.isActive = isActive;
         this.nombre = nombre;
     }
@@ -33,7 +33,7 @@ public class TipoIncidencia {
 
     @ManyToOne
     @JoinColumn(name = "id_subcategoria_incidencia")
-    private SubCategoriaIncidencia subcategoria;
+    private SubCategoriaIncidencia subCategoriaIncidencia;
 
     @JsonIgnore
     @OneToMany(mappedBy = "tipoIncidencia")

@@ -118,6 +118,7 @@ public class AtencionController {
             WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(ticket);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
             WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
@@ -190,6 +191,7 @@ public class AtencionController {
             WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(ticket);
             WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(ticket);
             WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
             // Redirigir a la URL actual
             String referer = request.getHeader("Referer");
@@ -272,6 +274,8 @@ public class AtencionController {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
             }
             WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
+
 
             String referer = request.getHeader("Referer");
             String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=desestimacion";

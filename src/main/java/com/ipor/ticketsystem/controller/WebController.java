@@ -142,6 +142,7 @@ public class WebController {
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesAreaActivos(model);
+        clasificadoresController.getListaCatIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Atender Tickets");
         return "soporte/ticketsRecepcionados";
     }
@@ -176,10 +177,10 @@ public class WebController {
     public String verTicketPorCodigo(@PathVariable("codigo") String codigo, Model model) {
         Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
         clasificadoresController.getListaClasificacionesAtencionActivos(model);
-        clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaClasificacionesAreaActivos(model);
+        clasificadoresController.getListaCatIncidenciaActivos(model);
 
 
         if (ticketOptional.isPresent()){

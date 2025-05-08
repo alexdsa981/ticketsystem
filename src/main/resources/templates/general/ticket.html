@@ -10,12 +10,12 @@
 <header th:replace="~{common/header :: header}"></header>
 
 
-<div class="container">
+<div class="container content-wrapper">
     <!-- Encabezado del ticket -->
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="text-primary">
             <i class="bi bi-envelope text-info"></i>
-            Ticket Código: <span th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
+            Ticket Código: <span id="ticketInfo" th:data-codigo="${detalle.ticket.codigoTicket}" th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
         </h2>
     </div>
 
@@ -80,15 +80,15 @@
                                         th:text="${detalle.atencion.usuario.nombre}">Usuario</span></p>
 
                                 <p class="mb-1"><i class="bi bi-building"></i> <span
-                                        th:text="${detalle.atencion.areaAtencion.nombre}">Clasificacion Área</span>
+                                        th:text="${'Area: '+ detalle.atencion.areaAtencion.nombre}">Clasificacion Área</span>
                                 </p>
 
                                 <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i> <span
-                                        th:text="${detalle.atencion.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
+                                        th:text="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre+ ': ' + detalle.atencion.tipoIncidencia.nombre}">Clasificacion Incidencia</span>
                                 </p>
 
-                                <p class="mb-1"><i class="bi bi-alarm-fill"></i> <span
-                                        th:text="${detalle.atencion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
+                                <p class="mb-1"><i class="bi bi-alarm-fill" sec:authorize="hasAnyAuthority('Admin','Soporte')"></i> <span
+                                        th:text="${'Nivel Urgencia: '+ detalle.atencion.clasificacionUrgencia.nombre}">Clasificacion Urgencia</span>
                                 </p>
                                 <p class="mb-1"><i class="bi bi-tools"></i> <span
                                         th:text="${detalle.atencion.clasificacionAtencion.nombre}">Clasificacion Atencion</span>
@@ -97,7 +97,6 @@
                                 <p class="mb-1"><i class="bi bi-calendar"></i> <span
                                         th:text="${detalle.fechaFormateadaAtencion}">Fecha</span> <span
                                         th:text="${detalle.horaFormateadaAtencion}">Hora</span></p>
-                                <p class="mb-0"><i class="bi bi-tag"></i> <span>Atendido</span></p>
                             </div>
                             <div th:if="${!#strings.equals(detalle.ticket.faseTicket.nombre, 'Cerrado - Atendido')}">
                                 <p class="text-muted">Aún no se ha atendido el Ticket.</p>
@@ -221,16 +220,37 @@
                                     th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
+
+
+
+
+
+
+                    <!-- CATEGORÍA -->
                     <div class="mb-3">
-                        <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
-                            CLASIFICACIÓN DE INCIDENCIA:</strong></label>
-                        <select class="form-select" id="tipo_incidencia" name="tipo_incidencia"
-                                required>
-                            <option selected disabled value="">Selecciona la clasificación</option>
-                            <option th:each="tipo : ${Lista_tipo_incidencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
+                        <label for="Lista_cat_incidencia" class="form-label"><strong><i class="bi bi-flag"></i> CATEGORÍA:</strong></label>
+                        <select class="form-select" id="Lista_cat_incidencia" name="Lista_cat_incidencia" required>
+                            <option selected disabled value="">Selecciona la categoría</option>
+                            <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
+
+                    <!-- SUBCATEGORÍA (inicialmente oculta) -->
+                    <div class="mb-3 d-none" id="subcategoria-wrapper">
+                        <label for="Lista_subcat_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> SUBCATEGORÍA:</strong></label>
+                        <select class="form-select" id="Lista_subcat_incidencia" name="subcat_incidencia" required>
+                            <option selected disabled value="">Selecciona la subcategoría</option>
+                        </select>
+                    </div>
+
+                    <!-- TIPO INCIDENCIA (inicialmente oculta) -->
+                    <div class="mb-3 d-none" id="tipo-wrapper">
+                        <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> TIPO DE INCIDENCIA:</strong></label>
+                        <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
+                            <option selected disabled value="">Selecciona el tipo de Incidencia</option>
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="clasificacionUrgencia" class="form-label"><strong><i
                                 class="bi bi-exclamation-triangle"></i>
@@ -250,6 +270,7 @@
                             <option selected disabled value="">Selecciona una clasificación</option>
                             <option th:each="tipo : ${Lista_clasificacion_atencion}" th:value="${tipo.id}"
                                     th:text="${tipo.nombre}"></option>
+
                         </select>
                     </div>
 
@@ -264,6 +285,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 <script>
     // Al abrir el modal, actualizar su contenido con los datos del ticket seleccionado
     const atencionModal = document.getElementById('atencionModal');
@@ -433,6 +458,107 @@
         form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
     });
 </script>
+
+
+
+
+<!--LOGICA SELECT DINAMICO EN ATENCION-->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const catSelect = document.getElementById("Lista_cat_incidencia");
+        const subCatSelect = document.getElementById("Lista_subcat_incidencia");
+        const tipoSelect = document.getElementById("tipo_incidencia");
+
+        const subcatWrapper = document.getElementById("subcategoria-wrapper");
+        const tipoWrapper = document.getElementById("tipo-wrapper");
+
+        catSelect.addEventListener("change", () => {
+            const idCategoria = catSelect.value;
+            fetch(`/app/clasificadores/listar/subCatIncidenciaActivos/${idCategoria}`)
+                .then(response => response.json())
+                .then(data => {
+                    subCatSelect.innerHTML = '<option selected disabled value="">Selecciona la subcategoría</option>';
+                    tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                    tipoWrapper.classList.add("d-none"); // ocultar tipo
+
+                    if (data.length > 0) {
+                        subcatWrapper.classList.remove("d-none");
+                        data.forEach(subcat => {
+                            const option = document.createElement("option");
+                            option.value = subcat.id;
+                            option.text = subcat.nombre;
+                            subCatSelect.appendChild(option);
+                        });
+                    } else {
+                        subcatWrapper.classList.add("d-none");
+                    }
+                });
+        });
+
+        subCatSelect.addEventListener("change", () => {
+            const idSubCategoria = subCatSelect.value;
+            fetch(`/app/clasificadores/listar/tipoIncidenciaActivos/${idSubCategoria}`)
+                .then(response => response.json())
+                .then(data => {
+                    tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                    if (data.length > 0) {
+                        tipoWrapper.classList.remove("d-none");
+                        data.forEach(tipo => {
+                            const option = document.createElement("option");
+                            option.value = tipo.id;
+                            option.text = tipo.nombre;
+                            tipoSelect.appendChild(option);
+                        });
+                    } else {
+                        tipoWrapper.classList.add("d-none");
+                    }
+                });
+        });
+    });
+</script>
+
+
+
+
+
+<script>
+    // Obtener el código del ticket desde el span
+const codigoTicket = document.getElementById('ticketInfo').dataset.codigo;
+
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, () => {
+        const destino = `/topic/actualizar/ticket/${codigoTicket}`;
+        stompClient.subscribe(destino, function (mensaje) {
+            if (mensaje.body === 'actualizar') {
+                console.log("Se actualizó el ticket, recargando datos...");
+
+                fetch(`/app/tickets/datos/${codigoTicket}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("No se pudo obtener el ticket");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Datos actualizados del ticket:", data);
+                        // Aquí puedes actualizar el DOM con los nuevos datos
+                        // Ejemplo: document.getElementById('fecha').textContent = data.fechaFormateadaTicket;
+                    })
+                    .catch(error => {
+                        console.error("Error al obtener datos del ticket:", error);
+                    });
+            }
+        });
+    });
+</script>
+
+
+
+
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
+<div th:insert="~{common/footer :: footer}">
+</div>
 </body>
 </html>

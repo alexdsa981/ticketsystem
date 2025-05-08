@@ -2,6 +2,9 @@ package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.AtencionRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
@@ -12,12 +15,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
@@ -94,6 +99,39 @@ public class TicketController {
 
         return html.toString();
     }
+
+
+
+
+    @GetMapping("/datos/{codigoTicket}")
+    public ResponseEntity<?> obtenerDatosTicket(@PathVariable String codigoTicket) {
+        Ticket ticket = ticketRepository.findByCodigoTicket(codigoTicket)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket no encontrado"));
+
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+
+        int idFase = detalleTicketDTO.getTicket().getFaseTicket().getId().intValue();
+        switch (idFase) {
+            case 2 -> {
+                RecepcionRecordWS record = new RecepcionRecordWS(detalleTicketDTO);
+                return ResponseEntity.ok(record);
+            }
+            case 3 -> {
+                AtencionRecordWS record = new AtencionRecordWS(detalleTicketDTO);
+                return ResponseEntity.ok(record);
+            }
+            case 4 -> {
+                DesestimacionRecordWS record = new DesestimacionRecordWS(detalleTicketDTO);
+                return ResponseEntity.ok(record);
+            }
+            default -> {
+                return ResponseEntity.badRequest().body("Fase de ticket no soportada para notificación.");
+            }
+        }
+    }
+
+
+
 
 
 

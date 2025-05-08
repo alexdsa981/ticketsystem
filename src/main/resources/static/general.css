@@ -1,3 +1,23 @@
+/*GENERAL*/
+html, body {
+    height: 100%;
+    margin: 0; /* Asegúrate de que no haya margen por defecto */
+}
+.content-wrapper {
+    min-height: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.content-wrapper > .container {
+    flex-grow: 1;
+    padding-bottom: 20px; /* Añadir un poco de espacio al final para evitar que el footer se pegue al contenido */
+}
+footer {
+    position: relative;
+}
+
+
+
 /*HEADER*/
 .nav-link{
     color: white;
@@ -302,6 +322,15 @@ h2 {
 .inputRangoFechas{
     cursor: pointer;
 }
+
+
+
+    .is-filled {
+        border: 1.5px solid #0d6efd4d; /* Azul Bootstrap con opacidad */
+        background-color: #e9f2ff;      /* Azul clarito de fondo */
+        transition: all 0.2s ease-in-out;
+    }
+
 
 
 

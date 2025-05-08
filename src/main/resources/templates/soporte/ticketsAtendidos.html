@@ -7,7 +7,7 @@
 <body>
 <header th:replace="~{common/header :: header}">
 </header>
-<main>
+<main class=" content-wrapper">
     <div class="container-fluid">
         <!-- Encabezado con título, contador y botones -->
         <div class="d-flex justify-content-between align-items-center">
@@ -366,7 +366,8 @@
 
 <div th:insert="~{common/imports :: bodyImportsAndNotification}">
 </div>
-
+<div th:insert="~{common/footer :: footer}">
+</div>
 </body>
 
 </html>

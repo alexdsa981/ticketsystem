@@ -9,276 +9,279 @@
 <div class="container" style="margin-bottom:10px;">
     <h2>ADMIN: Gestión de Usuarios</h2>
 </div>
-<div class="container border shadow p-3 px-4 mb-5 bg-body rounded">
+<main class="content-wrapper">
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded">
 
-    <div class="card  border-0 mb-4">
-        <div class="card-header bg-white text-success fw-bold">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    Usuarios Activos
+        <div class="card  border-0 mb-4">
+            <div class="card-header bg-white text-success fw-bold">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        Usuarios Activos
+                    </div>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#nuevoUsuarioModal">
+                        <i class="bi bi-plus-lg"></i> Nuevo Usuario
+                    </button>
                 </div>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
-                    <i class="bi bi-plus-lg"></i> Nuevo Usuario
-                </button>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
-                    <thead class="table-success text-dark">
-                    <tr>
-                        <th>N°</th>
-                        <th>Username</th>
-                        <th>Nombre</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="usuario, iter : ${ListaUsuariosActivos}">
-                        <td th:text="${iter.count}">#</td>
-                        <td th:text="${usuario.username}">Username</td>
-                        <td th:text="${usuario.nombre}">Nombre</td>
-                        <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
-                        <td class="fw-bold">Activo</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-edit-user"
-                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
-                                    th:data-usuario-id="${usuario.id}"
-                                    th:data-usuario-username="${usuario.username}"
-                                    th:data-usuario-nombre="${usuario.nombre}"
-                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}"
-                                    th:data-usuario-spring="${usuario.isSpringUser}">
-                            Editar
-                            </button>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
+                        <thead class="table-success text-dark">
+                        <tr>
+                            <th>N°</th>
+                            <th>Username</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="usuario, iter : ${ListaUsuariosActivos}">
+                            <td th:text="${iter.count}">#</td>
+                            <td th:text="${usuario.username}">Username</td>
+                            <td th:text="${usuario.nombre}">Nombre</td>
+                            <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+                            <td class="fw-bold">Activo</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-edit-user"
+                                        data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                        th:data-usuario-id="${usuario.id}"
+                                        th:data-usuario-username="${usuario.username}"
+                                        th:data-usuario-nombre="${usuario.nombre}"
+                                        th:data-usuario-rol="${usuario.rolUsuario.nombre}"
+                                        th:data-usuario-spring="${usuario.isSpringUser}">
+                                    Editar
+                                </button>
 
-                            <a style="width: 120px;" class="btn btn-danger btn-active-user"
-                               th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de deactivar este usuario? Esta acción desestimará sus tickets pendientes.');">
-                                Desactivar
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                                <a style="width: 120px;" class="btn btn-danger btn-active-user"
+                                   th:href="@{'/app/usuarios/desactivar/' + ${usuario.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de deactivar este usuario? Esta acción desestimará sus tickets pendientes.');">
+                                    Desactivar
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
+
+        <div class="card border-0  mb-4">
+            <div class="card-header bg-white text-secondary fw-bold">
+                Usuarios Desactivados
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
+                        <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>N°</th>
+                            <th>Username</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="usuario, iter : ${ListaUsuariosDesactivados}">
+                            <td th:text="${iter.count}">#</td>
+                            <td th:text="${usuario.username}">Username</td>
+                            <td th:text="${usuario.nombre}">Nombre</td>
+                            <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
+                            <td class="text-muted fw-bold">Desactivado</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-edit-user"
+                                        data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                        th:data-usuario-id="${usuario.id}"
+                                        th:data-usuario-username="${usuario.username}"
+                                        th:data-usuario-nombre="${usuario.nombre}"
+                                        th:data-usuario-rol="${usuario.rolUsuario.nombre}"
+                                        th:data-usuario-spring="${usuario.isSpringUser}">
+                                    Editar
+                                </button>
+
+                                <a style="width: 120px;" class="btn btn-success btn-active-user"
+                                   th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar este usuario?');">
+                                    Activar
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
     </div>
+    <!-- Ventana Modal para agregar un nuevo usuario -->
+    <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Encabezado de la Modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nuevoUsuarioModalLabel">Crear Nuevo Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-
-
-    <div class="card border-0  mb-4">
-        <div class="card-header bg-white text-secondary fw-bold">
-            Usuarios Desactivados
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-light table-hover text-center mb-0">
-                    <thead class="table-secondary text-dark">
-                    <tr>
-                        <th>N°</th>
-                        <th>Username</th>
-                        <th>Nombre</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="usuario, iter : ${ListaUsuariosDesactivados}">
-                        <td th:text="${iter.count}">#</td>
-                        <td th:text="${usuario.username}">Username</td>
-                        <td th:text="${usuario.nombre}">Nombre</td>
-                        <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
-                        <td class="text-muted fw-bold">Desactivado</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-edit-user"
-                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
-                                    th:data-usuario-id="${usuario.id}"
-                                    th:data-usuario-username="${usuario.username}"
-                                    th:data-usuario-nombre="${usuario.nombre}"
-                                    th:data-usuario-rol="${usuario.rolUsuario.nombre}"
-                                    th:data-usuario-spring="${usuario.isSpringUser}">
-                                Editar
-                            </button>
-
-                            <a style="width: 120px;" class="btn btn-success btn-active-user"
-                               th:href="@{'/app/usuarios/activar/' + ${usuario.id}}"
-                               onclick="return confirmAction(this.href, '¿Estás seguro de activar este usuario?');">
-                                Activar
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-
-
-</div>
-<!-- Ventana Modal para agregar un nuevo usuario -->
-<div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Encabezado de la Modal -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="nuevoUsuarioModalLabel">Crear Nuevo Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Cuerpo de la Modal con el Formulario -->
-            <div class="modal-body">
-                <form action="/app/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required
-                               autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="text" class="form-control" id="password" name="password" required
-                               autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label for="RolUsuario" class="form-label">Asignar Rol</label>
-                        <select class="form-select" id="RolUsuario" name="rolUsuario" required>
-                            <option selected disabled value="">Selecciona Rol</option>
-                            <option th:each="rol : ${ListaRoles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Pie de la Modal con Botones de Acción -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success submit-btn" form="nuevoUsuarioForm">Crear Usuario</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal para editar usuario -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Encabezado del modal -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!-- Cuerpo del modal con el formulario -->
-            <div class="modal-body">
-                <!-- Quitar th:action y usar una acción estática -->
-                <form id="editUserForm" method="post">
-                    <div class="mb-3">
-                        <label for="usernameEdit" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="usernameEdit" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="passwordEdit" class="form-label">Contraseña Nueva</label>
-                        <input type="text" placeholder="Completar campo si desea cambiar contraseña"
-                               class="form-control" id="passwordEdit" name="password" autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombreEdit" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreEdit" name="nombre" required>
-                    </div>
-                    <div class="mb-3">
-
-
+                <!-- Cuerpo de la Modal con el Formulario -->
+                <div class="modal-body">
+                    <form action="/app/usuarios/nuevo" method="POST" id="nuevoUsuarioForm">
                         <div class="mb-3">
-                            <label for="rolEdit" class="form-label">Asignar Rol</label>
-                            <select class="form-select" id="rolEdit" name="rol" required>
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required
+                                   autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="text" class="form-control" id="password" name="password" required
+                                   autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required
+                                   autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="RolUsuario" class="form-label">Asignar Rol</label>
+                            <select class="form-select" id="RolUsuario" name="rolUsuario" required>
                                 <option selected disabled value="">Selecciona Rol</option>
                                 <option th:each="rol : ${ListaRoles}" th:value="${rol.id}"
                                         th:text="${rol.nombre}"></option>
                             </select>
                         </div>
+                    </form>
+                </div>
 
-
-                    </div>
-
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
-                    </div>
-                </form>
+                <!-- Pie de la Modal con Botones de Acción -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success submit-btn" form="nuevoUsuarioForm">Crear Usuario
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!--SweetAlert-->
-<script>
-    function confirmAction(url, message) {
-        Swal.fire({
-            title: 'Confirmación',
-            text: message,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, continuar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = url;
-            }
+
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Encabezado del modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Cuerpo del modal con el formulario -->
+                <div class="modal-body">
+                    <!-- Quitar th:action y usar una acción estática -->
+                    <form id="editUserForm" method="post">
+                        <div class="mb-3">
+                            <label for="usernameEdit" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="usernameEdit" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordEdit" class="form-label">Contraseña Nueva</label>
+                            <input type="text" placeholder="Completar campo si desea cambiar contraseña"
+                                   class="form-control" id="passwordEdit" name="password" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreEdit" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreEdit" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+
+
+                            <div class="mb-3">
+                                <label for="rolEdit" class="form-label">Asignar Rol</label>
+                                <select class="form-select" id="rolEdit" name="rol" required>
+                                    <option selected disabled value="">Selecciona Rol</option>
+                                    <option th:each="rol : ${ListaRoles}" th:value="${rol.id}"
+                                            th:text="${rol.nombre}"></option>
+                                </select>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--SweetAlert-->
+    <script>
+        function confirmAction(url, message) {
+            Swal.fire({
+                title: 'Confirmación',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, continuar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+            return false; // Evita que el enlace se abra automáticamente
+        }
+    </script>
+
+    <script>
+        const editUserModal = document.getElementById('editUserModal');
+        editUserModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const usuarioId = button.getAttribute('data-usuario-id');
+            const usuarioUsername = button.getAttribute('data-usuario-username');
+            const usuarioNombre = button.getAttribute('data-usuario-nombre');
+            const usuarioRol = button.getAttribute('data-usuario-rol');
+            const isSpringUser = button.getAttribute('data-usuario-spring') === 'true';
+
+            const usernameInput = document.getElementById('usernameEdit');
+            const passwordInput = document.getElementById('passwordEdit');
+            const nombreInput = document.getElementById('nombreEdit');
+            const rolSelect = document.getElementById('rolEdit');
+
+            // Llenar valores
+            usernameInput.value = usuarioUsername;
+            nombreInput.value = usuarioNombre;
+
+            // Habilitar o deshabilitar campos según sea usuario Spring
+            usernameInput.disabled = isSpringUser;
+            passwordInput.disabled = isSpringUser;
+            nombreInput.disabled = isSpringUser;
+
+            // Seleccionar el rol actual
+            Array.from(rolSelect.options).forEach(option => {
+                option.selected = option.text === usuarioRol;
+            });
+
+            // Actualizar la acción del formulario
+            const form = document.getElementById('editUserForm');
+            form.setAttribute('action', `/app/usuarios/actualizar/${usuarioId}`);
         });
-        return false; // Evita que el enlace se abra automáticamente
-    }
-</script>
-
-<script>
-    const editUserModal = document.getElementById('editUserModal');
-    editUserModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-
-        const usuarioId = button.getAttribute('data-usuario-id');
-        const usuarioUsername = button.getAttribute('data-usuario-username');
-        const usuarioNombre = button.getAttribute('data-usuario-nombre');
-        const usuarioRol = button.getAttribute('data-usuario-rol');
-        const isSpringUser = button.getAttribute('data-usuario-spring') === 'true';
-
-        const usernameInput = document.getElementById('usernameEdit');
-        const passwordInput = document.getElementById('passwordEdit');
-        const nombreInput = document.getElementById('nombreEdit');
-        const rolSelect = document.getElementById('rolEdit');
-
-        // Llenar valores
-        usernameInput.value = usuarioUsername;
-        nombreInput.value = usuarioNombre;
-
-        // Habilitar o deshabilitar campos según sea usuario Spring
-        usernameInput.disabled = isSpringUser;
-        passwordInput.disabled = isSpringUser;
-        nombreInput.disabled = isSpringUser;
-
-        // Seleccionar el rol actual
-        Array.from(rolSelect.options).forEach(option => {
-            option.selected = option.text === usuarioRol;
-        });
-
-        // Actualizar la acción del formulario
-        const form = document.getElementById('editUserForm');
-        form.setAttribute('action', `/app/usuarios/actualizar/${usuarioId}`);
-    });
-</script>
+    </script>
 
 
-
-<div th:insert="~{common/imports :: bodyImportsAndNotification}">
-</div>
-
-
+    <div th:insert="~{common/imports :: bodyImportsAndNotification}">
+    </div>
+    <div th:insert="~{common/footer :: footer}">
+    </div>
+</main>
 </body>
 
 </html>

@@ -42,8 +42,8 @@ public class WSNotificacionesService {
 
     public void enviarRecepcionAVistaSoporteAtencion(Ticket ticket) {
 
-        DetalleTicketDTO TicketDTO = new DetalleTicketDTO(ticket);
-        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(TicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-atencion", ticketRecordWS);
     }
 
@@ -57,16 +57,16 @@ public class WSNotificacionesService {
     }
 
     public void enviarAtencionAVistaSoporteHistorialAtencion(Ticket ticket) {
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        AtencionRecordWS ticketRecordWS = new AtencionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        AtencionRecordWS ticketRecordWS = new AtencionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-historial", ticketRecordWS);
     }
 
 
     //DESESTIMACIÓN
     public void enviarAtencionAVistaSoporteHistorialDesestimacion(Ticket ticket ) {
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/desestimacion-historial", ticketRecordWS);
     }
 
@@ -85,8 +85,8 @@ public class WSNotificacionesService {
 
     //VISTA RECEPCIONADOS USUARIO
     public void enviarRecepcionAVistaUsuarioRecepcionados(Ticket ticket) {
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/usuario-recepcionados/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
     public void ocultarRegistroEnVistaUsuarioRecepcionados(Long idTicket) {
@@ -96,14 +96,14 @@ public class WSNotificacionesService {
     }
     //VISTA ATENDIDOS USUARIO
     public void enviarAtencionAVistaUsuarioAtendidos(Ticket ticket) {
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        AtencionRecordWS ticketRecordWS = new AtencionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        AtencionRecordWS ticketRecordWS = new AtencionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/usuario-atendidos/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
     //VISTA DESESTIMADOS USUARIO
     public void enviarAtencionAVistaUsuarioDesestimados(Ticket ticket) {
-        DetalleTicketDTO atencionTicketDTO = new DetalleTicketDTO(ticket);
-        DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(atencionTicketDTO);
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        DesestimacionRecordWS ticketRecordWS = new DesestimacionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/usuario-desestimados/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
 
@@ -111,20 +111,10 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/dashboard", "actualizar");
     }
 
-    public void notificarActualizacionPagTicket(Ticket ticket) {
-        DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
-        switch (ticketDTO.getId().intValue()){
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-        messagingTemplate.convertAndSend("/topic/ticket", "actualizar");
+    public void notificarActualizacionPaginaTicket(Ticket ticket) {
+        messagingTemplate.convertAndSend("/topic/actualizar/ticket/" + ticket.getCodigoTicket(), "actualizar");
     }
+
 
 
 

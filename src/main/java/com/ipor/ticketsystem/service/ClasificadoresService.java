@@ -240,4 +240,26 @@ public class ClasificadoresService {
         areaAtencionRepository.save(area);
     }
 
+
+
+
+
+
+
+
+
+    public List<SubCategoriaIncidencia> getListaSubCatIncidenciaActivosPorIDCat(Long idCategoria) {
+        return subCategoriaIncidenciaRepository.findByCategoriaIncidenciaIdAndIsActiveTrue(idCategoria);
+    }
+
+    public List<TipoIncidencia> getListaTiposDeIncidenciaActivosPorIDSubCat(Long idSubCategoria) {
+        return tipoIncidenciaRepository.findBySubCategoriaIncidenciaIdAndIsActiveTrue(idSubCategoria);
+    }
+
+
+
+
+
+
+
 }

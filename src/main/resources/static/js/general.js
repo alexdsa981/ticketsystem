@@ -141,3 +141,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        const checkFilled = () => {
+            if ((el.tagName === 'SELECT' && el.value !== '') ||
+                (el.tagName !== 'SELECT' && el.value.trim() !== '')) {
+                el.classList.add('is-filled');
+            } else {
+                el.classList.remove('is-filled');
+            }
+        };
+
+        // Inicial
+        checkFilled();
+
+        // Detectar cambios
+        el.addEventListener('change', checkFilled);
+        el.addEventListener('input', checkFilled);
+    });
+});

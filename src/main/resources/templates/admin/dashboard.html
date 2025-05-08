@@ -7,7 +7,7 @@
 
 <body>
 <header th:replace="~{common/header :: header}"></header>
-<main>
+<main class="content-wrapper">
     <div class="container">
         <h2 id="tituloDashboard">ADMIN: Dashboard</h2>
 
@@ -248,7 +248,8 @@
 <script src="/js/adminDashboard.js"></script>
 
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
-
+<div th:insert="~{common/footer :: footer}">
+</div>
 </body>
 
 </html>

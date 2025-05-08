@@ -8,5 +8,5 @@ import java.util.List;
 public interface TipoIncidenciaRepository extends JpaRepository<TipoIncidencia, Long> {
     List<TipoIncidencia> findByIsActiveTrue();
     List<TipoIncidencia> findAllByOrderByNombreAsc();
-    TipoIncidencia findByNombre(String nombre);
+    List<TipoIncidencia> findBySubCategoriaIncidenciaIdAndIsActiveTrue(Long idSubCategoria);
 }
