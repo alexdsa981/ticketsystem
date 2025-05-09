@@ -32,7 +32,7 @@ function conectarWebSocket() {
         connected = true;
         console.log('Conectado: ' + frame);
         const pathname = window.location.pathname;
-        const notificacionesContador = document.getElementById('notificaciones-contador');
+        const liGenerales = document.querySelectorAll('.li-general');
 
         if (pathname === '/soporte/Recepcionar') {
             stompClient.subscribe('/topic/actualizar/soporte-recepcion', (message) => {
@@ -68,9 +68,12 @@ function conectarWebSocket() {
             .then(res => res.json())
             .then(userId => {
                 stompClient.subscribe(`/topic/notificaciones/${userId}`, (message) => {
-                    let contador = parseInt(notificacionesContador.textContent) || 0;
-                    notificacionesContador.textContent = ++contador;
-                    notificacionesContador.classList.remove('d-none');
+                    liGenerales.forEach(li => {
+                        const notificacionesContador = li.querySelector('.notificaciones-contador');
+                        let contador = parseInt(notificacionesContador.textContent) || 0;
+                        notificacionesContador.textContent = ++contador;
+                        notificacionesContador.classList.remove('d-none');
+                    });
                     mostrarNotificacionPersonalizada(message.body);
                 });
 

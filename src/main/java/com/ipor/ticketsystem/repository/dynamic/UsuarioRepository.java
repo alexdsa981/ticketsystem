@@ -11,4 +11,6 @@ public interface UsuarioRepository extends JpaRepository <Usuario, Long> {
     List<Usuario> findByIsActiveTrue();
     List<Usuario> findByIsActiveFalse();
     List<Usuario> findByRolUsuarioId(Long idRolUsuario);
+    List<Usuario> findAllByOrderByIsSpringUserAsc();
+
 }

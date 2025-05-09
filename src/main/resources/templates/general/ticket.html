@@ -86,6 +86,7 @@
                                 <p class="mb-1"><i class="bi bi-building"></i>
                                     <span id="area-atencion">Clasificación Área</span></p>
                                 <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i>
+                                    <span id="subcat-incidencia-atencion">Clasificación SubCatIncidencia</span>:
                                     <span id="incidencia-atencion">Clasificación Incidencia</span></p>
                                 <p class="mb-1"><i class="bi bi-alarm-fill"
                                                    sec:authorize="hasAnyAuthority('Admin','Soporte')"></i>
@@ -219,34 +220,39 @@
                         </div>
 
 
-                        <!-- CATEGORÍA -->
+                        <!-- Jerarquía visual -->
+                        <p class="text-secondary small mb-3">
+                            <i class="bi bi-diagram-3"></i> Categoría &rarr; Subcategoría &rarr; Tipo de Incidencia
+                        </p>
+
                         <div class="mb-3">
-                            <label for="Lista_cat_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
-                                CATEGORÍA:</strong></label>
+                            <label for="Lista_cat_incidencia" class="form-label">
+                                <strong><i class="bi bi-tags"></i> CATEGORÍA:</strong>
+                            </label>
                             <select class="form-select" id="Lista_cat_incidencia" name="Lista_cat_incidencia" required>
                                 <option selected disabled value="">Selecciona la categoría</option>
-                                <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
+                                <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
 
-                        <!-- SUBCATEGORÍA (inicialmente oculta) -->
                         <div class="mb-3 d-none" id="subcategoria-wrapper">
-                            <label for="Lista_subcat_incidencia" class="form-label"><strong><i
-                                    class="bi bi-flag-fill"></i> SUBCATEGORÍA:</strong></label>
+                            <label for="Lista_subcat_incidencia" class="form-label">
+                                <strong><i class="bi bi-tag"></i> SUBCATEGORÍA:</strong>
+                            </label>
                             <select class="form-select" id="Lista_subcat_incidencia" name="subcat_incidencia" required>
                                 <option selected disabled value="">Selecciona la subcategoría</option>
                             </select>
                         </div>
 
-                        <!-- TIPO INCIDENCIA (inicialmente oculta) -->
                         <div class="mb-3 d-none" id="tipo-wrapper">
-                            <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> TIPO
-                                DE INCIDENCIA:</strong></label>
+                            <label for="tipo_incidencia" class="form-label">
+                                <strong><i class="bi bi-tools"></i> TIPO DE INCIDENCIA:</strong>
+                            </label>
                             <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
                                 <option selected disabled value="">Selecciona el tipo de Incidencia</option>
                             </select>
                         </div>
+
 
                         <div class="mb-3">
                             <label for="clasificacionUrgencia" class="form-label"><strong><i

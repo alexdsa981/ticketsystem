@@ -146,7 +146,6 @@ public class UsuariosCRUDController {
             List<Ticket>listaTicketsUsuarioFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 1L);
 
             for (Ticket ticket : listaTicketsUsuarioFase1){
-                System.out.println("creados: "+ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
                 ticketDesestimado.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(1L));
@@ -163,7 +162,6 @@ public class UsuariosCRUDController {
 
             List<Ticket>listaTicketsUsuarioFase2 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 2L);
             for (Ticket ticket : listaTicketsUsuarioFase2){
-                System.out.println("recepcionados:" + ticket.getId());
                 Desestimacion ticketDesestimado = new Desestimacion();
                 //CAMBIAR A AL NUMERO QUE DIGA USUARIO DESACTIVADO
                 ticketDesestimado.setClasificacionDesestimacion(clasificadoresService.getClasificacionDesestimacionPorId(2L));

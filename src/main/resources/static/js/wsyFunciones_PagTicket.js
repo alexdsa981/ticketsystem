@@ -118,7 +118,8 @@
                             document.getElementById("descripcion-atencion").textContent = data.descripcionAtencion || "";
                             document.getElementById("usuario-atencion").textContent = data.nombreUsuarioAtencion || "";
                             document.getElementById("area-atencion").textContent = data.nombreAreaAtencion || "";
-                            document.getElementById("incidencia-atencion").textContent = `${data.nombreTipoIncidencia || ""}`; // Puedes formatear más si hay subcategoría
+                            document.getElementById("subcat-incidencia-atencion").textContent = `${data.nombreSubCatIncidencia || ""}`;
+                            document.getElementById("incidencia-atencion").textContent = `${data.nombreTipoIncidencia || ""}`;
                             document.getElementById("urgencia-atencion").textContent = `Nivel Urgencia: ${data.nombreUrgencia || ""}`;
                             document.getElementById("clasificacion-atencion").textContent = data.nombreClasificacionAtencion || "";
                             document.getElementById("fecha-atencion").textContent = data.fechaFormateadaAtencion || "";

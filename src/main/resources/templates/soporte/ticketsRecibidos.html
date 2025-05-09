@@ -50,7 +50,7 @@
             <thead class="table-dark">
             <tr>
                 <th class="n-table">N°</th>
-                <th class="n-table">Código</th>
+                <th>Código</th>
                 <th class="fecha-table">Fecha</th>
                 <th class="hora-table">Hora</th>
                 <th class="usuario-table">Usuario Emisor</th>
@@ -62,8 +62,12 @@
             <tbody id="ticketTableBody">
             <tr th:each="detalle, iter: ${AllTickets}" id="ticket-${ticket.id}">
                 <td th:text="${iter.count}">#</td>
-                <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
-                <td class="fecha" th:text="${detalle.fechaFormateadaTicket}">Fecha</td>
+                <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                    <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                       th:text="${detalle.ticket.codigoTicket}"
+                       class="ticket-link">
+                    </a>
+                </td>                <td class="fecha" th:text="${detalle.fechaFormateadaTicket}">Fecha</td>
                 <td th:text="${detalle.horaFormateadaTicket}">Hora</td>
                 <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                 <td>
@@ -80,27 +84,29 @@
                     </ul>
                 </td>
                 <td class="td-accion">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
-                            th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                            th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                            th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                            th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                            th:data-ticket-hora="${detalle.horaFormateadaTicket}">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#recepcionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
 
-
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
-                            th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                            th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                            th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                            th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                            th:data-ticket-hora="${detalle.horaFormateadaTicket}">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </td>
+
             </tr>
             </tbody>
         </table>

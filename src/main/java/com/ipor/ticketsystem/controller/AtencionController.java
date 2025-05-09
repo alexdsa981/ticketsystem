@@ -137,7 +137,6 @@ public class AtencionController {
             e.printStackTrace(pw);
             String fullStackTrace = sw.toString();
 
-            System.out.println(fullStackTrace);            // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=recepcion-general" : "/fallbackUrl?recepcion-error=general");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al recepcionar el ticket.");
@@ -204,7 +203,6 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=atencion-duplicated" : "/fallbackUrl?error=atencion-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido atendido por otro usuario.");
         } catch (Exception e) {
-            System.out.println(e);
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=atencion-general" : "/fallbackUrl?error=atencion-general");
@@ -289,7 +287,6 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=desestimacion-duplicated" : "/fallbackUrl?error=desestimacion-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido desestimado por otro usuario.");
         } catch (Exception e) {
-            System.out.println(e);
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=desestimacion-general" : "/fallbackUrl?error=desestimacion-general");

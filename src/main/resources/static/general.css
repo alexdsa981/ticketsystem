@@ -1,4 +1,7 @@
 /*GENERAL*/
+html{
+    font-size:90%;
+}
 html, body {
     height: 100%;
     margin: 0; /* Asegúrate de que no haya margen por defecto */
@@ -15,6 +18,13 @@ html, body {
 footer {
     position: relative;
 }
+
+.table, .table td, .table th {
+  font-size: 12px;
+}
+
+
+
 
 
 
@@ -148,13 +158,6 @@ td .nombreTipoIncidencia {
 }
 
 /*PAGINACION*/
-
-/*COLUMNAS DE TABLAS*/
-.n-table {
-    width: 1px;
-    /* Un número limitado de filas, no necesita mucho espacio */
-}
-
 .fecha-table {
     width: 10%;
     /* La fecha no suele ser muy larga, pero necesita espacio */
@@ -335,6 +338,17 @@ h2 {
 
 
 
+.ticket-link {
+    color: #0d6efd; /* azul Bootstrap */
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.ticket-link:hover {
+    color: #084298; /* azul más oscuro al pasar el mouse */
+}
 
 
 
@@ -348,7 +362,7 @@ h2 {
     }
 /* Notificaciones */
 .ul-notificaciones {
-    float: right;
+    float: left ;
     width: auto;
     position: relative;
 }
@@ -442,4 +456,36 @@ h2 {
     .btn-pagina-ticket{
         margin-bottom:30px;
     }
+
+
+
+    .descripcion-table,
+    .descripcion-td,
+    .mensaje-table,
+    .mensaje-td {
+        min-width: 300px; /* puedes ajustar esto */
+        white-space: normal !important;
+        word-wrap: break-word;
+        word-break: break-word;
+        padding: 0.5rem;
+    }
+
+    .container td .btn {
+        width: 100% !important;
+    }
+
+    .container td .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .notificaciones-dropdown {
+        max-width: 90vw; /* Evita que se salga de la pantalla en mobile */
+        word-wrap: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+
+
 }

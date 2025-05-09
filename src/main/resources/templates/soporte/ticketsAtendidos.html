@@ -50,9 +50,9 @@
                     <th>Emisor</th>
                     <th>Receptor</th>
                     <th>Soporte</th>
-                    <th style="width:25%;">Motivo de Ticket</th>
-                    <th style="width:25%;">Mensaje Recepción</th>
-                    <th style="width:25%;">Descripción Atención</th>
+                    <th class="descripcion-table">Motivo de Ticket</th>
+                    <th class="descripcion-table">Mensaje Recepción</th>
+                    <th class="descripcion-table">Descripción Atención</th>
                     <th>Historial</th>
                 </tr>
                 </thead>
@@ -61,8 +61,12 @@
                 <tr th:each="detalle, iter: ${AllAtendidos}">
 
                     <td th:text="${iter.count}">#</td>
-                    <td th:text="${detalle.ticket.codigoTicket}">#</td>
-
+                    <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                        <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                           th:text="${detalle.ticket.codigoTicket}"
+                           class="ticket-link">
+                        </a>
+                    </td>
                     <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
                     <td th:text="${detalle.horaFormateadaAtencion}">Hora</td>
 
@@ -72,7 +76,7 @@
 
                     <td>
                                 <span class="nombreTipoIncidencia clasificacion"
-                                      th:utext="${detalle.atencion.tipoIncidencia.nombre + ':<br>'}"></span>
+                                      th:utext="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre  +  ': ' + detalle.atencion.tipoIncidencia.nombre + '<br>'}"></span>
                         <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                         <br>
                         <!-- Mostrar la lista de archivos adjuntos de cada ticket -->

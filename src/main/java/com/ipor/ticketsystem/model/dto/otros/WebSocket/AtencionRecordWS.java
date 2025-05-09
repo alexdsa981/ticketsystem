@@ -28,6 +28,7 @@ public record AtencionRecordWS(
         String nombreUsuarioAtencion,
 
         String nombreFaseTicket,
+        String nombreSubCatIncidencia,
         String nombreTipoIncidencia,
         String nombreUrgencia,
         String nombreClasificacionAtencion,
@@ -60,6 +61,7 @@ public record AtencionRecordWS(
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
 
+                detalleDTO.getAtencion().getTipoIncidencia().getSubCategoriaIncidencia().getNombre(),
                 detalleDTO.getAtencion().getTipoIncidencia().getNombre(),
                 detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
                 detalleDTO.getAtencion().getClasificacionAtencion().getNombre(),

@@ -41,7 +41,12 @@
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
             <tr th:each="detalle, iter: ${MyTickets}">
                 <td th:text="${iter.count}">#</td>
-                <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
+                <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                    <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                       th:text="${detalle.ticket.codigoTicket}"
+                       class="ticket-link">
+                    </a>
+                </td>
                 <td th:text="${detalle.fechaFormateadaTicket}">Fecha</td>
                 <td th:text="${detalle.horaFormateadaTicket}">Hora</td>
                 <td>
@@ -97,8 +102,12 @@
                 </div>
 
                 <div class="modal-footer d-flex flex-column align-items-start">
-                    <p class="text-muted mb-1"><i class="bi bi-exclamation-circle"></i> Este ticket no podrá ser editado ni eliminado una vez creado.</p>
-                    <p class="text-secondary mb-3"><i class="bi bi-info-circle"></i> Registra un ticket por cada solicitud o incidencia para facilitar su atención.</p>
+                    <small class="text-muted mb-3 d-block">
+                        <i class="bi bi-exclamation-circle"></i> Solo emite tickets para solicitudes de TI.<br>
+                        <i class="bi bi-exclamation-circle"></i> No podrás editar ni eliminar el ticket una vez creado.<br>
+                        <i class="bi bi-info-circle"></i> Registra un ticket por cada solicitud o incidencia.
+                    </small>
+
                     <div class="ms-auto">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-outline-primary submit-btn">Crear Ticket</button>

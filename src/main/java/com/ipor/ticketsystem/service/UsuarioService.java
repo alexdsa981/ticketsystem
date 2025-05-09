@@ -59,7 +59,7 @@ public class UsuarioService {
 
     // Obtener todos los usuarios
     public List<Usuario> getListaUsuarios() {
-        return usuarioRepository.findAll();
+        return usuarioRepository.findAllByOrderByIsSpringUserAsc();
     }
 
     //activos

@@ -53,8 +53,8 @@
                 <th>Hora</th>
                 <th>Emisor</th>
                 <th>Receptor</th>
-                <th style="width:25%;">Motivo de Ticket</th>
-                <th style="width:25%;">Mensaje Recepción</th>
+                <th class="descripcion-table">Motivo de Ticket</th>
+                <th class="descripcion-table">Mensaje Recepción</th>
                 <th style="width:200px;">Atención</th>
 
             </tr>
@@ -64,8 +64,12 @@
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
             <tr th:each="detalle, iter: ${AllRecepcionados}" id="ticket-${detalle.ticket.id}">
                 <td th:text="${iter.count}">#</td>
-                <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
-                <td class="fecha" th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
+                <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                    <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                       th:text="${detalle.ticket.codigoTicket}"
+                       class="ticket-link">
+                    </a>
+                </td>                <td class="fecha" th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
                 <td th:text="${detalle.horaFormateadaRecepcion}">Hora</td>
                 <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                 <td class="usuario-receptor" th:text="${detalle.recepcion.usuario.nombre}">Usuario Receptor</td>
@@ -88,27 +92,30 @@
                 </td>
 
                 <td class="td-accion">
-                    <!-- Botón de recepción que abre el modal -->
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
-                            th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                            th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                            th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                            th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                            th:data-ticket-hora="${detalle.horaFormateadaTicket}">
-                        <i class="bi bi-check2-square"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
-                            th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                            th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                            th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                            th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                            th:data-ticket-hora="${detalle.horaFormateadaTicket}">
-                        <i class="bi bi-trash"></i>
+                    <div class="d-flex gap-1 flex-nowrap">
+                        <!-- Botón de recepción que abre el modal -->
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                            <i class="bi bi-check2-square"></i>
+                        </button>
 
-                    </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
+                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
+                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
+                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </td>
+
             </tr>
             </tbody>
         </table>
@@ -161,34 +168,39 @@
                     </div>
 
 
-                    <!-- CATEGORÍA -->
+                    <!-- Jerarquía visual -->
+                    <p class="text-secondary small mb-3">
+                        <i class="bi bi-diagram-3"></i> Categoría &rarr; Subcategoría &rarr; Tipo de Incidencia
+                    </p>
+
                     <div class="mb-3">
-                        <label for="Lista_cat_incidencia" class="form-label"><strong><i class="bi bi-flag"></i>
-                            CATEGORÍA:</strong></label>
+                        <label for="Lista_cat_incidencia" class="form-label">
+                            <strong><i class="bi bi-tags"></i> CATEGORÍA:</strong>
+                        </label>
                         <select class="form-select" id="Lista_cat_incidencia" name="Lista_cat_incidencia" required>
                             <option selected disabled value="">Selecciona la categoría</option>
-                            <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
+                            <option th:each="tipo : ${Lista_cat_incidencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
 
-                    <!-- SUBCATEGORÍA (inicialmente oculta) -->
                     <div class="mb-3 d-none" id="subcategoria-wrapper">
-                        <label for="Lista_subcat_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i>
-                            SUBCATEGORÍA:</strong></label>
+                        <label for="Lista_subcat_incidencia" class="form-label">
+                            <strong><i class="bi bi-tag"></i> SUBCATEGORÍA:</strong>
+                        </label>
                         <select class="form-select" id="Lista_subcat_incidencia" name="subcat_incidencia" required>
                             <option selected disabled value="">Selecciona la subcategoría</option>
                         </select>
                     </div>
 
-                    <!-- TIPO INCIDENCIA (inicialmente oculta) -->
                     <div class="mb-3 d-none" id="tipo-wrapper">
-                        <label for="tipo_incidencia" class="form-label"><strong><i class="bi bi-flag-fill"></i> TIPO DE
-                            INCIDENCIA:</strong></label>
+                        <label for="tipo_incidencia" class="form-label">
+                            <strong><i class="bi bi-tools"></i> TIPO DE INCIDENCIA:</strong>
+                        </label>
                         <select class="form-select" id="tipo_incidencia" name="tipo_incidencia" required>
                             <option selected disabled value="">Selecciona el tipo de Incidencia</option>
                         </select>
                     </div>
+
 
                     <div class="mb-3">
                         <label for="clasificacionUrgencia" class="form-label"><strong><i

@@ -46,8 +46,8 @@
                     <th>Hora</th>
                     <th>Emisor</th>
                     <th>Evaluador</th>
-                    <th style="width:20%;">Motivo de Ticket</th>
-                    <th style="width:20%;">Motivo de Desestimación</th>
+                    <th class="descripcion-table">Motivo de Ticket</th>
+                    <th class="descripcion-table">Motivo de Desestimación</th>
                     <th>Historial</th>
                 </tr>
                 </thead>
@@ -55,8 +55,12 @@
                 <!-- Iterar sobre los tickets con un solo bucle th:each -->
                 <tr th:each="detalle, iter: ${AllDesestimados}">
                     <td th:text="${iter.count}">#</td>
-                    <td th:text="${detalle.ticket.codigoTicket}">#</td>
-                    <td class="fecha" th:text="${detalle.fechaFormateadaDesestimacion}">Fecha</td>
+                    <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                        <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                           th:text="${detalle.ticket.codigoTicket}"
+                           class="ticket-link">
+                        </a>
+                    </td>                    <td class="fecha" th:text="${detalle.fechaFormateadaDesestimacion}">Fecha</td>
                     <td th:text="${detalle.horaFormateadaDesestimacion}">Hora</td>
                     <td class="usuario-atencion" th:text="${detalle.desestimacion.usuario.nombre}">Usuario
                         Desestimación

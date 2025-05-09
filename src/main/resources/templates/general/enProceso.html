@@ -23,11 +23,11 @@
                 <thead class="table-dark">
                 <tr>
                     <th>N°</th>
-                    <th class="n-table">Código</th>
+                    <th>Código</th>
                     <th>Fecha</th>
                     <th>Hora</th>
-                    <th style="width:300px">Descripción de Incidencia</th>
-                    <th>Mensaje Recepción</th>
+                    <th class="descripcion-table">Descripción de Incidencia</th>
+                    <th class="descripcion-table">Mensaje Recepción</th>
                     <th>Fase</th>
                 </tr>
                 </thead>
@@ -35,8 +35,12 @@
                 <!-- Iterar sobre los tickets con un solo bucle th:each -->
                 <tr th:each="detalle, iter: ${MyRecepcionados}">
                     <td th:text="${iter.count}">#</td>
-                    <td th:id="${detalle.ticket.id}" th:text="${detalle.ticket.codigoTicket}">#</td>
-                    <td th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
+                    <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                        <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
+                           th:text="${detalle.ticket.codigoTicket}"
+                           class="ticket-link">
+                        </a>
+                    </td>                    <td th:text="${detalle.fechaFormateadaRecepcion}">Fecha</td>
                     <td th:text="${detalle.horaFormateadaRecepcion}">Hora</td>
                     <td>
                         <span th:text="${detalle.ticket.descripcion}"></span><br>

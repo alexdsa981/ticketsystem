@@ -52,7 +52,11 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
     newRow.innerHTML = `
         <td></td>
 
-        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
+<td id="${ticketRecord.id}" class="ticket-code-cell">
+    <a href="/ticket/${ticketRecord.idFormateado}" class="ticket-link">
+        ${ticketRecord.idFormateado}
+    </a>
+</td>
 
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>
@@ -158,7 +162,11 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaRecepcion}</td>
         <td>${ticketRecord.horaFormateadaRecepcion}</td>
         <td>${ticketRecord.nombreUsuarioTicket}</td>
@@ -260,7 +268,11 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaRecepcion}</td>
         <td>${ticketRecord.horaFormateadaRecepcion}</td>
 
@@ -270,7 +282,8 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
 
         <td>
             <span class="nombreTipoIncidencia clasificacion">
-                ${ticketRecord.nombreTipoIncidencia}:<br>
+                ${ticketRecord.nombreSubCatIncidencia}:
+                ${ticketRecord.nombreTipoIncidencia} <br>
             </span>
             <span>
                 ${ticketRecord.descripcionTicket.length > 150
@@ -390,7 +403,11 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaDesestimacion}</td>
         <td>${ticketRecord.horaFormateadaDesestimacion}</td>
 
@@ -503,7 +520,11 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaRecepcion}</td>
         <td>${ticketRecord.horaFormateadaRecepcion}</td>
         <td>
@@ -584,14 +605,19 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaAtencion}</td>
         <td>${ticketRecord.horaFormateadaAtencion}</td>
 
 
         <td>
             <span class="nombreTipoIncidencia clasificacion">
-                ${ticketRecord.nombreTipoIncidencia}:<br>
+                ${ticketRecord.nombreSubCatIncidencia}:
+                ${ticketRecord.nombreTipoIncidencia}<br>
 
             </span>
             <span>
@@ -680,7 +706,11 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
     // Generar las celdas de la fila con los datos del ticket
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
-        <td id="${ticketRecord.idTicket}">${ticketRecord.idFormateadoTicket}</td>
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
         <td>${ticketRecord.fechaFormateadaDesestimacion}</td>
         <td>${ticketRecord.horaFormateadaDesestimacion}</td>
 
@@ -768,8 +798,11 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
     newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
 
-        <td id="${ticketRecord.id}">${ticketRecord.idFormateado}</td>
-
+<td id="${ticketRecord.id}" class="ticket-code-cell">
+    <a href="/ticket/${ticketRecord.idFormateado}" class="ticket-link">
+        ${ticketRecord.idFormateado}
+    </a>
+</td>
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>
         <td>
