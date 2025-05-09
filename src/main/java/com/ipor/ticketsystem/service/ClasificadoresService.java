@@ -62,18 +62,31 @@ public class ClasificadoresService {
 
 
     //LISTAR CLASIFICADORES SIN IMPORTAR EL ESTADO (ACTIVADO/DESACTIVADO)
-
+    public List<CategoriaIncidencia> getListaCatIncidencia() {
+        return categoriaIncidenciaRepository.findAllByOrderByNombreAsc();
+    }
+    public List<SubCategoriaIncidencia> getListaSubCatIncidencia() {
+        return subCategoriaIncidenciaRepository.findAllByOrderByNombreAsc();
+    }
     public List<TipoIncidencia> getListaTipoIncidencia() {
         return tipoIncidenciaRepository.findAllByOrderByNombreAsc();
     }
 
-    public List<CategoriaIncidencia> getListaCatIncidencia() {
-        return categoriaIncidenciaRepository.findAllByOrderByNombreAsc();
+    //POR ID
+    public List<SubCategoriaIncidencia> getListaSubCatIncidenciaPorIDCat(Long id) {
+        return subCategoriaIncidenciaRepository.findByCategoriaIncidenciaIdOrderByNombreAsc(id);
+    }
+    public List<TipoIncidencia> getListaTipoIncidenciaPirIDSubCat(Long id) {
+        return tipoIncidenciaRepository.findBySubCategoriaIncidenciaIdOrderByNombreAsc(id);
     }
 
-    public List<SubCategoriaIncidencia> getListaSubCatIncidencia() {
-        return subCategoriaIncidenciaRepository.findAllByOrderByNombreAsc();
-    }
+
+
+
+
+
+
+
 
     public List<ClasificacionUrgencia> getListaClasUrgencia() {
 
@@ -158,12 +171,14 @@ public class ClasificadoresService {
     public void actualizarTipoIncidencia(Long id, TipoIncidencia incidenciaActualizada) {
         TipoIncidencia incidencia = tipoIncidenciaRepository.findById(id).get();
         incidencia.setNombre(incidenciaActualizada.getNombre());
+        incidencia.setSubCategoriaIncidencia(incidenciaActualizada.getSubCategoriaIncidencia());
         tipoIncidenciaRepository.save(incidencia);
     }
 
     public void actualizarSubCatIncidencia(Long id, SubCategoriaIncidencia subCatIncidenciaActualizada) {
         SubCategoriaIncidencia incidencia = subCategoriaIncidenciaRepository.findById(id).get();
         incidencia.setNombre(subCatIncidenciaActualizada.getNombre());
+        incidencia.setCategoriaIncidencia(subCatIncidenciaActualizada.getCategoriaIncidencia());
         subCategoriaIncidenciaRepository.save(incidencia);
     }
 

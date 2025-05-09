@@ -6,13 +6,88 @@
 <div th:replace="~{common/header :: header}">
     <!--si se usa th:insert, este se colocará dentro de este div-->
 </div>
-<main class="content-wrapper">
+<main class="container content-wrapper">
 
 
-    <div class="container" style="margin-bottom:10px;">
+    <div>
         <h2>ADMIN: Gestión de Clasificadores</h2>
     </div>
-    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+
+    <div class="container border shadow p-3 px-4 mb-1 bg-body rounded contenedor-clasificadores" >
+        <div class="d-flex align-items-center gap-3">
+            <h5 class="mb-0">SELECCIONE UN CLASIFICADOR:</h5>
+            <select id="selectorClasificador" class="form-select w-auto">
+                <option value="Incidencia" th:selected="${clasificadorActivo == 'Incidencia'}">Incidencia</option>
+                <option value="Atencion" th:selected="${clasificadorActivo == 'Atencion'}">Atencion</option>
+                <option value="Desestimacion" th:selected="${clasificadorActivo == 'Desestimacion'}">Desestimacion</option>
+                <option value="Area" th:selected="${clasificadorActivo == 'Area'}">Area</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("selectorClasificador").addEventListener("change", function () {
+            const tipo = this.value;
+            window.location.href = `/admin/Clasificadores?clasificador=${tipo}`;
+        });
+    </script>
+
+
+
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo =='Incidencia'}">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="selectCategoriaIncidencia" class="form-label">Categoría Incidencia</label>
+                <select id="selectCategoriaIncidencia" name="categoriaId" class="form-select">
+                    <option value="" disabled selected>Seleccione una categoría</option>
+                    <option th:each="cat : ${catIncidencias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.nombre}"
+                            th:selected="${cat.id.toString() == categoriaSeleccionada}"></option>
+
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="selectSubCategoriaIncidencia" class="form-label">Subcategoría Incidencia</label>
+                <select id="selectSubCategoriaIncidencia" name="subCategoriaId" class="form-select"
+                        th:disabled="${categoriaSeleccionada == null}">
+                    <option value="" disabled selected>Seleccione una subcategoría</option>
+                    <option th:each="sub : ${subCatIncidencias}"
+                            th:value="${sub.id}"
+                            th:text="${sub.nombre}"
+                            th:selected="${sub.id.toString() == subcategoriaSeleccionada}"></option>
+                </select>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const selectCategoria = document.getElementById("selectCategoriaIncidencia");
+                const selectSubCategoria = document.getElementById("selectSubCategoriaIncidencia");
+
+                const catSeleccionada = /*[[${categoriaSeleccionada}]]*/ '';
+                if (catSeleccionada !== '') {
+                    selectCategoria.value = catSeleccionada;
+                }
+
+                selectCategoria.addEventListener("change", function () {
+                    const categoriaId = this.value;
+                    const newUrl = `${window.location.origin}${window.location.pathname}?clasificador=Incidencia&categoria=${categoriaId}`;
+                    window.location.href = newUrl;
+                });
+
+                selectSubCategoria.addEventListener("change", function () {
+                    const categoriaId = selectCategoria.value;
+                    const subcategoriaId = this.value;
+                    const newUrl = `${window.location.origin}${window.location.pathname}?clasificador=Incidencia&categoria=${categoriaId}&subcategoria=${subcategoriaId}`;
+                    window.location.href = newUrl;
+                });
+            });
+        </script>
+
+
+
+
+
         <!-- Clasificadores Categoria -->
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
@@ -40,7 +115,7 @@
                         <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                         <td>
                             <button type="button" class="btn btn-primary btn-sm"
-                                    data-bs-toggle="modal" data-bs-target="#catIncidenciasModal"
+                                    data-bs-toggle="modal" data-bs-target="#editCatIncidenciaModal"
                                     th:data-catIncidencias-id="${clasificador.id}"
                                     th:data-catIncidencias-nombre="${clasificador.nombre}"
                                     onclick="openCatIncidenciasModal(this)">
@@ -49,14 +124,14 @@
                             <th:block th:if="${clasificador.isActive}">
                                 <a class="btn btn-danger btn-sm"
                                    th:href="@{'/app/clasificadores/desactivar/catIncidencia/' + ${clasificador.id}}"
-                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Incidencia?');">
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Categoria Incidencia?');">
                                     Desactivar
                                 </a>
                             </th:block>
                             <th:block th:if="${!clasificador.isActive}">
                                 <a class="btn btn-success btn-sm"
                                    th:href="@{'/app/clasificadores/activar/catIncidencia/' + ${clasificador.id}}"
-                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Incidencia?');">
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Categoria Incidencia?');">
                                     Activar
                                 </a>
                             </th:block>
@@ -68,12 +143,12 @@
         </div>
 
 
-        <!-- Clasificadores Incidencia -->
-        <div class="card shadow-sm">
+        <!-- Clasificadores SUBCATIncidencia -->
+        <div class="card shadow-sm" th:if="${clasificadorActivo == 'Incidencia' and categoriaSeleccionada != null}">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
-                <h5 class="mb-0">SubCategoria Incidencia</h5>
+                <h5 class="mb-0">Subcategorias: <span id="categoriaSeleccionada"></span></h5>
                 <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#newSubCategoriaIncidenciaModal">
+                        data-bs-target="#newSubCatIncidenciaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
             </div>
@@ -95,10 +170,11 @@
                         <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
                         <td>
                             <button type="button" class="btn btn-primary btn-sm"
-                                    data-bs-toggle="modal" data-bs-target="#subCatIncidenciasModal"
-                                    th:data-subCatIncidencias-id="${clasificador.id}"
-                                    th:data-subCatIncidencias-nombre="${clasificador.nombre}"
-                                    onclick="opensubCatIncidenciasModal(this)">
+                                    data-bs-toggle="modal" data-bs-target="#editSubCatIncidenciaModal"
+                                    th:data-subCatIncidencia-id="${clasificador.id}"
+                                    th:data-subCatIncidencia-nombre="${clasificador.nombre}"
+                                    th:data-CatIncidencia-id="${clasificador.categoriaIncidencia.id}"
+                                    onclick="openSubCatIncidenciaModal(this)">
                                 Editar
                             </button>
                             <th:block th:if="${clasificador.isActive}">
@@ -123,10 +199,10 @@
         </div>
 
 
-        <!-- Clasificadores Incidencia -->
-        <div class="card shadow-sm">
+        <!-- TIPO Incidencia -->
+        <div class="card shadow-sm" th:if="${clasificadorActivo == 'Incidencia' and categoriaSeleccionada != null and subcategoriaSeleccionada != null}">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
-                <h5 class="mb-0">Clasificadores Incidencia</h5>
+                <h5 class="mb-0">Incidencias: <span id="subcategoriaSeleccionada"></span></h5>
                 <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
                         data-bs-target="#newIncidenciaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
@@ -153,6 +229,7 @@
                                     data-bs-toggle="modal" data-bs-target="#incidenciaModal"
                                     th:data-incidencia-id="${clasificador.id}"
                                     th:data-incidencia-nombre="${clasificador.nombre}"
+                                    th:data-subCatIncidencia-id="${clasificador.subCategoriaIncidencia.id}"
                                     onclick="openIncidenciaModal(this)">
                                 Editar
                             </button>
@@ -179,7 +256,9 @@
     </div>
 
 
-    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+
+
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo == 'Atencion'}">
         <!-- Clasificadores Atencion -->
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
@@ -234,7 +313,9 @@
             </div>
         </div>
     </div>
-    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+
+
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo == 'Desestimacion'}">
         <!-- Clasificadores Desestimación -->
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
@@ -289,7 +370,7 @@
             </div>
         </div>
     </div>
-    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores">
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo == 'Area'}">
         <!-- Clasificadores Área -->
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
@@ -345,31 +426,153 @@
     </div>
 
 
-    <!-- Modal CREAR NUEVA INCIDENCIA-->
-    <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal"
+
+
+
+
+    <!-- Modal CREAR NUEVA CAT INCIDENCIA-->
+    <div class="modal fade" id="newCatIncidenciaModal" tabindex="-1" aria-labelledby="newCatIncidenciaModal"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/app/clasificadores/tipoIncidencia/nuevo" method="POST" enctype="multipart/form-data">
+                <form action="/app/clasificadores/catIncidencia/nuevo" method="POST" enctype="multipart/form-data" id="formNewCatIncidencia">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Nombra la Nueva Clasificación de
-                            Incidencia</h1>
+                        <h1 class="modal-title fs-5" id="catIncidenciaModalLabel">Nueva Categoria:</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nombreincidencia" class="form-label">Nuevo clasificador:</label>
-                            <input type="text" class="form-control" id="nombreincidencia" name="nombre" required
+                            <label for="nombreCatIncidencia" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreCatIncidencia" name="nombre" required
                                    autocomplete="off">
                         </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal para EDITAR CAT INCIDENCIA -->
+    <div class="modal fade" id="editCatIncidenciaModal" tabindex="-1" aria-labelledby="editCatIncidenciaModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCatIncidenciaModalLabel">Editar Categoria</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCatIncidenciaForm" method="post">
+                        <input type="hidden" id="editCatIncidenciaId" name="id"/>
                         <div class="mb-3">
-                            <label for="newTipoIncidenciaSubCat" class="form-label">Sub-Categoria:</label>
-                            <select class="form-select" id="newTipoIncidenciaSubCat" name="id_subcat" required>
-                                <option selected disabled value="">Selecciona la Sub-Categoria</option>
-                                <option th:each="tipo : ${subCatIncidencias}" th:value="${tipo.id}"
+                            <label for="editCatIncidenciaNombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="editCatIncidenciaNombre" name="nombre" required
+                                   autocomplete="off"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- Modal CREAR NUEVA SUBCAT INCIDENCIA-->
+    <div class="modal fade" id="newSubCatIncidenciaModal" tabindex="-1" aria-labelledby="newSubCatIncidenciaModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/app/clasificadores/subCatIncidencia/nuevo" method="POST" enctype="multipart/form-data"  id="formNewSubCatIncidencia">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="SubCatModalLabel">Nueva Subcategoria: <span id="nombreNuevoSubCatIncidenciaEnModal"></span></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombreSubCatincidencia" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreSubCatincidencia" name="nombre" required
+                                   autocomplete="off">
+                        </div>
+                        <input type="hidden" id="inputCategoriaId" name="id_cat">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal para EDITAR SUB CAT INCIDENCIA -->
+    <div class="modal fade" id="editSubCatIncidenciaModal" tabindex="-1" aria-labelledby="editSubCatIncidenciaModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSubCatModalLabel">Editar Subcategoria:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="subCatIncidenciaForm" method="post">
+                        <input type="hidden" id="subCatIncidenciaId" name="id"/>
+                        <div class="mb-3">
+                            <label for="subCatIncidenciaNombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="subCatIncidenciaNombre" name="nombre" required
+                                   autocomplete="off"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSubCatIncidenciaCat" class="form-label">Categoria:</label>
+                            <select class="form-select" id="editSubCatIncidenciaCat" name="id_cat" required>
+                                <option selected disabled value="">Selecciona la Categoria</option>
+                                <option th:each="tipo : ${catIncidencias}" th:value="${tipo.id}"
                                         th:text="${tipo.nombre}"></option>
                             </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal CREAR NUEVA INCIDENCIA-->
+    <div class="modal fade" id="newIncidenciaModal" tabindex="-1" aria-labelledby="newIncidenciaModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/app/clasificadores/tipoIncidencia/nuevo" method="POST" enctype="multipart/form-data" id="formNewTipoIncidencia">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Incidencia: <span id="nombreNuevoTipoIncidenciaEnModal"></span></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombreincidencia" class="form-label">Nombrer:</label>
+                            <input type="text" class="form-control" id="nombreincidencia" name="nombre" required
+                                   autocomplete="off">
+                            <input type="hidden" id="inputSubCategoriaId" name="id_subcat">
+
                         </div>
                     </div>
 
@@ -390,19 +593,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="incidenciaModalLabel">Editar Clasificador de Incidencia</h5>
+                    <h5 class="modal-title" id="incidenciaModalLabel">Editar Tipo Incidencia:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="incidenciaForm" method="post">
                         <input type="hidden" id="incidenciaId" name="id"/>
                         <div class="mb-3">
-                            <label for="incidenciaNombre" class="form-label">Nombre</label>
+                            <label for="incidenciaNombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="incidenciaNombre" name="nombre" required
                                    autocomplete="off"/>
                         </div>
                         <div class="mb-3">
-                            <label for="editTipoIncidenciaSubCat" class="form-label">Sub-Categoria:</label>
+                            <label for="editTipoIncidenciaSubCat" class="form-label">Subcategoria:</label>
                             <select class="form-select" id="editTipoIncidenciaSubCat" name="id_subcat" required>
                                 <option selected disabled value="">Selecciona la Sub-Categoria</option>
                                 <option th:each="tipo : ${subCatIncidencias}" th:value="${tipo.id}"
@@ -424,14 +627,13 @@
             <div class="modal-content">
                 <form action="/app/clasificadores/atencion/nuevo" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="newatencionModalLabel">Nombra la Nueva Clasificación de
-                            Atencion</h1>
+                        <h1 class="modal-title fs-5" id="newatencionModalLabel">Nueva Clasificacion Atención:</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nombreatencion" class="form-label">Nuevo clasificador:</label>
+                            <label for="nombreatencion" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombreatencion" name="nombre" required
                                    autocomplete="off">
                         </div>
@@ -454,14 +656,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="atencionModalLabel">Editar Clasificador de Atencion</h5>
+                    <h5 class="modal-title" id="atencionModalLabel">Editar Clasificador de Atención:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="atencionForm" method="post">
                         <input type="hidden" id="atencionId" name="id"/>
                         <div class="mb-3">
-                            <label for="atencionNombre" class="form-label">Nombre</label>
+                            <label for="atencionNombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="atencionNombre" name="nombre" required
                                    autocomplete="off"/>
                         </div>
@@ -480,14 +682,13 @@
             <div class="modal-content">
                 <form action="/app/clasificadores/desestimacion/nuevo" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nombra la Nueva Clasificación
-                            de Desestimación</h1>
+                        <h1 class="modal-title fs-5" id="newdesestimacionModalLabel">Nueva Clasificacion de Desestimación:</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nombredesestimacion" class="form-label">Nuevo clasificador:</label>
+                            <label for="nombredesestimacion" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombredesestimacion" name="nombre" required
                                    autocomplete="off">
                         </div>
@@ -510,14 +711,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion</h5>
+                    <h5 class="modal-title" id="desestimacionModalLabel">Editar Clasificador de Desestimacion:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="desestimacionForm" method="post">
                         <input type="hidden" id="desestimacionId" name="id"/>
                         <div class="mb-3">
-                            <label for="desestimacionNombre" class="form-label">Nombre</label>
+                            <label for="desestimacionNombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="desestimacionNombre" name="nombre" required
                                    autocomplete="off"/>
                         </div>
@@ -536,13 +737,13 @@
             <div class="modal-content">
                 <form action="/app/clasificadores/area/nuevo" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="newAreaModalLabel">Nombra la Nueva Área</h1>
+                        <h1 class="modal-title fs-5" id="newAreaModalLabel">Nueva Clasificación de Área:</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nombreArea" class="form-label">Nuevo clasificador:</label>
+                            <label for="nombreArea" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombreArea" name="nombre" required
                                    autocomplete="off">
                         </div>
@@ -564,14 +765,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="areaModalLabel">Editar Área</h5>
+                    <h5 class="modal-title" id="areaModalLabel">Editar Clasificación de Área:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="areaForm" method="post">
                         <input type="hidden" id="areaId" name="id"/>
                         <div class="mb-3">
-                            <label for="areaNombre" class="form-label">Nombre</label>
+                            <label for="areaNombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="areaNombre" name="nombre" required
                                    autocomplete="off"/>
                         </div>
@@ -581,6 +782,58 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const path = window.location.pathname;
+            const query = new URLSearchParams(window.location.search);
+            const clasificador = query.get("clasificador");
+
+            // Solo ejecutar si estamos en la página /admin/Clasificadores con clasificador=Incidencia
+            if (path === "/admin/Clasificadores" && clasificador === "Incidencia") {
+                const categoriaSelect = document.getElementById("selectCategoriaIncidencia");
+                const subCategoriaSelect = document.getElementById("selectSubCategoriaIncidencia");
+
+                const categoriaTexto = categoriaSelect.options[categoriaSelect.selectedIndex]?.text;
+                const subCategoriaTexto = subCategoriaSelect.options[subCategoriaSelect.selectedIndex]?.text;
+
+                if (categoriaTexto && categoriaTexto !== "Seleccione una categoría") {
+                    document.getElementById("nombreNuevoSubCatIncidenciaEnModal").innerText = `(${categoriaTexto})`;
+                    document.getElementById("categoriaSeleccionada").innerText = `(${categoriaTexto})`;
+                }
+
+                if (subCategoriaTexto && subCategoriaTexto !== "Seleccione una subcategoría") {
+                    document.getElementById("nombreNuevoTipoIncidenciaEnModal").innerText = `(${subCategoriaTexto})`;
+                    document.getElementById("subcategoriaSeleccionada").innerText = `(${subCategoriaTexto})`;
+                }
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Referencias a los selects principales
+            const categoriaSelect = document.getElementById('selectCategoriaIncidencia');
+            const subCategoriaSelect = document.getElementById('selectSubCategoriaIncidencia');
+
+            // Inputs ocultos en los modales
+            const inputCategoriaId = document.getElementById('inputCategoriaId');
+            const inputSubCategoriaId = document.getElementById('inputSubCategoriaId');
+
+            // Cuando se abre el modal de NUEVA SUBCATEGORÍA
+            const newSubCatModal = document.getElementById('newSubCatIncidenciaModal');
+            newSubCatModal.addEventListener('show.bs.modal', () => {
+                inputCategoriaId.value = categoriaSelect.value;
+            });
+
+            // Cuando se abre el modal de NUEVO TIPO DE INCIDENCIA
+            const newTipoModal = document.getElementById('newIncidenciaModal');
+            newTipoModal.addEventListener('show.bs.modal', () => {
+                inputSubCategoriaId.value = subCategoriaSelect.value;
+            });
+        });
+    </script>
 
 
     <!--SweetAlert-->
@@ -595,66 +848,34 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = url;
+                    fetch(url, { method: 'GET' })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Error en la solicitud');
+                            return response.text(); // O response.json() si el backend lo devuelve así
+                        })
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Operación completada',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            setTimeout(() => location.reload(), 1000); // Da un segundo antes de recargar
+                        })
+                        .catch(error => {
+                            console.error('Error en la operación:', error);
+                            Swal.fire('Error', 'No se pudo completar la operación.', 'error');
+                        });
                 }
             });
-            return false; // Evita que el enlace se abra automáticamente
+            return false; // Evita que el enlace se abra directamente
         }
     </script>
 
-    <script>
-        function openAreaModal(button) {
-        var id = button.getAttribute("data-area-id");
-        var nombre = button.getAttribute("data-area-nombre");
 
-        document.getElementById("areaId").value = id;
-        document.getElementById("areaNombre").value = nombre;
-
-        // Configurar la acción del formulario
-        const form = document.getElementById('areaForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/area/${id}`);
-        }
-
-
-
-        function openDesestimacionModal(button) {
-        var id = button.getAttribute("data-desestimacion-id");
-        var nombre = button.getAttribute("data-desestimacion-nombre");
-
-        document.getElementById("desestimacionId").value = id;
-        document.getElementById("desestimacionNombre").value = nombre;
-
-        // Configurar la acción del formulario
-        const form = document.getElementById('desestimacionForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/desestimacion/${id}`);
-    }
-    function openIncidenciaModal(button) {
-        var id = button.getAttribute("data-incidencia-id");
-        var nombre = button.getAttribute("data-incidencia-nombre");
-
-        document.getElementById("incidenciaId").value = id;
-        document.getElementById("incidenciaNombre").value = nombre;
-
-        // Configurar la acción del formulario
-        const form = document.getElementById('incidenciaForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/tipoIncidencia/${id}`);
-    }
-
-    function openAtencionModal(button) {
-        var id = button.getAttribute("data-atencion-id");
-        var nombre = button.getAttribute("data-atencion-nombre");
-
-        document.getElementById("atencionId").value = id;
-        document.getElementById("atencionNombre").value = nombre;
-
-        // Configurar la acción del formulario
-        const form = document.getElementById('atencionForm');
-        form.setAttribute('action', `/app/clasificadores/actualizar/atencion/${id}`);
-    }
-
-    </script>
 
 </main>
+<script src="/js/clasificadores.js"></script>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}">
 </div>
 <div th:insert="~{common/footer :: footer}">

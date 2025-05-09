@@ -118,11 +118,23 @@ public class WebController {
     }
 
     @GetMapping("/admin/Clasificadores")
-    public String redirigePaginaClasiicadores(Model model) {
-        clasificadoresController.listarClasificadores(model);
+    public String mostrarClasificadores(
+            @RequestParam(name = "clasificador", required = false) String clasificador,
+            @RequestParam(name = "categoria", required = false) String categoria,
+            @RequestParam(name = "subcategoria", required = false) String subcategoria,
+            Model model
+    ) {
+        if (clasificador == null) clasificador = "Area";
+        model.addAttribute("clasificadorActivo", clasificador);
+        clasificadoresController.listarClasificadores(model, categoria, subcategoria);
         model.addAttribute("Titulo", "HelpDesk | Admin - Gestion de Clasificadores");
+        model.addAttribute("categoriaSeleccionada", categoria);
+        model.addAttribute("subcategoriaSeleccionada", subcategoria);
         return "admin/clasificadores";
     }
+
+
+
 
     @GetMapping("/soporte/Recepcionar")
     public String redirigePaginaTicketsRecibidos(Model model) {

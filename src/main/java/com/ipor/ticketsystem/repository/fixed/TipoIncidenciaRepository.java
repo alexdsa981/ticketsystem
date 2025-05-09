@@ -9,4 +9,5 @@ public interface TipoIncidenciaRepository extends JpaRepository<TipoIncidencia, 
     List<TipoIncidencia> findByIsActiveTrue();
     List<TipoIncidencia> findAllByOrderByNombreAsc();
     List<TipoIncidencia> findBySubCategoriaIncidenciaIdAndIsActiveTrue(Long idSubCategoria);
+    List<TipoIncidencia> findBySubCategoriaIncidenciaIdOrderByNombreAsc(Long idSubCategoria);
 }
