@@ -189,9 +189,12 @@ function inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo
     // Clasificadores
     const clasificadores = [
       { idCanvas: "graficoIncidencia", idTabla: "tablaIncidencia", endpoint: "/app/dashboard/grafico/TicketsporIncidencia", titulo: "Incidencia" },
+      { idCanvas: "graficoSubcategoria", idTabla: "tablaSubcategoria", endpoint: "/app/dashboard/grafico/TicketsporSubcategoria", titulo: "Subcategoría" },
+      { idCanvas: "graficoCategoria", idTabla: "tablaCategoria", endpoint: "/app/dashboard/grafico/TicketsporCategoria", titulo: "Categoría" },
       { idCanvas: "graficoUrgencia", idTabla: "tablaUrgencia", endpoint: "/app/dashboard/grafico/TicketsporUrgencia", titulo: "Urgencia" },
       { idCanvas: "graficoArea", idTabla: "tablaArea", endpoint: "/app/dashboard/grafico/TicketsporArea", titulo: "Área" }
     ];
+
 
     clasificadores.forEach(({ idCanvas, idTabla, endpoint, titulo }) =>
       inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo)
@@ -255,34 +258,44 @@ function inicializarDashboard() {
     fechaInicioGlobal = formatearFechaLocal(primerDiaMes);
     fechaFinGlobal = formatearFechaLocal(ultimoDiaMes);
 
-
     document.getElementById("fechaInicio").value = fechaInicioGlobal;
     document.getElementById("fechaFin").value = fechaFinGlobal;
-  
+
     // Cargar datos iniciales del dashboard
     actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
-  
+
     // Inicializar gráficos por clasificadores
     inicializarGraficosDeClasificadores(
-      "graficoIncidencia", "tablaIncidencia",
-      "/app/dashboard/grafico/TicketsporIncidencia",
-      "Tickets por Tipo de Incidencia"
-    );
-  
-    inicializarGraficosDeClasificadores(
-      "graficoUrgencia", "tablaUrgencia",
-      "/app/dashboard/grafico/TicketsporUrgencia",
-      "Tickets por Nivel de Urgencia"
-    );
-  
-    inicializarGraficosDeClasificadores(
-      "graficoArea", "tablaArea",
-      "/app/dashboard/grafico/TicketsporArea",
-      "Tickets por Área Responsable"
+        "graficoIncidencia", "tablaIncidencia",
+        "/app/dashboard/grafico/TicketsporIncidencia",
+        "Tickets por Tipo de Incidencia"
     );
 
+    inicializarGraficosDeClasificadores(
+        "graficoSubcategoria", "tablaSubcategoria",
+        "/app/dashboard/grafico/TicketsporSubcategoria",
+        "Tickets por Subcategoría de Incidencia"
+    );
+
+    inicializarGraficosDeClasificadores(
+        "graficoCategoria", "tablaCategoria",
+        "/app/dashboard/grafico/TicketsporCategoria",
+        "Tickets por Categoría de Incidencia"
+    );
+
+    inicializarGraficosDeClasificadores(
+        "graficoUrgencia", "tablaUrgencia",
+        "/app/dashboard/grafico/TicketsporUrgencia",
+        "Tickets por Nivel de Urgencia"
+    );
+
+    inicializarGraficosDeClasificadores(
+        "graficoArea", "tablaArea",
+        "/app/dashboard/grafico/TicketsporArea",
+        "Tickets por Área Responsable"
+    );
 }
-  
+
   document.addEventListener("DOMContentLoaded", inicializarDashboard);
 
 

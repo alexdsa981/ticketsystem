@@ -354,6 +354,11 @@ h2 {
 .tooltip-inner {
     text-align: left;
 }
+.select-error {
+    border: 1px solid #ff6666;
+    background-color: #ffcccc;
+    color: #ff6666;
+}
 
 
 /* Estilos para pantallas móviles */

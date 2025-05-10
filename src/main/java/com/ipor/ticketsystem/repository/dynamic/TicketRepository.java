@@ -55,6 +55,47 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     INFORMACION PARA DASHBOARD ADMINISTRADOR
     */
 
+
+    //CATEGORIA INCIDENCIA SIN Y CON FECHA
+// CATEGORÍA INCIDENCIA SIN FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "INNER JOIN sci.categoriaIncidencia ci " +
+            "GROUP BY ci.nombre")
+    List<RecordFactorXConteo> findTicketCountByCATIncidencia();
+
+    // CATEGORÍA INCIDENCIA CON FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ci.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "INNER JOIN sci.categoriaIncidencia ci " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY ci.nombre")
+    List<RecordFactorXConteo> findTicketCountByCATIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+
+    // SUBCATEGORÍA INCIDENCIA SIN FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(sci.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "GROUP BY sci.nombre")
+    List<RecordFactorXConteo> findTicketCountBySubCATIncidencia();
+
+    // SUBCATEGORÍA INCIDENCIA CON FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(sci.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY sci.nombre")
+    List<RecordFactorXConteo> findTicketCountBySubCATIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+
+
     //CONTEO POR INCIDENCIA SIN Y CON FECHA
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ti.nombre, COUNT(a)) " +
             "FROM Atencion a INNER JOIN a.tipoIncidencia ti " +

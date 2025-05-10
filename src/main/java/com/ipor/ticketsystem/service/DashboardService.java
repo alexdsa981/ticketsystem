@@ -61,6 +61,20 @@ public class DashboardService {
 
     //INFO PARA TABLA Y GRAFICO CIRCULAR
     //Conteo Clasificaciones Incidencia (DASHBOARD ADMIN)
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorCategoriaIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountByCATIncidenciaWithDates(fechaInicio, fechaFin);
+        }
+        return ticketRepository.findTicketCountByCATIncidencia();
+    }
+
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorSubcategoriaIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountBySubCATIncidenciaWithDates(fechaInicio, fechaFin);
+        }
+        return ticketRepository.findTicketCountBySubCATIncidencia();
+    }
+
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorTipoIncidencia(LocalDate fechaInicio, LocalDate fechaFin) {
         if (fechaInicio != null && fechaFin != null) {
             return ticketRepository.findTicketCountByTipoIncidenciaWithDates(fechaInicio, fechaFin);

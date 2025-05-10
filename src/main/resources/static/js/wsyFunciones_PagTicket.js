@@ -293,54 +293,72 @@
 
 
 
-                      document.addEventListener("DOMContentLoaded", () => {
-                          const catSelect = document.getElementById("Lista_cat_incidencia");
-                          const subCatSelect = document.getElementById("Lista_subcat_incidencia");
-                          const tipoSelect = document.getElementById("tipo_incidencia");
+document.addEventListener("DOMContentLoaded", () => {
+    const catSelect = document.getElementById("Lista_cat_incidencia");
+    const subCatSelect = document.getElementById("Lista_subcat_incidencia");
+    const tipoSelect = document.getElementById("tipo_incidencia");
 
-                          const subcatWrapper = document.getElementById("subcategoria-wrapper");
-                          const tipoWrapper = document.getElementById("tipo-wrapper");
+    const subcatWrapper = document.getElementById("subcategoria-wrapper");
+    const tipoWrapper = document.getElementById("tipo-wrapper");
 
-                          catSelect.addEventListener("change", () => {
-                              const idCategoria = catSelect.value;
-                              fetch(`/app/clasificadores/listar/subCatIncidenciaActivos/${idCategoria}`)
-                                  .then(response => response.json())
-                                  .then(data => {
-                                      subCatSelect.innerHTML = '<option selected disabled value="">Selecciona la subcategoría</option>';
-                                      tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
-                                      tipoWrapper.classList.add("d-none"); // ocultar tipo
+    catSelect.addEventListener("change", () => {
+        const idCategoria = catSelect.value;
+        fetch(`/app/clasificadores/listar/subCatIncidenciaActivos/${idCategoria}`)
+            .then(response => response.json())
+            .then(data => {
+                subCatSelect.classList.remove("select-error");
+                subCatSelect.innerHTML = '<option selected disabled value="">Selecciona la subcategoría</option>';
+                tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                tipoWrapper.classList.add("d-none");
 
-                                      if (data.length > 0) {
-                                          subcatWrapper.classList.remove("d-none");
-                                          data.forEach(subcat => {
-                                              const option = document.createElement("option");
-                                              option.value = subcat.id;
-                                              option.text = subcat.nombre;
-                                              subCatSelect.appendChild(option);
-                                          });
-                                      } else {
-                                          subcatWrapper.classList.add("d-none");
-                                      }
-                                  });
-                          });
+                if (data.length > 0) {
+                    subcatWrapper.classList.remove("d-none");
+                    data.forEach(subcat => {
+                        const option = document.createElement("option");
+                        option.value = subcat.id;
+                        option.text = subcat.nombre;
+                        subCatSelect.appendChild(option);
+                    });
+                } else {
+                    subcatWrapper.classList.remove("d-none");
+                    subCatSelect.classList.add("select-error");
+                    subCatSelect.innerHTML = '<option disabled selected>No se encontraron subcategorías</option>';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sin subcategorías',
+                        text: 'No se encontraron subcategorías para la categoría seleccionada, contacte con un administrador.',
+                        confirmButtonText: 'Entendido'
+                    });
+                }
+            });
+    });
 
-                          subCatSelect.addEventListener("change", () => {
-                              const idSubCategoria = subCatSelect.value;
-                              fetch(`/app/clasificadores/listar/tipoIncidenciaActivos/${idSubCategoria}`)
-                                  .then(response => response.json())
-                                  .then(data => {
-                                      tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
-                                      if (data.length > 0) {
-                                          tipoWrapper.classList.remove("d-none");
-                                          data.forEach(tipo => {
-                                              const option = document.createElement("option");
-                                              option.value = tipo.id;
-                                              option.text = tipo.nombre;
-                                              tipoSelect.appendChild(option);
-                                          });
-                                      } else {
-                                          tipoWrapper.classList.add("d-none");
-                                      }
-                                  });
-                          });
-                      });
+    subCatSelect.addEventListener("change", () => {
+        const idSubCategoria = subCatSelect.value;
+        fetch(`/app/clasificadores/listar/tipoIncidenciaActivos/${idSubCategoria}`)
+            .then(response => response.json())
+            .then(data => {
+                tipoSelect.classList.remove("select-error");
+                tipoSelect.innerHTML = '<option selected disabled value="">Selecciona el tipo de Incidencia</option>';
+                tipoWrapper.classList.remove("d-none");
+
+                if (data.length > 0) {
+                    data.forEach(tipo => {
+                        const option = document.createElement("option");
+                        option.value = tipo.id;
+                        option.text = tipo.nombre;
+                        tipoSelect.appendChild(option);
+                    });
+                } else {
+                    tipoSelect.classList.add("select-error");
+                    tipoSelect.innerHTML = '<option disabled selected>No se encontraron tipos</option>';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sin tipos de incidencia',
+                        text: 'No se encontraron tipos para la subcategoría seleccionada, contacte con un administrador.',
+                        confirmButtonText: 'Entendido'
+                    });
+                }
+            });
+    });
+});

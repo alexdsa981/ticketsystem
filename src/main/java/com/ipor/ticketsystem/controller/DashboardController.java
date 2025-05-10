@@ -59,6 +59,25 @@ public class DashboardController {
 
 
     //INFO DASHBOARD ADMIN
+    @GetMapping("/grafico/TicketsporCategoria")
+    public ResponseEntity<Map<String, Object>> getTxCatGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorCategoriaIncidencia(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
+    }
+
+
+    @GetMapping("/grafico/TicketsporSubcategoria")
+    public ResponseEntity<Map<String, Object>> getTxSubcatGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorSubcategoriaIncidencia(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
+    }
+
     @GetMapping("/grafico/TicketsporIncidencia")
     public ResponseEntity<Map<String, Object>> getTxIGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
