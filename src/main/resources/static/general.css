@@ -328,11 +328,11 @@ h2 {
 
 
 
-    .is-filled {
-        border: 1.5px solid #0d6efd4d; /* Azul Bootstrap con opacidad */
-        background-color: #e9f2ff;      /* Azul clarito de fondo */
-        transition: all 0.2s ease-in-out;
-    }
+.is-filled {
+    border: 1.5px solid #0d6efd4d; /* Azul Bootstrap con opacidad */
+    background-color: #e9f2ff;      /* Azul clarito de fondo */
+    transition: all 0.2s ease-in-out;
+}
 
 
 
@@ -351,6 +351,9 @@ h2 {
 }
 
 
+.tooltip-inner {
+    text-align: left;
+}
 
 
 /* Estilos para pantallas móviles */

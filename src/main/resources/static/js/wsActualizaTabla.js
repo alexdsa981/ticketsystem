@@ -1,36 +1,44 @@
+let ticketTableBody = null;
+let noResultsMessage = null;
+
 document.addEventListener("DOMContentLoaded", function () {
+    ticketTableBody = document.getElementById('ticketTableBody');
+    noResultsMessage = document.getElementById('noResultsMessage');
     updateTicketCount();
 });
-export function EliminarTicketDeTabla(ticketId) {
 
-    // Buscar el <td> utilizando el ticketId
+function mostrarMensajeSiNoHayTickets() {
+    if (ticketTableBody && noResultsMessage) {
+        const rows = ticketTableBody.getElementsByTagName('tr');
+        noResultsMessage.style.display = rows.length === 0 ? '' : 'none';
+    }
+}
+
+export function EliminarTicketDeTabla(ticketId) {
     const ticketCell = document.getElementById(ticketId);
 
     if (ticketCell) {
-        // Obtener la fila <tr> que contiene este <td>
         const row = ticketCell.closest('tr');
         if (row) {
-            row.remove(); // Eliminar la fila del DOM
+            row.remove();
         } else {
             console.error(`No se encontró una fila para el ticket con ID ${ticketId}`);
         }
     } else {
         console.error(`No se encontró una celda con ID ${ticketId}`);
     }
+    mostrarMensajeSiNoHayTickets();
 }
 
-
 function updateTicketCount() {
-    const ticketTableBody = document.getElementById('ticketTableBody');
-    const ticketCount = document.getElementById('ticketCount');
     if (ticketTableBody) {
         const totalTickets = ticketTableBody.querySelectorAll('tr').length;
+        const ticketCount = document.getElementById('ticketCount');
         if (ticketCount) {
             ticketCount.textContent = totalTickets;
         }
-
     }
-
+    mostrarMensajeSiNoHayTickets();
 }
 
 //
@@ -865,5 +873,7 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
     // Llama a la función para actualizar las filas y la paginación
     updateFilteredRows();
     updateTicketCount();
+
+
 }
 

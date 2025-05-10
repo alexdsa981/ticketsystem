@@ -203,16 +203,25 @@
 
 
                     <div class="mb-3">
-                        <label for="clasificacionUrgencia" class="form-label"><strong><i
-                                class="bi bi-exclamation-triangle"></i>
-                            CLASIFICACIÓN DE URGENCIA:</strong></label>
-                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia"
-                                required>
+                        <label for="clasificacionUrgencia" class="form-label">
+                            <strong><i class="bi bi-exclamation-triangle"></i> CLASIFICACIÓN DE URGENCIA:</strong>
+                            <i class="bi bi-info-circle ms-2 text-primary"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="right"
+                               title="
+                                   <strong>🔵 Bajo:</strong> No afecta directamente el trabajo del usuario.<br>
+                                   <strong>🟡 Medio:</strong> Afecta parcialmente el trabajo.<br>
+                                   <strong>🟠 Alto:</strong> Interrumpe el trabajo con solución temporal.<br>
+                                   <strong>🔴 Crítico:</strong> Afecta operaciones esenciales (ej. internet o ERP caído).">
+                            </i>
+                        </label>
+
+                        <select class="form-select" id="clasificacionUrgencia" name="clasificacion_urgencia" required>
                             <option selected disabled value="">Selecciona Urgencia</option>
-                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
+                            <option th:each="tipo : ${Lista_clasificacion_urgencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label for="clasificacionAtencion" class="form-label"><strong><i class="bi bi-list-check"></i>
                             CLASIFICACIÓN DE ATENCIÓN:</strong></label>
@@ -432,6 +441,16 @@
                         tipoWrapper.classList.add("d-none");
                     }
                 });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: true
+            });
         });
     });
 </script>

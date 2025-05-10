@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const ticketTableBody = document.getElementById('ticketTableBody');
     const noResultsMessage = document.getElementById('noResultsMessage');
 
-    // Verifica si hay filas en el tbody de la tabla
     if(ticketTableBody){
     const rows = ticketTableBody.getElementsByTagName('tr');
         if(noResultsMessage){

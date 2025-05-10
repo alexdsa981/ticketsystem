@@ -216,8 +216,7 @@ public class TicketController {
         WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
         WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
         WSNotificacionesService.notificarActualizacionDashboard();
-
-        response.sendRedirect("/inicio");
+        response.sendRedirect("/ticket/" + ticket.getCodigoTicket());
         return ResponseEntity.ok("Ticket creado correctamente");
     }
 

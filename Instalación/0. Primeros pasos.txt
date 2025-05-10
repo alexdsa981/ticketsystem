@@ -23,4 +23,4 @@ Instalación:
 	en ARGUMENT: "-jar ticketsystem.jar"
 	(Ctrl + Shift + Esc) → pestaña Services para verificar creación y colocarlo como automatico
 
--Ejecutar 2. en SQL Server (Cargará información de tablas a la BD)
+-Ejecutar 2. en SQL Server (Cargará función exportar tickets atendidos)
