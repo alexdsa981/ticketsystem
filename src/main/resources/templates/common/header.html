@@ -32,7 +32,7 @@
                     <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
-                            Soporte
+                            Panel de Soporte
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/soporte/Dashboard">Dashboard</a></li>
@@ -58,7 +58,7 @@
                     <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
-                            Admin Tools
+                            Herramientas de Administración
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/admin/Dashboard">Dashboard</a></li>
@@ -75,16 +75,19 @@
                     <li sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')">
                         <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
-                                <input type="number" id="codigoTicket" name="codigoTicket" placeholder="Buscar por ID de ticket"
-                                       class="form-control" required autocomplete="off">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-search"></i>
-                                </button>
+                                <div class="input-group">
+                                    <span class="input-group-text">TK-</span>
+                                    <input type="number" id="codigoTicket" name="codigoTicket"
+                                           placeholder="Ej: 35" class="form-control" required autocomplete="off">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </li>
                     <li class="d-flex align-items-center" style="margin-left:15px;">
-                        <p style="color: white; margin-bottom:0px; font-size: 16px; font-weight:600;"><span
+                        <p style="color: white; margin-bottom:0px;"><span
                                 id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
                     </li>
                 </ul>
@@ -132,8 +135,9 @@
                     <div sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')">
                         <form id="ticketSearchFormMobile" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
-                                <input type="number" id="codigoTicketMobile" name="codigoTicket" placeholder="Buscar por ID de ticket"
-                                       class="form-control" required autocomplete="off">
+                                <span class="input-group-text">TK-</span>
+                                <input type="number" id="codigoTicketMobile" name="codigoTicket"
+                                       placeholder="Ej: 35" class="form-control" required autocomplete="off">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -143,87 +147,77 @@
 
                     <!-- Contenido del Menú Offcanvas -->
                     <ul class="navbar-nav">
-                        <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
-                            <a class="nav-link" href="/inicio">Enviar Tickets</a>
+                        <li class="nav-item mt-1" sec:authorize="hasAuthority('Usuario')">
+                            <a class="nav-link d-block py-2 px-3 rounded text-white" href="/inicio">
+                                <i class="bi bi-arrow-right-circle-fill me-1"></i> Enviar Tickets
+                            </a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
-                            <a class="nav-link" href="/TicketsEnProceso">Tickets En Proceso</a>
+                            <a class="nav-link d-block py-2 px-3 rounded text-white"  href="/TicketsEnProceso">
+                                <i class="bi bi-arrow-repeat me-1"></i> Tickets En Proceso
+                            </a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
-                            <a class="nav-link" href="/TicketsAtendidos">Tickets Atendidos</a>
+                            <a class="nav-link d-block py-2 px-3 rounded text-white"  href="/TicketsAtendidos">
+                                <i class="bi bi-check-circle-fill me-1"></i> Tickets Atendidos
+                            </a>
                         </li>
-                        <li class="nav-item" sec:authorize="hasAuthority('Usuario')">
-                            <a class="nav-link" href="/TicketsDesestimados">Tickets Desestimados</a>
+                        <li class="nav-item mb-1" sec:authorize="hasAuthority('Usuario')">
+                            <a class="nav-link d-block py-2 px-3 rounded text-white"  href="/TicketsDesestimados">
+                                <i class="bi bi-x-circle-fill me-1"></i> Tickets Desestimados
+                            </a>
                         </li>
 
 
+
+                        <!-- Menú Gestión de Tickets -->
                         <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin','Soporte')">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Mis Tickets
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-ticket-fill me-2"></i> Mis Tickets
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/inicio">Enviar Tickets</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/TicketsEnProceso">Tickets En proceso</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/TicketsAtendidos">Tickets Atendidos</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/TicketsDesestimados">Tickets Desestimados</a></li>
+                            <ul class="dropdown-menu" style="background-color: #343a40;">
+                                <li><a class="dropdown-item text-white" href="/inicio">Enviar Tickets</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/TicketsEnProceso">Tickets En Proceso</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/TicketsAtendidos">Tickets Atendidos</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/TicketsDesestimados">Tickets Desestimados</a></li>
                             </ul>
                         </li>
-                        <!-- Menú Soporte -->
+
+                        <!-- Menú Panel de Soporte -->
                         <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Soporte
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-headset me-2"></i> Panel de Soporte
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/soporte/Dashboard">Dashboard</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/soporte/Recepcionar">Recepcionar Tickets</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/soporte/Atender">Atender Tickets</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/soporte/Tickets-Cerrados">Historial Cerrados</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/soporte/Tickets-Desestimados">Historial
-                                    Desestimados</a></li>
+                            <ul class="dropdown-menu" style="background-color: #343a40;">
+                                <li><a class="dropdown-item text-white" href="/soporte/Dashboard">Dashboard</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/soporte/Recepcionar">Recepcionar Tickets</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/soporte/Atender">Atender Tickets</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/soporte/Tickets-Cerrados">Historial Cerrados</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/soporte/Tickets-Desestimados">Historial Desestimados</a></li>
                             </ul>
                         </li>
-                        <!-- Menú Admin Tools -->
+
+                        <!-- Menú Herramientas de Administración -->
                         <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Admin Tools
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-tools me-2"></i> Herramientas de Administración
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/admin/Dashboard">Dashboard</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/admin/Usuarios">Lista De Usuarios</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
+                            <ul class="dropdown-menu" style="background-color: #343a40;">
+                                <li><a class="dropdown-item text-white" href="/admin/Dashboard">Dashboard</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/admin/Usuarios">Lista De Usuarios</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-white" href="/admin/Clasificadores">Clasificadores</a></li>
                             </ul>
                         </li>
+
                     </ul>
                     <ul class="navbar-nav ul-notificaciones">
                         <li class="li-general position-relative">

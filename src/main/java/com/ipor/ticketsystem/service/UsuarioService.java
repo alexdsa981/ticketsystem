@@ -90,14 +90,6 @@ public class UsuarioService {
         return null; // O puedes lanzar una excepción personalizada si no existe
     }
 
-//    // Eliminar un usuario por ID
-//    public boolean eliminarUsuario(Long id) {
-//        if (usuarioRepository.existsById(id)) {
-//            usuarioRepository.deleteById(id);
-//            return true;
-//        }
-//        return false;
-//    }
 
     public void desactivarUsuario(Long id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
@@ -168,7 +160,7 @@ public class UsuarioService {
                     usuarioTicket = getUsuarioPorUsername(username).get();
                     usuarioTicket.setChangedPass(true);
                     usuarioTicket.setIsSpringUser(Boolean.TRUE);
-                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
+                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre().toUpperCase());
                     usuarioTicket.asignarYEncriptarPassword(password);
                     guardarUsuario(usuarioTicket);
                 } else if (existeEnSpring && !existeEnTickets) {
@@ -177,8 +169,8 @@ public class UsuarioService {
                     usuarioTicket.setRolUsuario(rolUsuarioRepository.findById(1l).get());
                     usuarioTicket.setIsSpringUser(true);
                     usuarioTicket.setChangedPass(true);
-                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre());
-                    usuarioTicket.setUsername(usuarioSpringDTO.getUsuario());
+                    usuarioTicket.setNombre(usuarioSpringDTO.getNombre().toUpperCase());
+                    usuarioTicket.setUsername(usuarioSpringDTO.getUsuario().toUpperCase());
                     usuarioTicket.asignarYEncriptarPassword(password);
                     guardarUsuario(usuarioTicket);
                 } else {

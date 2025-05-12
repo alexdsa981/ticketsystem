@@ -31,6 +31,7 @@
                         <tr>
                             <th>N°</th>
                             <th>Username</th>
+                            <th>Nombre</th>
                             <th>SPRING</th>
                             <th>Nombre</th>
                             <th>Rol</th>
@@ -42,6 +43,7 @@
                         <tr th:each="usuario, iter : ${ListaUsuariosActivos}">
                             <td th:text="${iter.count}">#</td>
                             <td th:text="${usuario.username}">Username</td>
+                            <td th:text="${usuario.nombre}">Username</td>
                             <td th:text="${usuario.isSpringUser} ? 'Sí' : 'No'">Sí/No</td>
                             <td th:text="${usuario.nombre}">Nombre</td>
                             <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
@@ -263,9 +265,25 @@
             nombreInput.value = usuarioNombre;
 
             // Habilitar o deshabilitar campos según sea usuario Spring
-            usernameInput.disabled = isSpringUser;
-            passwordInput.disabled = isSpringUser;
-            nombreInput.disabled = isSpringUser;
+            usernameInput.readOnly = isSpringUser;
+            passwordInput.readOnly = isSpringUser;
+            nombreInput.readOnly = isSpringUser;
+
+            function setReadOnlyWithStyle(input, isReadOnly) {
+                input.readOnly = isReadOnly;
+                if (isReadOnly) {
+                    input.style.backgroundColor = "#e9ecef";  // color típico de disabled en Bootstrap
+                    input.style.cursor = "not-allowed";
+                    input.style.opacity = "1"; // mantener la opacidad normal
+                } else {
+                    input.style.backgroundColor = "";
+                    input.style.cursor = "";
+                    input.style.opacity = "";
+                }
+            }
+            setReadOnlyWithStyle(usernameInput, isSpringUser);
+            setReadOnlyWithStyle(passwordInput, isSpringUser);
+            setReadOnlyWithStyle(nombreInput, isSpringUser);
 
             // Seleccionar el rol actual
             Array.from(rolSelect.options).forEach(option => {

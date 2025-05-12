@@ -411,6 +411,10 @@ h2 {
     }
 }
 @media (max-width: 768px) {
+.nav-link:hover {
+    background-color: #495057 !important;
+}
+
     .title {
         text-align: center; /* Centrar el título */
         width: 100%; /* El título ocupará todo el ancho del div */
