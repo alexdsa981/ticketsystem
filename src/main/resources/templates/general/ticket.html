@@ -83,15 +83,14 @@
                                     <span id="descripcion-atencion">Descripción</span></p>
                                 <p class="mb-1"><i class="bi bi-person"></i>
                                     <span id="usuario-atencion">Usuario</span></p>
-                                <p class="mb-1"><i class="bi bi-building"></i>
+                                <p  sec:authorize="hasAnyAuthority('Admin','Soporte')" class="mb-1"><i class="bi bi-building"></i>
                                     <span id="area-atencion">Clasificación Área</span></p>
-                                <p class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i>
+                                <p  sec:authorize="hasAnyAuthority('Admin','Soporte')" class="mb-1"><i class="bi bi-exclamation-diamond-fill"></i>
                                     <span id="subcat-incidencia-atencion">Clasificación SubCatIncidencia</span>:
                                     <span id="incidencia-atencion">Clasificación Incidencia</span></p>
-                                <p class="mb-1"><i class="bi bi-alarm-fill"
-                                                   sec:authorize="hasAnyAuthority('Admin','Soporte')"></i>
+                                <p  sec:authorize="hasAnyAuthority('Admin','Soporte')"class="mb-1"><i class="bi bi-alarm-fill"></i>
                                     <span id="urgencia-atencion">Clasificación Urgencia</span></p>
-                                <p class="mb-1"><i class="bi bi-tools"></i>
+                                <p  sec:authorize="hasAnyAuthority('Admin','Soporte')" class="mb-1"><i class="bi bi-tools"></i>
                                     <span id="clasificacion-atencion">Clasificación Atención</span></p>
                                 <p class="mb-1"><i class="bi bi-calendar"></i>
                                     <span id="fecha-atencion">Fecha</span>

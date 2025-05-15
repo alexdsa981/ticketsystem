@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:insert="~{common/imports :: headImports}">
 </head>
 <body>
@@ -54,10 +54,11 @@
                            th:text="${detalle.ticket.codigoTicket}"
                            class="ticket-link">
                         </a>
-                    </td>                    <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
+                    </td>
+                    <td class="fecha" th:text="${detalle.fechaFormateadaAtencion}">Fecha</td>
                     <td th:text="${detalle.horaFormateadaAtencion}">Hora</td>
                     <td>
-                        <span class="nombreTipoIncidencia" th:utext="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre  +  ': ' + detalle.atencion.tipoIncidencia.nombre + '<br>'}"></span>
+                        <span sec:authorize="hasAnyAuthority('Admin','Soporte')"  class="nombreTipoIncidencia" th:utext="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre  +  ': ' + detalle.atencion.tipoIncidencia.nombre + '<br>'}"></span>
                         <span th:text="${detalle.ticket.descripcion}"></span><br>
                         <ul>
                             <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
@@ -68,7 +69,7 @@
                         </ul>
                     </td>
                     <td>
-                        <span class="nombreTipoIncidencia" th:utext="${detalle.atencion.clasificacionAtencion.nombre + ':<br>'}"></span>
+                        <span sec:authorize="hasAnyAuthority('Admin','Soporte')" class="nombreTipoIncidencia" th:utext="${detalle.atencion.clasificacionAtencion.nombre + ':<br>'}"></span>
                         <span th:text="${detalle.atencion.descripcion}"></span><br>
                     </td>
                     <td th:text="${detalle.ticket.faseTicket.nombre}">Fase</td>
