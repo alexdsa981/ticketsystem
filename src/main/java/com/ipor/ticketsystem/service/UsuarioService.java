@@ -215,7 +215,7 @@ public class UsuarioService {
     }
 
     public Boolean obtenerValidacionLoginSpring(String username, String password) {
-        String url = "http://localhost:9000/api/usuarios/validar?username=" + username + "&password=" + password;
+        String url = "http://localhost:9000/api/usuarios/validar?username=" + username+ "&password=" + password;
         try {
             return restTemplate.getForObject(url, Boolean.class);
         } catch (Exception e) {
