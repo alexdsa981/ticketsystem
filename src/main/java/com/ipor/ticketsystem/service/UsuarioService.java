@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,10 +132,10 @@ public class UsuarioService {
     public Boolean existeUsuarioPorUsername(String username) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
         if (usuarioOpt.isPresent()) {
-            System.out.println("Existe en bd Tickets");
+            //System.out.println("Existe en bd Tickets");
             return true;
         } else {
-            System.out.println("No existe en bd tickets");
+            //System.out.println("No existe en bd tickets");
             return false;
         }
 
@@ -141,6 +143,7 @@ public class UsuarioService {
 
     public ResponseEntity<Void> logearUsuarioAlSistema(String username, String password, HttpServletResponse response) throws IOException {
         try {
+            username = URLEncoder.encode(username, StandardCharsets.UTF_8);
             Boolean existeEnSpring = obtenerValidacionLoginSpring(username, password);
             Usuario usuarioTicket;
             if (existeEnSpring == null) {
@@ -205,11 +208,11 @@ public class UsuarioService {
             response.sendRedirect("/inicio");
             return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            response.sendRedirect("/login?error=unknown&username=" + username);
+            //response.sendRedirect("/login?error=unknown&username=" + username);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

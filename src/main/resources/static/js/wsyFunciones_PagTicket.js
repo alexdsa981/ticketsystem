@@ -19,14 +19,13 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Datos actualizados del ticket:", data);
+                    //console.log("Datos actualizados del ticket:", data);
 
                     const fase = data.nombreFaseTicket;
                     const cardRecepcion = document.getElementById("card-recepcion");
                     const cardAtencion = document.getElementById("card-atencion");
                     const cardDesestimacion = document.getElementById("card-desestimacion");
 
-                    // Ocultar todo inicialmente
                     cardRecepcion.style.display = "none";
                     cardAtencion.style.display = "none";
                     cardDesestimacion.style.display = "none";
@@ -127,11 +126,32 @@
 
                             document.getElementById("descripcion-atencion").textContent = data.descripcionAtencion || "";
                             document.getElementById("usuario-atencion").textContent = data.nombreUsuarioAtencion || "";
-                            document.getElementById("area-atencion").textContent = data.nombreAreaAtencion || "";
-                            document.getElementById("subcat-incidencia-atencion").textContent = `${data.nombreSubCatIncidencia || ""}`;
-                            document.getElementById("incidencia-atencion").textContent = `${data.nombreTipoIncidencia || ""}`;
-                            document.getElementById("urgencia-atencion").textContent = `Nivel Urgencia: ${data.nombreUrgencia || ""}`;
-                            document.getElementById("clasificacion-atencion").textContent = data.nombreClasificacionAtencion || "";
+
+                            const areaAtencionElem = document.getElementById("area-atencion");
+                            if (areaAtencionElem) {
+                              areaAtencionElem.textContent = data.nombreAreaAtencion || "";
+                            }
+
+                            const subcatIncidenciaElem = document.getElementById("subcat-incidencia-atencion");
+                            if (subcatIncidenciaElem) {
+                              subcatIncidenciaElem.textContent = data.nombreSubCatIncidencia || "";
+                            }
+
+                            const incidenciaAtencionElem = document.getElementById("incidencia-atencion");
+                            if (incidenciaAtencionElem) {
+                              incidenciaAtencionElem.textContent = data.nombreTipoIncidencia || "";
+                            }
+
+                            const urgenciaAtencionElem = document.getElementById("urgencia-atencion");
+                            if (urgenciaAtencionElem) {
+                              urgenciaAtencionElem.textContent = `Nivel Urgencia: ${data.nombreUrgencia || ""}`;
+                            }
+
+                            const clasificacionAtencionElem = document.getElementById("clasificacion-atencion");
+                            if (clasificacionAtencionElem) {
+                              clasificacionAtencionElem.textContent = data.nombreClasificacionAtencion || "";
+                            }
+
                             document.getElementById("fecha-atencion").textContent = data.fechaFormateadaAtencion || "";
                             document.getElementById("hora-atencion").textContent = data.horaFormateadaAtencion || "";
                         }
