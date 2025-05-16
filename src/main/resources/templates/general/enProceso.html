@@ -8,14 +8,12 @@
 
 <main class="content-wrapper">
     <div class="container ">
-        <div class="d-flex align-items-center">
-            <h2><i class="bi bi-hourglass-split text-warning"></i> TICKETS EN PROCESO:</h2>
-            <a href="/inicio" class="btn btn-outline-dark btn-dashboard-atencion" style="margin-left:10px">
-                <i class="bi bi-arrow-left"></i>
-            </a>
-            <a href="/TicketsAtendidos" class="btn btn-outline-dark btn-dashboard-atencion" style="margin-left:10px">
-                Ver Atendidos <i class="bi bi-arrow-right"></i>
-            </a>
+        <div class="d-flex flex-wrap align-items-center gap-2 navegacion-desktop">
+            <h2 class="me-3"><i class="bi bi-inbox text-info"></i> TICKETS<span class="title-text-mobile"> EN PROCESO</span>:</h2>
+            <a href="/inicio" class="btn btn-outline-dark btn-sm">Enviados</a>
+            <a href="/TicketsEnProceso" class="btn btn-outline-dark btn-sm btn-active">En Proceso</a>
+            <a href="/TicketsAtendidos" class="btn btn-outline-dark btn-sm">Atendidos</a>
+            <a href="/TicketsDesestimados" class="btn btn-outline-dark btn-sm">Desestimados</a>
         </div>
 
         <div class="table-responsive">

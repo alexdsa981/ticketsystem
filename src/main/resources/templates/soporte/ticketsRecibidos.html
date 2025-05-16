@@ -12,24 +12,31 @@
 <div class="container-fluid  content-wrapper">
     <!-- Encabezado con título y botones -->
     <div class="d-flex justify-content-between align-items-center">
-        <!-- Contenedor para agrupar el título y el contador -->
-        <div class="d-flex align-items-center">
-            <h2>SOPORTE: Recepcionar Tickets</h2>
+        <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
+            <h2 class="me-2">SOPORTE<span class="title-text-mobile"> RECEPCIONAR</span>:</h2>
             <div id="ticketCount"
-                 class="badge bg-danger ms-2 border d-flex justify-content-center align-items-center ticketCountAtencion"
+                 class="badge bg-danger border d-flex justify-content-center align-items-center ticketCountAtencion"
                  style="width: 30px; height: 30px;">
                 0
             </div>
 
-            <a href="/soporte/Atender" class="btn btn-outline-dark btn-dashboard-atencion" style="margin-left:10px">
-                Atender <i class="bi bi-arrow-right"></i>
+            <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm  btn-active">
+                Recepcionar
             </a>
-            <a href="/soporte/Dashboard" class="btn btn-dark btn-dashboard-atencion" role="button"
-               style="margin-left:10px">
+            <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm ">
+                Atender
+            </a>
+            <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm ">
+                Historial Atendidos
+            </a>
+            <a href="/soporte/Tickets-Desestimados" class="btn btn-outline-dark btn-sm ">
+                Historial Desestimados
+            </a>
+            <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-dashboard-atencion">
                 Ir a Dashboard
             </a>
-
         </div>
+
         <!-- Contenedor para los dos botones alineados a la derecha -->
         <div class="btn-filtros">
             <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"

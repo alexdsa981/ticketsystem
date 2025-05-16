@@ -24,6 +24,15 @@ footer {
 }
 
 
+.btn-active {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #343a40;
+}
+.btn-active:hover {
+    background-color: #23272b;
+    color: #fff;
+}
 
 
 
@@ -255,6 +264,14 @@ h2 {
     transform: scale(1.05); /* Escala el botón al 105% de su tamaño al pasar el mouse */
 }
 
+
+.btn-dashboard-atencion {
+    background-color: #004085;
+    color: #fff;
+    border: none;
+}
+
+
 .card {
     padding: 10px; /* Espaciado interno */
     min-height: 80px; /* Altura fija para la tarjeta */
@@ -360,6 +377,10 @@ h2 {
     color: #ff6666;
 }
 
+
+.title-text-mobile{
+    display:none;
+}
 
 /* Estilos para pantallas móviles */
 @media (max-width: 991px) {
@@ -497,7 +518,12 @@ h2 {
         white-space: normal;
         overflow-wrap: break-word;
     }
-
+    .navegacion-desktop a{
+        display:none;
+    }
+    .title-text-mobile{
+        display:inline;
+    }
 
 
 }

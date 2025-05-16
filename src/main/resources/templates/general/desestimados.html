@@ -8,11 +8,12 @@
 <main>
     <div class="container content-wrapper">
         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <h2><i class="bi bi-x-circle text-danger"></i> TICKETS DESESTIMADOS:</h2>
-                <a href="/TicketsAtendidos" class="btn btn-outline-dark btn-dashboard-atencion" style="margin-left:10px">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
+            <div class="d-flex flex-wrap align-items-center gap-2 navegacion-desktop">
+                <h2 class="me-3"><i class="bi bi-x-circle text-info"></i> TICKETS<span class="title-text-mobile"> DESESTIMADOS</span>:</h2>
+                <a href="/inicio" class="btn btn-outline-dark btn-sm">Enviados</a>
+                <a href="/TicketsEnProceso" class="btn btn-outline-dark btn-sm">En Proceso</a>
+                <a href="/TicketsAtendidos" class="btn btn-outline-dark btn-sm">Atendidos</a>
+                <a href="/TicketsDesestimados" class="btn btn-outline-dark btn-sm btn-active">Desestimados</a>
             </div>
 
             <!-- Contenedor para los dos botones alineados a la derecha -->

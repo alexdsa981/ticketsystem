@@ -11,15 +11,26 @@
     <div class="container-fluid">
         <!-- Encabezado con título, contador y botones -->
         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <h2>SOPORTE: Tickets Desestimados</h2>
+            <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
+                <h2>SOPORTE<span class="title-text-mobile"> DESESTIMADOS</span>:</h2>
                 <div id="ticketCount"
                      class="badge bg-secondary ms-2 d-flex justify-content-center align-items-center ticketCountAtencion"
                      style="width: 30px; height: 30px;">
                     0
                 </div>
-                <a href="/soporte/Dashboard" class="btn btn-dark btn-dashboard-atencion" role="button"
-                   style="margin-left:15px">
+                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm  ">
+                    Recepcionar
+                </a>
+                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm  ">
+                    Atender
+                </a>
+                <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm  ">
+                    Historial Atendidos
+                </a>
+                <a href="/soporte/Tickets-Desestimados" class="btn btn-outline-dark btn-sm  btn-active">
+                    Historial Desestimados
+                </a>
+                <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-dashboard-atencion">
                     Ir a Dashboard
                 </a>
             </div>

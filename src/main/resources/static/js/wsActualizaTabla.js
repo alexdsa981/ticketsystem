@@ -623,11 +623,6 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
 
         <td>
-            <span class="nombreTipoIncidencia clasificacion">
-                ${ticketRecord.nombreSubCatIncidencia}:
-                ${ticketRecord.nombreTipoIncidencia}<br>
-
-            </span>
             <span>
                 ${ticketRecord.descripcionTicket.length > 150
             ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
@@ -644,9 +639,6 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
         </td>
 
         <td>
-            <span class="nombreTipoIncidencia clasificacion-atencion">
-                ${ticketRecord.nombreClasificacionAtencion}:<br>
-            </span>
             <span>
                 ${ticketRecord.descripcionAtencion.length > 150
             ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
