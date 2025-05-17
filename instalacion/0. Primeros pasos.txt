@@ -9,9 +9,9 @@ Instalación:
 
 	-Colocar dirección de BD, usuario y contraseña de SQL Server
 	-colocar el puerto en el que se alojará la aplicación
-	"spring.datasource.url= jdbc:sqlserver://localhost:1433;trustServerCertificate=true;databaseName=ticketSystem
-	spring.datasource.username= alex
-	spring.datasource.password= password!!
+	"spring.datasource.url= jdbc:sqlserver://localhost:1433;trustServerCertificate=true;databaseName=helpdesk_ipor
+	spring.datasource.username= user
+	spring.datasource.password= password
 	server.port=8080"
 -Iniciar el programa (Se crearán las tablas)
 	abrir C:\proyectos\ticketsystem (ruta del proyecto) en cmd
