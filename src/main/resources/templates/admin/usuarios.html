@@ -31,7 +31,6 @@
                         <tr>
                             <th>N°</th>
                             <th>Username</th>
-                            <th>Nombre</th>
                             <th>SPRING</th>
                             <th>Nombre</th>
                             <th>Rol</th>
@@ -43,7 +42,6 @@
                         <tr th:each="usuario, iter : ${ListaUsuariosActivos}">
                             <td th:text="${iter.count}">#</td>
                             <td th:text="${usuario.username}">Username</td>
-                            <td th:text="${usuario.nombre}">Username</td>
                             <td th:text="${usuario.isSpringUser} ? 'Sí' : 'No'">Sí/No</td>
                             <td th:text="${usuario.nombre}">Nombre</td>
                             <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
@@ -84,6 +82,7 @@
                         <tr>
                             <th>N°</th>
                             <th>Username</th>
+                            <th>SPRING</th>
                             <th>Nombre</th>
                             <th>Rol</th>
                             <th>Estado</th>
@@ -94,6 +93,7 @@
                         <tr th:each="usuario, iter : ${ListaUsuariosDesactivados}">
                             <td th:text="${iter.count}">#</td>
                             <td th:text="${usuario.username}">Username</td>
+                            <td th:text="${usuario.isSpringUser} ? 'Sí' : 'No'">Sí/No</td>
                             <td th:text="${usuario.nombre}">Nombre</td>
                             <td th:text="${usuario.rolUsuario.nombre}">Rol</td>
                             <td class="text-muted fw-bold">Desactivado</td>

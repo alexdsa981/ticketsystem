@@ -140,7 +140,7 @@ public class UsuariosCRUDController {
     // desactivar un usuario
     @GetMapping("/desactivar/{id}")
     public String desactivarUsuario(@PathVariable Long id) {
-        if (!Objects.equals(usuarioService.getIDdeUsuarioLogeado(), id)) {
+        if (!Objects.equals(usuarioService.getIDdeUsuarioLogeado(), id) && id !=1) {
             usuarioService.desactivarUsuario(id);
 
             List<Ticket>listaTicketsUsuarioFase1 = ticketRepository.findByUsuarioIdAndFaseTicketId(id, 1L);
