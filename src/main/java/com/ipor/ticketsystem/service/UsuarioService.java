@@ -143,13 +143,13 @@ public class UsuarioService {
 
     public ResponseEntity<Void> logearUsuarioAlSistema(String username, String password, HttpServletResponse response) throws IOException {
         try {
-            username = URLEncoder.encode(username, StandardCharsets.UTF_8);
             Boolean existeEnSpring = obtenerValidacionLoginSpring(username, password);
             Usuario usuarioTicket;
             if (existeEnSpring == null) {
                 if (getUsuarioPorUsername(username).isPresent()) {
                     usuarioTicket = getUsuarioPorUsername(username).get();
                 } else {
+                    username = URLEncoder.encode(username, StandardCharsets.UTF_8);
                     response.sendRedirect("/login?error=unknown&username=" + username);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
@@ -180,12 +180,14 @@ public class UsuarioService {
                     if (getUsuarioPorUsername(username).isPresent()) {
                         usuarioTicket = getUsuarioPorUsername(username).get();
                     } else {
+                        username = URLEncoder.encode(username, StandardCharsets.UTF_8);
                         response.sendRedirect("/login?error=badCredentials&username=" + username);
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                     }
                 }
             }
             if (!usuarioTicket.getIsActive()) {
+                username = URLEncoder.encode(username, StandardCharsets.UTF_8);
                 response.sendRedirect("/login?error=inactive&username=" + username);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -209,6 +211,7 @@ public class UsuarioService {
             return ResponseEntity.ok().build();
         } catch (BadCredentialsException e) {
             //System.out.println(e.getMessage());
+            username = URLEncoder.encode(username, StandardCharsets.UTF_8);
             response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
