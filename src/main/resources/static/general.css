@@ -322,6 +322,12 @@ h2 {
     right: 20px;
     z-index: 1050;
 }
+.fixed-qr-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1050;
+}
 #btnQuitarFiltro {
         right: 115px; /* Ajusta la posición del botón a la izquierda del de Filtrar */
 }
@@ -525,5 +531,8 @@ h2 {
         display:inline;
     }
 
+    .fixed-qr-button {
+        display:none;
+    }
 
 }

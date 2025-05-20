@@ -91,6 +91,8 @@
                                 id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
                     </li>
                 </ul>
+
+
                 <ul class="navbar-nav ms-auto" style="margin-right:10px;">
                     <li class="d-flex align-items-center ms-auto" style="color:white;">
                         <i class="bi bi-person-fill"></i><span style="margin-right:6px;">:</span>
@@ -246,6 +248,36 @@
             </div>
         </div>
     </nav>
+    <button type="button" class="btn btn-outline-dark rounded-pill shadow fixed-qr-button "
+            data-bs-toggle="modal" data-bs-target="#qrModal">
+        QR
+    </button>
+
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="qrModalLabel">Escanea y accede desde el móvil:</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!--
+                    <img src="/images/qr/qr-nextorion.svg" width="300px" alt="Código QR">
+                    -->
+                    <img src="/images/qr/qr-ipor.svg" width="300px" alt="Código QR">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <small class="text-muted">
+                        <span style="font-weight: 500;">Powered by</span>
+                        <a href="https://nextorion.pe" class="text-decoration-none text-dark fw-semibold" target="_blank">Nextorion</a>
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
     <!-- Modal para mostrar los detalles del ticket -->
     <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
         <div class="modal-dialog">
