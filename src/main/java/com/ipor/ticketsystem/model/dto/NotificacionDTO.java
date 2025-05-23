@@ -20,7 +20,7 @@ public record NotificacionDTO(
     public NotificacionDTO(Notificacion notificacion) {
         this(
                 notificacion.getId(),
-                String.format("TK-%04d", notificacion.getTicket().getId()),
+                notificacion.getTicket().getCodigoTicket(),
                 notificacion.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Formatear la fecha inline
                 notificacion.getHora().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")), // Formatear la hora inline
                 notificacion.getMensaje(),
