@@ -5,6 +5,7 @@ import com.ipor.ticketsystem.repository.fixed.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.geom.Area;
 import java.util.List;
 
 @Service
@@ -31,6 +32,9 @@ public class ClasificadoresService {
     @Autowired
     private AreaAtencionRepository areaAtencionRepository;
 
+    @Autowired
+    private SedeRepository sedeRepository;
+
     //GUARDAR CLASIFICADOR EN BASE DE DATOS
     public void saveTIncidencia(TipoIncidencia tipoIncidencia) {
         tipoIncidenciaRepository.save(tipoIncidencia);
@@ -50,6 +54,10 @@ public class ClasificadoresService {
 
     public void saveCArea(AreaAtencion areaAtencion) {
         areaAtencionRepository.save(areaAtencion);
+    }
+
+    public void saveSede(Sede sede) {
+        sedeRepository.save(sede);
     }
 
     public void saveCatIncidencia(CategoriaIncidencia categoriaIncidencia) {
@@ -80,11 +88,9 @@ public class ClasificadoresService {
         return tipoIncidenciaRepository.findBySubCategoriaIncidenciaIdOrderByNombreAsc(id);
     }
 
-
-
-
-
-
+    public List<AreaAtencion> getListaAreaPorSedeId(Long id) {
+        return areaAtencionRepository.findBySedeIdOrderByNombreAsc(id);
+    }
 
 
 
@@ -104,6 +110,9 @@ public class ClasificadoresService {
 
     public List<AreaAtencion> getListaAreaAtencion() {
         return areaAtencionRepository.findAllByOrderByNombreAsc();
+    }
+    public List<Sede> getListaSedes() {
+        return sedeRepository.findAllByOrderByNombreAsc();
     }
 
 
@@ -137,6 +146,9 @@ public class ClasificadoresService {
     public AreaAtencion getAreaAtencionPorId(Long id) {
         return areaAtencionRepository.findById(id).get();
     }
+    public Sede getSedePorId(Long id) {
+        return sedeRepository.findById(id).get();
+    }
 
 
     //LISTAR CLASIFICADORES ESTADO (ACTIVO)
@@ -162,8 +174,10 @@ public class ClasificadoresService {
         return clasificacionDesestimacionRepository.findByIsActiveTrue();
     }
 
-    public List<AreaAtencion> getListaAreaAtencionActivos() {
-        return areaAtencionRepository.findByIsActiveTrueOrderByNombreAsc();
+
+
+    public List<Sede> getListaSedesActivos() {
+        return sedeRepository.findByIsActiveTrueOrderByNombreAsc();
     }
 
 
@@ -209,8 +223,16 @@ public class ClasificadoresService {
     public void actualizarArea(Long id, AreaAtencion areaActualizada) {
         AreaAtencion area = areaAtencionRepository.findById(id).get();
         area.setNombre(areaActualizada.getNombre());
+        area.setSede(areaActualizada.getSede());
         areaAtencionRepository.save(area); // Persistir los cambios
     }
+
+    public void actualizarSede(Long id, Sede sedeActualizada) {
+        Sede sede = sedeRepository.findById(id).get();
+        sede.setNombre(sedeActualizada.getNombre());
+        sedeRepository.save(sede); // Persistir los cambios
+    }
+
 
     //CAMBIAR ESTADO DE UN CLASIFICADOR EXISTENTE (ACTIVADO/DESACTIVADO)
     public void cambiarEstadoIncidencia(Long id, boolean isActive) {
@@ -255,7 +277,11 @@ public class ClasificadoresService {
         areaAtencionRepository.save(area);
     }
 
-
+    public void cambiarEstadoSede(Long id, boolean isActive) {
+        Sede sede = sedeRepository.findById(id).orElseThrow(() -> new RuntimeException("Sede no encontrada"));
+        sede.setIsActive(isActive);
+        sedeRepository.save(sede);
+    }
 
 
 
@@ -271,10 +297,8 @@ public class ClasificadoresService {
         return tipoIncidenciaRepository.findBySubCategoriaIncidenciaIdAndIsActiveTrue(idSubCategoria);
     }
 
-
-
-
-
-
+    public List<AreaAtencion> getListaAreasActivosPorIDSede(Long idSede) {
+        return areaAtencionRepository.findBySedeIdAndIsActiveTrueOrderByNombreAsc(idSede);
+    }
 
 }

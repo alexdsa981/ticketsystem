@@ -90,6 +90,15 @@ public class DashboardService {
         return ticketRepository.findTicketCountByClasificacionUrgencia();
     }
 
+    //Conteo Sede (DASHBOARD ADMIN)
+    public List<RecordFactorXConteo> obtenerConteoDeTicketsPorSede(LocalDate fechaInicio, LocalDate fechaFin) {
+
+        if (fechaInicio != null && fechaFin != null) {
+            return ticketRepository.findTicketCountBySedeWithDates(fechaInicio, fechaFin);
+        }
+        return ticketRepository.findTicketCountBySede();
+    }
+
     //Conteo Áreas (DASHBOARD ADMIN)
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorArea(LocalDate fechaInicio, LocalDate fechaFin) {
 

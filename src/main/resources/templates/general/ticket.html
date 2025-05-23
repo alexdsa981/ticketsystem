@@ -207,17 +207,31 @@
                                       placeholder="Agrega algún comentario sobre la atención del ticket..."
                                       required></textarea>
                         </div>
+
+
+                        <!-- Jerarquía visual -->
+                        <p class="text-secondary small mb-3">
+                            <i class="bi bi-diagram-3"></i> Sede &rarr; Area de atendida
+                        </p>
+
                         <div class="mb-3">
-                            <label for="areaAtencion" class="form-label"><strong><i class="bi bi-diagram-3"></i> ÁREA
-                                ATENDIDA:</strong></label>
-                            <select class="form-select" id="areaAtencion" name="area_atencion"
-                                    required>
-                                <option selected disabled value="">Selecciona un área</option>
-                                <option th:each="tipo : ${Lista_area_atencion}" th:value="${tipo.id}"
-                                        th:text="${tipo.nombre}"></option>
+                            <label for="sede" class="form-label">
+                                <strong><i class="bi bi-building"></i> SEDE:</strong>
+                            </label>
+                            <select class="form-select" id="sede" name="sede" required>
+                                <option selected disabled value="">Selecciona una sede</option>
+                                <option th:each="tipo : ${Lista_sedes}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                             </select>
                         </div>
 
+                        <div class="mb-3 d-none" id="area-wrapper">
+                            <label for="areaAtencion" class="form-label">
+                                <strong><i class="bi bi-diagram-2"></i> ÁREA ATENDIDA:</strong>
+                            </label>
+                            <select class="form-select" id="areaAtencion" name="area_atencion" required>
+                                <option selected disabled value="">Selecciona un área</option>
+                            </select>
+                        </div>
 
                         <!-- Jerarquía visual -->
                         <p class="text-secondary small mb-3">

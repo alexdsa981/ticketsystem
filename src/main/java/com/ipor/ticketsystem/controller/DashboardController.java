@@ -94,6 +94,14 @@ public class DashboardController {
         return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
     }
 
+    @GetMapping("/grafico/TicketsporSede")
+    public ResponseEntity<Map<String, Object>> getTxSGraficoData(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+        List<RecordFactorXConteo> conteoTickets = dashboardService.obtenerConteoDeTicketsPorSede(fechaInicio, fechaFin);
+        return ResponseEntity.ok(mapearDatosFactorxConteo(conteoTickets));
+    }
+
     @GetMapping("/grafico/TicketsporArea")
     public ResponseEntity<Map<String, Object>> getTxAGraficoData(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,

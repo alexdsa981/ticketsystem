@@ -6,7 +6,7 @@
 <div th:replace="~{common/header :: header}">
     <!--si se usa th:insert, este se colocará dentro de este div-->
 </div>
-<main class="container content-wrapper">
+<main class="container">
 
 
     <div>
@@ -370,11 +370,79 @@
             </div>
         </div>
     </div>
+
+
+
     <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo == 'Area'}">
-        <!-- Clasificadores Área -->
+        <div class="my-3">
+            <select id="selectSede" class="form-select">
+                <option value="" th:selected="${sedeSeleccionada == null or sedeSeleccionada == ''}" disabled>Seleccione una Sede</option>
+                <option th:each="sede : ${sedes}"
+                        th:value="${sede.id}"
+                        th:text="${sede.nombre}"
+                        th:selected="${sedeSeleccionada != null and sedeSeleccionada != '' and sede.id == T(java.lang.Long).valueOf(sedeSeleccionada)}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Clasificadores Sede -->
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
-                <h5 class="mb-0">Áreas</h5>
+                <h5 class="mb-0">Sedes</h5>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newSedeModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Sede</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clasificador, iter: ${sedes}"
+                        th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${clasificador.nombre}">Nombre</td>
+                        <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                        <td class="d-flex gap-1 flex-wrap">
+                            <button class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#sedeModal"
+                                    th:data-sede-id="${clasificador.id}"
+                                    th:data-sede-nombre="${clasificador.nombre}"
+                                    onclick="openSedeModal(this)">
+                                Editar
+                            </button>
+                            <th:block th:if="${clasificador.isActive}">
+                                <a class="btn btn-danger btn-sm"
+                                   th:href="@{'/app/clasificadores/desactivar/sede/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Sede?');">
+                                    Desactivar
+                                </a>
+                            </th:block>
+                            <th:block th:if="${!clasificador.isActive}">
+                                <a class="btn btn-success btn-sm"
+                                   th:href="@{'/app/clasificadores/activar/sede/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Área?');">
+                                    Activar
+                                </a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- Clasificadores Área (solo si se ha seleccionado una sede) -->
+        <div th:if="${sedeSeleccionada != null and sedeSeleccionada != ''}" class="card shadow-sm" style="margin-top:20px;">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                <h5 class="mb-0">Áreas: <span id="sedeSeleccionadaTexto"></span></h5>
                 <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newAreaModal">
                     <i class="bi bi-plus-lg"></i> Nuevo
                 </button>
@@ -399,6 +467,7 @@
                             <button class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal" data-bs-target="#areaModal"
                                     th:data-area-id="${clasificador.id}"
+                                    th:data-area-sede-id="${clasificador.sede.id}"
                                     th:data-area-nombre="${clasificador.nombre}"
                                     onclick="openAreaModal(this)">
                                 Editar
@@ -423,7 +492,37 @@
                 </table>
             </div>
         </div>
+
+
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectSede = document.getElementById("selectSede");
+
+            if (selectSede) {
+                const sedeSeleccionada = /*[[${sedeSeleccionada}]]*/ '';
+
+                if (sedeSeleccionada !== '') {
+                    selectSede.value = sedeSeleccionada;
+                }
+
+                selectSede.addEventListener("change", function () {
+                    const sedeId = this.value;
+                    const urlParams = new URLSearchParams(window.location.search);
+                    urlParams.set('clasificador', 'Area');
+                    if (sedeId) {
+                        urlParams.set('sede', sedeId);
+                    } else {
+                        urlParams.delete('sede');
+                    }
+                    window.location.search = urlParams.toString();
+                });
+            }
+        });
+    </script>
+
+
 
 
 
@@ -730,12 +829,91 @@
     </div>
 
 
+
+
+
+
+
+
+
+
+
+    <!--CREAR SEDE-->
+    <div class="modal fade" id="newSedeModal" tabindex="-1" aria-labelledby="newSedeModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/app/clasificadores/sede/nuevo" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id_sede">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="newSedeModalLabel">Nueva Clasificación de Sede:</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombreSede" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreSede" name="nombre" required
+                                   autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!--EDITAR SEDE-->
+    <div class="modal fade" id="sedeModal" tabindex="-1" aria-labelledby="sedeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sedeModalLabel">Editar Clasificación de Sede:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sedeForm" method="post">
+                        <input type="hidden" name="id_sede">
+                        <input type="hidden" id="sedeId" name="id"/>
+                        <div class="mb-3">
+                            <label for="sedeNombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="sedeNombre" name="nombre" required
+                                   autocomplete="off"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!--CREAR AREA-->
     <div class="modal fade" id="newAreaModal" tabindex="-1" aria-labelledby="newAreaModal"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="/app/clasificadores/area/nuevo" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id_sede">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="newAreaModalLabel">Nueva Clasificación de Área:</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -770,12 +948,21 @@
                 </div>
                 <div class="modal-body">
                     <form id="areaForm" method="post">
+                        <input type="hidden" name="id_sede">
                         <input type="hidden" id="areaId" name="id"/>
                         <div class="mb-3">
                             <label for="areaNombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="areaNombre" name="nombre" required
                                    autocomplete="off"/>
                         </div>
+                        <select class="form-select"  name="id_sedeEdit" style="margin-bottom:15px;">
+                            <option value="" th:selected="${sedeSeleccionada == null or sedeSeleccionada == ''}" disabled>Seleccione una Sede</option>
+                            <option th:each="sede : ${sedes}"
+                                    th:value="${sede.id}"
+                                    th:text="${sede.nombre}"
+                                    th:selected="${sedeSeleccionada != null and sedeSeleccionada != '' and sede.id == T(java.lang.Long).valueOf(sedeSeleccionada)}">
+                            </option>
+                        </select>
                         <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
                     </form>
                 </div>
@@ -783,6 +970,17 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function () {
+                const sedeSeleccionada = document.getElementById("selectSede")?.value;
+                const hiddenInput = form.querySelector('[name="id_sede"]');
+                if (hiddenInput && sedeSeleccionada) {
+                    hiddenInput.value = sedeSeleccionada;
+                }
+            });
+        });
+    </script>
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
@@ -810,6 +1008,24 @@
             }
         });
     </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const path = window.location.pathname;
+            const query = new URLSearchParams(window.location.search);
+            const clasificador = query.get("clasificador");
+
+            // Ejecutar solo si estamos en la página con clasificador=Area
+            if (path === "/admin/Clasificadores" && clasificador === "Area") {
+                const sedeSelect = document.getElementById("selectSede");
+                const sedeTexto = sedeSelect.options[sedeSelect.selectedIndex]?.text;
+
+                if (sedeTexto && sedeTexto !== "Seleccione una Sede") {
+                    document.getElementById("sedeSeleccionadaTexto").innerText = `(${sedeTexto})`;
+                }
+            }
+        });
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

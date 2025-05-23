@@ -122,17 +122,21 @@ public class WebController {
             @RequestParam(name = "clasificador", required = false) String clasificador,
             @RequestParam(name = "categoria", required = false) String categoria,
             @RequestParam(name = "subcategoria", required = false) String subcategoria,
+            @RequestParam(name = "sede", required = false) String sede,
             Model model
     ) {
         if (clasificador == null) clasificador = "Area";
+
         model.addAttribute("clasificadorActivo", clasificador);
-        clasificadoresController.listarClasificadores(model, categoria, subcategoria);
+        clasificadoresController.listarClasificadores(model, categoria, subcategoria, sede); // NUEVO
         model.addAttribute("Titulo", "HelpDesk | Admin - Gestion de Clasificadores");
+
         model.addAttribute("categoriaSeleccionada", categoria);
         model.addAttribute("subcategoriaSeleccionada", subcategoria);
+        model.addAttribute("sedeSeleccionada", sede); // NUEVO
+
         return "admin/clasificadores";
     }
-
 
 
 
@@ -153,7 +157,7 @@ public class WebController {
         clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
-        clasificadoresController.getListaClasificacionesAreaActivos(model);
+        clasificadoresController.getListaSedesActivos(model);
         clasificadoresController.getListaCatIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Soporte - Atender Tickets");
         return "soporte/ticketsRecepcionados";
@@ -191,7 +195,7 @@ public class WebController {
         clasificadoresController.getListaClasificacionesAtencionActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
-        clasificadoresController.getListaClasificacionesAreaActivos(model);
+        clasificadoresController.getListaSedesActivos(model);
         clasificadoresController.getListaCatIncidenciaActivos(model);
 
 
@@ -199,9 +203,6 @@ public class WebController {
             DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticketOptional.get());
             model.addAttribute("detalle", detalleTicketDTO);
             model.addAttribute("Titulo", "HelpDesk | " + detalleTicketDTO.getTicket().getCodigoTicket());
-
-
-
 
         }
             return "general/ticket";

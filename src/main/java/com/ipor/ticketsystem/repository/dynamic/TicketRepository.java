@@ -97,14 +97,23 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
     //CONTEO POR INCIDENCIA SIN Y CON FECHA
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ti.nombre, COUNT(a)) " +
-            "FROM Atencion a INNER JOIN a.tipoIncidencia ti " +
-            "GROUP BY ti.nombre")
+// CONTEO POR INCIDENCIA SIN FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(" +
+            "CONCAT(sci.nombre, ' - ',ti.nombre), COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "GROUP BY ti.nombre, sci.nombre")
     List<RecordFactorXConteo> findTicketCountByTipoIncidencia();
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ti.nombre, COUNT(a)) " +
-            "FROM Atencion a INNER JOIN a.tipoIncidencia ti " +
-            "WHERE (a.fecha BETWEEN :fechaInicio AND :fechaFin) " +
-            "GROUP BY ti.nombre")
+
+    // CONTEO POR INCIDENCIA CON FECHA
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(" +
+            "CONCAT(sci.nombre, ' - ',ti.nombre), COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.tipoIncidencia ti " +
+            "INNER JOIN ti.subCategoriaIncidencia sci " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY ti.nombre, sci.nombre")
     List<RecordFactorXConteo> findTicketCountByTipoIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -123,20 +132,41 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
 
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(se.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.areaAtencion aa " +
+            "INNER JOIN aa.sede se " +
+            "GROUP BY se.nombre")
+    List<RecordFactorXConteo> findTicketCountBySede();
+
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(se.nombre, COUNT(a)) " +
+            "FROM Atencion a " +
+            "INNER JOIN a.areaAtencion aa " +
+            "INNER JOIN aa.sede se " +
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY se.nombre")
+    List<RecordFactorXConteo> findTicketCountBySedeWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+
+
 
     //CONTEO POR AREA SIN Y CON FECHA
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(aa.nombre, COUNT(a)) " +
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(" +
+            "CONCAT(se.nombre, ' - ', aa.nombre), COUNT(a)) " +
             "FROM Atencion a " +
             "INNER JOIN a.areaAtencion aa " +
-            "GROUP BY aa.nombre")
+            "INNER JOIN aa.sede se " +
+            "GROUP BY se.nombre, aa.nombre")
     List<RecordFactorXConteo> findTicketCountByArea();
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(aa.nombre, COUNT(a)) " +
+
+    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(" +
+            "CONCAT(se.nombre, ' - ', aa.nombre), COUNT(a)) " +
             "FROM Atencion a " +
             "INNER JOIN a.areaAtencion aa " +
+            "INNER JOIN aa.sede se " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY aa.nombre")
+            "GROUP BY se.nombre, aa.nombre")
     List<RecordFactorXConteo> findTicketCountByAreaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-
 
 
 

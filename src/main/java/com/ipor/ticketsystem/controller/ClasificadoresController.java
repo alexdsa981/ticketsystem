@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.fixed.*;
+import com.ipor.ticketsystem.repository.fixed.SedeRepository;
 import com.ipor.ticketsystem.service.ClasificadoresService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,35 +22,45 @@ public class ClasificadoresController {
 
     // Listar todos los clasificadores (Incidencias, Atencion, Urgencias)
 
-    public Model listarClasificadores(Model model, String categoriaId, String subcategoriaId) {
-        // Cargar listas generales
+    public Model listarClasificadores(Model model, String categoriaId, String subcategoriaId, String sedeId) {
+        // Cargar listas de Incidencia
         List<CategoriaIncidencia> catIncidencias = clasificadoresService.getListaCatIncidencia();
         model.addAttribute("catIncidencias", catIncidencias);
 
-        // Si hay categoría seleccionada, filtrar subcategorías
         if (categoriaId != null && !categoriaId.isEmpty()) {
             List<SubCategoriaIncidencia> subCatIncidencias = clasificadoresService.getListaSubCatIncidenciaPorIDCat(Long.parseLong(categoriaId));
             model.addAttribute("subCatIncidencias", subCatIncidencias);
 
-            // Si hay subcategoría seleccionada, filtrar tipos
             if (subcategoriaId != null && !subcategoriaId.isEmpty()) {
                 List<TipoIncidencia> tipoIncidencias = clasificadoresService.getListaTipoIncidenciaPirIDSubCat(Long.parseLong(subcategoriaId));
                 model.addAttribute("tipoIncidencias", tipoIncidencias);
             }
         } else {
-            // Si no hay categoría, vaciar listas dependientes
             model.addAttribute("subCatIncidencias", List.of());
             model.addAttribute("tipoIncidencias", List.of());
         }
-
-        // Cargar otros clasificadores
+        if (sedeId != null && !sedeId.isEmpty()) {
+            model.addAttribute("sedeSeleccionada", sedeId);
+        }
+        // Clasificadores comunes
         model.addAttribute("atenciones", clasificadoresService.getListaClasAtencion());
         model.addAttribute("urgencias", clasificadoresService.getListaClasUrgencia());
-        model.addAttribute("areas", clasificadoresService.getListaAreaAtencion());
         model.addAttribute("desestimaciones", clasificadoresService.getListaClasDesestimacion());
+
+        // Sedes (siempre se cargan para el selector)
+        model.addAttribute("sedes", clasificadoresService.getListaSedes());
+
+        // Áreas (solo si se seleccionó una sede)
+        if (sedeId != null && !sedeId.isEmpty()) {
+            List<AreaAtencion> areas = clasificadoresService.getListaAreaPorSedeId(Long.parseLong(sedeId));
+            model.addAttribute("areas", areas);
+        } else {
+            model.addAttribute("areas", List.of());
+        }
 
         return model;
     }
+
 
 
     public Model getListaTipoIncidenciaActivos(Model model) {
@@ -80,14 +91,14 @@ public class ClasificadoresController {
         model.addAttribute("Lista_clasificacion_atencion", listaAtencions);
         return  model;
     }
+    public Model getListaSedesActivos(Model model){
+        List<Sede> listaSedes = clasificadoresService.getListaSedesActivos();
+        model.addAttribute("Lista_sedes", listaSedes);
+        return  model;
+    }
     public Model getListaClasificacionesDesestimacionActivos(Model model){
         List<ClasificacionDesestimacion> listaDesestimacion = clasificadoresService.getListaClasificacionDesestimacionActivos();
         model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
-        return  model;
-    }
-    public Model getListaClasificacionesAreaActivos(Model model){
-        List<AreaAtencion> listaArea = clasificadoresService.getListaAreaAtencionActivos();
-        model.addAttribute("Lista_area_atencion", listaArea);
         return  model;
     }
 
@@ -106,32 +117,68 @@ public class ClasificadoresController {
         return clasificadoresService.getListaTipoIncidenciaPirIDSubCat(subCategoriaId);
     }
 
+    @ResponseBody
+    @GetMapping("/area/{sedeId}")
+    public List<AreaAtencion> getAreasPorSede(@PathVariable Long sedeId) {
+        return clasificadoresService.getListaAreaPorSedeId(sedeId);
+    }
 
 
-    //crear area nueva
+
+
+
+    @PostMapping("/sede/nuevo")
+    public void crearSede(@RequestParam("nombre") String nombre,
+                          @RequestParam(value = "id_sede", required = false) Long id_sede,
+                          HttpServletResponse response) throws IOException {
+        Sede sede = new Sede();
+        sede.setNombre(nombre);
+        sede.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveSede(sede);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Area" + (id_sede != null ? "&sede=" + id_sede : ""));
+    }
+
+    @PostMapping("/actualizar/sede/{id}")
+    public void actualizarSede(@PathVariable Long id,
+                               @RequestParam("nombre") String nombre,
+                               @RequestParam(value = "id_sede", required = false) Long id_sede,
+                               HttpServletResponse response) throws IOException {
+        Sede sede = new Sede();
+        sede.setNombre(nombre);
+        sede.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarSede(id, sede);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Area" + (id_sede != null ? "&sede=" + id_sede : ""));
+    }
+
     @PostMapping("/area/nuevo")
-    public ResponseEntity<String> crearClasificacionAr(
-            @RequestParam("nombre") String nombre,
-            HttpServletResponse response) throws IOException {
+    public void crearClasificacionAr(@RequestParam("id_sede") Long id_sede,
+                                     @RequestParam("nombre") String nombre,
+                                     HttpServletResponse response) throws IOException {
         AreaAtencion areaAtencion = new AreaAtencion();
         areaAtencion.setNombre(nombre);
         areaAtencion.setIsActive(Boolean.TRUE);
+        Sede sede = clasificadoresService.getSedePorId(id_sede);
+        areaAtencion.setSede(sede);
         clasificadoresService.saveCArea(areaAtencion);
-        response.sendRedirect("/admin/Clasificadores?clasificador=Area");
-        return ResponseEntity.ok("Clasificación Area creado correctamente");
+        response.sendRedirect("/admin/Clasificadores?clasificador=Area" + (id_sede != null ? "&sede=" + id_sede : ""));
     }
 
-    // Actualizar un area existente
     @PostMapping("/actualizar/area/{id}")
-    public String actualizarArea(@PathVariable Long id,
-                                       @RequestParam("nombre") String nombre
-    ) {
+    public void actualizarArea(@PathVariable Long id,
+                               @RequestParam("id_sede") Long id_sede,
+                               @RequestParam("id_sedeEdit") Long id_sedeEdit,
+                               @RequestParam("nombre") String nombre,
+                               HttpServletResponse response) throws IOException {
+
+        Sede sede = clasificadoresService.getSedePorId(id_sedeEdit);
         AreaAtencion areaAtencion = new AreaAtencion();
         areaAtencion.setNombre(nombre);
         areaAtencion.setIsActive(Boolean.TRUE);
+        areaAtencion.setSede(sede);
         clasificadoresService.actualizarArea(id, areaAtencion);
-        return "redirect:/admin/Clasificadores?clasificador=Area";
+        response.sendRedirect("/admin/Clasificadores?clasificador=Area" + (id_sede != null ? "&sede=" + id_sede : ""));
     }
+
 
 
 
@@ -377,18 +424,33 @@ public class ClasificadoresController {
         return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
     }
 
-    // Desactivar Clasificación Area
+    // Desactivar Área
     @GetMapping("/desactivar/area/{id}")
-    public String desactivarArea(@PathVariable Long id) {
+    public ResponseEntity<String> desactivarArea(@PathVariable Long id) {
         clasificadoresService.cambiarEstadoArea(id, false);
-        return "redirect:/admin/Clasificadores?clasificador=Area";
-    }
-    @GetMapping("/activar/area/{id}")
-    public String activaArea(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoArea(id, true);
-        return "redirect:/admin/Clasificadores?clasificador=Area";
+        return ResponseEntity.ok("Área desactivada correctamente");
     }
 
+    // Activar Área
+    @GetMapping("/activar/area/{id}")
+    public ResponseEntity<String> activarArea(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoArea(id, true);
+        return ResponseEntity.ok("Área activada correctamente");
+    }
+
+    // Desactivar Sede
+    @GetMapping("/desactivar/sede/{id}")
+    public ResponseEntity<String> desactivarSede(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoSede(id, false);
+        return ResponseEntity.ok("Sede desactivada correctamente");
+    }
+
+    // Activar Sede
+    @GetMapping("/activar/sede/{id}")
+    public ResponseEntity<String> activarSede(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoSede(id, true);
+        return ResponseEntity.ok("Sede activada correctamente");
+    }
 
 
 
@@ -407,7 +469,11 @@ public class ClasificadoresController {
         return clasificadoresService.getListaTiposDeIncidenciaActivosPorIDSubCat(id_subCategoria);
     }
 
-
+    @ResponseBody
+    @GetMapping("/listar/areasActivas/{id_sede}")
+    public List<AreaAtencion> listaAreasActivos(@PathVariable Long id_sede) {
+        return clasificadoresService.getListaAreasActivosPorIDSede(id_sede);
+    }
 
 
 }

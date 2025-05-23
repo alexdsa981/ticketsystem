@@ -43,6 +43,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private AreaAtencionRepository areaAtencionRepository;
 
+    @Autowired
+    private SedeRepository sedeRepository;
+
     @Override
     public void run(String... args) {
         // 1. Crear roles si no existen
@@ -193,7 +196,6 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // 7. Crear clasificacion de Atencion
-// 1. Crear clasificación de atención
         if (clasificacionAtencionRepository.count() == 0) {
             clasificacionAtencionRepository.save(new ClasificacionAtencion("Incidencia Resuelta", true));
             clasificacionAtencionRepository.save(new ClasificacionAtencion("Elevado a Proveedor", true));
@@ -204,37 +206,46 @@ public class DataInitializer implements CommandLineRunner {
             clasificacionAtencionRepository.save(new ClasificacionAtencion("No Se Encontró Falla", true));
         }
 
-        // 8. Crear clasificacion de Área
+        // 8. Crear clasificacion de Sede
+        if (sedeRepository.count() == 0) {
+            sedeRepository.save(new Sede("San Isidro", true));
+            sedeRepository.save(new Sede("San Isidro - Administrativo", true));
+            sedeRepository.save(new Sede("Jesús María", true));
+        }
+
+        // 9. Crear clasificación de Área
         if (areaAtencionRepository.count() == 0) {
-            areaAtencionRepository.save(new AreaAtencion("TI", true));
-            areaAtencionRepository.save(new AreaAtencion("RRHH", true));
-            areaAtencionRepository.save(new AreaAtencion("Logística", true));
-            areaAtencionRepository.save(new AreaAtencion("Calidad", true));
-            areaAtencionRepository.save(new AreaAtencion("Quimioterapia", true));
-            areaAtencionRepository.save(new AreaAtencion("Mantenimiento", true));
-            areaAtencionRepository.save(new AreaAtencion("Investigación 4to", true));
-            areaAtencionRepository.save(new AreaAtencion("Consultorios 4to", true));
-            areaAtencionRepository.save(new AreaAtencion("Gerencia", true));
-            areaAtencionRepository.save(new AreaAtencion("Asistentes Gerencia", true));
-            areaAtencionRepository.save(new AreaAtencion("Consultorios 3er", true));
-            areaAtencionRepository.save(new AreaAtencion("Investigación 3er", true));
-            areaAtencionRepository.save(new AreaAtencion("Asistentes Dr Rodriguez", true));
-            areaAtencionRepository.save(new AreaAtencion("Físicos", true));
-            areaAtencionRepository.save(new AreaAtencion("Consultorios 2do", true));
-            areaAtencionRepository.save(new AreaAtencion("PET CT", true));
-            areaAtencionRepository.save(new AreaAtencion("Coordinadoras", true));
-            areaAtencionRepository.save(new AreaAtencion("Farmacia", true));
-            areaAtencionRepository.save(new AreaAtencion("Admisión", true));
-            areaAtencionRepository.save(new AreaAtencion("Imágenes", true));
-            areaAtencionRepository.save(new AreaAtencion("Tomografía", true));
-            areaAtencionRepository.save(new AreaAtencion("Radiografía", true));
-            areaAtencionRepository.save(new AreaAtencion("Cochera", true));
-            areaAtencionRepository.save(new AreaAtencion("Radioterapia", true));
-            areaAtencionRepository.save(new AreaAtencion("Braquiterapia", true));
-            areaAtencionRepository.save(new AreaAtencion("Archivo", true));
-            areaAtencionRepository.save(new AreaAtencion("Facturación", true));
-            areaAtencionRepository.save(new AreaAtencion("Contabilidad", true));
-            areaAtencionRepository.save(new AreaAtencion("Ventas", true));
+            Sede sanIsidro = sedeRepository.findByNombre("San Isidro");
+
+            areaAtencionRepository.save(new AreaAtencion("TI", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("RRHH", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Logística", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Calidad", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Quimioterapia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Mantenimiento", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Investigación 4to", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Consultorios 4to", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Gerencia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Asistentes Gerencia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Consultorios 3er", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Investigación 3er", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Asistentes Dr Rodriguez", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Físicos", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Consultorios 2do", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("PET CT", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Coordinadoras", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Farmacia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Admisión", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Imágenes", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Tomografía", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Radiografía", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Cochera", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Radioterapia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Braquiterapia", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Archivo", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Facturación", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Contabilidad", sanIsidro, true));
+            areaAtencionRepository.save(new AreaAtencion("Ventas", sanIsidro, true));
         }
 
 

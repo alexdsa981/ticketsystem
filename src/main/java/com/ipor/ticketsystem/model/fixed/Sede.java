@@ -2,22 +2,22 @@ package com.ipor.ticketsystem.model.fixed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.dynamic.Atencion;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class AreaAtencion {
-    public AreaAtencion(String nombre, Sede sede, Boolean isActive) {
+public class Sede {
+
+    public Sede(String nombre, Boolean isActive){
         this.nombre = nombre;
         this.isActive = isActive;
-        this.sede = sede;
     }
 
     @Id
@@ -29,11 +29,7 @@ public class AreaAtencion {
     @Column(nullable = false)
     private Boolean isActive;
 
-    @ManyToOne
-    @JoinColumn(name = "id_sede")
-    private Sede sede;
-
     @JsonIgnore
-    @OneToMany(mappedBy = "areaAtencion")
-    private List<Atencion> listaAtencion;
+    @OneToMany(mappedBy = "sede")
+    private List<AreaAtencion> listaAreas;
 }

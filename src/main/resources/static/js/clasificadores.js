@@ -142,15 +142,28 @@ function openAtencionModal(button) {
 function openAreaModal(button) {
     var id = button.getAttribute("data-area-id");
     var nombre = button.getAttribute("data-area-nombre");
+    var sedeId = button.getAttribute("data-area-sede-id"); // <-- nueva línea
 
     document.getElementById("areaId").value = id;
     document.getElementById("areaNombre").value = nombre;
+    document.querySelector('input[name="id_sede"]').value = sedeId; // <-- nueva línea
 
-    // Configurar la acción del formulario
     const form = document.getElementById('areaForm');
     form.setAttribute('action', `/app/clasificadores/actualizar/area/${id}`);
 }
 
+
+function openSedeModal(button) {
+    var id = button.getAttribute("data-sede-id");
+    var nombre = button.getAttribute("data-sede-nombre");
+
+    document.getElementById("sedeId").value = id;
+    document.getElementById("sedeNombre").value = nombre;
+
+    // Configurar la acción del formulario
+    const form = document.getElementById('sedeForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/sede/${id}`);
+}
 
 function openDesestimacionModal(button) {
     var id = button.getAttribute("data-desestimacion-id");

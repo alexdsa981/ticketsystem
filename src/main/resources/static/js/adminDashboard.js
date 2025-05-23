@@ -192,7 +192,8 @@ function inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo
       { idCanvas: "graficoSubcategoria", idTabla: "tablaSubcategoria", endpoint: "/app/dashboard/grafico/TicketsporSubcategoria", titulo: "Subcategoría" },
       { idCanvas: "graficoCategoria", idTabla: "tablaCategoria", endpoint: "/app/dashboard/grafico/TicketsporCategoria", titulo: "Categoría" },
       { idCanvas: "graficoUrgencia", idTabla: "tablaUrgencia", endpoint: "/app/dashboard/grafico/TicketsporUrgencia", titulo: "Urgencia" },
-      { idCanvas: "graficoArea", idTabla: "tablaArea", endpoint: "/app/dashboard/grafico/TicketsporArea", titulo: "Área" }
+      { idCanvas: "graficoArea", idTabla: "tablaArea", endpoint: "/app/dashboard/grafico/TicketsporArea", titulo: "Área" },
+      { idCanvas: "graficoSede", idTabla: "tablaSede", endpoint: "/app/dashboard/grafico/TicketsporSede", titulo: "Área" }
     ];
 
 
@@ -293,6 +294,12 @@ function inicializarDashboard() {
         "graficoArea", "tablaArea",
         "/app/dashboard/grafico/TicketsporArea",
         "Tickets por Área Responsable"
+    );
+
+    inicializarGraficosDeClasificadores(
+        "graficoSede", "tablaSede",
+        "/app/dashboard/grafico/TicketsporSede",
+        "Tickets por Sede"
     );
 }
 

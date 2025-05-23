@@ -382,3 +382,51 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const sedeSelect = document.getElementById("sede");
+        const areaSelect = document.getElementById("areaAtencion");
+        const areaWrapper = document.getElementById("area-wrapper");
+
+        sedeSelect.addEventListener("change", () => {
+            const sedeId = sedeSelect.value;
+
+            fetch(`/app/clasificadores/listar/areasActivas/${sedeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    areaSelect.classList.remove("select-error");
+                    areaSelect.innerHTML = '<option selected disabled value="">Selecciona un área</option>';
+
+                    if (data.length > 0) {
+                        areaWrapper.classList.remove("d-none");
+
+                        data.forEach(area => {
+                            const option = document.createElement("option");
+                            option.value = area.id;
+                            option.text = area.nombre;
+                            areaSelect.appendChild(option);
+                        });
+                    } else {
+                        areaWrapper.classList.remove("d-none");
+                        areaSelect.classList.add("select-error");
+                        areaSelect.innerHTML = '<option disabled selected>No se encontraron áreas</option>';
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sin áreas',
+                            text: 'No se encontraron áreas para la sede seleccionada. Contacte con un administrador.',
+                            confirmButtonText: 'Entendido'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al obtener áreas:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al obtener las áreas. Intente nuevamente.',
+                        confirmButtonText: 'Entendido'
+                    });
+                });
+        });
+    });
