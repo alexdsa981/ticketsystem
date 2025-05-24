@@ -84,7 +84,7 @@
                 <td>
                     <ul>
                         <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
-                            <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                            <a th:href="@{/app/tickets/adjuntoEnvio/descargar/{id}(id=${adjunto.id})}" href="#"
                                th:text="${adjunto.nombre}">Archivo</a> - <span
                                 th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                         </li>

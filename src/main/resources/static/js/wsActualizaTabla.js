@@ -86,6 +86,7 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
             <button type="button" class="btn btn-primary"
                     data-bs-toggle="modal" data-bs-target="#recepcionModal"
                     data-ticket-id="${ticketRecord.id}"
+                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
                     data-ticket-descripcion="${ticketRecord.descripcion}"
                     data-ticket-fase="${ticketRecord.nombreFaseTicket}"
@@ -96,6 +97,7 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
+                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
                     data-ticket-descripcion="${ticketRecord.descripcion}"
                     data-ticket-fase="${ticketRecord.nombreFaseTicket}"
@@ -205,6 +207,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
         <td class="td-accion">
             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                 data-bs-target="#atencionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
                 data-ticket-fase="${ticketRecord.nombreFaseTicket}"
@@ -214,6 +217,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </button>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
                 data-ticket-fase="${ticketRecord.nombreFaseTicket}"
@@ -320,7 +324,7 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
 
                 <td>
             <span class="nombreTipoIncidencia clasificacion-atencion">
-             Área ${ticketRecord.nombreAreaAtencion} - ${ticketRecord.nombreClasificacionAtencion}:<br>
+             Área ${ticketRecord.nombreSedeAtencion}/${ticketRecord.nombreAreaAtencion} - ${ticketRecord.nombreClasificacionAtencion}:<br>
             </span>
             <span>
                 ${ticketRecord.descripcionAtencion.length > 150
@@ -338,10 +342,10 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
         </td>
 
         <td>
-            <!-- Botón de recepción que abre el modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#atencionModal"
                 data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
                 data-ticket-clasificacion="${ticketRecord.nombreTipoIncidencia}"
@@ -462,6 +466,7 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal"
                 data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
 

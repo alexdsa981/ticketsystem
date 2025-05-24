@@ -34,6 +34,7 @@ public record AtencionRecordWS(
         String nombreUrgencia,
         String nombreClasificacionAtencion,
         String nombreAreaAtencion,
+        String nombreSedeAtencion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntosAtencion
@@ -69,6 +70,7 @@ public record AtencionRecordWS(
                 detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
                 detalleDTO.getAtencion().getClasificacionAtencion().getNombre(),
                 detalleDTO.getAtencion().getAreaAtencion().getNombre(),
+                detalleDTO.getAtencion().getAreaAtencion().getSede().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
