@@ -128,6 +128,7 @@
                         <!-- Botón de recepción que abre el modal -->
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                th:data-ticket-codigo="${detalle.ticket.codigoTicket}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
                                 th:data-ticket-clasificacion="${detalle.atencion.tipoIncidencia.nombre}"
@@ -338,7 +339,7 @@
 
             // Extraer información del ticket desde los atributos data-*
             const ticketId = button.getAttribute('data-ticket-id');
-            const formattedTicketId = 'TK-' + ticketId.toString().padStart(4, '0');
+            const formattedTicketId = button.getAttribute('data-ticket-codigo');
             const ticketUsuario = button.getAttribute('data-ticket-usuario');
             const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
             const ticketClasificacion = button.getAttribute('data-ticket-clasificacion');
