@@ -1,10 +1,12 @@
 package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoAtencion;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
-import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoRepository;
+import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoAtencionRepository;
+import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoEnvioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.fixed.TipoIncidenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
@@ -21,7 +23,9 @@ public class TicketService {
     @Autowired
     private TicketRepository ticketRepository;
     @Autowired
-    private ArchivoAdjuntoRepository archivoAdjuntoRepository;
+    private ArchivoAdjuntoEnvioRepository archivoAdjuntoEnvioRepository;
+    @Autowired
+    private ArchivoAdjuntoAtencionRepository archivoAdjuntoAtencionRepository;
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
@@ -65,18 +69,25 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public void saveAdjunto(ArchivoAdjunto archivoAdjunto) {
-        archivoAdjuntoRepository.save(archivoAdjunto);
+    public void saveAdjuntoEnvio(ArchivoAdjuntoEnvio archivoAdjuntoEnvio) {
+        archivoAdjuntoEnvioRepository.save(archivoAdjuntoEnvio);
+    }
+    public void saveAdjuntoAtencion(ArchivoAdjuntoAtencion archivoAdjuntoAtencion) {
+        archivoAdjuntoAtencionRepository.save(archivoAdjuntoAtencion);
     }
 
     //obtener archivos adjuntos de un ticket por el id del ticket
-    public List<ArchivoAdjunto> getArchivosAdjuntosDeTicketPorTicketID(Long TicketId) {
-        return archivoAdjuntoRepository.BuscarPorIdTicket(TicketId);
+    public List<ArchivoAdjuntoEnvio> getArchivosAdjuntosDeTicketPorTicketID(Long TicketId) {
+        return archivoAdjuntoEnvioRepository.BuscarPorIdTicket(TicketId);
     }
 
     //obtener archivo adjunto por ID
-    public ArchivoAdjunto getArchivoPorId(Long id) {
-        return archivoAdjuntoRepository.findById(id)
+    public ArchivoAdjuntoEnvio getArchivoEnvioPorId(Long id) {
+        return archivoAdjuntoEnvioRepository.findById(id)
+                .get();
+    }
+    public ArchivoAdjuntoAtencion getArchivoAtencionPorId(Long id) {
+        return archivoAdjuntoAtencionRepository.findById(id)
                 .get();
     }
 

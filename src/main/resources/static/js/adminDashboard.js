@@ -99,51 +99,60 @@ function inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo
     }
   }
 
-  function actualizarGrafico(etiquetas, datos) {
-    const ctx = canvas.getContext("2d");
+function actualizarGrafico(etiquetas, datos) {
+  const ctx = canvas.getContext("2d");
 
-    if (graficos[idCanvas]) {
-      graficos[idCanvas].data.labels = etiquetas;
-      graficos[idCanvas].data.datasets[0].data = datos;
-      graficos[idCanvas].update();
-    } else {
-      graficos[idCanvas] = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: etiquetas,
-          datasets: [{
-            label: titulo,
-            data: datos,
-            backgroundColor: [
-              "rgba(169, 169, 169, 0.2)",
-              "rgba(135, 206, 235, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-              "rgba(255, 159, 64, 0.2)",
-            ],
-            borderColor: [
-              "rgba(169, 169, 169, 1)",
-              "rgba(135, 206, 235, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)",
-            ],
-            borderWidth: 1,
-          }],
+  if (graficos[idCanvas]) {
+    graficos[idCanvas].data.labels = etiquetas;
+    graficos[idCanvas].data.datasets[0].data = datos;
+    graficos[idCanvas].update();
+  } else {
+    graficos[idCanvas] = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: etiquetas,
+        datasets: [{
+          label: titulo,
+          data: datos,
+          backgroundColor: [
+            "rgba(169, 169, 169, 0.2)",
+            "rgba(135, 206, 235, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(169, 169, 169, 1)",
+            "rgba(135, 206, 235, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            ticks: {
+              display: false // oculta nombres del eje Y
+            }
+          }
         },
-        options: {
-          responsive: false,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: "top" },
-            title: { display: true, text: titulo },
-          },
+        plugins: {
+          legend: { position: "top" },
+          title: { display: false, text: titulo },
         },
-      });
-    }
+      },
+    });
   }
+}
+
 
   function actualizarTabla(etiquetas, datos) {
     tablaBody.innerHTML = "";
@@ -193,7 +202,7 @@ function inicializarGraficosDeClasificadores(idCanvas, idTabla, endpoint, titulo
       { idCanvas: "graficoCategoria", idTabla: "tablaCategoria", endpoint: "/app/dashboard/grafico/TicketsporCategoria", titulo: "Categoría" },
       { idCanvas: "graficoUrgencia", idTabla: "tablaUrgencia", endpoint: "/app/dashboard/grafico/TicketsporUrgencia", titulo: "Urgencia" },
       { idCanvas: "graficoArea", idTabla: "tablaArea", endpoint: "/app/dashboard/grafico/TicketsporArea", titulo: "Área" },
-      { idCanvas: "graficoSede", idTabla: "tablaSede", endpoint: "/app/dashboard/grafico/TicketsporSede", titulo: "Área" }
+      { idCanvas: "graficoSede", idTabla: "tablaSede", endpoint: "/app/dashboard/grafico/TicketsporSede", titulo: "Sede" }
     ];
 
 

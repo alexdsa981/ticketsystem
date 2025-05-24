@@ -73,9 +73,9 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
         <td>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -186,9 +186,9 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -299,9 +299,9 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -326,7 +326,15 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                 ${ticketRecord.descripcionAtencion.length > 150
             ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
             : ticketRecord.descripcionAtencion}
-            </span>
+            </span><br>
+               <ul>
+                   ${ticketRecord.listaArchivosAdjuntosAtencion.map(adjunto => `
+                       <li>
+                           <a href="/app/tickets/adjuntoAtencion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                           ${adjunto.pesoContenido}
+                       </li>
+                   `).join('')}
+               </ul>
         </td>
 
         <td>
@@ -429,9 +437,9 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -542,9 +550,9 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -629,9 +637,9 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -643,7 +651,15 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
                 ${ticketRecord.descripcionAtencion.length > 150
             ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
             : ticketRecord.descripcionAtencion}
-            </span>
+            </span><br>
+              <ul>
+                  ${ticketRecord.listaArchivosAdjuntosAtencion.map(adjunto => `
+                      <li>
+                          <a href="/app/tickets/adjuntoAtencion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                          ${adjunto.pesoContenido}
+                      </li>
+                  `).join('')}
+              </ul>
         </td>
         <td>
         Cerrado - Atendido
@@ -721,9 +737,9 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
             : ticketRecord.descripcionTicket}
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}
@@ -814,9 +830,9 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
 
         <td>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntos.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
                     <li>
-                        <a href="/app/tickets/adjunto/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                         ${adjunto.pesoContenido}
                     </li>
                 `).join('')}

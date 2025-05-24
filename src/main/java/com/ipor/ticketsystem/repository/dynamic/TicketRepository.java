@@ -63,7 +63,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN a.tipoIncidencia ti " +
             "INNER JOIN ti.subCategoriaIncidencia sci " +
             "INNER JOIN sci.categoriaIncidencia ci " +
-            "GROUP BY ci.nombre")
+            "GROUP BY ci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByCATIncidencia();
 
     // CATEGORÍA INCIDENCIA CON FECHA
@@ -73,7 +74,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN ti.subCategoriaIncidencia sci " +
             "INNER JOIN sci.categoriaIncidencia ci " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY ci.nombre")
+            "GROUP BY ci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByCATIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -82,7 +84,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "FROM Atencion a " +
             "INNER JOIN a.tipoIncidencia ti " +
             "INNER JOIN ti.subCategoriaIncidencia sci " +
-            "GROUP BY sci.nombre")
+            "GROUP BY sci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountBySubCATIncidencia();
 
     // SUBCATEGORÍA INCIDENCIA CON FECHA
@@ -91,7 +94,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN a.tipoIncidencia ti " +
             "INNER JOIN ti.subCategoriaIncidencia sci " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY sci.nombre")
+            "GROUP BY sci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountBySubCATIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -103,7 +107,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "FROM Atencion a " +
             "INNER JOIN a.tipoIncidencia ti " +
             "INNER JOIN ti.subCategoriaIncidencia sci " +
-            "GROUP BY ti.nombre, sci.nombre")
+            "GROUP BY ti.nombre, sci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByTipoIncidencia();
 
     // CONTEO POR INCIDENCIA CON FECHA
@@ -113,7 +118,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN a.tipoIncidencia ti " +
             "INNER JOIN ti.subCategoriaIncidencia sci " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY ti.nombre, sci.nombre")
+            "GROUP BY ti.nombre, sci.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByTipoIncidenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -121,13 +127,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(a)) " +
             "FROM Atencion a " +
             "INNER JOIN a.clasificacionUrgencia cu " +
-            "GROUP BY cu.nombre")
+            "GROUP BY cu.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgencia();
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(cu.nombre, COUNT(a)) " +
             "FROM Atencion a " +
             "INNER JOIN a.clasificacionUrgencia cu " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY cu.nombre")
+            "GROUP BY cu.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByClasificacionUrgenciaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -136,7 +144,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "FROM Atencion a " +
             "INNER JOIN a.areaAtencion aa " +
             "INNER JOIN aa.sede se " +
-            "GROUP BY se.nombre")
+            "GROUP BY se.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountBySede();
 
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(se.nombre, COUNT(a)) " +
@@ -144,7 +153,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN a.areaAtencion aa " +
             "INNER JOIN aa.sede se " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY se.nombre")
+            "GROUP BY se.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountBySedeWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
@@ -156,7 +166,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "FROM Atencion a " +
             "INNER JOIN a.areaAtencion aa " +
             "INNER JOIN aa.sede se " +
-            "GROUP BY se.nombre, aa.nombre")
+            "GROUP BY se.nombre, aa.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByArea();
 
     @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(" +
@@ -165,8 +176,14 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN a.areaAtencion aa " +
             "INNER JOIN aa.sede se " +
             "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY se.nombre, aa.nombre")
+            "GROUP BY se.nombre, aa.nombre " +
+            "ORDER BY COUNT(a) DESC")
     List<RecordFactorXConteo> findTicketCountByAreaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+
+
+
+
 
 
 

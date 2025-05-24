@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -152,6 +153,7 @@ public class AtencionController {
             @RequestParam("clasificacion_urgencia") Long IDclasificacion_urgencia,
             @RequestParam("tipo_incidencia") Long ID_tipo_incidencia,
             @RequestParam("clasificacion_atencion") Long IDclasificacion_atencion,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -174,6 +176,33 @@ public class AtencionController {
             // Modificar el ticket
             ticket.setAtencion(atencion);
             ticketService.saveTicket(ticket);
+
+
+
+
+            List<ArchivoAdjuntoAtencion> listaArchivosAdjuntos = new ArrayList<>();
+            // Si el archivo no es nulo y no está vacío, guardarlo
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+                    ArchivoAdjuntoAtencion archivoAdjuntoAtencion = new ArchivoAdjuntoAtencion();
+                    archivoAdjuntoAtencion.setNombre(archivo.getOriginalFilename());
+                    archivoAdjuntoAtencion.setArchivo(archivo.getBytes());  // Convertir archivo a bytes
+                    archivoAdjuntoAtencion.setTipoContenido(archivo.getContentType());
+                    archivoAdjuntoAtencion.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
+                    archivoAdjuntoAtencion.setAtencion(atencion);  // Asignar el ticket recién creado
+                    listaArchivosAdjuntos.add(archivoAdjuntoAtencion);
+                    // Guardar el archivo en la base de datos
+                    ticketService.saveAdjuntoAtencion(archivoAdjuntoAtencion);
+                    atencion.setListaArchivosAdjuntos(listaArchivosAdjuntos);
+
+                } catch (IOException e) {
+                    ResponseEntity.badRequest().body("Error al procesar el archivo");
+                    System.out.println(e.getMessage());
+                    System.out.println(Arrays.toString(e.getStackTrace()));
+                    throw new RuntimeException(e);
+                }
+
+            }
 
 
             Notificacion notificacion = new Notificacion();

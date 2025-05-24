@@ -1,7 +1,7 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjunto;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 
 import java.util.Base64;
 import java.util.List;
@@ -24,7 +24,7 @@ public record RecepcionRecordWS(
 
         String nombreFaseTicket,
 
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntos
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio
 )
 {
     public RecepcionRecordWS(DetalleTicketDTO detalleDTO) {
@@ -49,7 +49,7 @@ public record RecepcionRecordWS(
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
-                        .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjunto a ArchivoAdjuntoDTO
+                        .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
         );
     }
@@ -62,7 +62,7 @@ public record RecepcionRecordWS(
             String tipoContenido,
             String pesoContenido
     ) {
-        public ArchivoAdjuntoDTO(ArchivoAdjunto adjunto) {
+        public ArchivoAdjuntoDTO(ArchivoAdjuntoEnvio adjunto) {
             this(
                     adjunto.getId(),
                     adjunto.getNombre(),

@@ -12,6 +12,41 @@
 <main class="content-wrapper">
     <div class="container border shadow p-3 px-4 mb-5 bg-body rounded">
 
+
+
+        <form class="mb-3" id="filtroUsuarios">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="filtroNombre" class="form-label">Buscar por nombre</label>
+                    <input type="text" class="form-control" id="filtroNombre" placeholder="Nombre del usuario">
+                </div>
+
+                <div class="col-md-3">
+                    <label for="filtroSpring" class="form-label">Usuario Spring</label>
+                    <select class="form-select" id="filtroSpring">
+                        <option value="">Todos</option>
+                        <option value="Sí">Sí</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="filtroRol" class="form-label">Rol</label>
+                    <select class="form-select" id="filtroRol">
+                        <option value="">Todos</option>
+                        <option th:each="rol : ${ListaRoles}" th:value="${rol.nombre}" th:text="${rol.nombre}">Rol</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">Limpiar</button>
+                </div>
+            </div>
+        </form>
+
+
+
+
         <div class="card  border-0 mb-4">
             <div class="card-header bg-white text-success fw-bold">
                 <div class="d-flex justify-content-between align-items-center">
@@ -225,6 +260,59 @@
             </div>
         </div>
     </div>
+
+
+<!--FILTRO-->
+    <script>
+        document.querySelectorAll('#filtroNombre, #filtroSpring, #filtroRol').forEach(el => {
+            el.addEventListener('input', filtrarTablas);
+            el.addEventListener('change', filtrarTablas);
+        });
+
+        function limpiarFiltros() {
+            document.getElementById('filtroNombre').value = '';
+            document.getElementById('filtroSpring').value = '';
+            document.getElementById('filtroRol').value = '';
+            filtrarTablas();
+        }
+
+        function filtrarTablas() {
+            const nombre = document.getElementById('filtroNombre').value.toLowerCase();
+            const spring = document.getElementById('filtroSpring').value;
+            const rol = document.getElementById('filtroRol').value;
+
+            filtrarTabla(document.querySelectorAll('#filtroUsuarios ~ .card')[0], nombre, spring, rol);
+            filtrarTabla(document.querySelectorAll('#filtroUsuarios ~ .card')[1], nombre, spring, rol);
+        }
+
+        function filtrarTabla(card, nombre, spring, rol) {
+            const filas = card.querySelectorAll('tbody tr');
+
+            filas.forEach(fila => {
+                const nombreUsuario = fila.children[3].textContent.toLowerCase();
+                const springUsuario = fila.children[2].textContent.trim();
+                const rolUsuario = fila.children[4].textContent.trim();
+
+                const coincideNombre = nombre === '' || nombreUsuario.includes(nombre);
+                const coincideSpring = spring === '' || springUsuario === spring;
+                const coincideRol = rol === '' || rolUsuario === rol;
+
+                fila.style.display = (coincideNombre && coincideSpring && coincideRol) ? '' : 'none';
+            });
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
     <!--SweetAlert-->
     <script>
         function confirmAction(url, message) {

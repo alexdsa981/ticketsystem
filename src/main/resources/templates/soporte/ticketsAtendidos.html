@@ -69,7 +69,7 @@
                 <tr th:each="detalle, iter: ${AllAtendidos}">
 
                     <td th:text="${iter.count}">#</td>
-                    <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
+                    <td th:id="${detalle.ticket.id}" class="ticket-code-cell">
                         <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
                            th:text="${detalle.ticket.codigoTicket}"
                            class="ticket-link">
@@ -111,6 +111,17 @@
                                                 ? detalle.atencion.descripcion.substring(0, 150) + '...'
                                                 : detalle.atencion.descripcion}">
                                 </span>
+                        <ul>
+                        <li th:each="adjunto: ${detalle.atencion.listaArchivosAdjuntos}">
+                            <a th:href="@{/app/tickets/adjuntoAtencion/descargar/{id}(id=${adjunto.id})}" href="#"
+                               th:text="${adjunto.nombre}">Archivo</a> - <span
+                                th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                        </li>
+                    </ul>
+
+
+
+
                     </td>
 
                     <td>

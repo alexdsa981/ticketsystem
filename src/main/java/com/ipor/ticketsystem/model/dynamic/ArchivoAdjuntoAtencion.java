@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.DecimalFormat;
-import java.util.Base64;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class ArchivoAdjunto {
+public class ArchivoAdjuntoAtencion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +28,8 @@ public class ArchivoAdjunto {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "id_ticket", nullable = false)
-    private Ticket ticket;
+    @JoinColumn(name = "id_atencion", nullable = false)
+    private Atencion atencion;
 
     // Método para formatear el peso del archivo en MB
     public String getPesoEnMegabytes() {

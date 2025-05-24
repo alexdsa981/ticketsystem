@@ -10,6 +10,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +29,8 @@ public class Atencion {
     @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
     private String descripcion;
 
+    @OneToMany(mappedBy = "atencion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ArchivoAdjuntoAtencion> listaArchivosAdjuntos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name= "id_usuario", nullable = false)

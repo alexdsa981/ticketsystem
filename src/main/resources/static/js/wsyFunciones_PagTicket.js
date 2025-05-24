@@ -154,6 +154,35 @@
 
                             document.getElementById("fecha-atencion").textContent = data.fechaFormateadaAtencion || "";
                             document.getElementById("hora-atencion").textContent = data.horaFormateadaAtencion || "";
+                            const adjuntosContainer = document.getElementById("adjuntos-atencion");
+                            adjuntosContainer.innerHTML = ""; // Limpiar por si acaso
+
+                            if (Array.isArray(data.listaArchivosAdjuntosAtencion)) {
+                              data.listaArchivosAdjuntosAtencion.forEach(adjunto => {
+                                const p = document.createElement("p");
+                                p.classList.add("mb-0");
+
+                                const icon = document.createElement("i");
+                                icon.classList.add("bi", "bi-paperclip");
+                                p.appendChild(icon);
+
+                                const espacio = document.createTextNode(" ");
+                                p.appendChild(espacio);
+
+                                const a = document.createElement("a");
+                                a.href = `/app/tickets/adjuntoAtencion/descargar/${adjunto.id}`;
+                                a.textContent = adjunto.nombre;
+                                p.appendChild(a);
+
+                                const peso = document.createTextNode(` - ${adjunto.pesoContenido}`);
+                                p.appendChild(peso);
+
+                                adjuntosContainer.appendChild(p);
+                              });
+                            }
+
+
+
                         }
                     }
                 })

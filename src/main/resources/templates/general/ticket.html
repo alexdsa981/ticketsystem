@@ -37,7 +37,7 @@
                         <span th:text="${detalle.horaFormateadaTicket}">Hora</span></p>
                     <p class="mb-0" th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
                         <i class="bi bi-paperclip"></i>
-                        <a th:href="@{/app/tickets/adjunto/descargar/{id}(id=${adjunto.id})}" href="#"
+                        <a th:href="@{/app/tickets/adjuntoEnvio/descargar/{id}(id=${adjunto.id})}" href="#"
                            th:text="${adjunto.nombre}">Archivo</a> - <span
                             th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                     </p>
@@ -95,6 +95,7 @@
                                 <p  class="mb-1"><i class="bi bi-calendar"></i>
                                     <span id="fecha-atencion">Fecha</span>
                                     <span id="hora-atencion">Hora</span></p>
+                                <div id="adjuntos-atencion" class="mb-1"></div>
                             </div>
                         </div>
                     </div>
@@ -184,7 +185,7 @@
     <div class="modal fade" id="atencionModal" tabindex="-1" aria-labelledby="atencionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="atencionForm" method="POST">
+                <form id="atencionForm" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title text-success" id="atencionModalLabel"><i class="bi bi-tools"></i>
                             ATENCIÓN
@@ -207,7 +208,13 @@
                                       placeholder="Agrega algún comentario sobre la atención del ticket..."
                                       required></textarea>
                         </div>
-
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO:
+                                (opcional)</label>
+                            <input class="form-control" type="file" id="archivo" name="archivo"
+                                   accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.rar,.zip"
+                            >
+                        </div>
 
                         <!-- Jerarquía visual -->
                         <p class="text-secondary small mb-3">
@@ -397,7 +404,40 @@
             </div>
         </div>
     </div>
+    <script>
+        const archivoInput = document.getElementById('archivo');
+        const formulario = document.getElementById('atencionForm');
+        const submitBtn = formulario.querySelector('.submit-btn');
 
+        // Crear mensaje de error dinámico
+        const mensajeError = document.createElement('div');
+        mensajeError.id = 'mensaje-error-archivo';
+        mensajeError.className = 'form-text text-danger mt-1';
+        archivoInput.parentNode.appendChild(mensajeError);
+
+        archivoInput.addEventListener('change', function () {
+            const archivo = archivoInput.files[0];
+            if (archivo && archivo.size > 10 * 1024 * 1024) {
+                mensajeError.textContent = 'El archivo no debe superar los 10MB.';
+                submitBtn.disabled = true;
+            } else {
+                mensajeError.textContent = '';
+                submitBtn.disabled = false;
+            }
+        });
+
+        formulario.addEventListener('submit', function (e) {
+            const archivo = archivoInput.files[0];
+            if (archivo && archivo.size > 10 * 1024 * 1024) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo demasiado grande',
+                    text: 'El archivo no debe superar los 10MB.',
+                });
+            }
+        });
+    </script>
     <script src="/js/wsyFunciones_PagTicket.js"></script>
     <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
     <div th:insert="~{common/footer :: footer}">

@@ -144,7 +144,6 @@ public class TicketController {
     @PostMapping("/crearTicket")
     public ResponseEntity<String> crearTicket(
             @RequestParam("descripcion") String descripcion,
-//            @RequestParam("clasificacion") Long clasificacion,
             @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             HttpServletResponse response) throws IOException {
 
@@ -169,19 +168,19 @@ public class TicketController {
         ticketService.saveTicket(ticket);
 
 
-        List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
+        List<ArchivoAdjuntoEnvio> listaArchivosAdjuntos = new ArrayList<>();
         // Si el archivo no es nulo y no está vacío, guardarlo
         if (archivo != null && !archivo.isEmpty()) {
             try {
-                ArchivoAdjunto archivoAdjunto = new ArchivoAdjunto();
-                archivoAdjunto.setNombre(archivo.getOriginalFilename());
-                archivoAdjunto.setArchivo(archivo.getBytes());  // Convertir archivo a bytes
-                archivoAdjunto.setTipoContenido(archivo.getContentType());
-                archivoAdjunto.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
-                archivoAdjunto.setTicket(ticket);  // Asignar el ticket recién creado
-                listaArchivosAdjuntos.add(archivoAdjunto);
+                ArchivoAdjuntoEnvio archivoAdjuntoEnvio = new ArchivoAdjuntoEnvio();
+                archivoAdjuntoEnvio.setNombre(archivo.getOriginalFilename());
+                archivoAdjuntoEnvio.setArchivo(archivo.getBytes());  // Convertir archivo a bytes
+                archivoAdjuntoEnvio.setTipoContenido(archivo.getContentType());
+                archivoAdjuntoEnvio.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
+                archivoAdjuntoEnvio.setTicket(ticket);  // Asignar el ticket recién creado
+                listaArchivosAdjuntos.add(archivoAdjuntoEnvio);
                 // Guardar el archivo en la base de datos
-                ticketService.saveAdjunto(archivoAdjunto);
+                ticketService.saveAdjuntoEnvio(archivoAdjuntoEnvio);
                 ticket.setListaArchivosAdjuntos(listaArchivosAdjuntos);
 
             } catch (IOException e) {
@@ -221,18 +220,27 @@ public class TicketController {
     }
 
 
-    @GetMapping("/adjunto/descargar/{id}")
-    public ResponseEntity<Resource> descargarArchivo(@PathVariable Long id) {
-        ArchivoAdjunto archivoAdjunto = ticketService.getArchivoPorId(id);
+    @GetMapping("/adjuntoEnvio/descargar/{id}")
+    public ResponseEntity<Resource> descargarArchivoEnvio(@PathVariable Long id) {
+        ArchivoAdjuntoEnvio archivoAdjuntoEnvio = ticketService.getArchivoEnvioPorId(id);
 
         // Crear un recurso basado en los bytes del archivo
-        Resource recurso = new ByteArrayResource(archivoAdjunto.getArchivo());
+        Resource recurso = new ByteArrayResource(archivoAdjuntoEnvio.getArchivo());
 
         // Devolver el archivo como respuesta, con el tipo de contenido adecuado
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(archivoAdjunto.getTipoContenido())) // Tipo MIME
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjunto.getNombre() + "\"") // Para descarga
+                .contentType(MediaType.parseMediaType(archivoAdjuntoEnvio.getTipoContenido())) // Tipo MIME
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoEnvio.getNombre() + "\"") // Para descarga
                 .body(recurso); // El cuerpo de la respuesta es el recurso
+    }
+    @GetMapping("/adjuntoAtencion/descargar/{id}")
+    public ResponseEntity<Resource> descargarArchivoAtencion(@PathVariable Long id) {
+        ArchivoAdjuntoAtencion archivoAdjuntoAtencion = ticketService.getArchivoAtencionPorId(id);
+        Resource recurso = new ByteArrayResource(archivoAdjuntoAtencion.getArchivo());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(archivoAdjuntoAtencion.getTipoContenido()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoAtencion.getNombre() + "\"")
+                .body(recurso);
     }
 
 }

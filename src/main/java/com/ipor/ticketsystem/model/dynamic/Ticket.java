@@ -40,7 +40,7 @@ public class Ticket {
 
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ArchivoAdjunto> listaArchivosAdjuntos = new ArrayList<>();
+    private List<ArchivoAdjuntoEnvio> listaArchivosAdjuntos = new ArrayList<>();
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Atencion atencion;
