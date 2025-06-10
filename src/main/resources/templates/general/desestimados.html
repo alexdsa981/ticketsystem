@@ -68,6 +68,13 @@
                     <td>
                         <span class="nombreTipoIncidencia" th:utext="${detalle.desestimacion.clasificacionDesestimacion.nombre + ':<br>'}"></span>
                         <span th:text="${detalle.desestimacion.descripcion}"></span><br>
+                        <ul>
+                            <li th:each="adjunto: ${detalle.desestimacion.listaArchivosAdjuntos}">
+                                <a th:href="@{/app/tickets/adjuntoDesestimacion/descargar/{id}(id=${adjunto.id})}" href="#"
+                                   th:text="${adjunto.nombre}">Archivo</a> -
+                                <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                            </li>
+                        </ul>
                     </td>
                     <td th:text="${detalle.ticket.faseTicket.nombre}">Fase</td>
                 </tr>

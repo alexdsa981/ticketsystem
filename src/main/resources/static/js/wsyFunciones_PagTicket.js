@@ -73,6 +73,34 @@
                         document.getElementById("hora-desestimacion").textContent = data.horaFormateadaDesestimacion || "";
                         document.getElementById("clasificacion-desestimacion").textContent = data.nombreClasificacionDesestimacion || "";
 
+                        const adjuntosContainerDesestimacion = document.getElementById("adjuntos-desestimacion");
+                        adjuntosContainerDesestimacion.innerHTML = ""; // Limpiar por si acaso
+
+                        if (Array.isArray(data.listaArchivosAdjuntosDesestimacion)) {
+                          data.listaArchivosAdjuntosDesestimacion.forEach(adjunto => {
+                            const p = document.createElement("p");
+                            p.classList.add("mb-0");
+
+                            const icon = document.createElement("i");
+                            icon.classList.add("bi", "bi-paperclip");
+                            p.appendChild(icon);
+
+                            const espacio = document.createTextNode(" ");
+                            p.appendChild(espacio);
+
+                            const a = document.createElement("a");
+                            a.href = `/app/tickets/adjuntoDesestimacion/descargar/${adjunto.id}`;
+                            a.textContent = adjunto.nombre;
+                            p.appendChild(a);
+
+                            const peso = document.createTextNode(` - ${adjunto.pesoContenido}`);
+                            p.appendChild(peso);
+
+                            adjuntosContainerDesestimacion.appendChild(p);
+                          });
+                        }
+
+
                     } else {
                         document.getElementById("cards-principales").style.display = "block";
 
@@ -105,7 +133,7 @@
 
                             if (btnAtender) btnAtender.style.display = 'inline-block';
                             if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
-                            console.log("EN PROCESOO");
+
 
                         } else if (fase === "Cerrado - Atendido") {
                             cardRecepcion.style.display = "block";

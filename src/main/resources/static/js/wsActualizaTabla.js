@@ -457,7 +457,15 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
                 ${ticketRecord.descripcionDesestimacion.length > 150
             ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
             : ticketRecord.descripcionDesestimacion}
-            </span>
+            </span><br>
+              <ul>
+                  ${ticketRecord.listaArchivosAdjuntosDesestimacion.map(adjunto => `
+                      <li>
+                          <a href="/app/tickets/adjuntoDesestimacion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                          ${adjunto.pesoContenido}
+                      </li>
+                  `).join('')}
+              </ul>
             
         </td>
 
@@ -759,7 +767,15 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
                 ${ticketRecord.descripcionDesestimacion.length > 150
             ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
             : ticketRecord.descripcionDesestimacion}
-            </span>
+            </span><br>
+              <ul>
+                  ${ticketRecord.listaArchivosAdjuntosDesestimacion.map(adjunto => `
+                      <li>
+                          <a href="/app/tickets/adjuntoDesestimacion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                          ${adjunto.pesoContenido}
+                      </li>
+                  `).join('')}
+              </ul>
         </td>
         <td>
         Desestimado

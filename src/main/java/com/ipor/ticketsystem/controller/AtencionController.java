@@ -246,6 +246,7 @@ public class AtencionController {
             @RequestParam("mensaje") String mensaje,
             @RequestParam("fase") int fase,
             @RequestParam("clasificacion_desestimacion") Long IDclasificacion_desestimacion,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             @PathVariable Long id,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -276,6 +277,35 @@ public class AtencionController {
             // Modificar el ticket
             ticket.setDesestimacion(desestimacion);
             ticketService.saveTicket(ticket);
+
+
+            List<ArchivoAdjuntoDesestimacion> listaArchivosAdjuntos = new ArrayList<>();
+            // Si el archivo no es nulo y no está vacío, guardarlo
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+                    ArchivoAdjuntoDesestimacion archivoAdjuntoDesestimacion = new ArchivoAdjuntoDesestimacion();
+                    archivoAdjuntoDesestimacion.setNombre(archivo.getOriginalFilename());
+                    archivoAdjuntoDesestimacion.setArchivo(archivo.getBytes());  // Convertir archivo a bytes
+                    archivoAdjuntoDesestimacion.setTipoContenido(archivo.getContentType());
+                    archivoAdjuntoDesestimacion.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
+                    archivoAdjuntoDesestimacion.setDesestimacion(desestimacion);  // Asignar el ticket recién creado
+                    listaArchivosAdjuntos.add(archivoAdjuntoDesestimacion);
+                    // Guardar el archivo en la base de datos
+                    ticketService.saveAdjuntoDesestimacion(archivoAdjuntoDesestimacion);
+                    desestimacion.setListaArchivosAdjuntos(listaArchivosAdjuntos);
+
+                } catch (IOException e) {
+                    ResponseEntity.badRequest().body("Error al procesar el archivo");
+                    System.out.println(e.getMessage());
+                    System.out.println(Arrays.toString(e.getStackTrace()));
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+
+
+
 
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(desestimacion.getTicket());

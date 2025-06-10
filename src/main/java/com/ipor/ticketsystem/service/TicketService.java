@@ -2,10 +2,12 @@ package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoAtencion;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoDesestimacion;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
 import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoAtencionRepository;
+import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoDesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoEnvioRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.fixed.TipoIncidenciaRepository;
@@ -26,6 +28,8 @@ public class TicketService {
     private ArchivoAdjuntoEnvioRepository archivoAdjuntoEnvioRepository;
     @Autowired
     private ArchivoAdjuntoAtencionRepository archivoAdjuntoAtencionRepository;
+    @Autowired
+    private ArchivoAdjuntoDesestimacionRepository archivoAdjuntoDesestimacionRepository;
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
@@ -75,10 +79,8 @@ public class TicketService {
     public void saveAdjuntoAtencion(ArchivoAdjuntoAtencion archivoAdjuntoAtencion) {
         archivoAdjuntoAtencionRepository.save(archivoAdjuntoAtencion);
     }
-
-    //obtener archivos adjuntos de un ticket por el id del ticket
-    public List<ArchivoAdjuntoEnvio> getArchivosAdjuntosDeTicketPorTicketID(Long TicketId) {
-        return archivoAdjuntoEnvioRepository.BuscarPorIdTicket(TicketId);
+    public void saveAdjuntoDesestimacion(ArchivoAdjuntoDesestimacion archivoAdjuntoDesestimacion) {
+        archivoAdjuntoDesestimacionRepository.save(archivoAdjuntoDesestimacion);
     }
 
     //obtener archivo adjunto por ID
@@ -88,6 +90,10 @@ public class TicketService {
     }
     public ArchivoAdjuntoAtencion getArchivoAtencionPorId(Long id) {
         return archivoAdjuntoAtencionRepository.findById(id)
+                .get();
+    }
+    public ArchivoAdjuntoDesestimacion getArchivoDesestimacionPorId(Long id) {
+        return archivoAdjuntoDesestimacionRepository.findById(id)
                 .get();
     }
 

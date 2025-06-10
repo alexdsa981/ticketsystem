@@ -223,11 +223,7 @@ public class TicketController {
     @GetMapping("/adjuntoEnvio/descargar/{id}")
     public ResponseEntity<Resource> descargarArchivoEnvio(@PathVariable Long id) {
         ArchivoAdjuntoEnvio archivoAdjuntoEnvio = ticketService.getArchivoEnvioPorId(id);
-
-        // Crear un recurso basado en los bytes del archivo
         Resource recurso = new ByteArrayResource(archivoAdjuntoEnvio.getArchivo());
-
-        // Devolver el archivo como respuesta, con el tipo de contenido adecuado
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(archivoAdjuntoEnvio.getTipoContenido())) // Tipo MIME
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoEnvio.getNombre() + "\"") // Para descarga
@@ -240,6 +236,15 @@ public class TicketController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(archivoAdjuntoAtencion.getTipoContenido()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoAtencion.getNombre() + "\"")
+                .body(recurso);
+    }
+    @GetMapping("/adjuntoDesestimacion/descargar/{id}")
+    public ResponseEntity<Resource> descargarArchivoDesestimacion(@PathVariable Long id) {
+        ArchivoAdjuntoDesestimacion archivoAdjuntoDesestimacion = ticketService.getArchivoDesestimacionPorId(id);
+        Resource recurso = new ByteArrayResource(archivoAdjuntoDesestimacion.getArchivo());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(archivoAdjuntoDesestimacion.getTipoContenido()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoDesestimacion.getNombre() + "\"")
                 .body(recurso);
     }
 

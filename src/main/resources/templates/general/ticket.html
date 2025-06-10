@@ -118,6 +118,7 @@
                         <span id="hora-desestimacion">Hora</span></p>
                     <p class="mb-0"><i class="bi bi-tag"></i>
                         <span id="clasificacion-desestimacion">Clasificación</span></p>
+                    <div id="adjuntos-desestimacion" class="mb-1"></div>
                 </div>
             </div>
         </div>
@@ -364,7 +365,7 @@
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="desestimacionForm" method="POST">
+                <form id="desestimacionForm" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title text-danger" id="desestimacionModalLabel"><i class="bi bi-trash"></i>
                             Desestimación <span id="desestimacionTicketIdFormateado"></span>:</h5>
@@ -382,6 +383,12 @@
                             <textarea class="form-control" id="comentariosDesestimacion" name="mensaje" rows="4"
                                       placeholder="Agrega algún comentario sobre la desestimación del ticket..."
                                       required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivo-desestimacion" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO:
+                                (opcional)</label>
+                            <input class="form-control" type="file" id="archivo-desestimacion" name="archivo"
+                                   accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.rar,.zip">
                         </div>
                         <div class="mb-3">
                             <label for="clasificacionDesestimacion" class="form-label"><strong><i
@@ -404,6 +411,42 @@
             </div>
         </div>
     </div>
+    <script>
+        const archivoInputDesestimacion = document.getElementById('archivo-desestimacion');
+        const formularioDesestimacion = document.getElementById('desestimacionForm');
+        const submitBtnDesestimacion = formularioDesestimacion.querySelector('.submit-btn');
+
+        // Crear mensaje de error dinámico
+        const mensajeErrorDesestimacion = document.createElement('div');
+        mensajeErrorDesestimacion.id = 'mensaje-error-archivo';
+        mensajeErrorDesestimacion.className = 'form-text text-danger mt-1';
+        archivoInputDesestimacion.parentNode.appendChild(mensajeErrorDesestimacion);
+
+        archivoInputDesestimacion.addEventListener('change', function () {
+            const archivo = archivoInputDesestimacion.files[0];
+            if (archivo && archivo.size > 10 * 1024 * 1024) {
+                mensajeErrorDesestimacion.textContent = 'El archivo no debe superar los 10MB.';
+                submitBtnDesestimacion.disabled = true;
+            } else {
+                mensajeErrorDesestimacion.textContent = '';
+                submitBtnDesestimacion.disabled = false;
+            }
+        });
+
+        formularioDesestimacion.addEventListener('submit', function (e) {
+            const archivo = archivoInputDesestimacion.files[0];
+            if (archivo && archivo.size > 10 * 1024 * 1024) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo demasiado grande',
+                    text: 'El archivo no debe superar los 10MB.',
+                });
+            }
+        });
+    </script>
+
+
     <script>
         const archivoInput = document.getElementById('archivo');
         const formulario = document.getElementById('atencionForm');

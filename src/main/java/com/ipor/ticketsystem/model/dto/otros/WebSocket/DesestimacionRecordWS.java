@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoDesestimacion;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 
 import java.util.Base64;
@@ -27,7 +28,9 @@ public record DesestimacionRecordWS(
 
         String nombreClasificacionDesestimacion,
 
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosDesestimacion
+
 )
 {
     public DesestimacionRecordWS(DetalleTicketDTO detalleDTO) {
@@ -52,6 +55,10 @@ public record DesestimacionRecordWS(
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
+                        .collect(Collectors.toList()),
+
+                detalleDTO.getDesestimacion().getListaArchivosAdjuntos().stream()
+                        .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
                         .collect(Collectors.toList())
 
         );
@@ -66,6 +73,15 @@ public record DesestimacionRecordWS(
             String pesoContenido
     ) {
         public ArchivoAdjuntoDTO(ArchivoAdjuntoEnvio adjunto) {
+            this(
+                    adjunto.getId(),
+                    adjunto.getNombre(),
+                    Base64.getEncoder().encodeToString(adjunto.getArchivo()),
+                    adjunto.getTipoContenido(),
+                    adjunto.getPesoEnMegabytes()
+            );
+        }
+        public ArchivoAdjuntoDTO(ArchivoAdjuntoDesestimacion adjunto) {
             this(
                     adjunto.getId(),
                     adjunto.getNombre(),
