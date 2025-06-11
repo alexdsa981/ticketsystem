@@ -19,6 +19,8 @@ public class DetalleTicketDTO {
     private Atencion atencion;
     private Desestimacion desestimacion;
 
+    private DetalleEnEspera detalleEnEspera;
+
     private String fechaFormateadaTicket;
     private String horaFormateadaTicket;
 
@@ -30,6 +32,9 @@ public class DetalleTicketDTO {
 
     private String fechaFormateadaDesestimacion;
     private String horaFormateadaDesestimacion;
+
+    private String fechaFormateadaEnEspera;
+    private String horaFormateadaEnEspera;
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
@@ -74,6 +79,15 @@ public class DetalleTicketDTO {
                 this.desestimacion = ticket.getDesestimacion();
                 this.fechaFormateadaDesestimacion = ConvertirFechaConFormato(desestimacion.getFecha());
                 this.horaFormateadaDesestimacion = ConvertirHoraConFormato(desestimacion.getHora());
+                break;
+            case 5:
+                this.ticket = detalleEnEspera.getTicket();
+                this.fechaFormateadaTicket = ConvertirFechaConFormato(ticket.getFecha());
+                this.horaFormateadaTicket = ConvertirHoraConFormato(ticket.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas().get(0);
+                this.fechaFormateadaEnEspera = ConvertirFechaConFormato(detalleEnEspera.getFechaInicio());
+                this.horaFormateadaEnEspera = ConvertirHoraConFormato(detalleEnEspera.getHoraInicio());
                 break;
         }
     }

@@ -46,6 +46,7 @@ public class ClasificadoresController {
         model.addAttribute("atenciones", clasificadoresService.getListaClasAtencion());
         model.addAttribute("urgencias", clasificadoresService.getListaClasUrgencia());
         model.addAttribute("desestimaciones", clasificadoresService.getListaClasDesestimacion());
+        model.addAttribute("esperas", clasificadoresService.getListaClasEspera());
 
         // Sedes (siempre se cargan para el selector)
         model.addAttribute("sedes", clasificadoresService.getListaSedes());
@@ -62,59 +63,193 @@ public class ClasificadoresController {
     }
 
 
+    //ESPERA ---------------------------------------------------------
 
-    public Model getListaTipoIncidenciaActivos(Model model) {
-        List<TipoIncidencia> ListaTiposIncidencia = clasificadoresService.getListaTiposDeIncidenciaActivos();
-        model.addAttribute("Lista_tipo_incidencia", ListaTiposIncidencia);
-        return model;
+    public Model getListaClasificacionesEsperaActivos(Model model){
+        List<ClasificacionEspera> listaEspera = clasificadoresService.getListaClasificacionEsperaActivos();
+        model.addAttribute("Lista_clasificacion_espera", listaEspera);
+        return  model;
+    }
+    @PostMapping("/espera/nuevo")
+    public ResponseEntity<String> crearClasificacionEspera(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        ClasificacionEspera clasificacionEspera = new ClasificacionEspera();
+        clasificacionEspera.setNombre(nombre);
+        clasificacionEspera.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCEspera(clasificacionEspera);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Espera");
+        return ResponseEntity.ok("Clasificación Espera creado correctamente");
+    }
+    @PostMapping("/actualizar/espera/{id}")
+    public String actualizarEspera(@PathVariable Long id,
+                                          @RequestParam("nombre") String nombre
+    ) {
+        ClasificacionEspera clasificacionEspera = new ClasificacionEspera();
+        clasificacionEspera.setNombre(nombre);
+        clasificacionEspera.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarEspera(id, clasificacionEspera);
+        return "redirect:/admin/Clasificadores?clasificador=Espera";
+    }
+    @GetMapping("/desactivar/espera/{id}")
+    public String desactivarEspera(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoEspera(id, false);
+        return "redirect:/admin/Clasificadores?clasificador=Espera";
+    }
+    @GetMapping("/activar/espera/{id}")
+    public String activarEsperaa(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoEspera(id, true);
+        return "redirect:/admin/Clasificadores?clasificador=Espera";
     }
 
-    public Model getListaSubCatIncidenciaActivos(Model model) {
-        List<SubCategoriaIncidencia> ListaSubCatIncidencia = clasificadoresService.getListaSubCatIncidenciaActivos();
-        model.addAttribute("Lista_subcat_incidencia", ListaSubCatIncidencia);
-        return model;
+
+    //DESESTIMACION ---------------------------------------------------------
+
+    public Model getListaClasificacionesDesestimacionActivos(Model model){
+        List<ClasificacionDesestimacion> listaDesestimacion = clasificadoresService.getListaClasificacionDesestimacionActivos();
+        model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
+        return  model;
+    }
+    @PostMapping("/desestimacion/nuevo")
+    public ResponseEntity<String> crearClasificacionDesestimacion(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
+        clasificacionDesestimacion.setNombre(nombre);
+        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCDesestimacion(clasificacionDesestimacion);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Desestimacion");
+        return ResponseEntity.ok("Clasificación Desestimacion creado correctamente");
+    }
+    @PostMapping("/actualizar/desestimacion/{id}")
+    public String actualizarDesestimacion(@PathVariable Long id,
+                                          @RequestParam("nombre") String nombre
+    ) {
+        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
+        clasificacionDesestimacion.setNombre(nombre);
+        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarDesestimacion(id, clasificacionDesestimacion);
+        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
+    }
+    @GetMapping("/desactivar/desestimacion/{id}")
+    public String desactivarDesestimacion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoDesestimacion(id, false);
+        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
+    }
+    @GetMapping("/activar/desestimacion/{id}")
+    public String activarDesestimaciona(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoDesestimacion(id, true);
+        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
     }
 
-    public Model getListaCatIncidenciaActivos(Model model) {
-        List<CategoriaIncidencia> ListaCatIncidencia = clasificadoresService.getListaCatIncidenciaActivos();
-        model.addAttribute("Lista_cat_incidencia", ListaCatIncidencia);
-        return model;
-    }
+
+
+    //URGENCIAS ---------------------------------------------------------
+
+
+
+
 
     public Model getListaClasificacionesUrgenciaActivos(Model model){
         List<ClasificacionUrgencia> listaUrgencias = clasificadoresService.getListaClasificacionUrgenciaActivos();
         model.addAttribute("Lista_clasificacion_urgencia", listaUrgencias);
         return  model;
     }
+    @PostMapping("/urgencia/nuevo")
+    public ResponseEntity<String> crearClasificacionUrgencia(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
+        clasificacionUrgencia.setNombre(nombre);
+        clasificacionUrgencia.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCUrgencia(clasificacionUrgencia);
+        response.sendRedirect("/admin/Clasificadores");
+        return ResponseEntity.ok("Clasificación Urgencia creado correctamente");
+    }
+    @PostMapping("/actualizar/urgencia/{id}")
+    public String actualizarUrgencia(@PathVariable Long id,
+                                     @RequestParam("nombre") String nombre
+    ) {
+        ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
+        clasificacionUrgencia.setNombre(nombre);
+        clasificacionUrgencia.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarUrgencia(id, clasificacionUrgencia);
+        return "redirect:/admin/Clasificadores";
+    }
+
+    @GetMapping("/desactivar/urgencia/{id}")
+    public String desactivarUrgencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoUrgencia(id, false);
+        return "redirect:/admin/Clasificadores";
+    }
+    @GetMapping("/activar/urgencia/{id}")
+    public String activarUrgencia(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoUrgencia(id, true);
+        return "redirect:/admin/Clasificadores";
+    }
+
+
+
+    //ATENCION ---------------------------------------------------------
+
+
+
+
+
     public Model getListaClasificacionesAtencionActivos(Model model){
         List<ClasificacionAtencion> listaAtencions = clasificadoresService.getListaClasificacionAtencionActivos();
         model.addAttribute("Lista_clasificacion_atencion", listaAtencions);
         return  model;
     }
+    @PostMapping("/atencion/nuevo")
+    public ResponseEntity<String> crearClasificacionAtencion(
+            @RequestParam("nombre") String nombre,
+            HttpServletResponse response) throws IOException {
+        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
+        clasificacionAtencion.setNombre(nombre);
+        clasificacionAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.saveCAtencion(clasificacionAtencion);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Atencion");
+        return ResponseEntity.ok("Clasificación Atencion creado correctamente");
+    }
+    @PostMapping("/actualizar/atencion/{id}")
+    public String actualizarAtencion(@PathVariable Long id,
+                                     @RequestParam("nombre") String nombre
+    ) {
+        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
+        clasificacionAtencion.setNombre(nombre);
+        clasificacionAtencion.setIsActive(Boolean.TRUE);
+        clasificadoresService.actualizarAtencion(id, clasificacionAtencion);
+        return "redirect:/admin/Clasificadores?clasificador=Atencion";
+    }
+    @GetMapping("/desactivar/atencion/{id}")
+    public String desactivarAtencion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoAtencion(id, false);
+        return "redirect:/admin/Clasificadores?clasificador=Atencion";
+    }
+    @GetMapping("/activar/atencion/{id}")
+    public String activarAtencion(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoAtencion(id, true);
+        return "redirect:/admin/Clasificadores?clasificador=Atencion";
+    }
+
+
+
+
+
+
+
+
+    //AREA ---------------------------------------------------------
+
+
+
+
+
     public Model getListaSedesActivos(Model model){
         List<Sede> listaSedes = clasificadoresService.getListaSedesActivos();
         model.addAttribute("Lista_sedes", listaSedes);
         return  model;
-    }
-    public Model getListaClasificacionesDesestimacionActivos(Model model){
-        List<ClasificacionDesestimacion> listaDesestimacion = clasificadoresService.getListaClasificacionDesestimacionActivos();
-        model.addAttribute("Lista_clasificacion_desestimacion", listaDesestimacion);
-        return  model;
-    }
-
-
-    // Obtener subcategorías por ID de categoría
-    @ResponseBody
-    @GetMapping("/subcategorias/{categoriaId}")
-    public List<SubCategoriaIncidencia> getSubcategoriasPorCategoria(@PathVariable Long categoriaId) {
-        return clasificadoresService.getListaSubCatIncidenciaPorIDCat(categoriaId);
-    }
-
-    // Obtener tipos de incidencia por ID de subcategoría
-    @ResponseBody
-    @GetMapping("/tipos/{subCategoriaId}")
-    public List<TipoIncidencia> getTiposPorSubCategoria(@PathVariable Long subCategoriaId) {
-        return clasificadoresService.getListaTipoIncidenciaPirIDSubCat(subCategoriaId);
     }
 
     @ResponseBody
@@ -122,11 +257,6 @@ public class ClasificadoresController {
     public List<AreaAtencion> getAreasPorSede(@PathVariable Long sedeId) {
         return clasificadoresService.getListaAreaPorSedeId(sedeId);
     }
-
-
-
-
-
     @PostMapping("/sede/nuevo")
     public void crearSede(@RequestParam("nombre") String nombre,
                           @RequestParam(value = "id_sede", required = false) Long id_sede,
@@ -178,38 +308,68 @@ public class ClasificadoresController {
         clasificadoresService.actualizarArea(id, areaAtencion);
         response.sendRedirect("/admin/Clasificadores?clasificador=Area" + (id_sede != null ? "&sede=" + id_sede : ""));
     }
-
-
-
-
-    //crear desestimacion nueva
-    @PostMapping("/desestimacion/nuevo")
-    public ResponseEntity<String> crearClasificacionDesestimacion(
-            @RequestParam("nombre") String nombre,
-            HttpServletResponse response) throws IOException {
-        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
-        clasificacionDesestimacion.setNombre(nombre);
-        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCDesestimacion(clasificacionDesestimacion);
-        response.sendRedirect("/admin/Clasificadores?clasificador=Desestimacion");
-        return ResponseEntity.ok("Clasificación Desestimacion creado correctamente");
+    @GetMapping("/desactivar/area/{id}")
+    public ResponseEntity<String> desactivarArea(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoArea(id, false);
+        return ResponseEntity.ok("Área desactivada correctamente");
     }
-    // Actualizar un desestimacion existente
-    @PostMapping("/actualizar/desestimacion/{id}")
-    public String actualizarDesestimacion(@PathVariable Long id,
-                                       @RequestParam("nombre") String nombre
-    ) {
-        ClasificacionDesestimacion clasificacionDesestimacion = new ClasificacionDesestimacion();
-        clasificacionDesestimacion.setNombre(nombre);
-        clasificacionDesestimacion.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarDesestimacion(id, clasificacionDesestimacion);
-        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
+    @GetMapping("/activar/area/{id}")
+    public ResponseEntity<String> activarArea(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoArea(id, true);
+        return ResponseEntity.ok("Área activada correctamente");
+    }
+    @GetMapping("/desactivar/sede/{id}")
+    public ResponseEntity<String> desactivarSede(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoSede(id, false);
+        return ResponseEntity.ok("Sede desactivada correctamente");
+    }
+    @GetMapping("/activar/sede/{id}")
+    public ResponseEntity<String> activarSede(@PathVariable Long id) {
+        clasificadoresService.cambiarEstadoSede(id, true);
+        return ResponseEntity.ok("Sede activada correctamente");
+    }
+    @ResponseBody
+    @GetMapping("/listar/areasActivas/{id_sede}")
+    public List<AreaAtencion> listaAreasActivos(@PathVariable Long id_sede) {
+        return clasificadoresService.getListaAreasActivosPorIDSede(id_sede);
     }
 
 
 
-    //EN INCIDENCIA LA REDIRECCION SERÁ POR JS
-    //crear categori nueva
+
+    //INCIDENCIAS ---------------------------------------------------------
+
+
+
+
+
+    public Model getListaTipoIncidenciaActivos(Model model) {
+        List<TipoIncidencia> ListaTiposIncidencia = clasificadoresService.getListaTiposDeIncidenciaActivos();
+        model.addAttribute("Lista_tipo_incidencia", ListaTiposIncidencia);
+        return model;
+    }
+
+    public Model getListaSubCatIncidenciaActivos(Model model) {
+        List<SubCategoriaIncidencia> ListaSubCatIncidencia = clasificadoresService.getListaSubCatIncidenciaActivos();
+        model.addAttribute("Lista_subcat_incidencia", ListaSubCatIncidencia);
+        return model;
+    }
+
+    public Model getListaCatIncidenciaActivos(Model model) {
+        List<CategoriaIncidencia> ListaCatIncidencia = clasificadoresService.getListaCatIncidenciaActivos();
+        model.addAttribute("Lista_cat_incidencia", ListaCatIncidencia);
+        return model;
+    }
+    @ResponseBody
+    @GetMapping("/subcategorias/{categoriaId}")
+    public List<SubCategoriaIncidencia> getSubcategoriasPorCategoria(@PathVariable Long categoriaId) {
+        return clasificadoresService.getListaSubCatIncidenciaPorIDCat(categoriaId);
+    }
+    @ResponseBody
+    @GetMapping("/tipos/{subCategoriaId}")
+    public List<TipoIncidencia> getTiposPorSubCategoria(@PathVariable Long subCategoriaId) {
+        return clasificadoresService.getListaTipoIncidenciaPirIDSubCat(subCategoriaId);
+    }
     @PostMapping("/catIncidencia/nuevo")
     public ResponseEntity<String> crearTipoIncidenciaa(
             @RequestParam("nombre") String nombre,
@@ -220,11 +380,9 @@ public class ClasificadoresController {
         clasificadoresService.saveCatIncidencia(categoriaIncidencia);
         return ResponseEntity.ok("Clasificación Incidencia creado correctamente");
     }
-
-    // Actualizar un categoria existente
     @PostMapping("/actualizar/catIncidencia/{id}")
     public ResponseEntity<String>  actualizarIncidencia(@PathVariable Long id,
-                                       @RequestParam("nombre") String nombre
+                                                        @RequestParam("nombre") String nombre
     ) {
         CategoriaIncidencia categoriaIncidencia = new CategoriaIncidencia();
         categoriaIncidencia.setNombre(nombre);
@@ -232,8 +390,6 @@ public class ClasificadoresController {
         clasificadoresService.actualizarCatIncidencia(id, categoriaIncidencia);
         return ResponseEntity.ok("Clasificación Incidencia actualizado correctamente");
     }
-
-    //crear sub categoria nueva
     @PostMapping("/subCatIncidencia/nuevo")
     public ResponseEntity<String> crearSubCatIncidenciaa(
             @RequestParam("id_cat") Long id_cat,
@@ -247,23 +403,17 @@ public class ClasificadoresController {
         response.sendRedirect("/admin/Clasificadores?clasificador=Incidencia");
         return ResponseEntity.ok("Clasificación sbCategoriaIncidencia creado correctamente");
     }
-
-    // Actualizar un sub categoria existente
     @PostMapping("/actualizar/subCatIncidencia/{id}")
     public ResponseEntity<String> actualizarIncidencia(@PathVariable Long id,
-                                       @RequestParam("id_cat") Long id_cat,
-                                       @RequestParam("nombre") String nombre) {
+                                                       @RequestParam("id_cat") Long id_cat,
+                                                       @RequestParam("nombre") String nombre) {
         SubCategoriaIncidencia sbCategoriaIncidencia = new SubCategoriaIncidencia();
         sbCategoriaIncidencia.setNombre(nombre);
         sbCategoriaIncidencia.setCategoriaIncidencia(clasificadoresService.getCatIncidenciaPorID(id_cat));
         sbCategoriaIncidencia.setIsActive(Boolean.TRUE);
         clasificadoresService.actualizarSubCatIncidencia(id, sbCategoriaIncidencia);
         return ResponseEntity.ok("Clasificación sbCategoriaIncidencia actualizado correctamente");
-
     }
-
-
-    //crear incidencia nueva
     @PostMapping("/tipoIncidencia/nuevo")
     public ResponseEntity<String> crearTipoIncidenciaa(
             @RequestParam("nombre") String nombre,
@@ -277,13 +427,10 @@ public class ClasificadoresController {
         response.sendRedirect("/admin/Clasificadores?clasificador=Incidencia");
         return ResponseEntity.ok("Clasificación Incidencia creado correctamente");
     }
-
-    // Actualizar un incidencia existente
     @PostMapping("/actualizar/tipoIncidencia/{id}")
     public ResponseEntity<String>  actualizarTipoIncidencia(@PathVariable Long id,
-                                           @RequestParam("id_subcat") Long id_subcat,
-                                           @RequestParam("nombre") String nombre) {
-
+                                                            @RequestParam("id_subcat") Long id_subcat,
+                                                            @RequestParam("nombre") String nombre) {
         TipoIncidencia tipoIncidencia = new TipoIncidencia();
         tipoIncidencia.setNombre(nombre);
         tipoIncidencia.setSubCategoriaIncidencia(clasificadoresService.getSubCatIncidenciaPorID(id_subcat));
@@ -291,67 +438,6 @@ public class ClasificadoresController {
         clasificadoresService.actualizarTipoIncidencia(id, tipoIncidencia);
         return ResponseEntity.ok("Clasificación Incidencia actualizado correctamente");
     }
-
-
-
-
-
-
-    //crear Clasificacion atencion nueva
-    @PostMapping("/atencion/nuevo")
-    public ResponseEntity<String> crearClasificacionAtencion(
-            @RequestParam("nombre") String nombre,
-            HttpServletResponse response) throws IOException {
-        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
-        clasificacionAtencion.setNombre(nombre);
-        clasificacionAtencion.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCAtencion(clasificacionAtencion);
-        response.sendRedirect("/admin/Clasificadores?clasificador=Atencion");
-        return ResponseEntity.ok("Clasificación Atencion creado correctamente");
-    }
-
-    // Actualizar un atencion existente
-    @PostMapping("/actualizar/atencion/{id}")
-    public String actualizarAtencion(@PathVariable Long id,
-                                       @RequestParam("nombre") String nombre
-    ) {
-        ClasificacionAtencion clasificacionAtencion = new ClasificacionAtencion();
-        clasificacionAtencion.setNombre(nombre);
-        clasificacionAtencion.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarAtencion(id, clasificacionAtencion);
-        return "redirect:/admin/Clasificadores?clasificador=Atencion";
-    }
-
-    //crear Clasificacion Urgencia nueva
-    @PostMapping("/urgencia/nuevo")
-    public ResponseEntity<String> crearClasificacionUrgencia(
-            @RequestParam("nombre") String nombre,
-            HttpServletResponse response) throws IOException {
-        ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
-        clasificacionUrgencia.setNombre(nombre);
-        clasificacionUrgencia.setIsActive(Boolean.TRUE);
-        clasificadoresService.saveCUrgencia(clasificacionUrgencia);
-        response.sendRedirect("/admin/Clasificadores");
-        return ResponseEntity.ok("Clasificación Urgencia creado correctamente");
-    }
-
-    // Actualizar un Urgencia existente
-    @PostMapping("/actualizar/urgencia/{id}")
-    public String actualizarUrgencia(@PathVariable Long id,
-                                     @RequestParam("nombre") String nombre
-    ) {
-        ClasificacionUrgencia clasificacionUrgencia = new ClasificacionUrgencia();
-        clasificacionUrgencia.setNombre(nombre);
-        clasificacionUrgencia.setIsActive(Boolean.TRUE);
-        clasificadoresService.actualizarUrgencia(id, clasificacionUrgencia);
-        return "redirect:/admin/Clasificadores";
-    }
-
-
-
-
-
-    // Desactivar Clasificación CAT
     @GetMapping("/desactivar/catIncidencia/{id}")
     public ResponseEntity<String>  desactivarCatIncidencia(@PathVariable Long id) {
         clasificadoresService.cambiarEstadoCatIncidencia(id, false);
@@ -362,8 +448,6 @@ public class ClasificadoresController {
         clasificadoresService.cambiarEstadoCatIncidencia(id, true);
         return ResponseEntity.ok("Clasificación Incidencia actualizado correctamente");
     }
-
-    // Desactivar Clasificación SUBCAT
     @GetMapping("/desactivar/subCatIncidencia/{id}")
     public ResponseEntity<String>  desactivarSubCatIncidencia(@PathVariable Long id) {
         clasificadoresService.cambiarEstadoSubCatIncidencia(id, false);
@@ -374,8 +458,6 @@ public class ClasificadoresController {
         clasificadoresService.cambiarEstadoSubCatIncidencia(id, true);
         return ResponseEntity.ok("sub categoria activado correctamente");
     }
-
-    // Desactivar TIPO Incidencia
     @GetMapping("/desactivar/tipoIncidencia/{id}")
     public ResponseEntity<String>  desactivarIncidencia(@PathVariable Long id) {
         clasificadoresService.cambiarEstadoIncidencia(id, false);
@@ -386,94 +468,15 @@ public class ClasificadoresController {
         clasificadoresService.cambiarEstadoIncidencia(id, true);
         return ResponseEntity.ok("tipo Incidencia activado correctamente");
     }
-
-    // Desactivar Clasificación Atencion
-    @GetMapping("/desactivar/atencion/{id}")
-    public String desactivarAtencion(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoAtencion(id, false);
-        return "redirect:/admin/Clasificadores?clasificador=Atencion";
-    }
-    @GetMapping("/activar/atencion/{id}")
-    public String activarAtencion(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoAtencion(id, true);
-        return "redirect:/admin/Clasificadores?clasificador=Atencion";
-    }
-
-    // Desactivar Clasificación Urgencia
-    @GetMapping("/desactivar/urgencia/{id}")
-    public String desactivarUrgencia(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoUrgencia(id, false);
-        return "redirect:/admin/Clasificadores";
-    }
-    @GetMapping("/activar/urgencia/{id}")
-    public String activarUrgencia(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoUrgencia(id, true);
-        return "redirect:/admin/Clasificadores";
-    }
-
-
-    // Desactivar Clasificación Desestimacion
-    @GetMapping("/desactivar/desestimacion/{id}")
-    public String desactivarDesestimacion(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoDesestimacion(id, false);
-        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
-    }
-    @GetMapping("/activar/desestimacion/{id}")
-    public String activarDesestimaciona(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoDesestimacion(id, true);
-        return "redirect:/admin/Clasificadores?clasificador=Desestimacion";
-    }
-
-    // Desactivar Área
-    @GetMapping("/desactivar/area/{id}")
-    public ResponseEntity<String> desactivarArea(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoArea(id, false);
-        return ResponseEntity.ok("Área desactivada correctamente");
-    }
-
-    // Activar Área
-    @GetMapping("/activar/area/{id}")
-    public ResponseEntity<String> activarArea(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoArea(id, true);
-        return ResponseEntity.ok("Área activada correctamente");
-    }
-
-    // Desactivar Sede
-    @GetMapping("/desactivar/sede/{id}")
-    public ResponseEntity<String> desactivarSede(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoSede(id, false);
-        return ResponseEntity.ok("Sede desactivada correctamente");
-    }
-
-    // Activar Sede
-    @GetMapping("/activar/sede/{id}")
-    public ResponseEntity<String> activarSede(@PathVariable Long id) {
-        clasificadoresService.cambiarEstadoSede(id, true);
-        return ResponseEntity.ok("Sede activada correctamente");
-    }
-
-
-
-
-
-
     @ResponseBody
     @GetMapping("/listar/subCatIncidenciaActivos/{id_categoria}")
     public List<SubCategoriaIncidencia> listaSubCategoriasIncidenciaActivos(@PathVariable Long id_categoria) {
         return clasificadoresService.getListaSubCatIncidenciaActivosPorIDCat(id_categoria);
     }
-
     @ResponseBody
     @GetMapping("/listar/tipoIncidenciaActivos/{id_subCategoria}")
     public List<TipoIncidencia> listaTipoIncidenciaActivos(@PathVariable Long id_subCategoria) {
         return clasificadoresService.getListaTiposDeIncidenciaActivosPorIDSubCat(id_subCategoria);
     }
-
-    @ResponseBody
-    @GetMapping("/listar/areasActivas/{id_sede}")
-    public List<AreaAtencion> listaAreasActivos(@PathVariable Long id_sede) {
-        return clasificadoresService.getListaAreasActivosPorIDSede(id_sede);
-    }
-
 
 }

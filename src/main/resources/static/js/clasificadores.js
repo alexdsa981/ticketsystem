@@ -177,4 +177,17 @@ function openDesestimacionModal(button) {
     form.setAttribute('action', `/app/clasificadores/actualizar/desestimacion/${id}`);
 }
 
+function openEsperaModal(button) {
+    var id = button.getAttribute("data-espera-id");
+    var nombre = button.getAttribute("data-espera-nombre");
+
+    document.getElementById("esperaId").value = id;
+    document.getElementById("esperaNombre").value = nombre;
+
+    // Configurar la acción del formulario
+    const form = document.getElementById('esperaForm');
+    form.setAttribute('action', `/app/clasificadores/actualizar/espera/${id}`);
+}
+
+
 

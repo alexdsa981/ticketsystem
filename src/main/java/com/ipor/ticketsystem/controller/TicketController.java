@@ -269,5 +269,14 @@ public class TicketController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoDesestimacion.getNombre() + "\"")
                 .body(recurso);
     }
+    @GetMapping("/adjuntoEspera/descargar/{id}")
+    public ResponseEntity<Resource> descargarArchivoEspera(@PathVariable Long id) {
+        ArchivoAdjuntoEspera archivoAdjuntoEspera = ticketService.getArchivoEsperaPorId(id);
+        Resource recurso = new ByteArrayResource(archivoAdjuntoEspera.getArchivo());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(archivoAdjuntoEspera.getTipoContenido()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivoAdjuntoEspera.getNombre() + "\"")
+                .body(recurso);
+    }
 
 }

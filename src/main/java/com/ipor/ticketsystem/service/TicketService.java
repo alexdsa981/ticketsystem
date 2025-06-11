@@ -1,15 +1,9 @@
 package com.ipor.ticketsystem.service;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoAtencion;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoDesestimacion;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
-import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
-import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoAtencionRepository;
-import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoDesestimacionRepository;
-import com.ipor.ticketsystem.repository.dynamic.ArchivoAdjuntoEnvioRepository;
-import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.repository.dynamic.*;
 import com.ipor.ticketsystem.repository.fixed.TipoIncidenciaRepository;
 import com.ipor.ticketsystem.repository.fixed.FaseTicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +25,8 @@ public class TicketService {
     @Autowired
     private ArchivoAdjuntoDesestimacionRepository archivoAdjuntoDesestimacionRepository;
     @Autowired
+    private ArchivoAdjuntoEsperaRepository archivoAdjuntoEsperaRepository;
+    @Autowired
     private UsuarioService usuarioService;
     @Autowired
     private TipoIncidenciaRepository tipoIncidenciaRepository;
@@ -49,7 +45,6 @@ public class TicketService {
     }
 
 
-    // Método para obtener tickets propios enviados y en espera de aprobación de compra,
     // además junta los tickets y sus archivos adjuntos en TicketDTO
     public List<DetalleTicketDTO> getMyTickets() {
         Long idUsuario = usuarioService.getIDdeUsuarioLogeado();
@@ -83,6 +78,10 @@ public class TicketService {
         archivoAdjuntoDesestimacionRepository.save(archivoAdjuntoDesestimacion);
     }
 
+    public void saveAdjuntoEspera(ArchivoAdjuntoEspera archivoAdjuntoEspera) {
+        archivoAdjuntoEsperaRepository.save(archivoAdjuntoEspera);
+    }
+
     //obtener archivo adjunto por ID
     public ArchivoAdjuntoEnvio getArchivoEnvioPorId(Long id) {
         return archivoAdjuntoEnvioRepository.findById(id)
@@ -96,6 +95,11 @@ public class TicketService {
         return archivoAdjuntoDesestimacionRepository.findById(id)
                 .get();
     }
+    public ArchivoAdjuntoEspera getArchivoEsperaPorId(Long id) {
+        return archivoAdjuntoEsperaRepository.findById(id)
+                .get();
+    }
+
 
     public Ticket getTicketPorID(Long id) {
         return ticketRepository.findById(id).get();

@@ -60,7 +60,7 @@ public class Ticket {
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticket")
-    private Set<DetalleEnEspera> listaDetalleEsperas;
+    private List<DetalleEnEspera> listaDetalleEsperas;
 
     // Método para establecer fecha y hora actuales antes de persistir
     @PrePersist

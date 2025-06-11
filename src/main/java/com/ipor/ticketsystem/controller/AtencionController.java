@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -239,6 +241,138 @@ public class AtencionController {
         }
 
     }
+
+
+
+    @PostMapping("/espera/{id}")
+    public ResponseEntity<String> esperaTicket(
+            @RequestParam("mensaje") String mensaje,
+            @RequestParam("fase") int fase,
+            @RequestParam("clasificacion_espera") Long IDclasificacion_espera,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+            @PathVariable Long id,
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        try {
+            Ticket ticket = ticketService.getTicketPorID(id);
+
+            Long lastFaseTicket = ticket.getFaseTicket().getId();
+
+            if (fase != lastFaseTicket) {
+                String referer = request.getHeader("Referer");
+                String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?error=espera-moved";
+                response.sendRedirect(redirectUrl);
+                return ResponseEntity.ok("Ticket ya fue movido a otra fase.");
+            }
+
+
+            // Cambiar fase del ticket
+            atencionService.updateFaseTicket(id, 5L);
+
+            // Lógica para crear la espera
+            DetalleEnEspera espera = new DetalleEnEspera();
+            espera.setDescripcion(mensaje);
+            espera.setClasificacionEspera(clasificadoresService.getClasificacionEsperaPorId(IDclasificacion_espera));
+            espera.setTicket(ticket);
+            espera.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+            espera.setFechaInicio(LocalDate.now());
+            espera.setHoraInicio(LocalTime.now());
+            atencionService.saveEspera(espera);
+
+            List<DetalleEnEspera> listaEsperas = new ArrayList<>();
+            listaEsperas.add(espera);
+
+            // Modificar el ticket
+            ticket.setListaDetalleEsperas(listaEsperas);
+            ticketService.saveTicket(ticket);
+
+
+            List<ArchivoAdjuntoEspera> listaArchivosAdjuntos = new ArrayList<>();
+            // Si el archivo no es nulo y no está vacío, guardarlo
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+                    ArchivoAdjuntoEspera archivoAdjuntoEspera = new ArchivoAdjuntoEspera();
+                    archivoAdjuntoEspera.setNombre(archivo.getOriginalFilename());
+                    archivoAdjuntoEspera.setArchivo(archivo.getBytes());  // Convertir archivo a bytes
+                    archivoAdjuntoEspera.setTipoContenido(archivo.getContentType());
+                    archivoAdjuntoEspera.setPesoContenido((double) archivo.getSize() / 1024); // Tamaño en KB
+                    archivoAdjuntoEspera.setDetalleEnEspera(espera);  // Asignar el ticket recién creado
+                    listaArchivosAdjuntos.add(archivoAdjuntoEspera);
+                    // Guardar el archivo en la base de datos
+                    ticketService.saveAdjuntoEspera(archivoAdjuntoEspera);
+                    espera.setListaArchivosAdjuntos(listaArchivosAdjuntos);
+
+                } catch (IOException e) {
+                    ResponseEntity.badRequest().body("Error al procesar el archivo");
+                    System.out.println(e.getMessage());
+                    System.out.println(Arrays.toString(e.getStackTrace()));
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+
+
+
+
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(espera.getTicket());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(espera.getTicket().getUsuario());
+            notificacion.setMensaje(" Ha sido puesto en Espera");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+
+//            notificacionesService.saveNotiicacion(notificacion);
+//            WSNotificacionesService.enviarNotificacion(notificacion);
+//            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialDesestimacion(ticket);
+//            WSNotificacionesService.enviarAtencionAVistaUsuarioDesestimados(ticket);
+//            if (lastFaseTicket == 1L) {
+//                WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
+//            } else if (lastFaseTicket == 2L) {
+//                WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+//            }
+//            WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
+//            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+//
+//            if (atencionService.findRecepcionByTicketID(id) != null) {
+//                atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
+//            }
+//            WSNotificacionesService.notificarActualizacionDashboard();
+//            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
+
+
+            String referer = request.getHeader("Referer");
+            String redirectUrl = (referer != null ? referer : "/fallbackUrl") + "?successful=espera";
+            response.sendRedirect(redirectUrl);
+            return ResponseEntity.ok("Ticket puesto en Espera correctamente");
+
+
+        } catch (DataIntegrityViolationException e) {
+            // Error de llave duplicada u otros problemas de integridad
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=espera-duplicated" : "/fallbackUrl?error=espera-duplicated");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido puesto en Espera por otro usuario.");
+        } catch (Exception e) {
+            e.printStackTrace();;
+            // Captura otros errores
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer + "?error=espera-general" : "/fallbackUrl?error=espera-general");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado al poner en Espera el ticket.");
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     // Método para desestimar un ticket, crea una desestimación y cambia la fase del ticket:
     @PostMapping("/desestimacion/{id}")

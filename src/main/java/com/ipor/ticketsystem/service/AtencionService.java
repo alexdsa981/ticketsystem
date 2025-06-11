@@ -3,6 +3,7 @@ package com.ipor.ticketsystem.service;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
+import com.ipor.ticketsystem.repository.dynamic.DetalleEnEsperaRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class AtencionService {
     AtencionRepository atencionRepository;
     @Autowired
     DesestimacionRepository desestimacionRepository;
+    @Autowired
+    DetalleEnEsperaRepository detalleEnEsperaRepository;
     @Autowired
     TicketService ticketService;
     @Autowired
@@ -47,6 +50,38 @@ public class AtencionService {
     }
 
 
+    //metodo para retornar todos los tickets en espera:
+    public List<DetalleTicketDTO> getListaEspera() {
+        List<DetalleEnEspera> listaDetalleEnEspera = detalleEnEsperaRepository.findAllByTicketFaseID5();
+        List<DetalleTicketDTO> listaDetallesEsperaDTO = new ArrayList<>();
+        for (DetalleEnEspera detalleEnEspera : listaDetalleEnEspera) {
+            DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
+            listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+        }
+        return listaDetallesEsperaDTO;
+    }
+    //metodo para retornar Mis tickets en espera:
+    public List<DetalleTicketDTO> getMyListaEspera() {
+        List<DetalleEnEspera> listaDetalleEnEspera = detalleEnEsperaRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
+        List<DetalleTicketDTO> listaDetallesEsperaDTO = new ArrayList<>();
+        for (DetalleEnEspera detalleEnEspera : listaDetalleEnEspera) {
+            DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
+            listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+        }
+        return listaDetallesEsperaDTO;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     //metodo para retornar todos los tickets desestimados:
     public List<DetalleTicketDTO> getListaDesestimados() {
         List<Desestimacion> listaDesestimados = desestimacionRepository.findAllByTicketFaseID4();
@@ -67,6 +102,7 @@ public class AtencionService {
         }
         return listaDesestimacionesDTO;
     }
+
     //metodo para retornar Mis tickets atendidos:
     public List<DetalleTicketDTO> getMyListaAtendidos() {
         List<Atencion> listaAtencions = atencionRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
@@ -113,6 +149,9 @@ public class AtencionService {
     //guardar atencion en base de datos
     public void saveDesestimacion(Desestimacion desestimacion){
         desestimacionRepository.save(desestimacion);
+    }
+    public void saveEspera(DetalleEnEspera detalleEnEspera){
+        detalleEnEsperaRepository.save(detalleEnEspera);
     }
 
     public void deleteRecepcion(Recepcion recepcion){

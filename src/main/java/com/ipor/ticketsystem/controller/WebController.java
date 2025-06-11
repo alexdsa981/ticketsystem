@@ -154,6 +154,7 @@ public class WebController {
     public String redirigePaginaTicketsRecepcionados(Model model) {
         atencionController.getListaTodosLosTicketsRecepcionadosAVista(model);
         clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaClasificacionesEsperaActivos(model);
         clasificadoresController.getListaTipoIncidenciaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);

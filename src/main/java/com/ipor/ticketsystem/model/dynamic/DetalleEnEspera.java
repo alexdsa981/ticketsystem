@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,8 +40,11 @@ public class DetalleEnEspera {
     @Column(nullable = false)
     private LocalTime horaInicio;
 
-    @Column(nullable = false)
     private LocalDate fechaFin;
-    @Column(nullable = false)
+
     private LocalTime horaFin;
+
+    @OneToMany(mappedBy = "detalleEnEspera", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ArchivoAdjuntoEspera> listaArchivosAdjuntos = new ArrayList<>();
+
 }

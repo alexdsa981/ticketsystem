@@ -18,9 +18,10 @@
             <h5 class="mb-0">SELECCIONE UN CLASIFICADOR:</h5>
             <select id="selectorClasificador" class="form-select w-auto">
                 <option value="Incidencia" th:selected="${clasificadorActivo == 'Incidencia'}">Incidencia</option>
+                <option value="Area" th:selected="${clasificadorActivo == 'Area'}">Area</option>
                 <option value="Atencion" th:selected="${clasificadorActivo == 'Atencion'}">Atencion</option>
                 <option value="Desestimacion" th:selected="${clasificadorActivo == 'Desestimacion'}">Desestimacion</option>
-                <option value="Area" th:selected="${clasificadorActivo == 'Area'}">Area</option>
+                <option value="Espera" th:selected="${clasificadorActivo == 'Espera'}">Espera</option>
             </select>
         </div>
     </div>
@@ -370,6 +371,65 @@
             </div>
         </div>
     </div>
+
+
+    <div class="container border shadow p-3 px-4 mb-5 bg-body rounded contenedor-clasificadores" th:if="${clasificadorActivo == 'Espera'}">
+        <!-- Clasificadores Espera -->
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light text-dark">
+                <h5 class="mb-0">Clasificadores Espera</h5>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#newEsperaModal">
+                    <i class="bi bi-plus-lg"></i> Nuevo
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Espera</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clasificador, iter: ${esperas}"
+                        th:classappend="${!clasificador.isActive} ? 'row-desactivado' : ''">
+                        <td th:text="${iter.count}">#</td>
+                        <td th:text="${clasificador.nombre}">Nombre</td>
+                        <td th:text="${clasificador.isActive ? 'Activo' : 'Desactivado'}">Estado</td>
+                        <td class="d-flex gap-1 flex-wrap">
+                            <button class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#esperaModal"
+                                    th:data-espera-id="${clasificador.id}"
+                                    th:data-espera-nombre="${clasificador.nombre}"
+                                    onclick="openEsperaModal(this)">
+                                Editar
+                            </button>
+                            <th:block th:if="${clasificador.isActive}">
+                                <a class="btn btn-danger btn-sm"
+                                   th:href="@{'/app/clasificadores/desactivar/espera/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de desactivar esta Espera?');">
+                                    Desactivar
+                                </a>
+                            </th:block>
+                            <th:block th:if="${!clasificador.isActive}">
+                                <a class="btn btn-success btn-sm"
+                                   th:href="@{'/app/clasificadores/activar/espera/' + ${clasificador.id}}"
+                                   onclick="return confirmAction(this.href, '¿Estás seguro de activar esta Espera?');">
+                                    Activar
+                                </a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -831,7 +891,59 @@
 
 
 
+    <!--CREAR ESPERA-->
+    <div class="modal fade" id="newEsperaModal" tabindex="-1" aria-labelledby="newEsperaModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/app/clasificadores/espera/nuevo" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="newesperaModalLabel">Nueva Clasificacion de Espera:</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombreespera" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreespera" name="nombre" required
+                                   autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary submit-btn">Crear</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--EDITAR ESPERA -->
+    <div class="modal fade" id="esperaModal" tabindex="-1" aria-labelledby="esperaModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="esperaModalLabel">Editar Clasificador de Espera:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="esperaForm" method="post">
+                        <input type="hidden" id="esperaId" name="id"/>
+                        <div class="mb-3">
+                            <label for="esperaNombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="esperaNombre" name="nombre" required
+                                   autocomplete="off"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
