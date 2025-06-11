@@ -7,7 +7,9 @@ import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.repository.fixed.HorarioAtencionSoporteRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
 import com.ipor.ticketsystem.service.UsuarioService;
@@ -33,6 +35,8 @@ import java.util.*;
 public class TicketController {
     @Autowired
     TicketService ticketService;
+    @Autowired
+    HorarioAtencionSoporteRepository horarioAtencionSoporteRepository;
     @Autowired
     TicketRepository ticketRepository;
     @Autowired
@@ -158,13 +162,16 @@ public class TicketController {
         ticket.setCodigoTicket(codigo);
 
 
+        HorarioAtencionSoporte ultimoHorarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
+
+
         ticket.setCodigoTicket(codigo);
         ticket.setDescripcion(descripcion);
         ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
         ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
         ticket.setFecha(ticket.getFecha());
         ticket.setHora(ticket.getHora());
-
+        ticket.setHorarioAtencionSoporte(ultimoHorarioAtencionSoporte);
         ticketService.saveTicket(ticket);
 
 
@@ -207,6 +214,21 @@ public class TicketController {
             notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS DE SOPORTE
+            WSNotificacionesService.enviarNotificacion(notificacion);
+        }
+        List<Usuario> listaAdmins = usuarioService.ListaUsuariosPorRol(3L);
+        for (Usuario admin : listaAdmins) {
+            Notificacion notificacion = new Notificacion();
+            notificacion.setTicket(ticket);
+            notificacion.setHora(notificacion.getHora());
+            notificacion.setFecha(notificacion.getFecha());
+            notificacion.setAbierto(Boolean.FALSE);
+            notificacion.setLeido(Boolean.FALSE);
+            notificacion.setUsuario(admin);
+            notificacion.setMensaje(ticket.getUsuario().getNombre() + " Ha Enviado un Ticket");
+            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacionesService.saveNotiicacion(notificacion);
+            //AUMENTA EL CONTADOR DE NOTIFICACIONES EN TIEMPO REAL A LOS ADMIN
             WSNotificacionesService.enviarNotificacion(notificacion);
         }
 

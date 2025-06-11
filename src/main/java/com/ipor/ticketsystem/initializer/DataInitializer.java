@@ -1,14 +1,19 @@
 package com.ipor.ticketsystem.initializer;
 
+import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.model.fixed.*;
+import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.dynamic.UsuarioRepository;
 import com.ipor.ticketsystem.repository.fixed.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -45,6 +50,16 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private SedeRepository sedeRepository;
+
+    @Autowired
+    private HorarioAtencionSoporteRepository horarioAtencionSoporteRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private ClasificacionEsperaRepository clasificacionEsperaRepository;
+
 
     @Override
     public void run(String... args) {
@@ -87,6 +102,8 @@ public class DataInitializer implements CommandLineRunner {
             faseTicketRepository.save(new FaseTicket("Recepcionado - En Proceso"));
             faseTicketRepository.save(new FaseTicket("Cerrado - Atendido"));
             faseTicketRepository.save(new FaseTicket("Desestimado"));
+            faseTicketRepository.save(new FaseTicket("En Espera"));
+
         }
 
         // 4. Crear tipos de urgencia
@@ -248,6 +265,31 @@ public class DataInitializer implements CommandLineRunner {
             areaAtencionRepository.save(new AreaAtencion("Ventas", sanIsidro, true));
         }
 
+        // 10. Crear Horario de atencion
+        if (horarioAtencionSoporteRepository.count() == 0) {
+            Usuario admin = usuarioRepository.findById(1L).get();
+            LocalTime horaEntrada = LocalTime.of(8, 0);
+            LocalTime horaSalida = LocalTime.of(17, 0);
+
+            // Crear horario
+            HorarioAtencionSoporte horario = new HorarioAtencionSoporte(horaEntrada, horaSalida, admin, LocalDateTime.now());
+            horario = horarioAtencionSoporteRepository.save(horario);
+
+            // Asignar a todos los tickets
+            List<Ticket> tickets = ticketRepository.findAll();
+            for (Ticket ticket : tickets) {
+                ticket.setHorarioAtencionSoporte(horario);
+            }
+            ticketRepository.saveAll(tickets);
+        }
+
+        // 11. Crear clasificacion de Atencion
+        if (clasificacionEsperaRepository.count() == 0) {
+            clasificacionEsperaRepository.save(new ClasificacionEspera("Fuera de horario laboral", true));
+            clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de autorización", true));
+            clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de proveedor", true));
+
+        }
 
     }
 }

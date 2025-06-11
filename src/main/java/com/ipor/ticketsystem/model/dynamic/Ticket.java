@@ -1,6 +1,8 @@
 package com.ipor.ticketsystem.model.dynamic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ipor.ticketsystem.model.fixed.FaseTicket;
+import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -38,6 +41,9 @@ public class Ticket {
     @JoinColumn(name = "id_fase_ticket", nullable = false)
     private FaseTicket faseTicket;
 
+    @ManyToOne
+    @JoinColumn(name = "id_horario_atencion_soporte")
+    private HorarioAtencionSoporte horarioAtencionSoporte;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ArchivoAdjuntoEnvio> listaArchivosAdjuntos = new ArrayList<>();
@@ -51,6 +57,10 @@ public class Ticket {
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private Desestimacion desestimacion;
 
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ticket")
+    private Set<DetalleEnEspera> listaDetalleEsperas;
 
     // Método para establecer fecha y hora actuales antes de persistir
     @PrePersist
