@@ -108,8 +108,17 @@
                     <small class="text-muted mb-3 d-block">
                         <i class="bi bi-exclamation-circle"></i> Solo emite tickets para solicitudes de TI.<br>
                         <i class="bi bi-exclamation-circle"></i> No podrás editar ni eliminar el ticket una vez creado.<br>
-                        <i class="bi bi-info-circle"></i> Registra un ticket por cada solicitud o incidencia.
+                        <i class="bi bi-info-circle"></i> Registra un ticket por cada solicitud o incidencia.<br>
+                        <i class="bi bi-clock"></i> Horario de atención:
+                        <span class="text-primary fw-semibold" th:if="${horarioAtencionSoporte != null}"
+                              th:text="${#temporals.format(horarioAtencionSoporte.horaEntrada, 'HH:mm')} + ' - ' + ${#temporals.format(horarioAtencionSoporte.horaSalida, 'HH:mm')}">
+                            08:00 - 18:00
+                        </span>
+                                            <span class="text-danger fw-semibold" th:if="${horarioAtencionSoporte == null}">
+                            no configurado
+                        </span>
                     </small>
+
 
                     <div class="ms-auto">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>

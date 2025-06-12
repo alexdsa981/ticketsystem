@@ -7,8 +7,11 @@ import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.ClasificacionEspera;
 import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
+import com.ipor.ticketsystem.repository.dynamic.DetalleEnEsperaRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.repository.fixed.ClasificacionEsperaRepository;
 import com.ipor.ticketsystem.repository.fixed.HorarioAtencionSoporteRepository;
 import com.ipor.ticketsystem.service.NotificacionesService;
 import com.ipor.ticketsystem.service.TicketService;
@@ -28,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -40,12 +45,15 @@ public class TicketController {
     @Autowired
     TicketRepository ticketRepository;
     @Autowired
+    DetalleEnEsperaRepository detalleEnEsperaRepository;
+    @Autowired
     UsuarioService usuarioService;
     @Autowired
     WSNotificacionesService WSNotificacionesService;
     @Autowired
     NotificacionesService notificacionesService;
-
+    @Autowired
+    ClasificacionEsperaRepository clasificacionEsperaRepository;
 
     //ESTA CLASE REPRESENTA LA LOGICA PARA MOSTRAR TICKETS CREADOS/REDIRIGIDOS (AÚN SIN RECEPCIONAR) EN LAS VISTAS
     public Model retornaTicketsPropiosAVista(Model model) {
@@ -164,15 +172,52 @@ public class TicketController {
 
         HorarioAtencionSoporte ultimoHorarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
 
-
         ticket.setCodigoTicket(codigo);
         ticket.setDescripcion(descripcion);
-        ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); //enviado
+        ticket.setFaseTicket(ticketService.getFaseTicketPorID(1L)); // Enviado
         ticket.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
-        ticket.setFecha(ticket.getFecha());
-        ticket.setHora(ticket.getHora());
         ticket.setHorarioAtencionSoporte(ultimoHorarioAtencionSoporte);
+
+        LocalTime horaCreacionTicket = LocalTime.now();
+
+        if (ultimoHorarioAtencionSoporte != null) {
+            LocalTime horaEntrada = ultimoHorarioAtencionSoporte.getHoraEntrada();
+            LocalTime horaSalida = ultimoHorarioAtencionSoporte.getHoraSalida();
+
+            if (horaCreacionTicket.isBefore(horaEntrada) || horaCreacionTicket.isAfter(horaSalida)) {
+                System.out.println("⚠ El ticket fue creado FUERA del horario de atención: " + horaCreacionTicket);
+
+                DetalleEnEspera detalleEnEspera = new DetalleEnEspera();
+                detalleEnEspera.setHoraInicio(horaCreacionTicket);
+                detalleEnEspera.setFechaInicio(LocalDate.now());
+                detalleEnEspera.setClasificacionEspera(clasificacionEsperaRepository.findById(1L).orElseThrow());
+                detalleEnEspera.setTicket(ticket);
+                detalleEnEspera.setDescripcion("El ticket ha sido puesto en espera automáticamente porque fue enviado fuera del horario de atención establecido. Será atendido en el siguiente horario laboral.");
+                detalleEnEspera.setUsuario(ticket.getUsuario());
+
+                // Lógica para determinar la fechaFin
+                LocalDate fechaFin;
+                if (horaCreacionTicket.isBefore(horaEntrada)) {
+                    // El ticket se creó antes del horario laboral de hoy
+                    fechaFin = LocalDate.now();
+                } else {
+                    // El ticket se creó después del horario laboral de hoy
+                    fechaFin = LocalDate.now().plusDays(1);
+                }
+
+                detalleEnEspera.setFechaFin(fechaFin);
+                detalleEnEspera.setHoraFin(horaEntrada);
+                ticketService.saveTicket(ticket);
+                detalleEnEsperaRepository.save(detalleEnEspera);
+                System.out.println("ℹ DetalleEnEspera guardado automáticamente hasta " + fechaFin + " " + horaEntrada);
+            }
+        }
+
+
         ticketService.saveTicket(ticket);
+
+
+
 
 
         List<ArchivoAdjuntoEnvio> listaArchivosAdjuntos = new ArrayList<>();

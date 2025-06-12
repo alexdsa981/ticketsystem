@@ -1,6 +1,8 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dynamic.Usuario;
+import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
+import com.ipor.ticketsystem.service.ClasificadoresService;
 import com.ipor.ticketsystem.service.UsuarioService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,12 @@ import java.time.format.DateTimeFormatter;
 
 @ControllerAdvice
 public class GlobalAdviceController {
-@Autowired
-UsuarioService usuarioService;
+    @Autowired
+    UsuarioService usuarioService;
+    @Autowired
+    ClasificadoresService clasificadoresService;
+
+
 
     @ModelAttribute
     public void datosHeader(Model model) {
@@ -35,6 +41,8 @@ UsuarioService usuarioService;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); // Formato de hora
             String formattedTime = now.format(formatter); // Hora formateada
             model.addAttribute("horaActual", formattedTime);
+            HorarioAtencionSoporte horarioAtencionSoporte = clasificadoresService.getLastHorarioAtencionSoporte();
+            model.addAttribute("horarioAtencionSoporte", horarioAtencionSoporte);
 
         }
     }

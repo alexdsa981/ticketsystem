@@ -2,9 +2,11 @@ package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
+import com.ipor.ticketsystem.repository.fixed.HorarioAtencionSoporteRepository;
 import com.ipor.ticketsystem.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,7 +33,8 @@ public class WebController {
     private LoginController loginController;
 
 
-
+    @Autowired
+    HorarioAtencionSoporteRepository horarioAtencionSoporteRepository;
     @Autowired
     RecepcionRepository recepcionRepository;
     @Autowired

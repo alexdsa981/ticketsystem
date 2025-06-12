@@ -5,7 +5,8 @@ import com.ipor.ticketsystem.repository.fixed.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.Area;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -41,6 +42,8 @@ public class ClasificadoresService {
     @Autowired
     private ClasificacionEsperaRepository clasificacionEsperaRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
 
 
 
@@ -70,6 +73,18 @@ public class ClasificadoresService {
         clasificacionEsperaRepository.save(espera);
     }
 
+    //HORARIO DE ATENCON
+    public void nuevoHorario(LocalTime horaInicio, LocalTime horaFin) {
+        HorarioAtencionSoporte horarioNuevo = new HorarioAtencionSoporte();
+        horarioNuevo.setHoraEntrada(horaInicio);
+        horarioNuevo.setHoraSalida(horaFin);
+        horarioNuevo.setFechaHoraCreacion(LocalDateTime.now());
+        horarioNuevo.setUsuarioCreacion(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
+        horarioAtencionSoporteRepository.save(horarioNuevo);
+    }
+    public HorarioAtencionSoporte getLastHorarioAtencionSoporte(){
+        return horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
+    }
 
     //URGENCIA---------------------------------------------------------------
 

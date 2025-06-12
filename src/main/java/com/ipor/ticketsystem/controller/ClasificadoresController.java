@@ -1,7 +1,6 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.fixed.*;
-import com.ipor.ticketsystem.repository.fixed.SedeRepository;
 import com.ipor.ticketsystem.service.ClasificadoresService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -46,7 +46,10 @@ public class ClasificadoresController {
         model.addAttribute("atenciones", clasificadoresService.getListaClasAtencion());
         model.addAttribute("urgencias", clasificadoresService.getListaClasUrgencia());
         model.addAttribute("desestimaciones", clasificadoresService.getListaClasDesestimacion());
+        //ESPERAS Y HORARIO DE ATENCION
         model.addAttribute("esperas", clasificadoresService.getListaClasEspera());
+        model.addAttribute("ultimoHorarioAtencion", clasificadoresService.getLastHorarioAtencionSoporte());
+
 
         // Sedes (siempre se cargan para el selector)
         model.addAttribute("sedes", clasificadoresService.getListaSedes());
@@ -102,6 +105,23 @@ public class ClasificadoresController {
         return "redirect:/admin/Clasificadores?clasificador=Espera";
     }
 
+    //HORARIO ATENCION
+    @PostMapping("/horarioAtencion/nuevo")
+    public ResponseEntity<String> crearClasificacionHorarioAtencion(
+            @RequestParam("horaEntrada") LocalTime horaEntrada,
+            @RequestParam("horaSalida") LocalTime horaSalida,
+            HttpServletResponse response) throws IOException {
+
+        // Validación: horaEntrada debe ser antes que horaSalida
+        if (horaEntrada.isAfter(horaSalida) || horaEntrada.equals(horaSalida)) {
+            response.sendRedirect("/admin/Clasificadores?clasificador=Espera&error=Horario+invalido:+la+hora+de+entrada+debe+ser+anterior+a+la+de+salida");
+            return ResponseEntity.badRequest().body("Horario inválido: la hora de entrada debe ser anterior a la de salida");
+        }
+
+        clasificadoresService.nuevoHorario(horaEntrada, horaSalida);
+        response.sendRedirect("/admin/Clasificadores?clasificador=Espera");
+        return ResponseEntity.ok("Nuevo horario establecido correctamente");
+    }
 
     //DESESTIMACION ---------------------------------------------------------
 

@@ -427,6 +427,37 @@
                 </table>
             </div>
         </div>
+        <div class="card shadow-sm" style="margin-top:10px">
+            <div class="card-header bg-light text-dark">
+                <h6 class="mb-0">Horario de Atención</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Último horario establecido:</strong>
+                    <span th:text="${ultimoHorarioAtencion != null ? #temporals.format(ultimoHorarioAtencion.horaEntrada, 'HH:mm') + ' - ' + #temporals.format(ultimoHorarioAtencion.horaSalida, 'HH:mm') : 'No establecido'}"></span>
+                </div>
+                <form th:action="@{/app/clasificadores/horarioAtencion/nuevo}" method="post" class="row g-2 align-items-end">
+                    <div class="col-md-5">
+                        <label for="horaEntrada" class="form-label">Hora de entrada</label>
+                        <input type="time" class="form-control" id="horaEntrada" name="horaEntrada" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="horaSalida" class="form-label">Hora de salida</label>
+                        <input type="time" class="form-control" id="horaSalida" name="horaSalida" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">
+                            Establecer
+                        </button>
+                    </div>
+                    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span th:text="${param.error}">Error</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
     </div>
 
 

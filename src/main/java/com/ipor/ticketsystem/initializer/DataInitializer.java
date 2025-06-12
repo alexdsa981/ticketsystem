@@ -285,7 +285,7 @@ public class DataInitializer implements CommandLineRunner {
 
         // 11. Crear clasificacion de Atencion
         if (clasificacionEsperaRepository.count() == 0) {
-            clasificacionEsperaRepository.save(new ClasificacionEspera("Fuera de horario laboral", true));
+            clasificacionEsperaRepository.save(new ClasificacionEspera("Fuera de horario de atención", true));
             clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de autorización", true));
             clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de proveedor", true));
 
