@@ -131,19 +131,19 @@ if (fechaInicio && fechaFin) {
 
     if (fechaInicio === hoyStr && fechaFin === hoyStr) {
         const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
-        tituloDashboard.textContent = `SOPORTE: Estado Actual (Hoy: ${fechaHoyFormateada})`;
+        tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
     } else {
         const inicio = new Date(fechaInicio + 'T00:00:00');
         const fin = new Date(fechaFin + 'T23:59:59');
         const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
         const finFormateado = fin.toLocaleDateString('es-ES', opciones);
-        tituloDashboard.textContent = `Estado: Dashboard (${inicioFormateado} - ${finFormateado})`;
+        tituloDashboard.textContent = `ESTADO: (${inicioFormateado} - ${finFormateado})`;
     }
 } else {
     const fechaHoy = new Date();
     const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
     const fechaHoyFormateada = fechaHoy.toLocaleDateString('es-ES', opciones);
-    tituloDashboard.textContent = `SOPORTE: Estado Actual (Hoy: ${fechaHoyFormateada})`;
+    tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
 }
 
 

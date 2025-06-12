@@ -79,6 +79,19 @@ public class AtencionController {
     }
 
 
+    public Model getListaMisTicketsEnEsperaAVista(Model model) {
+        List<DetalleTicketDTO> MyEnEspera = atencionService.getMyListaEspera();
+        model.addAttribute("MyEnEspera", MyEnEspera);
+        return model;
+    }
+
+    public Model getListaTodosLosTicketsEnEsperaAVista(Model model) {
+        List<DetalleTicketDTO> AllEnEspera = atencionService.getListaEspera();
+        model.addAttribute("AllEnEspera", AllEnEspera);
+        return model;
+    }
+
+
     //metodo para recepcionar un ticket(desde soporte), crea un recepcionado y cambia la fase del ticket:
     @PostMapping("/recepcion/{id}")
     public ResponseEntity<String> recepcionarTicket(
@@ -322,6 +335,7 @@ public class AtencionController {
             notificacion.setUsuario(espera.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido puesto en Espera");
             notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacionesService.saveNotiicacion(notificacion);
 
 //            notificacionesService.saveNotiicacion(notificacion);
 //            WSNotificacionesService.enviarNotificacion(notificacion);

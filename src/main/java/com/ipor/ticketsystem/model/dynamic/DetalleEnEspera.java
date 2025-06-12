@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +47,14 @@ public class DetalleEnEspera {
 
     @OneToMany(mappedBy = "detalleEnEspera", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ArchivoAdjuntoEspera> listaArchivosAdjuntos = new ArrayList<>();
+
+    @Transient
+    public String ConvertirFechaConFormato(LocalDate localDate) {
+        return localDate.format( DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+    @Transient
+    public String ConvertirHoraConFormato(LocalTime localTime) {
+        return localTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
 
 }

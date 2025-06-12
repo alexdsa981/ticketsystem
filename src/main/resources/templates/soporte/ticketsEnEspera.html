@@ -11,7 +11,7 @@
 <div class="container-fluid  content-wrapper">
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
-            <h2>SOPORTE<span class="title-text-mobile"> ATENDER</span>:</h2>
+            <h2>SOPORTE<span class="title-text-mobile"> En ESPERA</span>:</h2>
             <div id="ticketCount"
                  class="badge bg-warning ms-2 d-flex justify-content-center align-items-center ticketCountAtencion"
                  style="width: 30px; height: 30px;">
@@ -20,10 +20,10 @@
             <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm  ">
                 Recepcionar
             </a>
-            <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm  btn-active">
+            <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm">
                 Atender
             </a>
-            <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm">
+            <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm  btn-active">
                 Atender Espera
             </a>
             <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm ">
@@ -62,6 +62,7 @@
                 <th>Receptor</th>
                 <th class="descripcion-table">Motivo de Ticket</th>
                 <th class="descripcion-table">Mensaje Recepción</th>
+                <th class="descripcion-table">Motivo de Pausa</th>
                 <th style="width:200px;">Atención</th>
 
             </tr>
@@ -69,7 +70,7 @@
 
             <tbody id="ticketTableBody">
             <!-- Iterar sobre los tickets con un solo bucle th:each -->
-            <tr th:each="detalle, iter: ${AllRecepcionados}" id="ticket-${detalle.ticket.id}">
+            <tr th:each="detalle, iter: ${AllEnEspera}" id="ticket-${detalle.ticket.id}">
                 <td th:text="${iter.count}">#</td>
                 <td th:id="${detalle.ticket.id}" class="ticket-code-cell" >
                     <a th:href="@{'/ticket/' + ${detalle.ticket.codigoTicket}}"
@@ -95,8 +96,23 @@
                 </td>
                 <td>
                     <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>
-
                 </td>
+                <td>
+                    <div th:each="espera, iterStat : ${detalle.detalleEnEspera}">
+                        <strong th:text="${espera.clasificacionEspera.nombre + ': '}"></strong><br>
+                        <span th:text="${espera.ConvertirFechaConFormato(espera.fechaInicio) + ' | ' + espera.ConvertirHoraConFormato(espera.horaInicio) + ': '}"></span>
+                        <span th:text="${#strings.length(espera.descripcion) > 150 ? espera.descripcion.substring(0, 150) + '...' : espera.descripcion}"></span><br>
+                        <ul>
+                            <li th:each="adjunto : ${espera.listaArchivosAdjuntos}">
+                                <a th:href="@{/app/tickets/adjuntoEspera/descargar/{id}(id=${adjunto.id})}" th:text="${adjunto.nombre}"></a> -
+                                <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                            </li>
+                        </ul>
+                        <hr th:if="${!iterStat.last}">
+                    </div>
+                </td>
+
+
 
                 <td class="td-accion">
                     <div class="d-flex gap-1 flex-nowrap">
@@ -110,17 +126,6 @@
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}">
                             <i class="bi bi-check2-square"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#esperaModal" th:data-ticket-id="${detalle.ticket.id}"
-                                th:data-ticket-codigo="${detalle.ticket.codigoTicket}"
-                                th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
-                                th:data-ticket-descripcion="${detalle.ticket.descripcion}"
-                                th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
-                                th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
-                            <i class="bi bi-hourglass-top"></i>
                         </button>
 
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -391,148 +396,6 @@
 
 
 
-<!-- Modal para Espera -->
-<div class="modal fade" id="esperaModal" tabindex="-1" aria-labelledby="esperaModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="esperaForm" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title text-warning" id="esperaModalLabel"><i class="bi bi-hourglass-top"></i>
-                        Espera <span id="esperaTicketIdFormateado"></span>:</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3 text-secondary">
-                        <p><strong>USUARIO:</strong> <span id="esperaTicketUsuario"></span></p>
-                        <p><strong>DESCRIPCIÓN:</strong> <span id="esperaTicketDescripcion"></span></p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="comentariosEspera" class="form-label"><strong><i
-                                class="bi bi-chat-left-text"></i> COMENTARIOS DE ESPERA</strong></label>
-                        <textarea class="form-control" id="comentariosEspera" name="mensaje" rows="4"
-                                  placeholder="Agrega algún comentario sobre la puesta en espera del ticket..."
-                                  required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="archivo-espera" class="form-label"><i class="bi bi-upload"></i> SUBIR ARCHIVO:
-                            (opcional)</label>
-                        <input class="form-control" type="file" id="archivo-espera" name="archivo"
-                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.rar,.zip">
-                    </div>
-                    <div class="mb-3">
-                        <label for="clasificacionEspera" class="form-label"><strong> <i class="bi bi-clock"></i>CLASIFICACIÓN DE ESPERA</strong></label>
-                        <select class="form-select" id="clasificacionEspera"
-                                name="clasificacion_espera" required>
-                            <option selected disabled value="">Selecciona Espera</option>
-                            <option th:each="tipo : ${Lista_clasificacion_espera}" th:value="${tipo.id}"
-                                    th:text="${tipo.nombre}"></option>
-                        </select>
-                    </div>
-                    <input type="number" value="2" style="display:none" name="fase">
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-warning submit-btn">Poner en Espera</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    const archivoInputEspera = document.getElementById('archivo-espera');
-    const formularioEspera = document.getElementById('esperaForm');
-    const submitBtnEspera = formularioEspera.querySelector('.submit-btn');
-
-    // Crear mensaje de error dinámico
-    const mensajeErrorEspera= document.createElement('div');
-    mensajeErrorEspera.id = 'mensaje-error-archivo';
-    mensajeErrorEspera.className = 'form-text text-danger mt-1';
-    archivoInputEspera.parentNode.appendChild(mensajeErrorEspera);
-
-    archivoInputEspera.addEventListener('change', function () {
-        const archivo = archivoInputEspera.files[0];
-        if (archivo && archivo.size > 10 * 1024 * 1024) {
-            mensajeErrorEspera.textContent = 'El archivo no debe superar los 10MB.';
-            submitBtnEspera.disabled = true;
-        } else {
-            mensajeErrorEspera.textContent = '';
-            submitBtnEspera.disabled = false;
-        }
-    });
-
-    formularioEspera.addEventListener('submit', function (e) {
-        const archivo = archivoInputEspera.files[0];
-        if (archivo && archivo.size > 10 * 1024 * 1024) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: 'Archivo demasiado grande',
-                text: 'El archivo no debe superar los 10MB.',
-            });
-        }
-    });
-</script>
-
-
-
-
-<script>
-    // Al abrir el modal de desestimación, actualizar su contenido con los datos del ticket seleccionado
-    const esperaModal = document.getElementById('esperaModal');
-    esperaModal.addEventListener('show.bs.modal', function (event) {
-        // Botón que disparó el modal
-        const button = event.relatedTarget;
-
-        // Extraer información del ticket desde los atributos data-*
-        const ticketId = button.getAttribute('data-ticket-id');
-        const formattedTicketId = button.getAttribute('data-ticket-codigo');
-        const ticketUsuario = button.getAttribute('data-ticket-usuario');
-        const ticketDescripcion = button.getAttribute('data-ticket-descripcion');
-        const ticketFecha = button.getAttribute('data-ticket-fecha');
-        const ticketHora = button.getAttribute('data-ticket-hora');
-
-        // Actualizar los elementos del modal con la información del ticket
-        document.getElementById('esperaTicketIdFormateado').textContent = formattedTicketId;
-        document.getElementById('esperaTicketUsuario').textContent = ticketUsuario;
-        document.getElementById('esperaTicketDescripcion').textContent = ticketDescripcion;
-
-
-        // Actualizar la acción del formulario para que envíe el ticket correspondiente
-        const form = document.getElementById('esperaForm');
-        form.setAttribute('action', `/app/tickets/espera/${ticketId}`);
-    });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Modal para Desestimación -->
 <div class="modal fade" id="desestimacionModal" tabindex="-1" aria-labelledby="desestimacionModalLabel"
      aria-hidden="true">
@@ -649,26 +512,6 @@
         form.setAttribute('action', `/app/tickets/desestimacion/${ticketId}`);
     });
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

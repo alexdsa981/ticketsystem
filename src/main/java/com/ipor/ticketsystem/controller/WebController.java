@@ -86,6 +86,14 @@ public class WebController {
         return "general/enProceso";
     }
 
+
+    @GetMapping("/TicketsEnEspera")
+    public String redirigePaginaTicketsEnEspera(Model model) {
+        atencionController.getListaMisTicketsEnEsperaAVista(model);
+        model.addAttribute("Titulo", "HelpDesk | En Espera");
+        return "general/enEspera";
+    }
+
     @GetMapping("/TicketsAtendidos")
     public String redirigePaginaMisTicketsAtendidos(Model model) {
         atencionController.getListaMisTicketsAtendidosAVista(model);
@@ -163,6 +171,29 @@ public class WebController {
         model.addAttribute("Titulo", "HelpDesk | Soporte - Atender Tickets");
         return "soporte/ticketsRecepcionados";
     }
+
+
+
+
+
+    @GetMapping("/soporte/Atender-Espera")
+    public String redirigePaginaTicketsEnPausa(Model model) {
+        atencionController.getListaTodosLosTicketsEnEsperaAVista(model);
+        clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaTipoIncidenciaActivos(model);
+        clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaSedesActivos(model);
+        clasificadoresController.getListaCatIncidenciaActivos(model);
+            model.addAttribute("Titulo", "HelpDesk | Soporte - Tickets En Espera");
+        return "soporte/ticketsEnEspera";
+    }
+
+
+
+
+
+
 
     @GetMapping("/soporte/Tickets-Cerrados")
     public String redirigePaginaTicketsAtendidos(Model model) {

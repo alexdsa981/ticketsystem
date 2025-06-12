@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AtencionService {
@@ -54,19 +56,33 @@ public class AtencionService {
     public List<DetalleTicketDTO> getListaEspera() {
         List<DetalleEnEspera> listaDetalleEnEspera = detalleEnEsperaRepository.findAllByTicketFaseID5();
         List<DetalleTicketDTO> listaDetallesEsperaDTO = new ArrayList<>();
+        Set<Long> idsAgregados = new HashSet<>();
+
         for (DetalleEnEspera detalleEnEspera : listaDetalleEnEspera) {
-            DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
-            listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+            Long idTicket = detalleEnEspera.getTicket().getId();
+            if (!idsAgregados.contains(idTicket)) {
+                DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
+                listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+                idsAgregados.add(idTicket);
+            }
         }
         return listaDetallesEsperaDTO;
     }
+
     //metodo para retornar Mis tickets en espera:
     public List<DetalleTicketDTO> getMyListaEspera() {
-        List<DetalleEnEspera> listaDetalleEnEspera = detalleEnEsperaRepository.findAllByTicketUsuarioId(usuarioService.getIDdeUsuarioLogeado());
+        Long idUsuarioLogueado = usuarioService.getIDdeUsuarioLogeado();
+        List<DetalleEnEspera> listaDetalleEnEspera = detalleEnEsperaRepository.findAllByTicketUsuarioId(idUsuarioLogueado);
         List<DetalleTicketDTO> listaDetallesEsperaDTO = new ArrayList<>();
+        Set<Long> idsAgregados = new HashSet<>();
+
         for (DetalleEnEspera detalleEnEspera : listaDetalleEnEspera) {
-            DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
-            listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+            Long idTicket = detalleEnEspera.getTicket().getId();
+            if (!idsAgregados.contains(idTicket)) {
+                DetalleTicketDTO detalleEnEsperaDTO = new DetalleTicketDTO(detalleEnEspera.getTicket());
+                listaDetallesEsperaDTO.add(detalleEnEsperaDTO);
+                idsAgregados.add(idTicket);
+            }
         }
         return listaDetallesEsperaDTO;
     }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,8 +19,7 @@ public class DetalleTicketDTO {
     private Recepcion recepcion;
     private Atencion atencion;
     private Desestimacion desestimacion;
-
-    private DetalleEnEspera detalleEnEspera;
+    private List<DetalleEnEspera> detalleEnEspera;
 
     private String fechaFormateadaTicket;
     private String horaFormateadaTicket;
@@ -35,6 +35,8 @@ public class DetalleTicketDTO {
 
     private String fechaFormateadaEnEspera;
     private String horaFormateadaEnEspera;
+
+
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
@@ -81,14 +83,17 @@ public class DetalleTicketDTO {
                 this.horaFormateadaDesestimacion = ConvertirHoraConFormato(desestimacion.getHora());
                 break;
             case 5:
-                this.ticket = detalleEnEspera.getTicket();
+                this.ticket = ticket;
                 this.fechaFormateadaTicket = ConvertirFechaConFormato(ticket.getFecha());
                 this.horaFormateadaTicket = ConvertirHoraConFormato(ticket.getHora());
 
-                this.detalleEnEspera = ticket.getListaDetalleEsperas().get(0);
-                this.fechaFormateadaEnEspera = ConvertirFechaConFormato(detalleEnEspera.getFechaInicio());
-                this.horaFormateadaEnEspera = ConvertirHoraConFormato(detalleEnEspera.getHoraInicio());
+                this.recepcion = ticket.getRecepcion();
+                this.fechaFormateadaRecepcion = ConvertirFechaConFormato(recepcion.getFecha());
+                this.horaFormateadaRecepcion = ConvertirHoraConFormato(recepcion.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas();
                 break;
+
         }
     }
 

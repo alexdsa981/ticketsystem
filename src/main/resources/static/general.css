@@ -38,6 +38,16 @@ footer {
 
 
 /*HEADER*/
+.btn-soft-light {
+    color: #e0e0e0;
+    background-color: transparent;
+}
+.btn-soft-light:hover {
+    background-color: #444;
+    color: white;
+}
+
+
 .nav-link{
     color: white;
 }

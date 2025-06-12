@@ -25,72 +25,54 @@
 
 
             <div class="collapse navbar-collapse " id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul-direcciones">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul-direcciones d-flex align-items-center">
+
                     <li class="nav-item" sec:authorize="hasAnyAuthority('Usuario','Admin','Soporte')">
-                        <a class="nav-link" href="/inicio">Mis Tickets</a>
-                    </li>
-                    <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Panel de Soporte
+                        <a class="btn btn-soft-light rounded px-3" href="/inicio">
+                            <i class="bi bi-card-list me-1"></i>Mis Tickets
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/soporte/Dashboard">Dashboard</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/soporte/Recepcionar">Recepcionar Tickets</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/soporte/Atender">Atender Tickets</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/soporte/Tickets-Cerrados">Historial Cerrados</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/soporte/Tickets-Desestimados">Historial Desestimados</a>
-                            </li>
-                        </ul>
                     </li>
+
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                        <a class="btn btn-soft-light rounded px-3" href="/soporte/Dashboard">
+                            <i class="bi bi-kanban me-1"></i>Panel de Soporte
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Herramientas de Administración
+                        <a class="btn btn-soft-light rounded px-3 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear me-1"></i>Herramientas Admin
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/admin/Dashboard">Dashboard</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/admin/Usuarios">Lista De Usuarios</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/admin/Clasificadores">Clasificadores</a></li>
+                        <ul class="dropdown-menu shadow">
+                            <li><a class="dropdown-item" href="/admin/Dashboard"><i class="bi bi-bar-chart me-1"></i>Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/admin/Usuarios"><i class="bi bi-people me-1"></i>Lista de Usuarios</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/admin/Clasificadores"><i class="bi bi-sliders me-1"></i>Clasificadores</a></li>
                         </ul>
                     </li>
-                    <li sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')">
+
+                    <li sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')" class="d-flex">
                         <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
-                                <div class="input-group">
-                                    <span class="input-group-text">TK-</span>
-                                    <input type="number" id="codigoTicket" name="codigoTicket"
-                                           placeholder="Ej: 35" class="form-control" required autocomplete="off">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
+                                <span class="input-group-text">TK-</span>
+                                <input type="number" id="codigoTicket" name="codigoTicket" placeholder="Ej: 35" class="form-control" required autocomplete="off">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i>
+                                </button>
                             </div>
                         </form>
                     </li>
+
                     <li class="d-flex align-items-center" style="margin-left:15px;">
-                        <p style="color: white; margin-bottom:0px;"><span
-                                id="horaActual" th:text="${horaActual}">HH:MM:SS</span></p>
+                        <p style="color: white; margin-bottom:0px;">
+                            <span id="horaActual" th:text="${horaActual}">HH:MM:SS</span>
+                        </p>
                     </li>
+
                 </ul>
+
+
 
 
                 <ul class="navbar-nav ms-auto" style="margin-right:10px;">
