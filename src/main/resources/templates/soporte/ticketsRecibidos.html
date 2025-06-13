@@ -82,6 +82,13 @@
                 <td class="usuario-emisor" th:text="${detalle.ticket.usuario.nombre}">Usuario Emisor</td>
                 <td>
                     <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span><br>
+                    <div th:each="espera, iterStat : ${detalle.detalleEnEspera}" class="border-start ps-2 ms-1 mt-2 text-muted small">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-clock me-1 text-primary"></i>
+                            <strong th:text="${espera.clasificacionEspera.nombre}"></strong>
+                        </div>
+                        <hr class="my-2" th:if="${!iterStat.last}">
+                    </div>
 
                 </td>
                 <td>

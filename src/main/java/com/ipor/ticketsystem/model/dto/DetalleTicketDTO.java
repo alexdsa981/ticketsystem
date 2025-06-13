@@ -50,6 +50,9 @@ public class DetalleTicketDTO {
                 this.ticket = ticket;
                 this.fechaFormateadaTicket = ConvertirFechaConFormato(ticket.getFecha());
                 this.horaFormateadaTicket = ConvertirHoraConFormato(ticket.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas();
+
                 break;
             case 2:
                 this.ticket = ticket;
@@ -59,6 +62,9 @@ public class DetalleTicketDTO {
                 this.recepcion = ticket.getRecepcion();
                 this.fechaFormateadaRecepcion = ConvertirFechaConFormato(recepcion.getFecha());
                 this.horaFormateadaRecepcion = ConvertirHoraConFormato(recepcion.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas();
+
                 break;
             case 3:
                 this.ticket = ticket;
@@ -72,6 +78,9 @@ public class DetalleTicketDTO {
                 this.atencion = ticket.getAtencion();
                 this.fechaFormateadaAtencion = ConvertirFechaConFormato(atencion.getFecha());
                 this.horaFormateadaAtencion = ConvertirHoraConFormato(atencion.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas();
+
                 break;
             case 4:
                 this.ticket = ticket;
@@ -81,6 +90,9 @@ public class DetalleTicketDTO {
                 this.desestimacion = ticket.getDesestimacion();
                 this.fechaFormateadaDesestimacion = ConvertirFechaConFormato(desestimacion.getFecha());
                 this.horaFormateadaDesestimacion = ConvertirHoraConFormato(desestimacion.getHora());
+
+                this.detalleEnEspera = ticket.getListaDetalleEsperas();
+
                 break;
             case 5:
                 this.ticket = ticket;

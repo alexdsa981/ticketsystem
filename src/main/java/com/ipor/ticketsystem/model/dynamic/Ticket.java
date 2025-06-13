@@ -58,9 +58,8 @@ public class Ticket {
     private Desestimacion desestimacion;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "ticket")
-    private List<DetalleEnEspera> listaDetalleEsperas;
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DetalleEnEspera> listaDetalleEsperas = new ArrayList<>();
 
     // Método para establecer fecha y hora actuales antes de persistir
     @PrePersist

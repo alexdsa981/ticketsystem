@@ -3,7 +3,10 @@ package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoDesestimacion;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
+import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEspera;
+import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +32,9 @@ public record DesestimacionRecordWS(
         String nombreClasificacionDesestimacion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosDesestimacion
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosDesestimacion,
 
+        List<DetalleEsperaDTO> listaDetalleEspera
 )
 {
     public DesestimacionRecordWS(DetalleTicketDTO detalleDTO) {
@@ -54,17 +58,19 @@ public record DesestimacionRecordWS(
                 detalleDTO.getDesestimacion().getClasificacionDesestimacion().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
-                        .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
+                        .map(ArchivoAdjuntoDTO::new)
                         .collect(Collectors.toList()),
 
                 detalleDTO.getDesestimacion().getListaArchivosAdjuntos().stream()
-                        .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
-                        .collect(Collectors.toList())
+                        .map(ArchivoAdjuntoDTO::new)
+                        .collect(Collectors.toList()),
 
+                detalleDTO.getDetalleEnEspera().stream()
+                        .map(DetalleEsperaDTO::new)
+                        .collect(Collectors.toList())
         );
     }
 
-    // Clase interna para representar los detalles del archivo adjunto
     public static record ArchivoAdjuntoDTO(
             Long id,
             String nombre,
@@ -81,7 +87,18 @@ public record DesestimacionRecordWS(
                     adjunto.getPesoEnMegabytes()
             );
         }
+
         public ArchivoAdjuntoDTO(ArchivoAdjuntoDesestimacion adjunto) {
+            this(
+                    adjunto.getId(),
+                    adjunto.getNombre(),
+                    Base64.getEncoder().encodeToString(adjunto.getArchivo()),
+                    adjunto.getTipoContenido(),
+                    adjunto.getPesoEnMegabytes()
+            );
+        }
+
+        public ArchivoAdjuntoDTO(ArchivoAdjuntoEspera adjunto) {
             this(
                     adjunto.getId(),
                     adjunto.getNombre(),
@@ -92,5 +109,23 @@ public record DesestimacionRecordWS(
         }
     }
 
-
+    public static record DetalleEsperaDTO(
+            String clasificacion,
+            String fecha,
+            String hora,
+            String descripcion,
+            List<ArchivoAdjuntoDTO> listaArchivos
+    ) {
+        public DetalleEsperaDTO(DetalleEnEspera espera) {
+            this(
+                    espera.getClasificacionEspera().getNombre(),
+                    espera.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    espera.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    espera.getDescripcion(),
+                    espera.getListaArchivosAdjuntos().stream()
+                            .map(ArchivoAdjuntoDTO::new)
+                            .collect(Collectors.toList())
+            );
+        }
+    }
 }

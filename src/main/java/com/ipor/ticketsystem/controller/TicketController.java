@@ -2,10 +2,7 @@ package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.AtencionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.*;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.model.fixed.ClasificacionEspera;
 import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
@@ -141,6 +138,10 @@ public class TicketController {
                 DesestimacionRecordWS record = new DesestimacionRecordWS(detalleTicketDTO);
                 return ResponseEntity.ok(record);
             }
+            case 5 -> {
+                EsperaRecordWS record = new EsperaRecordWS(detalleTicketDTO);
+                return ResponseEntity.ok(record);
+            }
             default -> {
                 return ResponseEntity.badRequest().body("Fase de ticket no soportada para notificación.");
             }
@@ -192,7 +193,7 @@ public class TicketController {
                 detalleEnEspera.setFechaInicio(LocalDate.now());
                 detalleEnEspera.setClasificacionEspera(clasificacionEsperaRepository.findById(1L).orElseThrow());
                 detalleEnEspera.setTicket(ticket);
-                detalleEnEspera.setDescripcion("El ticket ha sido puesto en espera automáticamente porque fue enviado fuera del horario de atención establecido. Será atendido en el siguiente horario laboral.");
+                detalleEnEspera.setDescripcion("El ticket fue enviado fuera del horario habitual.");
                 detalleEnEspera.setUsuario(ticket.getUsuario());
 
                 // Lógica para determinar la fechaFin

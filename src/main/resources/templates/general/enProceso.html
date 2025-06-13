@@ -50,6 +50,20 @@
                                     th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                             </li>
                         </ul>
+                        <div th:each="espera, iterStat : ${detalle.detalleEnEspera}">
+                            <div class="text-muted small mt-1">
+                                <i class="bi bi-info-circle"></i>
+                                <span th:text="${espera.descripcion}">Este ticket fue enviado fuera del horario laboral.</span>
+
+                                <ul class="list-unstyled ms-3 mt-1">
+                                    <li th:each="adjunto : ${espera.listaArchivosAdjuntos}">
+                                        <a th:href="@{/app/tickets/adjuntoEspera/descargar/{id}(id=${adjunto.id})}" th:text="${adjunto.nombre}"></a>
+                                        <span class="text-muted">- <span th:text="${adjunto.getPesoEnMegabytes()}">0.0</span> MB</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr class="my-1" th:if="${!iterStat.last}">
+                        </div>
                     </td>
                     <td>
                         <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span><br>

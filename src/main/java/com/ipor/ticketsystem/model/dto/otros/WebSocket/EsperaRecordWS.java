@@ -1,7 +1,6 @@
 package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
-import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoAtencion;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEspera;
 import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
@@ -11,7 +10,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record AtencionRecordWS(
+public record EsperaRecordWS(
         Long idTicket,
         String idFormateadoTicket,
 
@@ -19,65 +18,43 @@ public record AtencionRecordWS(
         String horaFormateadaTicket,
         String fechaFormateadaRecepcion,
         String horaFormateadaRecepcion,
-        String fechaFormateadaAtencion,
-        String horaFormateadaAtencion,
 
         String descripcionTicket,
         String mensajeRecepcion,
-        String descripcionAtencion,
 
         String nombreUsuarioTicket,
         String nombreUsuarioRecepcion,
-        String nombreUsuarioAtencion,
 
         String nombreFaseTicket,
-        String nombreSubCatIncidencia,
-        String nombreTipoIncidencia,
-        String nombreUrgencia,
-        String nombreClasificacionAtencion,
-        String nombreAreaAtencion,
-        String nombreSedeAtencion,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosAtencion,
-
         List<DetalleEsperaDTO> listaDetalleEspera
+
 )
 {
-    public AtencionRecordWS(DetalleTicketDTO detalleDTO) {
+    public EsperaRecordWS(DetalleTicketDTO detalleDTO) {
         this(
                 detalleDTO.getTicket().getId(),
                 detalleDTO.getTicket().getCodigoTicket(),
 
                 detalleDTO.getFechaFormateadaTicket(),
                 detalleDTO.getHoraFormateadaTicket(),
+
                 detalleDTO.getFechaFormateadaRecepcion(),
                 detalleDTO.getHoraFormateadaRecepcion(),
-                detalleDTO.getFechaFormateadaAtencion(),
-                detalleDTO.getHoraFormateadaAtencion(),
 
                 detalleDTO.getTicket().getDescripcion(),
                 detalleDTO.getRecepcion().getMensaje(),
-                detalleDTO.getAtencion().getDescripcion(),
 
                 detalleDTO.getTicket().getUsuario().getNombre(),
                 detalleDTO.getRecepcion().getUsuario().getNombre(),
-                detalleDTO.getAtencion().getUsuario().getNombre(),
 
                 detalleDTO.getTicket().getFaseTicket().getNombre(),
-                detalleDTO.getAtencion().getTipoIncidencia().getSubCategoriaIncidencia().getNombre(),
-                detalleDTO.getAtencion().getTipoIncidencia().getNombre(),
-                detalleDTO.getAtencion().getClasificacionUrgencia().getNombre(),
-                detalleDTO.getAtencion().getClasificacionAtencion().getNombre(),
-                detalleDTO.getAtencion().getAreaAtencion().getNombre(),
-                detalleDTO.getAtencion().getAreaAtencion().getSede().getNombre(),
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new)
                         .collect(Collectors.toList()),
-                detalleDTO.getAtencion().getListaArchivosAdjuntos().stream()
-                        .map(ArchivoAdjuntoDTO::new)
-                        .collect(Collectors.toList()),
+
                 detalleDTO.getDetalleEnEspera().stream()
                         .map(DetalleEsperaDTO::new)
                         .collect(Collectors.toList())
@@ -101,16 +78,7 @@ public record AtencionRecordWS(
             );
         }
 
-        public ArchivoAdjuntoDTO(ArchivoAdjuntoAtencion adjunto) {
-            this(
-                    adjunto.getId(),
-                    adjunto.getNombre(),
-                    Base64.getEncoder().encodeToString(adjunto.getArchivo()),
-                    adjunto.getTipoContenido(),
-                    adjunto.getPesoEnMegabytes()
-            );
-        }
-
+        // Constructor sobrecargado para ArchivoAdjuntoEspera
         public ArchivoAdjuntoDTO(ArchivoAdjuntoEspera adjunto) {
             this(
                     adjunto.getId(),

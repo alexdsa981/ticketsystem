@@ -86,43 +86,67 @@
                     <td class="usuario-atencion" th:text="${detalle.atencion.usuario.nombre}">Soporte</td>
 
                     <td>
-                                <span class="nombreTipoIncidencia clasificacion"
-                                      th:utext="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre  +  ': ' + detalle.atencion.tipoIncidencia.nombre + '<br>'}"></span>
+    <span class="nombreTipoIncidencia clasificacion"
+          th:utext="${detalle.atencion.tipoIncidencia.subCategoriaIncidencia.nombre  +  ': ' + detalle.atencion.tipoIncidencia.nombre + '<br>'}"></span>
                         <span th:text="${#strings.length(detalle.ticket.descripcion) > 150 ? detalle.ticket.descripcion.substring(0, 150) + '...' : detalle.ticket.descripcion}"></span>
                         <br>
-                        <!-- Mostrar la lista de archivos adjuntos de cada ticket -->
+
+                        <!-- Archivos adjuntos del ticket -->
                         <ul>
                             <li th:each="adjunto: ${detalle.ticket.listaArchivosAdjuntos}">
-                                <a th:href="@{/app/tickets/adjuntoEnvio/descargar/{id}(id=${adjunto.id})}" href="#"
-                                   th:text="${adjunto.nombre}">Archivo</a> -
+                                <a th:href="@{/app/tickets/adjuntoEnvio/descargar/{id}(id=${adjunto.id})}" th:text="${adjunto.nombre}">Archivo</a> -
                                 <span th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
                             </li>
                         </ul>
+
+                        <!-- Esperas automáticas (ID = 1) -->
+                        <div th:each="espera : ${detalle.detalleEnEspera}" th:if="${espera.clasificacionEspera.id == 1}" class="border-start ps-2 ms-1 mt-2 text-muted small">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-clock me-1 text-primary"></i>
+                                <strong th:text="${espera.clasificacionEspera.nombre}"></strong>
+                                <span class="ms-2" th:text="${espera.ConvertirFechaConFormato(espera.fechaInicio) + ' | ' + espera.ConvertirHoraConFormato(espera.horaInicio)}"></span>
+                            </div>
+                        </div>
                     </td>
 
                     <td>
-                                <span class="nombreTipoIncidencia urgencia"
-                                      th:utext="${'Urgencia ' + detalle.atencion.clasificacionUrgencia.nombre + ':<br>'}"></span>
+    <span class="nombreTipoIncidencia urgencia"
+          th:utext="${'Urgencia ' + detalle.atencion.clasificacionUrgencia.nombre + ':<br>'}"></span>
                         <span th:text="${#strings.length(detalle.recepcion.mensaje) > 150 ? detalle.recepcion.mensaje.substring(0, 150) + '...' : detalle.recepcion.mensaje}"></span>
+
+                        <!-- Esperas manuales (ID ≠ 1) -->
+                        <div th:each="espera : ${detalle.detalleEnEspera}" th:if="${espera.clasificacionEspera.id != 1}" class="border-start ps-2 ms-1 mt-2 text-muted small">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-clock me-1 text-primary"></i>
+                                <strong th:text="${espera.clasificacionEspera.nombre}"></strong>
+                                <span class="ms-2" th:text="${espera.ConvertirFechaConFormato(espera.fechaInicio) + ' | ' + espera.ConvertirHoraConFormato(espera.horaInicio)}"></span>
+                            </div>
+                            <div th:text="${#strings.length(espera.descripcion) > 150 ? espera.descripcion.substring(0, 150) + '...' : espera.descripcion}" class="mb-1"></div>
+                            <ul class="list-unstyled ms-3">
+                                <li th:each="adjunto : ${espera.listaArchivosAdjuntos}">
+                                    <a th:href="@{/app/tickets/adjuntoEspera/descargar/{id}(id=${adjunto.id})}" th:text="${adjunto.nombre}"></a>
+                                    <span class="text-muted">- <span th:text="${adjunto.getPesoEnMegabytes()}">0.0</span> MB</span>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
+
 
                     <td>
                                 <span class="nombreTipoIncidencia clasificacion-atencion"
                                       th:utext="${(detalle.atencion.areaAtencion != null ? 'Área ' +detalle.atencion.areaAtencion.nombre : 'N/D') + ' - ' + detalle.atencion.clasificacionAtencion.nombre + ':<br>'}">
                                 </span>
                         <span th:text="${#strings.length(detalle.atencion.descripcion) > 150
-                                                ? detalle.atencion.descripcion.substring(0, 150) + '...'
-                                                : detalle.atencion.descripcion}">
-                                </span>
+                                ? detalle.atencion.descripcion.substring(0, 150) + '...'
+                                : detalle.atencion.descripcion}">
+                        </span>
                         <ul>
-                        <li th:each="adjunto: ${detalle.atencion.listaArchivosAdjuntos}">
-                            <a th:href="@{/app/tickets/adjuntoAtencion/descargar/{id}(id=${adjunto.id})}" href="#"
-                               th:text="${adjunto.nombre}">Archivo</a> - <span
-                                th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
-                        </li>
-                    </ul>
-
-
+                            <li th:each="adjunto: ${detalle.atencion.listaArchivosAdjuntos}">
+                                <a th:href="@{/app/tickets/adjuntoAtencion/descargar/{id}(id=${adjunto.id})}" href="#"
+                                   th:text="${adjunto.nombre}">Archivo</a> - <span
+                                    th:text="${adjunto.getPesoEnMegabytes()}">mb</span>
+                            </li>
+                        </ul>
 
 
                     </td>

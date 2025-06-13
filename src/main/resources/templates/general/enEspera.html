@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:insert="~{common/imports :: headImports}">
 </head>
 <body>
@@ -57,7 +57,7 @@
                     </td>
                     <td>
                         <div th:each="espera, iterStat : ${detalle.detalleEnEspera}">
-                            <strong th:text="${espera.clasificacionEspera.nombre + ': '}"></strong><br>
+                            <strong th:text="${espera.clasificacionEspera.nombre + ': '}" sec:authorize="hasAnyAuthority('Admin','Soporte')" ></strong><br>
                             <span th:text="${espera.ConvertirFechaConFormato(espera.fechaInicio) + ' | ' + espera.ConvertirHoraConFormato(espera.horaInicio) + ': '}"></span>
                             <span th:text="${#strings.length(espera.descripcion) > 150 ? espera.descripcion.substring(0, 150) + '...' : espera.descripcion}"></span><br>
                             <ul>

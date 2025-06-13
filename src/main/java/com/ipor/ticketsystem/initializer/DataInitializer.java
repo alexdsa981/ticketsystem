@@ -283,9 +283,9 @@ public class DataInitializer implements CommandLineRunner {
             ticketRepository.saveAll(tickets);
         }
 
-        // 11. Crear clasificacion de Atencion
+        // 11. Crear clasificacion de Espera
         if (clasificacionEsperaRepository.count() == 0) {
-            clasificacionEsperaRepository.save(new ClasificacionEspera("Fuera de horario de atención", true));
+            clasificacionEsperaRepository.save(new ClasificacionEspera("Creado fuera de horario habitual", true));
             clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de autorización", true));
             clasificacionEsperaRepository.save(new ClasificacionEspera("Espera de proveedor", true));
 

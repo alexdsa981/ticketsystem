@@ -3,6 +3,7 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.*;
+import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import com.ipor.ticketsystem.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -106,16 +107,28 @@ public class AtencionController {
 
             Ticket ticket = ticketService.getTicketPorID(id);
 
-            // Crear la recepción
+
             Recepcion recepcion = new Recepcion();
             recepcion.setMensaje(mensaje);
             recepcion.setTicket(ticket);
             recepcion.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
             atencionService.saveRecepcion(recepcion);
 
-            // Modificar el ticket
             ticket.setRecepcion(recepcion);
             ticketService.saveTicket(ticket);
+
+            HorarioAtencionSoporte horarioAtencionSoporte = clasificadoresService.getLastHorarioAtencionSoporte();
+
+            if (ticket.getListaDetalleEsperas() != null && !ticket.getListaDetalleEsperas().isEmpty()) {
+                ticket.getListaDetalleEsperas().stream()
+                        .filter(e -> e.getFechaFin() == null || e.getHoraFin() == null || e.getHoraFin() == horarioAtencionSoporte.getHoraEntrada())
+                        .forEach(detalle -> {
+                            detalle.setFechaFin(LocalDate.now());
+                            detalle.setHoraFin(LocalTime.now());
+                            atencionService.saveEspera(detalle);
+                            System.out.println("⚠ detalle espera por fuera de horario terminado: " + detalle.getId());
+                        });
+            }
 
 
             // Crear notificación
@@ -126,7 +139,7 @@ public class AtencionController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(recepcion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Recepcionado");
-            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacion.setUrl("/ticket/" + ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
@@ -194,6 +207,15 @@ public class AtencionController {
 
 
 
+            if (ticket.getListaDetalleEsperas() != null && !ticket.getListaDetalleEsperas().isEmpty()) {
+                ticket.getListaDetalleEsperas().stream()
+                        .filter(e -> e.getFechaFin() == null || e.getHoraFin() == null)
+                        .forEach(detalle -> {
+                            detalle.setFechaFin(LocalDate.now());
+                            detalle.setHoraFin(LocalTime.now());
+                            atencionService.saveEspera(detalle);
+                        });
+            }
 
             List<ArchivoAdjuntoAtencion> listaArchivosAdjuntos = new ArrayList<>();
             // Si el archivo no es nulo y no está vacío, guardarlo
@@ -226,7 +248,7 @@ public class AtencionController {
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(atencion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Atendido");
-            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacion.setUrl("/ticket/" + ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
@@ -254,7 +276,6 @@ public class AtencionController {
         }
 
     }
-
 
 
     @PostMapping("/espera/{id}")
@@ -300,6 +321,7 @@ public class AtencionController {
             ticketService.saveTicket(ticket);
 
 
+
             List<ArchivoAdjuntoEspera> listaArchivosAdjuntos = new ArrayList<>();
             // Si el archivo no es nulo y no está vacío, guardarlo
             if (archivo != null && !archivo.isEmpty()) {
@@ -325,16 +347,13 @@ public class AtencionController {
             }
 
 
-
-
-
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(espera.getTicket());
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(espera.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido puesto en Espera");
-            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacion.setUrl("/ticket/" + ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
 
 //            notificacionesService.saveNotiicacion(notificacion);
@@ -368,7 +387,8 @@ public class AtencionController {
             response.sendRedirect(referer != null ? referer + "?error=espera-duplicated" : "/fallbackUrl?error=espera-duplicated");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: El ticket ya ha sido puesto en Espera por otro usuario.");
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
+            ;
             // Captura otros errores
             String referer = request.getHeader("Referer");
             response.sendRedirect(referer != null ? referer + "?error=espera-general" : "/fallbackUrl?error=espera-general");
@@ -376,16 +396,6 @@ public class AtencionController {
         }
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
     // Método para desestimar un ticket, crea una desestimación y cambia la fase del ticket:
@@ -427,6 +437,17 @@ public class AtencionController {
             ticketService.saveTicket(ticket);
 
 
+            if (ticket.getListaDetalleEsperas() != null && !ticket.getListaDetalleEsperas().isEmpty()) {
+                ticket.getListaDetalleEsperas().stream()
+                        .filter(e -> e.getFechaFin() == null || e.getHoraFin() == null)
+                        .forEach(detalle -> {
+                            detalle.setFechaFin(LocalDate.now());
+                            detalle.setHoraFin(LocalTime.now());
+                            atencionService.saveEspera(detalle);
+                        });
+            }
+
+
             List<ArchivoAdjuntoDesestimacion> listaArchivosAdjuntos = new ArrayList<>();
             // Si el archivo no es nulo y no está vacío, guardarlo
             if (archivo != null && !archivo.isEmpty()) {
@@ -452,16 +473,13 @@ public class AtencionController {
             }
 
 
-
-
-
             Notificacion notificacion = new Notificacion();
             notificacion.setTicket(desestimacion.getTicket());
             notificacion.setAbierto(Boolean.FALSE);
             notificacion.setLeido(Boolean.FALSE);
             notificacion.setUsuario(desestimacion.getTicket().getUsuario());
             notificacion.setMensaje(" Ha sido Desestimado");
-            notificacion.setUrl("/ticket/"+ticket.getCodigoTicket());
+            notificacion.setUrl("/ticket/" + ticket.getCodigoTicket());
 
             notificacionesService.saveNotiicacion(notificacion);
             WSNotificacionesService.enviarNotificacion(notificacion);
