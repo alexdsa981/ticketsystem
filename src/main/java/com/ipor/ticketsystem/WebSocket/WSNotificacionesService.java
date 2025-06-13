@@ -41,11 +41,26 @@ public class WSNotificacionesService {
     }
 
     public void enviarRecepcionAVistaSoporteAtencion(Ticket ticket) {
-
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
         RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-atencion", ticketRecordWS);
     }
+
+
+
+
+
+    //ENVIA Y OCULTA TICKET DE VISTA EN ESPERA SOPORTE
+    public void ocultarRegistroEnVistaSoporteEnEspera(Long idTicket) {
+        String message = String.valueOf(idTicket);
+        messagingTemplate.convertAndSend("/topic/ocultar/soporte-espera", message);
+    }
+    public void enviarTicketAVistaSoporteEnEspera(Ticket ticket) {
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(detalleTicketDTO);
+        messagingTemplate.convertAndSend("/topic/actualizar/soporte-espera", ticketRecordWS);
+    }
+
 
 
 
@@ -83,6 +98,23 @@ public class WSNotificacionesService {
     }
 
 
+
+    //VISTA ENVIADOS ENVIA Y OCULTA REGISTROS EN ESPERA USUARIO
+    public void ocultarRegistroEnVistaEnEsperaUsuario(Long idTicket) {
+        String message = String.valueOf(idTicket);
+        Long idUsuario = ticketService.getTicketPorID(idTicket).getUsuario().getId();
+        messagingTemplate.convertAndSend("/topic/ocultar/usuario-espera/"+ idUsuario, message);
+    }
+    public void enviarTicketAVistaEnEsperaUsuario(Ticket ticket) {
+        DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+        TicketRecordWS ticketRecordWS = new TicketRecordWS(detalleTicketDTO);
+        messagingTemplate.convertAndSend("/topic/actualizar/usuario-espera/"+ticket.getUsuario().getId(), ticketRecordWS);
+    }
+
+
+
+
+
     //VISTA RECEPCIONADOS USUARIO
     public void enviarRecepcionAVistaUsuarioRecepcionados(Ticket ticket) {
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
@@ -94,6 +126,8 @@ public class WSNotificacionesService {
         Long idUsuario = ticketService.getTicketPorID(idTicket).getUsuario().getId();
         messagingTemplate.convertAndSend("/topic/ocultar/usuario-recepcionados/"+idUsuario, message);
     }
+
+
     //VISTA ATENDIDOS USUARIO
     public void enviarAtencionAVistaUsuarioAtendidos(Ticket ticket) {
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);

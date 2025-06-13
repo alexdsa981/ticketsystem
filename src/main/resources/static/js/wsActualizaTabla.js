@@ -2,43 +2,45 @@ let ticketTableBody = null;
 let noResultsMessage = null;
 
 document.addEventListener("DOMContentLoaded", function () {
-    ticketTableBody = document.getElementById('ticketTableBody');
-    noResultsMessage = document.getElementById('noResultsMessage');
-    updateTicketCount();
+  ticketTableBody = document.getElementById("ticketTableBody");
+  noResultsMessage = document.getElementById("noResultsMessage");
+  updateTicketCount();
 });
 
 function mostrarMensajeSiNoHayTickets() {
-    if (ticketTableBody && noResultsMessage) {
-        const rows = ticketTableBody.getElementsByTagName('tr');
-        noResultsMessage.style.display = rows.length === 0 ? '' : 'none';
-    }
+  if (ticketTableBody && noResultsMessage) {
+    const rows = ticketTableBody.getElementsByTagName("tr");
+    noResultsMessage.style.display = rows.length === 0 ? "" : "none";
+  }
 }
 
 export function EliminarTicketDeTabla(ticketId) {
-    const ticketCell = document.getElementById(ticketId);
+  const ticketCell = document.getElementById(ticketId);
 
-    if (ticketCell) {
-        const row = ticketCell.closest('tr');
-        if (row) {
-            row.remove();
-        } else {
-            console.error(`No se encontró una fila para el ticket con ID ${ticketId}`);
-        }
+  if (ticketCell) {
+    const row = ticketCell.closest("tr");
+    if (row) {
+      row.remove();
     } else {
-        console.error(`No se encontró una celda con ID ${ticketId}`);
+      console.error(
+        `No se encontró una fila para el ticket con ID ${ticketId}`
+      );
     }
-    mostrarMensajeSiNoHayTickets();
+  } else {
+    console.error(`No se encontró una celda con ID ${ticketId}`);
+  }
+  mostrarMensajeSiNoHayTickets();
 }
 
 function updateTicketCount() {
-    if (ticketTableBody) {
-        const totalTickets = ticketTableBody.querySelectorAll('tr').length;
-        const ticketCount = document.getElementById('ticketCount');
-        if (ticketCount) {
-            ticketCount.textContent = totalTickets;
-        }
+  if (ticketTableBody) {
+    const totalTickets = ticketTableBody.querySelectorAll("tr").length;
+    const ticketCount = document.getElementById("ticketCount");
+    if (ticketCount) {
+      ticketCount.textContent = totalTickets;
     }
-    mostrarMensajeSiNoHayTickets();
+  }
+  mostrarMensajeSiNoHayTickets();
 }
 
 //
@@ -49,15 +51,14 @@ function updateTicketCount() {
 //
 //
 export function ActualizaTablasSoporteRecepcion(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td>
 
 <td id="${ticketRecord.id}" class="ticket-code-cell">
@@ -73,12 +74,16 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
 
         <td>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
 
@@ -96,7 +101,9 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
             </button>
 
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.id}"
+                    data-bs-target="#desestimacionModal" data-ticket-id="${
+                      ticketRecord.id
+                    }"
                     data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                     data-ticket-usuario="${ticketRecord.nombreUsuario}"
                     data-ticket-descripcion="${ticketRecord.descripcion}"
@@ -109,71 +116,67 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
         </td>
     `;
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
-    });
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        // Si la fila tiene la clase "tr-con-componentes", no se toca "fondo-blanco"
-        if (!newRow.classList.contains('tr-con-componentes')) {
-            cells.forEach(cell => {
-                cell.classList.remove('nuevo-ticket');
-                cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
-            });
-        } else {
-            // Si tiene la clase "tr-con-componentes", solo se elimina "nuevo-ticket"
-            cells.forEach(cell => {
-                cell.classList.remove('nuevo-ticket');
-            });
-        }
-    });
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    // Si la fila tiene la clase "tr-con-componentes", no se toca "fondo-blanco"
+    if (!newRow.classList.contains("tr-con-componentes")) {
+      cells.forEach((cell) => {
+        cell.classList.remove("nuevo-ticket");
+        cell.classList.add("fondo-blanco"); // Cambiar el fondo de cada celda a blanco
+      });
+    } else {
+      // Si tiene la clase "tr-con-componentes", solo se elimina "nuevo-ticket"
+      cells.forEach((cell) => {
+        cell.classList.remove("nuevo-ticket");
+      });
+    }
+  });
 
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
 
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
 
-
-
-
-
 //
 //
 //
-//AGREGA REGISTRO DE RECEPCION A TABLA ATENCION SOPORTE:
+//AGREGA REGISTRO A TABLA ATENCION SOPORTE:
 //
 //
 //
-
 
 export function ActualizaTablaAtencionSoporte(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -183,30 +186,40 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
         <td>${ticketRecord.nombreUsuarioRecepcion}</td>
         <td>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
         <td>
             <span>
-                ${ticketRecord.mensajeRecepcion.length > 150
-            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
-            : ticketRecord.mensajeRecepcion}
+                ${
+                  ticketRecord.mensajeRecepcion.length > 150
+                    ? ticketRecord.mensajeRecepcion.substring(0, 150) + "..."
+                    : ticketRecord.mensajeRecepcion
+                }
             </span>
 
         </td>
         <td class="td-accion">
             <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                data-bs-target="#atencionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-bs-target="#atencionModal" data-ticket-id="${
+                  ticketRecord.idTicket
+                }"
                 data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
@@ -216,7 +229,9 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                 <i class="bi bi-check2-square"></i>
             </button>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                data-bs-target="#desestimacionModal" data-ticket-id="${ticketRecord.idTicket}"
+                data-bs-target="#desestimacionModal" data-ticket-id="${
+                  ticketRecord.idTicket
+                }"
                 data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
                 data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
                 data-ticket-descripcion="${ticketRecord.descripcionTicket}"
@@ -227,35 +242,194 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </button>
         </td>
     `;
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
+
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
+
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
+}
+
+//
+//
+//
+//AGREGA REGISTRO A TABLA ESPERA SOPORTE:
+//
+//
+//
+
+export function ActualizaTablaEsperaSoporte(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
+
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
+
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
+        <td>${ticketRecord.fechaFormateadaRecepcion}</td>
+        <td>${ticketRecord.horaFormateadaRecepcion}</td>
+        <td>${ticketRecord.nombreUsuarioTicket}</td>
+        <td>${ticketRecord.nombreUsuarioRecepcion}</td>
+        <td>
+            <span>
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
+                    <li>
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
+                        ${adjunto.pesoContenido}
+                    </li>
+                `
+                  )
+                  .join("")}
+            </ul>
+        </td>
+        <td>
+            <span>
+                ${
+                  ticketRecord.mensajeRecepcion.length > 150
+                    ? ticketRecord.mensajeRecepcion.substring(0, 150) + "..."
+                    : ticketRecord.mensajeRecepcion
+                }
+            </span>
+
+        </td>
+
+        <td>
+        ${(ticketRecord.listaDetalleEspera || [])
+            .map(
+            (espera, index) => `
+            <div>
+                <strong>${espera.clasificacion}: </strong><br>
+                <span>${espera.fecha} | ${espera.hora}: </span>
+                <span>${
+                espera.descripcion && espera.descripcion.length > 150
+                    ? espera.descripcion.substring(0, 150) + "..."
+                    : espera.descripcion || ""
+                }</span><br>
+                <ul>
+                ${(espera.listaArchivos || [])
+                    .map(
+                    (adjunto) => `
+                    <li>
+                        <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        <span>${adjunto.pesoEnMb} mb</span>
+                    </li>
+                `
+                    )
+                    .join("")}
+                </ul>
+                ${
+                index !== (ticketRecord.listaDetalleEspera || []).length - 1
+                    ? "<hr>"
+                    : ""
+                }
+            </div>
+            `
+            )
+            .join("")}
+        </td>
+
+
+
+
+
+
+        <td class="td-accion">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#atencionModal" data-ticket-id="${
+                  ticketRecord.idTicket
+                }"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
+                <i class="bi bi-check2-square"></i>
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                data-bs-target="#desestimacionModal" data-ticket-id="${
+                  ticketRecord.idTicket
+                }"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    `;
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
+
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco');
-        });
-    });
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
 
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow);
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
 
 
@@ -268,20 +442,20 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
 //
 //
 
-
 export function ActualizaTablaSoporteHistorial(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -298,17 +472,23 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                 ${ticketRecord.nombreTipoIncidencia} <br>
             </span>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
         <td>
@@ -316,28 +496,38 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                Urgencia ${ticketRecord.nombreUrgencia}:<br>
             </span>
             <span>
-                ${ticketRecord.mensajeRecepcion.length > 150
-            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
-            : ticketRecord.mensajeRecepcion}
+                ${
+                  ticketRecord.mensajeRecepcion.length > 150
+                    ? ticketRecord.mensajeRecepcion.substring(0, 150) + "..."
+                    : ticketRecord.mensajeRecepcion
+                }
             </span>
         </td>
 
                 <td>
             <span class="nombreTipoIncidencia clasificacion-atencion">
-             Área ${ticketRecord.nombreSedeAtencion}/${ticketRecord.nombreAreaAtencion} - ${ticketRecord.nombreClasificacionAtencion}:<br>
+             Área ${ticketRecord.nombreSedeAtencion}/${
+    ticketRecord.nombreAreaAtencion
+  } - ${ticketRecord.nombreClasificacionAtencion}:<br>
             </span>
             <span>
-                ${ticketRecord.descripcionAtencion.length > 150
-            ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
-            : ticketRecord.descripcionAtencion}
+                ${
+                  ticketRecord.descripcionAtencion.length > 150
+                    ? ticketRecord.descripcionAtencion.substring(0, 150) + "..."
+                    : ticketRecord.descripcionAtencion
+                }
             </span><br>
                <ul>
-                   ${ticketRecord.listaArchivosAdjuntosAtencion.map(adjunto => `
+                   ${ticketRecord.listaArchivosAdjuntosAtencion
+                     .map(
+                       (adjunto) => `
                        <li>
                            <a href="/app/tickets/adjuntoAtencion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                            ${adjunto.pesoContenido}
                        </li>
-                   `).join('')}
+                   `
+                     )
+                     .join("")}
                </ul>
         </td>
 
@@ -360,7 +550,9 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                 data-atencion-usuario="${ticketRecord.nombreUsuarioAtencion}"
                 data-atencion-descripcion="${ticketRecord.descripcionAtencion}"
                 data-area-clasificacion="${ticketRecord.nombreAreaAtencion}"
-                data-atencion-clasificacion="${ticketRecord.nombreClasificacionAtencion}"
+                data-atencion-clasificacion="${
+                  ticketRecord.nombreClasificacionAtencion
+                }"
                 data-atencion-fecha="${ticketRecord.fechaFormateadaAtencion}"
                 data-atencion-hora="${ticketRecord.horaFormateadaAtencion}">
 
@@ -370,38 +562,36 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
 
     `;
 
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco');
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow);
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
-
 
 //
 //
@@ -411,20 +601,20 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
 //
 //
 
-
 export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -436,17 +626,23 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
 
         <td>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
         <td>
@@ -454,17 +650,24 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
                 ${ticketRecord.nombreClasificacionDesestimacion}:<br>
             </span>
             <span>
-                ${ticketRecord.descripcionDesestimacion.length > 150
-            ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
-            : ticketRecord.descripcionDesestimacion}
+                ${
+                  ticketRecord.descripcionDesestimacion.length > 150
+                    ? ticketRecord.descripcionDesestimacion.substring(0, 150) +
+                      "..."
+                    : ticketRecord.descripcionDesestimacion
+                }
             </span><br>
               <ul>
-                  ${ticketRecord.listaArchivosAdjuntosDesestimacion.map(adjunto => `
+                  ${ticketRecord.listaArchivosAdjuntosDesestimacion
+                    .map(
+                      (adjunto) => `
                       <li>
                           <a href="/app/tickets/adjuntoDesestimacion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                           ${adjunto.pesoContenido}
                       </li>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
               </ul>
             
         </td>
@@ -481,11 +684,21 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
                 data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
 
-                data-desestimacion-usuario="${ticketRecord.nombreUsuarioDesestimacion}"
-                data-desestimacion-mensaje="${ticketRecord.descripcionDesestimacion}"
-                data-desestimacion-clasificacion="${ticketRecord.nombreClasificacionDesestimacion}"
-                data-desestimacion-fecha="${ticketRecord.fechaFormateadaDesestimacion}"
-                data-desestimacion-hora="${ticketRecord.horaFormateadaDesestimacion}">
+                data-desestimacion-usuario="${
+                  ticketRecord.nombreUsuarioDesestimacion
+                }"
+                data-desestimacion-mensaje="${
+                  ticketRecord.descripcionDesestimacion
+                }"
+                data-desestimacion-clasificacion="${
+                  ticketRecord.nombreClasificacionDesestimacion
+                }"
+                data-desestimacion-fecha="${
+                  ticketRecord.fechaFormateadaDesestimacion
+                }"
+                data-desestimacion-hora="${
+                  ticketRecord.horaFormateadaDesestimacion
+                }">
   
 
                 <i class="bi bi-clock-history"></i>
@@ -497,36 +710,35 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
 
     `;
 
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco');
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow);
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
 
 //
@@ -537,20 +749,20 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
 //
 //
 
-
 export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -558,24 +770,32 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
         <td>${ticketRecord.horaFormateadaRecepcion}</td>
         <td>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
         <td>
             <span>
-                ${ticketRecord.mensajeRecepcion.length > 150
-            ? ticketRecord.mensajeRecepcion.substring(0, 150) + '...'
-            : ticketRecord.mensajeRecepcion}
+                ${
+                  ticketRecord.mensajeRecepcion.length > 150
+                    ? ticketRecord.mensajeRecepcion.substring(0, 150) + "..."
+                    : ticketRecord.mensajeRecepcion
+                }
             </span>
         </td>
         <td>
@@ -584,35 +804,29 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
         
     `;
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
+
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco"); // Cambiar el fondo de cada celda a blanco
     });
-
-   // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-   const cells = newRow.querySelectorAll('td');
-   cells.forEach(cell => {
-       cell.classList.add('nuevo-ticket');
-   });
-
-   // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-   newRow.addEventListener('mouseover', function () {
-       cells.forEach(cell => {
-           cell.classList.remove('nuevo-ticket');
-           cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
-       });
-   });
-
+  });
 }
-
-
-
-
-
 
 //
 //
@@ -622,20 +836,20 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
 //
 //
 
-
 export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -645,33 +859,45 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
         <td>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
 
         <td>
             <span>
-                ${ticketRecord.descripcionAtencion.length > 150
-            ? ticketRecord.descripcionAtencion.substring(0, 150) + '...'
-            : ticketRecord.descripcionAtencion}
+                ${
+                  ticketRecord.descripcionAtencion.length > 150
+                    ? ticketRecord.descripcionAtencion.substring(0, 150) + "..."
+                    : ticketRecord.descripcionAtencion
+                }
             </span><br>
               <ul>
-                  ${ticketRecord.listaArchivosAdjuntosAtencion.map(adjunto => `
+                  ${ticketRecord.listaArchivosAdjuntosAtencion
+                    .map(
+                      (adjunto) => `
                       <li>
                           <a href="/app/tickets/adjuntoAtencion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                           ${adjunto.pesoContenido}
                       </li>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
               </ul>
         </td>
         <td>
@@ -681,39 +907,36 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 
     `;
 
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco');
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow);
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
-
-
 
 //
 //
@@ -723,20 +946,20 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
 //
 //
 
-
 export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
         <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
-            <a href="/ticket/${ticketRecord.idFormateadoTicket}" class="ticket-link">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
                 ${ticketRecord.idFormateadoTicket}
             </a>
         </td>
@@ -745,17 +968,23 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
 
         <td>
             <span>
-                ${ticketRecord.descripcionTicket.length > 150
-            ? ticketRecord.descripcionTicket.substring(0, 150) + '...'
-            : ticketRecord.descripcionTicket}
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
             </span><br>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> - 
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
 
@@ -764,17 +993,24 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
                 ${ticketRecord.nombreClasificacionDesestimacion}:<br>
             </span>
             <span>
-                ${ticketRecord.descripcionDesestimacion.length > 150
-            ? ticketRecord.descripcionDesestimacion.substring(0, 150) + '...'
-            : ticketRecord.descripcionDesestimacion}
+                ${
+                  ticketRecord.descripcionDesestimacion.length > 150
+                    ? ticketRecord.descripcionDesestimacion.substring(0, 150) +
+                      "..."
+                    : ticketRecord.descripcionDesestimacion
+                }
             </span><br>
               <ul>
-                  ${ticketRecord.listaArchivosAdjuntosDesestimacion.map(adjunto => `
+                  ${ticketRecord.listaArchivosAdjuntosDesestimacion
+                    .map(
+                      (adjunto) => `
                       <li>
                           <a href="/app/tickets/adjuntoDesestimacion/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                           ${adjunto.pesoContenido}
                       </li>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
               </ul>
         </td>
         <td>
@@ -783,38 +1019,36 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
 
 
     `;
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
+
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco");
     });
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow);
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        cells.forEach(cell => {
-            cell.classList.remove('nuevo-ticket');
-            cell.classList.add('fondo-blanco');
-        });
-    });
-
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow);
-
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
-
-
 
 //
 //
@@ -824,15 +1058,14 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
 //
 //
 export function ActualizaTablaUsuarioEnviados(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
 
-    // Obtener el cuerpo de la tabla donde se agregarán las filas
-    const ticketTableBody = document.getElementById('ticketTableBody');
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
 
-    // Crear una nueva fila
-    const newRow = document.createElement('tr');
-
-    // Generar las celdas de la fila con los datos del ticket
-    newRow.innerHTML = `
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
 
 <td id="${ticketRecord.id}" class="ticket-code-cell">
@@ -844,19 +1077,25 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
         <td>${ticketRecord.horaFormateada}</td>
         <td>
             <!-- Descripción truncada -->
-            <span>${ticketRecord.descripcion.length > 150
-            ? ticketRecord.descripcion.substring(0, 150) + '...'
-            : ticketRecord.descripcion}</span><br>
+            <span>${
+              ticketRecord.descripcion.length > 150
+                ? ticketRecord.descripcion.substring(0, 150) + "..."
+                : ticketRecord.descripcion
+            }</span><br>
         </td>
 
         <td>
             <ul>
-                ${ticketRecord.listaArchivosAdjuntosEnvio.map(adjunto => `
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> -
                         ${adjunto.pesoContenido}
                     </li>
-                `).join('')}
+                `
+                  )
+                  .join("")}
             </ul>
         </td>
         <td>
@@ -865,44 +1104,41 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
 
     `;
 
-    // Insertar la nueva fila al inicio de la tabla
-    ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
 
-    // Actualizar el número de cada fila
-    const rows = ticketTableBody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        row.querySelector('td').textContent = index + 1;
-    });
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
 
-    // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
-    const cells = newRow.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.classList.add('nuevo-ticket');
-    });
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
 
-    // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
-    newRow.addEventListener('mouseover', function () {
-        // Si la fila tiene la clase "tr-con-componentes", no se toca "fondo-blanco"
-        if (!newRow.classList.contains('tr-con-componentes')) {
-            cells.forEach(cell => {
-                cell.classList.remove('nuevo-ticket');
-                cell.classList.add('fondo-blanco'); // Cambiar el fondo de cada celda a blanco
-            });
-        } else {
-            // Si tiene la clase "tr-con-componentes", solo se elimina "nuevo-ticket"
-            cells.forEach(cell => {
-                cell.classList.remove('nuevo-ticket');
-            });
-        }
-    });
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    // Si la fila tiene la clase "tr-con-componentes", no se toca "fondo-blanco"
+    if (!newRow.classList.contains("tr-con-componentes")) {
+      cells.forEach((cell) => {
+        cell.classList.remove("nuevo-ticket");
+        cell.classList.add("fondo-blanco"); // Cambiar el fondo de cada celda a blanco
+      });
+    } else {
+      // Si tiene la clase "tr-con-componentes", solo se elimina "nuevo-ticket"
+      cells.forEach((cell) => {
+        cell.classList.remove("nuevo-ticket");
+      });
+    }
+  });
 
-    // Actualiza la lista de filas filtradas
-    filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
+  // Actualiza la lista de filas filtradas
+  filteredRows.unshift(newRow); // Añadir la nueva fila al principio del arreglo de filas filtradas
 
-    // Llama a la función para actualizar las filas y la paginación
-    updateFilteredRows();
-    updateTicketCount();
-
-
+  // Llama a la función para actualizar las filas y la paginación
+  updateFilteredRows();
+  updateTicketCount();
 }
-

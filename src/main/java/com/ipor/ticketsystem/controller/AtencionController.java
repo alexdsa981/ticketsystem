@@ -356,23 +356,14 @@ public class AtencionController {
             notificacion.setUrl("/ticket/" + ticket.getCodigoTicket());
             notificacionesService.saveNotiicacion(notificacion);
 
-//            notificacionesService.saveNotiicacion(notificacion);
-//            WSNotificacionesService.enviarNotificacion(notificacion);
-//            WSNotificacionesService.enviarAtencionAVistaSoporteHistorialDesestimacion(ticket);
-//            WSNotificacionesService.enviarAtencionAVistaUsuarioDesestimados(ticket);
-//            if (lastFaseTicket == 1L) {
-//                WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
-//            } else if (lastFaseTicket == 2L) {
-//                WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
-//            }
-//            WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
-//            WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
-//
-//            if (atencionService.findRecepcionByTicketID(id) != null) {
-//                atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
-//            }
-//            WSNotificacionesService.notificarActualizacionDashboard();
-//            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
+            WSNotificacionesService.enviarNotificacion(notificacion);
+            WSNotificacionesService.enviarTicketAVistaSoporteEnEspera(ticket);
+            WSNotificacionesService.enviarTicketAVistaEnEsperaUsuario(ticket);
+            WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
+
+            WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
 
             String referer = request.getHeader("Referer");
@@ -489,9 +480,12 @@ public class AtencionController {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteRecepcion(id);
             } else if (lastFaseTicket == 2L) {
                 WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
+            } else if (lastFaseTicket == 5L) {
+                WSNotificacionesService.ocultarRegistroEnVistaSoporteEnEspera(id);
             }
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
+            WSNotificacionesService.ocultarRegistroEnVistaEnEsperaUsuario(id);
 
             if (atencionService.findRecepcionByTicketID(id) != null) {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
