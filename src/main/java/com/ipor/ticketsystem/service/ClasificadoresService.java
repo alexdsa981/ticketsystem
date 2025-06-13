@@ -54,13 +54,14 @@ public class ClasificadoresService {
         clasificacionEsperaRepository.save(clasificacionEspera);
     }
     public List<ClasificacionEspera> getListaClasEspera() {
-        return clasificacionEsperaRepository.findAll();
+        return clasificacionEsperaRepository.findAllExceptId1();
     }
     public ClasificacionEspera getClasificacionEsperaPorId(Long id) {
         return clasificacionEsperaRepository.findById(id).get();
     }
+
     public List<ClasificacionEspera> getListaClasificacionEsperaActivos() {
-        return clasificacionEsperaRepository.findByIsActiveTrue();
+        return clasificacionEsperaRepository.findByIsActiveTrueAndIdNot1();
     }
     public void actualizarEspera(Long id, ClasificacionEspera esperaActualizada) {
         ClasificacionEspera espera = clasificacionEsperaRepository.findById(id).get();

@@ -2,7 +2,10 @@ package com.ipor.ticketsystem.model.dto.otros.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
+import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
+import com.ipor.ticketsystem.model.fixed.ClasificacionEspera;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +27,9 @@ public record RecepcionRecordWS(
 
         String nombreFaseTicket,
 
-        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio
+        List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
+        List<TicketRecordWS.DetalleEsperaDTO> listaDetalleEspera
+
 )
 {
     public RecepcionRecordWS(DetalleTicketDTO detalleDTO) {
@@ -50,6 +55,9 @@ public record RecepcionRecordWS(
 
                 detalleDTO.getTicket().getListaArchivosAdjuntos().stream()
                         .map(ArchivoAdjuntoDTO::new) // Convierte cada ArchivoAdjuntoEnvio a ArchivoAdjuntoDTO
+                        .collect(Collectors.toList()),
+                detalleDTO.getDetalleEnEspera().stream()
+                        .map(TicketRecordWS.DetalleEsperaDTO::new)
                         .collect(Collectors.toList())
         );
     }
@@ -69,6 +77,25 @@ public record RecepcionRecordWS(
                     Base64.getEncoder().encodeToString(adjunto.getArchivo()),
                     adjunto.getTipoContenido(),
                     adjunto.getPesoEnMegabytes()
+            );
+        }
+    }
+    public static record DetalleEsperaDTO(
+            ClasificacionEspera clasificacion,
+            String fecha,
+            String hora,
+            String descripcion,
+            List<TicketRecordWS.ArchivoAdjuntoDTO> listaArchivos
+    ) {
+        public DetalleEsperaDTO(DetalleEnEspera espera) {
+            this(
+                    espera.getClasificacionEspera(),
+                    espera.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    espera.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    espera.getDescripcion(),
+                    espera.getListaArchivosAdjuntos().stream()
+                            .map(TicketRecordWS.ArchivoAdjuntoDTO::new)
+                            .collect(Collectors.toList())
             );
         }
     }

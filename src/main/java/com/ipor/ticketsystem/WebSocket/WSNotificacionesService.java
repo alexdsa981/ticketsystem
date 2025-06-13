@@ -3,10 +3,7 @@ package com.ipor.ticketsystem.WebSocket;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dto.NotificacionDTO;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.AtencionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.DesestimacionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.RecepcionRecordWS;
-import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.*;
 import com.ipor.ticketsystem.model.dynamic.*;
 import com.ipor.ticketsystem.service.TicketService;
 
@@ -56,8 +53,11 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-espera", message);
     }
     public void enviarTicketAVistaSoporteEnEspera(Ticket ticket) {
+        for (DetalleEnEspera detalleEnEspera : ticket.getListaDetalleEsperas()){
+            System.out.println(detalleEnEspera.getClasificacionEspera().getNombre());
+        }
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
-        RecepcionRecordWS ticketRecordWS = new RecepcionRecordWS(detalleTicketDTO);
+        EsperaRecordWS ticketRecordWS = new EsperaRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-espera", ticketRecordWS);
     }
 

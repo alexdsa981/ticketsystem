@@ -253,6 +253,11 @@ public class AtencionController {
             WSNotificacionesService.enviarNotificacion(notificacion);
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
+
+            WSNotificacionesService.ocultarRegistroEnVistaEnEsperaUsuario(id);
+            WSNotificacionesService.ocultarRegistroEnVistaSoporteEnEspera(id);
+
+
             WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(ticket);
             WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(ticket);
             WSNotificacionesService.notificarActualizacionDashboard();
@@ -313,7 +318,7 @@ public class AtencionController {
             espera.setHoraInicio(LocalTime.now());
             atencionService.saveEspera(espera);
 
-            List<DetalleEnEspera> listaEsperas = new ArrayList<>();
+            List<DetalleEnEspera> listaEsperas = ticket.getListaDetalleEsperas();
             listaEsperas.add(espera);
 
             // Modificar el ticket

@@ -442,7 +442,67 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
 //
 //
 
+
+
+
 export function ActualizaTablaSoporteHistorial(ticketRecord) {
+const htmlEsperaAutomatica = (ticketRecord.listaDetalleEspera || [])
+  .filter(
+    (espera) =>
+      espera.clasificacion &&
+      String(espera.clasificacion.id) === "1"
+  )
+  .map((espera) => `
+      <div class="border-start ps-2 ms-1 mt-2 text-muted small">
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-clock me-1 text-primary"></i>
+          <strong>${espera.clasificacion.nombre || espera.clasificacion}</strong>
+          <span class="ms-2">${espera.fecha} | ${espera.hora}</span>
+        </div>
+      </div>
+  `)
+  .join("");
+
+const htmlEsperaManual = (ticketRecord.listaDetalleEspera || [])
+  .filter(
+    (espera) =>
+      !espera.clasificacion || String(espera.clasificacion.id) !== "1"
+  )
+  .map((espera) => `
+      <div class="border-start ps-2 ms-1 mt-2 text-muted small">
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-clock me-1 text-primary"></i>
+          <strong>${espera.clasificacion?.nombre || espera.clasificacion}</strong>
+          <span class="ms-2">${espera.fecha} | ${espera.hora}</span>
+        </div>
+        <div class="mb-1">
+          ${
+            espera.descripcion && espera.descripcion.length > 150
+              ? espera.descripcion.substring(0, 150) + "..."
+              : espera.descripcion || ""
+          }
+        </div>
+        <ul class="list-unstyled ms-3">
+          ${(espera.listaArchivos || [])
+            .map(
+              (adjunto) => `
+              <li>
+                <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                <span class="text-muted">- <span>${adjunto.pesoEnMb}</span> MB</span>
+              </li>
+            `
+            )
+            .join("")}
+        </ul>
+      </div>
+  `)
+  .join("");
+
+
+
+
+
+
   // Obtener el cuerpo de la tabla donde se agregarán las filas
   const ticketTableBody = document.getElementById("ticketTableBody");
 
@@ -490,6 +550,7 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                   )
                   .join("")}
             </ul>
+           ${htmlEsperaAutomatica}
         </td>
         <td>
             <span class="nombreTipoIncidencia urgencia">
@@ -502,7 +563,10 @@ export function ActualizaTablaSoporteHistorial(ticketRecord) {
                     : ticketRecord.mensajeRecepcion
                 }
             </span>
+           ${htmlEsperaManual}
+
         </td>
+
 
                 <td>
             <span class="nombreTipoIncidencia clasificacion-atencion">

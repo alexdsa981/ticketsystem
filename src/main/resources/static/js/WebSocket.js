@@ -56,9 +56,6 @@ function conectarWebSocket() {
         if (pathname === '/soporte/Atender-Espera') {
             stompClient.subscribe('/topic/actualizar/soporte-espera', (message) => {
                 const ticketData = JSON.parse(message.body);
-                console.log("📦 Datos recibidos en soporte-espera:", ticketData);
-                console.log("🧪 Tiene descripcionTicket:", 'descripcionTicket' in ticketData);
-                console.log("🧪 Valor descripcionTicket:", ticketData.descripcionTicket);
                 ActualizaTablaEsperaSoporte(ticketData);
             });
 

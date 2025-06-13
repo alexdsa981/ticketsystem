@@ -4,6 +4,7 @@ import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio;
 import com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEspera;
 import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
+import com.ipor.ticketsystem.model.fixed.ClasificacionEspera;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -91,20 +92,20 @@ public record EsperaRecordWS(
     }
 
     public static record DetalleEsperaDTO(
-            String clasificacion,
+            ClasificacionEspera clasificacion,
             String fecha,
             String hora,
             String descripcion,
-            List<ArchivoAdjuntoDTO> listaArchivos
+            List<TicketRecordWS.ArchivoAdjuntoDTO> listaArchivos
     ) {
         public DetalleEsperaDTO(DetalleEnEspera espera) {
             this(
-                    espera.getClasificacionEspera().getNombre(),
+                    espera.getClasificacionEspera(),
                     espera.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     espera.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")),
                     espera.getDescripcion(),
                     espera.getListaArchivosAdjuntos().stream()
-                            .map(ArchivoAdjuntoDTO::new)
+                            .map(TicketRecordWS.ArchivoAdjuntoDTO::new)
                             .collect(Collectors.toList())
             );
         }
