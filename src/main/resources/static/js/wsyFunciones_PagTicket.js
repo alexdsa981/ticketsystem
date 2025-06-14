@@ -34,9 +34,11 @@
 
                     const btnRecepcionar = document.getElementById('btn-recepcionar');
                     const btnAtender = document.getElementById('btn-atender');
+                    const btnEspera = document.getElementById('btn-espera');
                     const btnDesestimar = document.getElementById('btn-desestimar');
                     if (btnRecepcionar) btnRecepcionar.style.display = 'none';
                     if (btnAtender) btnAtender.style.display = 'none';
+                    if (btnEspera) btnEspera.style.display = 'none';
                     if (btnDesestimar) btnDesestimar.style.display = 'none';
 
 
@@ -46,14 +48,16 @@
                         'Enviado': '/soporte/Recepcionar',
                         'Recepcionado - En Proceso': '/soporte/Atender',
                         'Cerrado - Atendido': '/soporte/Tickets-Cerrados',
-                        'Desestimado': '/soporte/Tickets-Desestimados'
+                        'Desestimado': '/soporte/Tickets-Desestimados',
+                        'En Espera': '/soporte/Atender-Espera',
                     };
 
                     const rutasUsuario = {
                         'Enviado': '/inicio',
                         'Recepcionado - En Proceso': '/TicketsEnProceso',
                         'Cerrado - Atendido': '/TicketsAtendidos',
-                        'Desestimado': '/TicketsDesestimados'
+                        'Desestimado': '/TicketsDesestimados',
+                        'En Espera': '/TicketsEnEspera',
                     };
                     if (btnSoporte && rutasSoporte[fase]) {
                         btnSoporte.setAttribute('href', rutasSoporte[fase]);
@@ -132,10 +136,30 @@
 
 
                             if (btnAtender) btnAtender.style.display = 'inline-block';
+                            if (btnEspera) btnEspera.style.display = 'inline-block';
                             if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
 
 
-                        } else if (fase === "Cerrado - Atendido") {
+                        } else if (fase === "En Espera") {
+                             cardRecepcion.style.display = "block";
+                             cardRecepcion.querySelector(".info-recepcion").style.display = "block";
+                             cardRecepcion.querySelector(".pendiente-recepcion").style.display = "none";
+
+                             cardAtencion.style.display = "block";
+                             cardAtencion.querySelector(".info-atencion").style.display = "none";
+                             cardAtencion.querySelector(".pendiente-atencion").style.display = "block";
+
+                             document.getElementById("mensaje-recepcion").textContent = data.mensajeRecepcion || "";
+                             document.getElementById("usuario-recepcion").textContent = data.nombreUsuarioRecepcion || "";
+                             document.getElementById("fecha-recepcion").textContent = data.fechaFormateadaRecepcion || "";
+                             document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
+
+
+                             if (btnAtender) btnAtender.style.display = 'inline-block';
+                             if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
+
+
+                         } else if (fase === "Cerrado - Atendido") {
                             cardRecepcion.style.display = "block";
                             cardRecepcion.querySelector(".info-recepcion").style.display = "block";
                             cardRecepcion.querySelector(".pendiente-recepcion").style.display = "none";
@@ -213,6 +237,90 @@
 
                         }
                     }
+
+
+const contenedorEspera = document.getElementById("contenedor-detalles-espera");
+contenedorEspera.innerHTML = ""; // Limpiar contenido anterior
+
+if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0) {
+  data.listaDetalleEspera.forEach((espera, index) => {
+    const col = document.createElement("div");
+    col.classList.add("col-md-6");
+
+    const card = document.createElement("div");
+    card.classList.add("card", "border-0", "shadow-sm", "bg-warning-subtle", "small");
+
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body", "p-3");
+
+    // Título
+    const titulo = document.createElement("h6");
+    titulo.classList.add("fw-bold", "mb-2");
+    titulo.innerHTML = `<i class="bi bi-info-circle"></i> Motivo ${index + 1}: ${espera.clasificacion?.nombre || "Sin clasificación"}`;
+    cardBody.appendChild(titulo);
+
+    // Descripción
+    const desc = document.createElement("p");
+    desc.classList.add("mb-2");
+    desc.textContent = espera.descripcion || "";
+    cardBody.appendChild(desc);
+
+    // Desde
+    const desde = document.createElement("p");
+    desde.classList.add("mb-1", "text-muted");
+    desde.innerHTML = `<i class="bi bi-clock"></i> <strong>Desde:</strong> ${espera.fecha || "-"} ${espera.hora || "-"}`;
+    cardBody.appendChild(desde);
+
+    // Hasta
+    const hasta = document.createElement("p");
+    hasta.classList.add("mb-1", "text-muted");
+
+    const fechaFin = espera.fechaFin || "<span class='text-secondary fst-italic'>Aún no finaliza</span>";
+    const horaFin = espera.horaFin || "";
+    hasta.innerHTML = `<i class="bi bi-clock-history"></i> <strong>Hasta:</strong> ${fechaFin} ${horaFin}`;
+    cardBody.appendChild(hasta);
+
+    // Adjuntos
+    if (Array.isArray(espera.listaArchivos) && espera.listaArchivos.length > 0) {
+      const archivosTitulo = document.createElement("p");
+      archivosTitulo.classList.add("fw-bold", "mb-1", "mt-2");
+      archivosTitulo.textContent = "Adjuntos:";
+      cardBody.appendChild(archivosTitulo);
+
+      espera.listaArchivos.forEach(archivo => {
+        const p = document.createElement("p");
+        p.classList.add("mb-0", "text-truncate");
+
+        const icon = document.createElement("i");
+        icon.classList.add("bi", "bi-paperclip");
+        p.appendChild(icon);
+
+        p.appendChild(document.createTextNode(" "));
+
+        const a = document.createElement("a");
+        a.href = `/app/tickets/adjuntoEspera/descargar/${archivo.id}`;
+        a.textContent = archivo.nombre;
+        a.classList.add("text-decoration-none");
+        p.appendChild(a);
+
+        const peso = document.createTextNode(` - ${archivo.pesoContenido || ""}`);
+        p.appendChild(peso);
+
+        cardBody.appendChild(p);
+      });
+    }
+
+    card.appendChild(cardBody);
+    col.appendChild(card);
+    contenedorEspera.appendChild(col);
+  });
+} else {
+  contenedorEspera.innerHTML = '<p class="text-muted mb-0">No se encuentran Tiempos de espera relacionados al Ticket.</p>';
+}
+
+
+
+
                 })
                 .catch(error => {
                     console.error("Error al obtener datos del ticket:", error);

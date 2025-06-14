@@ -228,6 +228,7 @@ public class WebController {
     public String verTicketPorCodigo(@PathVariable("codigo") String codigo, Model model) {
         Optional<Ticket> ticketOptional = ticketRepository.findByCodigoTicket(codigo);
         clasificadoresController.getListaClasificacionesAtencionActivos(model);
+        clasificadoresController.getListaClasificacionesEsperaActivos(model);
         clasificadoresController.getListaClasificacionesDesestimacionActivos(model);
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaSedesActivos(model);

@@ -121,7 +121,9 @@ public class AtencionController {
 
             if (ticket.getListaDetalleEsperas() != null && !ticket.getListaDetalleEsperas().isEmpty()) {
                 ticket.getListaDetalleEsperas().stream()
-                        .filter(e -> e.getFechaFin() == null || e.getHoraFin() == null || e.getHoraFin() == horarioAtencionSoporte.getHoraEntrada())
+                        .filter(e -> e.getFechaFin() == null
+                                || e.getHoraFin() == null
+                                || e.getHoraFin().equals(horarioAtencionSoporte.getHoraEntrada()))
                         .forEach(detalle -> {
                             detalle.setFechaFin(LocalDate.now());
                             detalle.setHoraFin(LocalTime.now());

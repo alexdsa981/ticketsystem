@@ -181,35 +181,25 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<RecordFactorXConteo> findTicketCountByAreaWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
 
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket",
+            nativeQuery = true)
+    Long contarTicketsAtendidos();
 
-
-
-
-
-
-    //MEDICION DE TIEMPO SIN Y CON FECHA
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
-            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+    @Query(value = "SELECT COUNT(*) " +
             "FROM atencion a " +
             "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
-            "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL",
+            "WHERE t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
-    Double obtenerPromedioSegundosRS();
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
-            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
-            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
-            "FROM atencion a " +
-            "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
-            "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
-            nativeQuery = true)
-    Double obtenerPromedioSegundosRSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+    Long contarTicketsAtendidosEnRango(@Param("fechaInicio") LocalDate fechaInicio,
+                                       @Param("fechaFin") LocalDate fechaFin);
+
+
+
+
+
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME))) " +
             "FROM recepcion r " +
@@ -217,10 +207,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL",
             nativeQuery = true)
-    Double obtenerPromedioSegundosTR();
-
-
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+    Double obtenerSegundosTicketRecepcion();
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME))) " +
             "FROM recepcion r " +
@@ -229,8 +217,37 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
-    Double obtenerPromedioSegundosTRConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+    Double obtenerSegundosTicketRecepcionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
+                                                  @Param("fechaFin") LocalDate fechaFin);
+
+
+
+
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
+            "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerSegundosRecepcionAtencion();
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
+            "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            nativeQuery = true)
+    Double obtenerSegundosRecepcionAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
+                                                    @Param("fechaFin") LocalDate fechaFin);
+
+
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
             "FROM atencion a " +
@@ -238,8 +255,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL",
             nativeQuery = true)
-    Double obtenerPromedioSegundosTS();
-    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+    Double obtenerSegundosTicketAtencion();
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
             "FROM atencion a " +
@@ -248,7 +265,60 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
-    Double obtenerPromedioSegundosTSConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+    Double obtenerSegundosTicketAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
+                                                 @Param("fechaFin") LocalDate fechaFin);
+
+
+
+
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
+            "FROM detalle_en_espera de " +
+            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "WHERE de.id_clasificacion_espera = 1 " +
+            "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerSegundosEsperaClasificacion1();
+    @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
+            "FROM detalle_en_espera de " +
+            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "WHERE de.id_clasificacion_espera = 1 " +
+            "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
+            "AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin",
+            nativeQuery = true)
+    Double obtenerSegundosEsperaClasificacion1ConFecha(@Param("fechaInicio") LocalDate fechaInicio,
+                                                       @Param("fechaFin") LocalDate fechaFin);
+
+
+
+    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
+            "FROM detalle_en_espera de " +
+            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "WHERE de.id_clasificacion_espera != 1 " +
+            "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL",
+            nativeQuery = true)
+    Double obtenerSegundosEsperaClasificacionNo1();
+    @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
+            "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
+            "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
+            "FROM detalle_en_espera de " +
+            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "WHERE de.id_clasificacion_espera != 1 " +
+            "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
+            "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
+            "AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin",
+            nativeQuery = true)
+    Double obtenerSegundosEsperaClasificacionNo1ConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+
 
 
     @Query("SELECT COUNT(t) FROM Ticket t WHERE t.fecha BETWEEN :inicio AND :fin")

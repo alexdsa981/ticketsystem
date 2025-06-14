@@ -114,6 +114,8 @@ public record DesestimacionRecordWS(
             ClasificacionEspera clasificacion,
             String fecha,
             String hora,
+            String fechaFin,
+            String horaFin,
             String descripcion,
             List<TicketRecordWS.ArchivoAdjuntoDTO> listaArchivos
     ) {
@@ -122,6 +124,13 @@ public record DesestimacionRecordWS(
                     espera.getClasificacionEspera(),
                     espera.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     espera.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    espera.getFechaFin() != null
+                            ? espera.getFechaFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                            : "En curso",
+                    espera.getHoraFin() != null
+                            ? espera.getHoraFin().format(DateTimeFormatter.ofPattern("HH:mm"))
+                            : "En curso",
+
                     espera.getDescripcion(),
                     espera.getListaArchivosAdjuntos().stream()
                             .map(TicketRecordWS.ArchivoAdjuntoDTO::new)

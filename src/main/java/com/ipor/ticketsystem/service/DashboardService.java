@@ -108,57 +108,120 @@ public class DashboardService {
         return ticketRepository.findTicketCountByArea();
     }
 
-
     //INFO PARA GRAFICOS EN PESTAÑA SOPORTE
     //Conteo de tickets por fase con filtro de fechas (ESTADO ACTUAL PARA DASHBOARD DE SOPORTE)
     public List<RecordFactorXConteo> obtenerConteoDeTicketsPorFase(LocalDate fechaInicio, LocalDate fechaFin) {
 
         if (fechaInicio != null && fechaFin != null) {
-
             return ticketRepository.findTicketCountByFaseWithDates(fechaInicio, fechaFin);
         }
         return ticketRepository.findTicketCountByFase();
     }
 
 
+
+
+
     //INFO DE TIEMPO
 
-    public double obtenerPromedioSegundosR_S(LocalDate fechaInicio, LocalDate fechaFin) {
+    public double obtenerPromedioSegundosTicket_Recepcion(LocalDate fechaInicio, LocalDate fechaFin) {
         try {
             if (fechaInicio != null && fechaFin != null) {
-                Double promedio = ticketRepository.obtenerPromedioSegundosRSConFecha(fechaInicio, fechaFin);
-                return promedio != null ? promedio : 0.0;
+                Double segundosTR = ticketRepository.obtenerSegundosTicketRecepcionConFecha(fechaInicio, fechaFin);
+                Double segundosEspera1 = ticketRepository.obtenerSegundosEsperaClasificacion1ConFecha(fechaInicio, fechaFin);
+                Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidosEnRango(fechaInicio, fechaFin);
+
+                double STR = segundosTR != null ? segundosTR : 0.0;
+                double SE = segundosEspera1 != null ? segundosEspera1 : 0.0;
+                long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+                return TTA > 0 ? (STR - SE) / TTA : 0.0;
             }
-            return ticketRepository.obtenerPromedioSegundosRS(); // método general ya existente
+
+            Double segundosTR = ticketRepository.obtenerSegundosTicketRecepcion();
+            Double segundosEspera1 = ticketRepository.obtenerSegundosEsperaClasificacion1();
+            Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidos();
+
+            double STR = segundosTR != null ? segundosTR : 0.0;
+            double SE = segundosEspera1 != null ? segundosEspera1 : 0.0;
+            long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+            return TTA > 0 ? (STR - SE) / TTA : 0.0;
+
         } catch (Exception e) {
             return 0.0;
         }
     }
 
 
-    public double obtenerPromedioSegundosT_R(LocalDate fechaInicio, LocalDate fechaFin) {
+
+
+    public double obtenerPromedioSegundosRecepcion_Atencion(LocalDate fechaInicio, LocalDate fechaFin) {
         try {
             if (fechaInicio != null && fechaFin != null) {
-                Double promedio = ticketRepository.obtenerPromedioSegundosTRConFecha(fechaInicio, fechaFin);
-                return promedio != null ? promedio : 0.0;
+                Double segundosRA = ticketRepository.obtenerSegundosRecepcionAtencionConFecha(fechaInicio, fechaFin);
+                Double segundosEsperaNo1 = ticketRepository.obtenerSegundosEsperaClasificacionNo1ConFecha(fechaInicio, fechaFin);
+                Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidosEnRango(fechaInicio, fechaFin);
+
+                double SRA = segundosRA != null ? segundosRA : 0.0;
+                double SE = segundosEsperaNo1 != null ? segundosEsperaNo1 : 0.0;
+                long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+                return TTA > 0 ? (SRA - SE) / TTA : 0.0;
             }
-            return ticketRepository.obtenerPromedioSegundosTR();
+
+            Double segundosRA = ticketRepository.obtenerSegundosRecepcionAtencion();
+            Double segundosEsperaNo1 = ticketRepository.obtenerSegundosEsperaClasificacionNo1();
+            Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidos();
+
+            double SRA = segundosRA != null ? segundosRA : 0.0;
+            double SE = segundosEsperaNo1 != null ? segundosEsperaNo1 : 0.0;
+            long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+            return TTA > 0 ? (SRA - SE) / TTA : 0.0;
+
         } catch (Exception e) {
             return 0.0;
         }
     }
 
-    public double obtenerPromedioSegundosT_S(LocalDate fechaInicio, LocalDate fechaFin) {
+
+
+
+
+    public double obtenerPromedioSegundosTicket_Atencion(LocalDate fechaInicio, LocalDate fechaFin) {
         try {
             if (fechaInicio != null && fechaFin != null) {
-                Double promedio = ticketRepository.obtenerPromedioSegundosTSConFecha(fechaInicio, fechaFin);
-                return promedio != null ? promedio : 0.0;
+                Double segundosTA = ticketRepository.obtenerSegundosTicketAtencionConFecha(fechaInicio, fechaFin);
+                Double segundosEsperaNo1 = ticketRepository.obtenerSegundosEsperaClasificacionNo1ConFecha(fechaInicio, fechaFin);
+                Double segundosEspera1 = ticketRepository.obtenerSegundosEsperaClasificacion1ConFecha(fechaInicio, fechaFin);
+                Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidosEnRango(fechaInicio, fechaFin);
+
+                double STA = segundosTA != null ? segundosTA : 0.0;
+                double SEN1 = segundosEsperaNo1 != null ? segundosEsperaNo1 : 0.0;
+                double SE1 = segundosEspera1 != null ? segundosEspera1 : 0.0;
+                long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+                return TTA > 0 ? (STA - (SEN1 + SE1)) / TTA : 0.0;
             }
-            return ticketRepository.obtenerPromedioSegundosTS();
+
+            Double segundosTA = ticketRepository.obtenerSegundosTicketAtencion();
+            Double segundosEsperaNo1 = ticketRepository.obtenerSegundosEsperaClasificacionNo1();
+            Double segundosEspera1 = ticketRepository.obtenerSegundosEsperaClasificacion1();
+            Long totalTicketsAtendidos = ticketRepository.contarTicketsAtendidos();
+
+            double STA = segundosTA != null ? segundosTA : 0.0;
+            double SEN1 = segundosEsperaNo1 != null ? segundosEsperaNo1 : 0.0;
+            double SE1 = segundosEspera1 != null ? segundosEspera1 : 0.0;
+            long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
+
+            return TTA > 0 ? (STA - (SEN1 + SE1)) / TTA : 0.0;
+
         } catch (Exception e) {
             return 0.0;
         }
     }
+
 
 
 }

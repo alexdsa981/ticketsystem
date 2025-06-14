@@ -145,7 +145,7 @@ public class DashboardController {
     public String obtenerPromedioRecepcion(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_R(fechaInicio, fechaFin);
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosTicket_Recepcion(fechaInicio, fechaFin);
         double promedioMinutos = promedioSegundos / 60;
         return String.format("%.2f", promedioMinutos);
     }
@@ -155,7 +155,7 @@ public class DashboardController {
     public String obtenerPromedioAtencion(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosR_S(fechaInicio, fechaFin);
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosRecepcion_Atencion(fechaInicio, fechaFin);
         double promedioMinutos = promedioSegundos / 60;
         return String.format("%.2f", promedioMinutos);
     }
@@ -165,7 +165,7 @@ public class DashboardController {
     public String obtenerPromedioInicioFin(
             @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
-        double promedioSegundos = dashboardService.obtenerPromedioSegundosT_S(fechaInicio, fechaFin);
+        double promedioSegundos = dashboardService.obtenerPromedioSegundosTicket_Atencion(fechaInicio, fechaFin);
         double promedioMinutos = promedioSegundos / 60;
         return String.format("%.2f", promedioMinutos);
     }
