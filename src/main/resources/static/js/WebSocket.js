@@ -9,6 +9,7 @@ import {
     ActualizaTablaUsuarioAtendidos,
     ActualizaTablaUsuarioDesestimados,
     ActualizaTablaUsuarioEnviados,
+    ActualizaTablaUsuarioEnEspera,
     EliminarTicketDeTabla
 } from './wsActualizaTabla.js';
 
@@ -107,6 +108,16 @@ function conectarWebSocket() {
                         EliminarTicketDeTabla(message.body.trim());
                     });
                 }
+
+                if (pathname === '/TicketsEnEspera') {
+                    stompClient.subscribe(`/topic/actualizar/usuario-espera/${userId}`, (message) => {
+                        ActualizaTablaUsuarioEnEspera(JSON.parse(message.body));
+                    });
+                    stompClient.subscribe(`/topic/ocultar/usuario-espera/${userId}`, (message) => {
+                        EliminarTicketDeTabla(message.body.trim());
+                    });
+                }
+
 
                 if (pathname === '/TicketsAtendidos') {
                     stompClient.subscribe(`/topic/actualizar/usuario-atendidos/${userId}`, (message) => {

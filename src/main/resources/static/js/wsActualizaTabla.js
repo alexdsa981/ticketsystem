@@ -70,7 +70,22 @@ export function ActualizaTablasSoporteRecepcion(ticketRecord) {
         <td>${ticketRecord.fechaFormateada}</td>
         <td>${ticketRecord.horaFormateada}</td>
         <td>${ticketRecord.nombreUsuario}</td>
-        <td>${ticketRecord.descripcion}</td>
+        <td>${ticketRecord.descripcion}
+
+          ${(ticketRecord.listaDetalleEspera || [])
+            .map(
+              (espera, index) => `
+                <div class="border-start ps-2 ms-1 mt-2 text-muted small">
+                  <div class="d-flex align-items-center mb-1">
+                    <i class="bi bi-clock me-1 text-primary"></i>
+                    <strong>${espera.clasificacion?.nombre || ''}</strong>
+                  </div>
+                  ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-2">' : ''}
+                </div>
+              `
+            )
+            .join('')}
+        </td>
 
         <td>
             <ul>
@@ -204,6 +219,22 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                   )
                   .join("")}
             </ul>
+
+          ${(ticketRecord.listaDetalleEspera || [])
+            .map(
+              (espera, index) => `
+                <div class="border-start ps-2 ms-1 mt-2 text-muted small">
+                  <div class="d-flex align-items-center mb-1">
+                    <i class="bi bi-clock me-1 text-primary"></i>
+                    <strong>${espera.clasificacion?.nombre || ''}</strong>
+                    <span class="ms-2">${espera.fechaFormateada || espera.fecha} | ${espera.horaFormateada || espera.hora}</span>
+                  </div>
+                  ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-2">' : ''}
+                </div>
+              `
+            )
+            .join('')}
+
         </td>
         <td>
             <span>
@@ -339,7 +370,7 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
             .map(
             (espera, index) => `
             <div>
-                <strong>${espera.clasificacion}: </strong><br>
+                <strong>${espera.clasificacion.nombre}: </strong><br>
                 <span>${espera.fecha} | ${espera.hora}: </span>
                 <span>${
                 espera.descripcion && espera.descripcion.length > 150
@@ -352,7 +383,7 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
                     (adjunto) => `
                     <li>
                         <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a> -
-                        <span>${adjunto.pesoEnMb} mb</span>
+                        <span>${adjunto.pesoContenido}</span>
                     </li>
                 `
                     )
@@ -488,7 +519,7 @@ const htmlEsperaManual = (ticketRecord.listaDetalleEspera || [])
               (adjunto) => `
               <li>
                 <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
-                <span class="text-muted">- <span>${adjunto.pesoEnMb}</span> MB</span>
+                <span class="text-muted">- <span>${adjunto.pesoContenido}</span></span>
               </li>
             `
             )
@@ -708,6 +739,47 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
                   )
                   .join("")}
             </ul>
+              ${(ticketRecord.listaDetalleEspera || [])
+                .map(
+                  (espera, index) => `
+                  <div class="border-start ps-2 ms-1 mt-2 text-muted small">
+                    <div class="d-flex align-items-center mb-1">
+                      <i class="bi bi-clock me-1 text-primary"></i>
+                      <strong>${espera.clasificacion?.nombre || ''}</strong>
+                      <span class="ms-2">${espera.fechaFormateada || espera.fecha} | ${espera.horaFormateada || espera.hora}</span>
+                    </div>
+
+                    <div class="mb-1">
+                      ${
+                        espera.descripcion && espera.descripcion.length > 150
+                          ? espera.descripcion.substring(0, 150) + "..."
+                          : espera.descripcion || ""
+                      }
+                    </div>
+
+                    <ul class="list-unstyled ms-3">
+                      ${(espera.listaArchivos || [])
+                        .map(
+                          (adjunto) => `
+                        <li>
+                          <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                          <span class="text-muted">- <span>${adjunto.pesoContenido || '0.0'}</span></span>
+                        </li>
+                      `
+                        )
+                        .join("")}
+                    </ul>
+
+                    ${
+                      index !== (ticketRecord.listaDetalleEspera || []).length - 1
+                        ? '<hr class="my-2">'
+                        : ""
+                    }
+                  </div>
+                `
+                )
+                .join("")}
+
         </td>
         <td>
             <span class="nombreTipoIncidencia urgencia">
@@ -805,6 +877,151 @@ export function ActualizaTablaDesestimacionHistorial(ticketRecord) {
   updateTicketCount();
 }
 
+
+//
+//
+//
+//AGREGA REGISTRO DE RECEPCION A TABLA ESPERA USUARIO:
+//
+//
+//
+
+export function ActualizaTablaUsuarioEnEspera(ticketRecord) {
+  // Obtener el cuerpo de la tabla donde se agregarán las filas
+  const ticketTableBody = document.getElementById("ticketTableBody");
+
+  // Crear una nueva fila
+  const newRow = document.createElement("tr");
+
+  // Generar las celdas de la fila con los datos del ticket
+  newRow.innerHTML = `
+        <td></td> <!-- Este número se actualizará luego -->
+        <td id="${ticketRecord.idTicket}" class="ticket-code-cell">
+            <a href="/ticket/${
+              ticketRecord.idFormateadoTicket
+            }" class="ticket-link">
+                ${ticketRecord.idFormateadoTicket}
+            </a>
+        </td>
+        <td>${ticketRecord.fechaFormateadaRecepcion}</td>
+        <td>${ticketRecord.horaFormateadaRecepcion}</td>
+        <td>
+            <span>
+                ${
+                  ticketRecord.descripcionTicket.length > 150
+                    ? ticketRecord.descripcionTicket.substring(0, 150) + "..."
+                    : ticketRecord.descripcionTicket
+                }
+            </span><br>
+            <ul>
+                ${ticketRecord.listaArchivosAdjuntosEnvio
+                  .map(
+                    (adjunto) => `
+                    <li>
+                        <a href="/app/tickets/adjuntoEnvio/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        ${adjunto.pesoContenido}
+                    </li>
+                `
+                  )
+                  .join("")}
+            </ul>
+        </td>
+        <td>
+            <span>
+                ${
+                  ticketRecord.mensajeRecepcion.length > 150
+                    ? ticketRecord.mensajeRecepcion.substring(0, 150) + "..."
+                    : ticketRecord.mensajeRecepcion
+                }
+            </span>
+        </td>
+
+        <td>
+        ${(ticketRecord.listaDetalleEspera || [])
+            .map(
+            (espera, index) => `
+            <div>
+                <strong>${espera.clasificacion.nombre}: </strong><br>
+                <span>${espera.fecha} | ${espera.hora}: </span>
+                <span>${
+                espera.descripcion && espera.descripcion.length > 150
+                    ? espera.descripcion.substring(0, 150) + "..."
+                    : espera.descripcion || ""
+                }</span><br>
+                <ul>
+                ${(espera.listaArchivos || [])
+                    .map(
+                    (adjunto) => `
+                    <li>
+                        <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a> -
+                        <span>${adjunto.pesoContenido}</span>
+                    </li>
+                `
+                    )
+                    .join("")}
+                </ul>
+                ${
+                index !== (ticketRecord.listaDetalleEspera || []).length - 1
+                    ? "<hr>"
+                    : ""
+                }
+            </div>
+            `
+            )
+            .join("")}
+        </td>
+
+        <td>
+        ${ticketRecord.nombreFaseTicket}
+        </td>
+
+    `;
+
+  // Insertar la nueva fila al inicio de la tabla
+  ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
+
+  // Actualizar el número de cada fila
+  const rows = ticketTableBody.querySelectorAll("tr");
+  rows.forEach((row, index) => {
+    row.querySelector("td").textContent = index + 1;
+  });
+
+  // Añadir clase de fondo verde suave a cada celda (td) de la nueva fila
+  const cells = newRow.querySelectorAll("td");
+  cells.forEach((cell) => {
+    cell.classList.add("nuevo-ticket");
+  });
+
+  // Añadir evento para cambiar el fondo de cada celda a blanco de manera irreversible
+  newRow.addEventListener("mouseover", function () {
+    cells.forEach((cell) => {
+      cell.classList.remove("nuevo-ticket");
+      cell.classList.add("fondo-blanco"); // Cambiar el fondo de cada celda a blanco
+    });
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //
 //
@@ -852,6 +1069,30 @@ export function ActualizaTablaUsuarioRecepcionados(ticketRecord) {
                   )
                   .join("")}
             </ul>
+              ${(ticketRecord.listaDetalleEspera || [])
+                .map((espera, index) => `
+                  <div>
+                    <div class="text-muted small mt-1">
+                      <i class="bi bi-info-circle"></i>
+                      <span>
+                        ${espera.descripcion || 'Este ticket fue enviado fuera del horario laboral.'}
+                      </span>
+
+                      <ul class="list-unstyled ms-3 mt-1">
+                        ${(espera.listaArchivos || [])
+                          .map(adjunto => `
+                            <li>
+                              <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                              <span class="text-muted">- <span>${adjunto.pesoContenido}</span></span>
+                            </li>
+                          `)
+                          .join('')}
+                      </ul>
+                    </div>
+                    ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-1">' : ''}
+                  </div>
+                `)
+                .join('')}
         </td>
         <td>
             <span>
@@ -941,6 +1182,30 @@ export function ActualizaTablaUsuarioAtendidos(ticketRecord) {
                   )
                   .join("")}
             </ul>
+
+              ${(ticketRecord.listaDetalleEspera || [])
+                .map((espera, index) => `
+                  <div>
+                    <div class="text-muted small mt-1">
+                      <i class="bi bi-info-circle"></i>
+                      <span>${espera.descripcion || 'Este ticket fue enviado fuera del horario laboral.'}</span>
+
+                      <ul class="list-unstyled ms-3 mt-1">
+                        ${(espera.listaArchivos || [])
+                          .map(adjunto => `
+                            <li>
+                              <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                              <span class="text-muted">- <span>${adjunto.pesoContenido}</span></span>
+                            </li>
+                          `)
+                          .join('')}
+                      </ul>
+                    </div>
+                    ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-1">' : ''}
+                  </div>
+                `)
+                .join('')}
+
         </td>
 
         <td>
@@ -1050,6 +1315,29 @@ export function ActualizaTablaUsuarioDesestimados(ticketRecord) {
                   )
                   .join("")}
             </ul>
+          ${(ticketRecord.listaDetalleEspera || [])
+            .map((espera, index) => `
+              <div>
+                <div class="text-muted small mt-1">
+                  <i class="bi bi-info-circle"></i>
+                  <span>${espera.descripcion || 'Este ticket fue enviado fuera del horario laboral.'}</span>
+
+                  <ul class="list-unstyled ms-3 mt-1">
+                    ${(espera.listaArchivos || [])
+                      .map(adjunto => `
+                        <li>
+                          <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                          <span class="text-muted">- <span>${adjunto.pesoContenido}</span></span>
+                        </li>
+                      `)
+                      .join('')}
+                  </ul>
+                </div>
+                ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-1">' : ''}
+              </div>
+            `)
+            .join('')}
+
         </td>
 
         <td>
@@ -1146,6 +1434,30 @@ export function ActualizaTablaUsuarioEnviados(ticketRecord) {
                 ? ticketRecord.descripcion.substring(0, 150) + "..."
                 : ticketRecord.descripcion
             }</span><br>
+              ${(ticketRecord.listaDetalleEspera || [])
+                .map((espera, index) => `
+                  <div>
+                    <div class="text-muted small mt-1">
+                      <i class="bi bi-info-circle"></i>
+                      <span>
+                        ${espera.descripcion || 'Este ticket fue enviado fuera del horario laboral.'}
+                      </span>
+
+                      <ul class="list-unstyled ms-3 mt-1">
+                        ${(espera.listaArchivos || [])
+                          .map(adjunto => `
+                            <li>
+                              <a href="/app/tickets/adjuntoEspera/descargar/${adjunto.id}">${adjunto.nombre}</a>
+                              <span class="text-muted">- <span>${adjunto.pesoContenido}</span></span>
+                            </li>
+                          `)
+                          .join('')}
+                      </ul>
+                    </div>
+                    ${index !== (ticketRecord.listaDetalleEspera || []).length - 1 ? '<hr class="my-1">' : ''}
+                  </div>
+                `)
+                .join('')}
         </td>
 
         <td>

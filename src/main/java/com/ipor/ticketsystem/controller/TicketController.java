@@ -208,6 +208,9 @@ public class TicketController {
 
                 detalleEnEspera.setFechaFin(fechaFin);
                 detalleEnEspera.setHoraFin(horaEntrada);
+                List<DetalleEnEspera> listaDetalles = ticket.getListaDetalleEsperas();
+                listaDetalles.add(detalleEnEspera);
+                ticket.setListaDetalleEsperas(listaDetalles);
                 ticketService.saveTicket(ticket);
                 detalleEnEsperaRepository.save(detalleEnEspera);
                 System.out.println("ℹ DetalleEnEspera guardado automáticamente hasta " + fechaFin + " " + horaEntrada);

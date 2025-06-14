@@ -53,9 +53,6 @@ public class WSNotificacionesService {
         messagingTemplate.convertAndSend("/topic/ocultar/soporte-espera", message);
     }
     public void enviarTicketAVistaSoporteEnEspera(Ticket ticket) {
-        for (DetalleEnEspera detalleEnEspera : ticket.getListaDetalleEsperas()){
-            System.out.println(detalleEnEspera.getClasificacionEspera().getNombre());
-        }
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
         EsperaRecordWS ticketRecordWS = new EsperaRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/soporte-espera", ticketRecordWS);
@@ -107,7 +104,7 @@ public class WSNotificacionesService {
     }
     public void enviarTicketAVistaEnEsperaUsuario(Ticket ticket) {
         DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
-        TicketRecordWS ticketRecordWS = new TicketRecordWS(detalleTicketDTO);
+        EsperaRecordWS ticketRecordWS = new EsperaRecordWS(detalleTicketDTO);
         messagingTemplate.convertAndSend("/topic/actualizar/usuario-espera/"+ticket.getUsuario().getId(), ticketRecordWS);
     }
 

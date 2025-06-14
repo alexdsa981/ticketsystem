@@ -74,7 +74,7 @@
                                 <ul class="list-unstyled ms-3 mt-1">
                                     <li th:each="adjunto : ${espera.listaArchivosAdjuntos}">
                                         <a th:href="@{/app/tickets/adjuntoEspera/descargar/{id}(id=${adjunto.id})}" th:text="${adjunto.nombre}"></a>
-                                        <span class="text-muted">- <span th:text="${adjunto.getPesoEnMegabytes()}">0.0</span> MB</span>
+                                        <span class="text-muted">- <span th:text="${adjunto.getPesoEnMegabytes()}">0.0</span></span>
                                     </li>
                                 </ul>
                             </div>
