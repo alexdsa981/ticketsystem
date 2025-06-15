@@ -124,10 +124,22 @@
         </div>
 
         <div class="col-12 mt-4">
-            <h5 class="card-title mb-3">
-                <i class="bi bi-hourglass-split"></i> Tiempos de Espera Registrados
-            </h5>
-            <div class="row g-3" id="contenedor-detalles-espera"></div>
+            <div class="accordion" id="accordionEspera">
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEspera" aria-expanded="false" aria-controls="collapseEspera">
+                            <i class="bi bi-hourglass-split me-2"></i> Tiempos de Espera Registrados
+                        </button>
+                    </h2>
+                    <div id="collapseEspera" class="accordion-collapse collapse" data-bs-parent="#accordionEspera">
+                        <div class="accordion-body">
+                            <div class="row g-3" id="contenedor-detalles-espera">
+                                <!-- Aquí se inyectará el contenido con JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 

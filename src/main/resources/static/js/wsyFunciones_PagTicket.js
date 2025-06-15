@@ -239,11 +239,16 @@
                     }
 
 
+
+
 const contenedorEspera = document.getElementById("contenedor-detalles-espera");
+const acordeonItem = document.querySelector("#accordionEspera");
+
 contenedorEspera.innerHTML = ""; // Limpiar contenido anterior
 
 if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0) {
-  data.listaDetalleEspera.forEach((espera, index) => {
+  acordeonItem.style.display = "block"; // Mostrar el acordeón
+  data.listaDetalleEspera.forEach((espera) => {
     const col = document.createElement("div");
     col.classList.add("col-md-6");
 
@@ -256,14 +261,16 @@ if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0
     // Título
     const titulo = document.createElement("h6");
     titulo.classList.add("fw-bold", "mb-2");
-    titulo.innerHTML = `<i class="bi bi-info-circle"></i> Motivo ${index + 1}: ${espera.clasificacion?.nombre || "Sin clasificación"}`;
+    titulo.innerHTML = `<i class="bi bi-info-circle"></i> ${espera.clasificacion?.nombre || "Sin clasificación"}`;
     cardBody.appendChild(titulo);
 
     // Descripción
-    const desc = document.createElement("p");
-    desc.classList.add("mb-2");
-    desc.textContent = espera.descripcion || "";
-    cardBody.appendChild(desc);
+    if (espera.descripcion) {
+      const desc = document.createElement("p");
+      desc.classList.add("mb-2");
+      desc.textContent = espera.descripcion;
+      cardBody.appendChild(desc);
+    }
 
     // Desde
     const desde = document.createElement("p");
@@ -274,7 +281,6 @@ if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0
     // Hasta
     const hasta = document.createElement("p");
     hasta.classList.add("mb-1", "text-muted");
-
     const fechaFin = espera.fechaFin || "<span class='text-secondary fst-italic'>Aún no finaliza</span>";
     const horaFin = espera.horaFin || "";
     hasta.innerHTML = `<i class="bi bi-clock-history"></i> <strong>Hasta:</strong> ${fechaFin} ${horaFin}`;
@@ -287,7 +293,7 @@ if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0
       archivosTitulo.textContent = "Adjuntos:";
       cardBody.appendChild(archivosTitulo);
 
-      espera.listaArchivos.forEach(archivo => {
+      espera.listaArchivos.forEach((archivo) => {
         const p = document.createElement("p");
         p.classList.add("mb-0", "text-truncate");
 
@@ -315,9 +321,8 @@ if (Array.isArray(data.listaDetalleEspera) && data.listaDetalleEspera.length > 0
     contenedorEspera.appendChild(col);
   });
 } else {
-  contenedorEspera.innerHTML = '<p class="text-muted mb-0">No se encuentran Tiempos de espera relacionados al Ticket.</p>';
+  acordeonItem.style.display = "none"; // Ocultar si no hay esperas
 }
-
 
 
 
