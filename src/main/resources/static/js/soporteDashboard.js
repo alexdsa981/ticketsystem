@@ -30,16 +30,26 @@ let graficoEstadoActualTickets = null;
 function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
     const ctx = document.getElementById(idCanvas).getContext('2d');
 
+    const linksPorSegmento = [
+        "/soporte/Recepcionar",
+        "/soporte/Atender",
+        "/soporte/Atender-Espera",
+        "/soporte/Tickets-Cerrados",
+        "/soporte/Tickets-Desestimados"
+    ];
+
+    const etiquetasConConteo = etiquetas.map((nombre, i) => `${nombre} [${datos[i]}]`);
+
     if (idCanvas === 'graficoEstadoActualTickets') {
         if (graficoEstadoActualTickets) {
-            graficoEstadoActualTickets.data.labels = etiquetas;
+            graficoEstadoActualTickets.data.labels = etiquetasConConteo;
             graficoEstadoActualTickets.data.datasets[0].data = datos;
             graficoEstadoActualTickets.update();
         } else {
             graficoEstadoActualTickets = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: etiquetas,
+                    labels: etiquetasConConteo,
                     datasets: [{
                         label: label,
                         data: datos,
@@ -49,10 +59,10 @@ function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
                     }]
                 },
                 options: {
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'top'
                         },
                         tooltip: {
                             callbacks: {
@@ -62,12 +72,23 @@ function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
                                 }
                             }
                         }
+                    },
+                    onClick: (evt, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const link = linksPorSegmento[index];
+                            if (link) {
+                                window.location.href = link;
+                            }
+                        }
                     }
                 }
             });
         }
     }
 }
+
+
 
 // Función para actualizar los datos en el dashboard
 function actualizarDatos(fechaInicio = null, fechaFin = null) {
@@ -96,12 +117,6 @@ function actualizarDatos(fechaInicio = null, fechaFin = null) {
 
             const datos = data.datos.slice(0, 5);
 
-            document.getElementById("nRecibidos").textContent = datos[0] || 0;
-            document.getElementById("ntotalRecepcionados").textContent = datos[1] || 0;
-            document.getElementById("ntotalAtendidos").textContent = datos[2] || 0;
-            document.getElementById("ntotalDesestimados").textContent = datos[3] || 0;
-            document.getElementById("ntotalEspera").textContent = datos[4] || 0;
-
 
             crearGrafico(
                 etiquetas,
@@ -127,31 +142,30 @@ function actualizarDatos(fechaInicio = null, fechaFin = null) {
                 }
             );
 
-            // Actualizar el título con las fechas seleccionadas o el día actual
- const tituloDashboard = document.getElementById("tituloDashboard");
-if (fechaInicio && fechaFin) {
-    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+             const tituloDashboard = document.getElementById("tituloDashboard");
+            if (fechaInicio && fechaFin) {
+                const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
 
-    const hoy = new Date();
-    const hoyStr = formatearFechaLocal(hoy);
+                const hoy = new Date();
+                const hoyStr = formatearFechaLocal(hoy);
 
 
-    if (fechaInicio === hoyStr && fechaFin === hoyStr) {
-        const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
-        tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
-    } else {
-        const inicio = new Date(fechaInicio + 'T00:00:00');
-        const fin = new Date(fechaFin + 'T23:59:59');
-        const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
-        const finFormateado = fin.toLocaleDateString('es-ES', opciones);
-        tituloDashboard.textContent = `ESTADO: (${inicioFormateado} - ${finFormateado})`;
-    }
-} else {
-    const fechaHoy = new Date();
-    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-    const fechaHoyFormateada = fechaHoy.toLocaleDateString('es-ES', opciones);
-    tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
-}
+                if (fechaInicio === hoyStr && fechaFin === hoyStr) {
+                    const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
+                    tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
+                } else {
+                    const inicio = new Date(fechaInicio + 'T00:00:00');
+                    const fin = new Date(fechaFin + 'T23:59:59');
+                    const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
+                    const finFormateado = fin.toLocaleDateString('es-ES', opciones);
+                    tituloDashboard.textContent = `ESTADO: (${inicioFormateado} - ${finFormateado})`;
+                }
+            } else {
+                const fechaHoy = new Date();
+                const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+                const fechaHoyFormateada = fechaHoy.toLocaleDateString('es-ES', opciones);
+                tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
+            }
 
 
         })
@@ -170,6 +184,67 @@ function formatearFechaLocal(date) {
          String(date.getDate()).padStart(2, '0');
 }
 
+function cargarTicketsRecientes() {
+    fetch('/app/dashboard/tickets/recientes')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#tablaTicketsRecientes tbody');
+            tbody.innerHTML = '';
+
+            if (data.tickets.length === 0) {
+                const filaVacia = document.createElement('tr');
+                filaVacia.innerHTML = `
+                    <td colspan="5" class="text-center text-muted">
+                        <i class="bi bi-check-circle me-2 text-success"></i>
+                        No hay tickets pendientes. Todos han sido resueltos.
+                    </td>
+                `;
+                tbody.appendChild(filaVacia);
+                return;
+            }
+
+
+            data.tickets.forEach(ticket => {
+                const fila = document.createElement('tr');
+
+                fila.innerHTML = `
+                    <td class="text-nowrap">
+                        <a href="/ticket/${ticket.idFormateado}" class="ticket-link" target="_blank" rel="noopener noreferrer">
+                            ${ticket.idFormateado}
+                        </a>
+                    </td>
+                    <td>${ticket.fechaFormateada} ${ticket.horaFormateada}</td>
+                    <td>${ticket.nombreUsuario}</td>
+                    <td>${ticket.descripcion}</td>
+                    <td><span class="badge ${claseFase(ticket.nombreFaseTicket)}">${ticket.nombreFaseTicket}</span></td>
+                `;
+
+                tbody.appendChild(fila);
+            });
+        })
+        .catch(error => console.error('Error al cargar tickets recientes:', error));
+}
+
+
+function claseFase(fase) {
+    switch (fase) {
+        case 'Enviado': return 'bg-secondary text-white';
+        case 'Recepcionado - En Proceso': return 'bg-warning text-dark';
+        case 'En Espera': return 'bg-primary';
+        case 'Cerrado - Atendido': return 'bg-success';
+        case 'Desestimado': return 'bg-danger';
+        default: return 'bg-light text-dark';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', cargarTicketsRecientes);
+
+
+
+
+
+
+
 let stompClient = null;
 let socket = null;
 let reconnectInterval = 5000; // 5 segundos
@@ -184,12 +259,18 @@ function conectarWebSocketDashboard() {
         if (wasDisconnected) {
             console.log('Reconectado al WebSocket del dashboard. Actualizando datos...');
             actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
+            cargarTicketsRecientes();
+
+
             wasDisconnected = false;
         }
 
-        stompClient.subscribe('/topic/dashboard', function (mensaje) {
+        stompClient.subscribe('/topic/estadoActual', function (mensaje) {
             if (mensaje.body === 'actualizar') {
                 actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
+                cargarTicketsRecientes();
+
+
             }
         });
     }, (error) => {

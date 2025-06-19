@@ -9,6 +9,7 @@
     <script src="/imports/chart.min.js"></script>
     <div class="container-fluid  content-wrapper">
         <div class="d-flex justify-content-between align-items-center">
+
             <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
                 <h2>SOPORTE<span class="title-text-mobile"></span>:</h2>
                 <div class="badge bg-dark text-white ms-2 d-flex justify-content-center align-items-center ticketCountAtencion"
@@ -17,28 +18,17 @@
                 </div>
 
 
-                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm position-relative">
-                    Recepcionar
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    <span id="countRecepcionar">3</span>
-                </span>
+                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm">
+                    Recepcionar <small class="">[<span id="countRecepcionar">0</span>]</small>
                 </a>
 
-                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm position-relative">
-                    Atender
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
-                    <span id="countAtender">2</span>
-                </span>
+                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm">
+                    Atender <small class="">[<span id="countAtender">0</span>]</small>
                 </a>
 
-                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm position-relative">
-                    Atender Espera
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                    <span id="countEspera">1</span>
-                </span>
+                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm">
+                    Atender Espera <small class="">[<span id="countEspera">0</span>]</small>
                 </a>
-
-
 
 
                 <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm ">
@@ -51,6 +41,7 @@
                     Dashboard
                 </a>
             </div>
+
         </div>
 
         <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
@@ -99,86 +90,45 @@
         </div>
 
 
-        <div class="container border shadow p-3 px-4 mb-5 bg-body rounded mt-3">
-
+        <div class="container border shadow p-3 px-4 mb-3 bg-body rounded mt-3">
             <h2 id="tituloDashboard" class="mb-4 text-center">SOPORTE<span class="title-text-mobile"></span>:</h2>
 
-            <!-- 🟡 Estado Actual -->
-            <h6 class="text-secondary mb-2">Estado Actual</h6>
-            <div class="row row-cols-2 row-cols-md-3 g-2 mb-3">
-
-                <div class="col">
-                    <a href="/soporte/Recepcionar" class="btn-dashboard text-decoration-none">
-                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #f8d7da;">
-                            <i class="bi bi-ticket fs-5 mb-1 d-block"></i>
-                            <small>Solicitados</small><br>
-                            <strong id="nRecibidos">0</strong>
-                        </div>
-                    </a>
+            <div class="row g-4 align-items-center">
+                <!-- 🔹 Distribución de tickets -->
+                <div class="col-md-4">
+                    <h6 class="text-secondary mb-2">Distribución de tickets por fase</h6>
+                    <div style="width: 100%; aspect-ratio: 1;">
+                        <canvas id="graficoEstadoActualTickets" style="width: 100%; height: auto;"></canvas>
+                    </div>
                 </div>
 
-                <div class="col">
-                    <a href="/soporte/Atender" class="btn-dashboard text-decoration-none">
-                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #fff3cd;">
-                            <i class="bi bi-check-circle fs-5 mb-1 d-block"></i>
-                            <small>Recepcionados</small><br>
-                            <strong id="ntotalRecepcionados">0</strong>
-                        </div>
-                    </a>
-                </div>
+                <!-- 🔹 Tickets recientes (centrado verticalmente) -->
+                <div class="col-md-8 d-flex flex-column justify-content-center">
+                    <h6 class="text-secondary mb-2">Top 5 tickets recientes</h6>
+                    <div class="table-responsive small">
+                        <table id="tablaTicketsRecientes" class="table table-sm table-bordered table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Descripción</th>
+                                <th>Fase</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
 
-                <div class="col">
-                    <a href="/soporte/Atender-Espera" class="btn-dashboard text-decoration-none">
-                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #b8daff;">
-                            <i class="bi bi-clock fs-5 mb-1 d-block"></i>
-                            <small>En Espera</small><br>
-                            <strong id="ntotalEspera">0</strong>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
-
-            <hr>
-
-            <!-- 🟢 KPIs de Productividad -->
-            <h6 class="text-secondary mb-2">Productividad (según fechas)</h6>
-            <div class="row row-cols-2 row-cols-md-2 g-2 mb-3">
-
-                <div class="col">
-                    <a href="/soporte/Tickets-Cerrados" class="btn-dashboard text-decoration-none">
-                        <div class="rounded card py-2 px-2 text-center" style="background-color: #d4edda; color: #6c757d;">
-                            <i class="bi bi-check2-circle fs-5 mb-1 d-block"></i>
-                            <small>Atendidos</small><br>
-                            <strong id="ntotalAtendidos">0</strong>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col">
-                    <a href="/soporte/Tickets-Desestimados" class="btn-dashboard text-decoration-none">
-                        <div class="rounded card py-2 px-2 text-center" style="background-color: #C8C8C8; color: #6c757d;">
-                            <i class="bi bi-x-circle fs-5 mb-1 d-block"></i>
-                            <small>Desestimados</small><br>
-                            <strong id="ntotalDesestimados">0</strong>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- 🔵 Gráfico -->
-            <h6 class="text-secondary mb-2">Distribución</h6>
-            <div class="d-flex justify-content-center align-items-center">
-                <canvas id="graficoEstadoActualTickets" width="300" height="300" class="mx-auto d-block" style="max-width: 80%;"></canvas>
-            </div>
-
         </div>
 
 
-        <script src="/js/soporteDashboard.js"></script>
-    </div>
 
+
+    </div>
+    <script src="/js/soporteDashboard.js"></script>
 </main>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
 <div th:insert="~{common/footer :: footer}">

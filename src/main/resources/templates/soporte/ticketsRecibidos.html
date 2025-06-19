@@ -12,30 +12,38 @@
 <div class="container-fluid  content-wrapper">
     <!-- Encabezado con título y botones -->
     <div class="d-flex justify-content-between align-items-center">
+
+
         <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
-            <h2 class="me-2">SOPORTE<span class="title-text-mobile"> RECEPCIONAR</span>:</h2>
-            <div id="ticketCount"
-                 class="badge bg-danger border d-flex justify-content-center align-items-center ticketCountAtencion"
+            <h2>SOPORTE<span class="title-text-mobile"></span>:</h2>
+            <div class="badge bg-dark text-white ms-2 d-flex justify-content-center align-items-center ticketCountAtencion"
                  style="width: 30px; height: 30px;">
-                0
+                <i class="bi bi-speedometer2" style="font-size: 16px;"></i>
             </div>
 
-            <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm  btn-active">
-                Recepcionar
+
+            <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm btn-active">
+                Recepcionar <small class="">[<span id="countRecepcionar">0</span>]</small>
             </a>
-            <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm ">
-                Atender
+
+            <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm">
+                Atender <small class="">[<span id="countAtender">0</span>]</small>
             </a>
+
             <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm">
-                Atender Espera
+                Atender Espera <small class="">[<span id="countEspera">0</span>]</small>
             </a>
+
+
+
+
             <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm ">
                 Historial Atendidos
             </a>
             <a href="/soporte/Tickets-Desestimados" class="btn btn-outline-dark btn-sm ">
                 Historial Desestimados
             </a>
-            <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-dashboard-atencion">
+            <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-active btn-dashboard-atencion">
                 Dashboard
             </a>
         </div>

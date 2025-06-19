@@ -343,6 +343,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
 
+    //top 5 tickets que no estan atendidos ni desestimados ordenados por más recientes:
+    List<Ticket> findTop5ByFaseTicket_IdNotInOrderByFechaDescHoraDesc(List<Long> ids);
+
+
     @Query("SELECT COUNT(t) FROM Ticket t WHERE t.fecha BETWEEN :inicio AND :fin")
     long countTicketsByFechaBetween(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
 }

@@ -1,6 +1,9 @@
 package com.ipor.ticketsystem.controller;
 
+import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
+import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
+import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -135,6 +135,26 @@ public class DashboardController {
         response.put("datos", datos);
         return response;
     }
+
+    @GetMapping("/tickets/recientes")
+    public ResponseEntity<Map<String, Object>> getTicketsRecientes() {
+        List<Ticket> tickets = dashboardService.Obtener5TicketsMasRecientes();
+        List<TicketRecordWS> listaWS = new ArrayList<>();
+        for (Ticket ticket : tickets){
+            DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
+            TicketRecordWS ticketRecordWS = new TicketRecordWS(detalleTicketDTO);
+            listaWS.add(ticketRecordWS);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("tickets", listaWS);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
+
+
 
 
 

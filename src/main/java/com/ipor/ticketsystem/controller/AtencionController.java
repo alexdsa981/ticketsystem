@@ -148,7 +148,7 @@ public class AtencionController {
             WSNotificacionesService.enviarRecepcionAVistaSoporteAtencion(ticket);
             WSNotificacionesService.enviarRecepcionAVistaUsuarioRecepcionados(ticket);
             WSNotificacionesService.ocultarRegistroEnVistaEnviadosUsuario(id);
-            WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionEstadoActual();
             WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
             // Redirigir a la URL actual
@@ -262,7 +262,7 @@ public class AtencionController {
 
             WSNotificacionesService.enviarAtencionAVistaSoporteHistorialAtencion(ticket);
             WSNotificacionesService.enviarAtencionAVistaUsuarioAtendidos(ticket);
-            WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionEstadoActual();
             WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
             // Redirigir a la URL actual
@@ -369,7 +369,7 @@ public class AtencionController {
             WSNotificacionesService.ocultarRegistroEnVistaSoporteAtencion(id);
             WSNotificacionesService.ocultarRegistroEnVistaUsuarioRecepcionados(id);
 
-            WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionEstadoActual();
             WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
 
@@ -497,7 +497,7 @@ public class AtencionController {
             if (atencionService.findRecepcionByTicketID(id) != null) {
                 atencionService.deleteRecepcion(atencionService.findRecepcionByTicketID(id));
             }
-            WSNotificacionesService.notificarActualizacionDashboard();
+            WSNotificacionesService.notificarActualizacionEstadoActual();
             WSNotificacionesService.notificarActualizacionPaginaTicket(ticket);
 
 

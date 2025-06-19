@@ -13,6 +13,44 @@ import {
     EliminarTicketDeTabla
 } from './wsActualizaTabla.js';
 
+
+function actualizarBotonesSoporte(fechaInicio = null, fechaFin = null) {
+    const url = new URL('/app/dashboard/grafico/EstadoActual', window.location.origin);
+    if (fechaInicio && fechaFin) {
+        url.searchParams.append('fechaInicio', fechaInicio);
+        url.searchParams.append('fechaFin', fechaFin);
+    }
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Error al obtener datos del dashboard');
+            return response.json();
+        })
+        .then(data => {
+            const etiquetas = data.etiquetas;
+            const valores = data.datos;
+
+            etiquetas.forEach((nombre, i) => {
+                const cantidad = valores[i];
+                switch (nombre) {
+                    case 'Enviado':
+                        document.getElementById('countRecepcionar').textContent = cantidad;
+                        break;
+                    case 'Recepcionado - En Proceso':
+                        document.getElementById('countAtender').textContent = cantidad;
+                        break;
+                    case 'En Espera':
+                        document.getElementById('countEspera').textContent = cantidad;
+                        break;
+                }
+            });
+        })
+        .catch(error => console.error('Error al actualizar los botones de soporte:', error));
+}
+
+
+
+
 let stompClient = null;
 let connected = false;
 let reconnectInterval = 5000; // 5 segundos
@@ -35,6 +73,21 @@ function conectarWebSocket() {
         console.log('Conectado: ' + frame);
         const pathname = window.location.pathname;
         const liGenerales = document.querySelectorAll('.li-general');
+
+
+        // Si estás en cualquier página bajo /soporte, actualiza los botones una vez
+        if (pathname.startsWith('/soporte')) {
+            actualizarBotonesSoporte(); // Inicial
+            stompClient.subscribe('/topic/estadoActual', (mensaje) => {
+                if (mensaje.body === 'actualizar') {
+                    actualizarBotonesSoporte();
+                }
+            });
+        }
+
+
+
+
 
         if (pathname === '/soporte/Recepcionar') {
             stompClient.subscribe('/topic/actualizar/soporte-recepcion', (message) => {

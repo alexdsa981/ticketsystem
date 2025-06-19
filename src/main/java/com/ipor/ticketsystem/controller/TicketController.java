@@ -4,7 +4,6 @@ import com.ipor.ticketsystem.WebSocket.WSNotificacionesService;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.*;
 import com.ipor.ticketsystem.model.dynamic.*;
-import com.ipor.ticketsystem.model.fixed.ClasificacionEspera;
 import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import com.ipor.ticketsystem.repository.dynamic.DetalleEnEsperaRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -285,7 +284,7 @@ public class TicketController {
         DetalleTicketDTO ticketDTO = new DetalleTicketDTO(ticket);
         WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(ticketDTO);
         WSNotificacionesService.enviarTicketAVistaEnviadosUsuario(ticketDTO);
-        WSNotificacionesService.notificarActualizacionDashboard();
+        WSNotificacionesService.notificarActualizacionEstadoActual();
         response.sendRedirect("/ticket/" + ticket.getCodigoTicket());
         return ResponseEntity.ok("Ticket creado correctamente");
     }

@@ -2,6 +2,7 @@ package com.ipor.ticketsystem.service;
 
 
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
+import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
@@ -117,6 +118,12 @@ public class DashboardService {
         }
         return ticketRepository.findTicketCountByFase();
     }
+
+
+    public List<Ticket> Obtener5TicketsMasRecientes() {
+        return ticketRepository.findTop5ByFaseTicket_IdNotInOrderByFechaDescHoraDesc(List.of(3L, 4L));
+    }
+
 
 
 
