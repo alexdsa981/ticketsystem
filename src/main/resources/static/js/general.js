@@ -4,6 +4,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const contador = container.querySelector(".notificaciones-contador");
         const dropdown = container.querySelector(".notificaciones-dropdown");
 
+
+
+        let primeraCarga = true;
+
+        btn.addEventListener('click', async () => {
+            const spinner = btn.querySelector('.spinner-notificaciones');
+
+            if (primeraCarga) {
+                spinner.classList.remove('d-none'); // Mostrar spinner solo en el botón actual
+            }
+
+            await marcarNotificacionesComoLeidas();
+            await cargarNotificaciones();
+
+            if (primeraCarga) {
+                spinner.classList.add('d-none'); // Ocultar spinner después de la primera vez
+                primeraCarga = false;
+            }
+        });
+
+
+
+
         async function actualizarContador() {
             try {
                 const response = await fetch('/app/notificaciones');
@@ -50,11 +73,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     dropdown.querySelectorAll('.notificacion-item').forEach(item => {
                         item.addEventListener('click', async (e) => {
-                            const id = e.currentTarget.dataset.id;
-                            await marcarNotificacionComoAbierto(id);
-                            e.currentTarget.querySelector('.dropdown-item').classList.add('notificacion-abierta');
+                            e.preventDefault(); // ✳️ Detiene la redirección automática
+
+                            const anchor = e.currentTarget;
+                            const id = anchor.dataset.id;
+                            const url = anchor.getAttribute('href');
+
+                            try {
+                                await marcarNotificacionComoAbierto(id); // Esperar a que el backend procese
+                            } catch (error) {
+                                console.error('Error al marcar como abierto:', error);
+                            }
+
+                            // Redirige manualmente luego del fetch
+                            window.location.href = url;
                         });
                     });
+
                 }
             } catch (error) {
                 console.error('Error al cargar notificaciones:', error);

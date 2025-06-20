@@ -88,7 +88,9 @@
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-bell"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none notificaciones-contador">0</span>
+                            <span class="spinner-border spinner-border-sm text-primary ms-2 d-none spinner-notificaciones" role="status" aria-hidden="true"></span>
                         </button>
+
                         <ul class="dropdown-menu dropdown-menu-end notificaciones-dd notificaciones-dropdown"
                             style="max-height: 300px; overflow-y: auto;">
                             <li><span class="dropdown-item-text text-muted">Sin notificaciones nuevas</span></li>
@@ -203,11 +205,18 @@
                         </li>
 
                     </ul>
+
+
+
                     <ul class="navbar-nav ul-notificaciones">
                         <li class="li-general position-relative">
                             <button class="btn btn-light position-relative notificaciones-btn w-100 text-start"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-bell"></i> Notificaciones
+                                <i class="bi bi-bell me-1"></i>
+                                <span class="position-relative d-inline-block">
+                                    Notificaciones
+                                    <span class="spinner-border spinner-border-sm text-primary ms-2 d-none spinner-notificaciones align-middle" role="status" aria-hidden="true"></span>
+                                </span>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none notificaciones-contador">0</span>
                             </button>
                             <ul class="dropdown-menu notificaciones-dropdown mt-1"
@@ -216,6 +225,7 @@
                             </ul>
                         </li>
                     </ul>
+
 
 
                     <ul class="navbar-nav ms-autos ul-cerrarsesion ul-cerrarsesion-mobile">
