@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
+import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -242,15 +244,22 @@ public class WebController {
 
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
-            if (Objects.equals(ticket.getUsuario().getId(), usuarioService.getIDdeUsuarioLogeado())){
-                HorarioAtencionSoporte horarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
-                if (
-                        ticket.getListaDetalleEsperas().get(0).getClasificacionEspera().getId() == 1 &&
-                                horarioAtencionSoporte.getHoraEntrada().equals(ticket.getListaDetalleEsperas().get(0).getHoraFin())
-                ) {
-                    fueraDeHorario = true;
+            if (Objects.equals(ticket.getUsuario().getId(), usuarioService.getIDdeUsuarioLogeado())) {
+                List<DetalleEnEspera> listaDetalleEsperas = ticket.getListaDetalleEsperas();
+
+                if (!listaDetalleEsperas.isEmpty()) {
+                    DetalleEnEspera primerDetalleEspera = listaDetalleEsperas.get(0);
+                    HorarioAtencionSoporte horarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
+
+                    if (
+                            primerDetalleEspera.getClasificacionEspera().getId() == 1 &&
+                                    horarioAtencionSoporte.getHoraEntrada().equals(primerDetalleEspera.getHoraFin())
+                    ) {
+                        fueraDeHorario = true;
+                    }
                 }
             }
+
             model.addAttribute("fueraDeHorario", fueraDeHorario);
 
             DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
@@ -258,7 +267,20 @@ public class WebController {
             model.addAttribute("Titulo", "HelpDesk | " + detalleTicketDTO.getTicket().getCodigoTicket());
         }
 
+
         return "general/ticket";
+    }
+
+
+    @GetMapping("/supervisor/dashboard-soporte")
+    public String redirigePaginaDashboardSoporteSupervisor(Model model) {
+        model.addAttribute("Titulo", "HelpDesk | Soporte - Dashboard");
+        return "soporte/dashboard";
+    }
+    @GetMapping("/supervisor/dashboard-admin")
+    public String redirigePaginaDashboardAdminSupervisor(Model model) {
+        model.addAttribute("Titulo", "HelpDesk | Admin - Dashboard");
+        return "admin/dashboard";
     }
 
 

@@ -156,6 +156,7 @@ public class UsuarioService {
                 } else {
                     username = URLEncoder.encode(username, StandardCharsets.UTF_8);
                     response.sendRedirect("/login?error=unknown&username=" + username);
+                    System.out.println("Error 1");
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             } else {
@@ -221,6 +222,8 @@ public class UsuarioService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             //response.sendRedirect("/login?error=unknown&username=" + username);
+            System.out.println("Error 2");
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

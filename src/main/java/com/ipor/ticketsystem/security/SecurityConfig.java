@@ -81,6 +81,13 @@ public class SecurityConfig {
                         //paginas front que requieren autorización, el resto de paginas pueden ser accedidas por todos, por ejemplo usuario
                         //puede ingresar a todas las pagians menos las que tengan /soporte/ o /admin/
                         .requestMatchers("/soporte/**").hasAnyAuthority("Admin", "Soporte")
+
+
+                        //dashboard de soporte visible para supervisor
+                        //dahboard de admin visible para supervisor
+                        .requestMatchers("/supervisor/**").hasAnyAuthority("Supervisor")
+
+
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
                         // Permitir a los usuarios crear tickets y ver los suyos
