@@ -9,8 +9,8 @@
 </header>
 
 <meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
-<script>
-    const idUsuarioLogeado = parseInt(document.querySelector('meta[name="id-usuario-logeado"]').content);
+<script th:inline="javascript">
+    const idUsuarioLogeado = [[${idUsuarioLogeado}]];
 </script>
 
 <div class="container-fluid  content-wrapper">

@@ -218,17 +218,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Long contarTicketsAtendidosEnRango(@Param("fechaInicio") LocalDate fechaInicio,
                                        @Param("fechaFin") LocalDate fechaFin);
 
-
     @Query(value = "SELECT COUNT(*) " +
             "FROM atencion a " +
             "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "WHERE a.id_usuario = :idUsuario " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            "INNER JOIN recepcion r ON r.id_ticket = a.id_ticket " +
+            "WHERE r.id_usuario = a.id_usuario " +
+            "AND a.id_usuario = :idUsuario " +
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Long contarTicketsAtendidosPorUsuarioEnRango(@Param("idUsuario") Long idUsuario,
                                                  @Param("fechaInicio") LocalDate fechaInicio,
                                                  @Param("fechaFin") LocalDate fechaFin);
-
 
 
 
@@ -249,10 +249,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN atencion a ON a.id_ticket = t.id " +  // Solo tickets que fueron atendidos
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND r.id_usuario = a.id_usuario " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosTicketRecepcionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
-                                                       @Param("fechaFin") LocalDate fechaFin);
+                                                  @Param("fechaFin") LocalDate fechaFin);
+
 
 
     @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
@@ -273,10 +275,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "INNER JOIN recepcion r ON t.id = r.id_ticket " +
             "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND r.id_usuario = a.id_usuario " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosRecepcionAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
                                                     @Param("fechaFin") LocalDate fechaFin);
+
 
 
     @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
@@ -293,8 +297,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
             "FROM atencion a " +
             "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "INNER JOIN recepcion r ON r.id_ticket = t.id " +
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
+            "AND a.id_usuario = r.id_usuario " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosTicketAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,

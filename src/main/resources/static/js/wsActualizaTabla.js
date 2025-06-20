@@ -186,6 +186,10 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
   const newRow = document.createElement("tr");
 
   const isUsuarioAutorizadoAtencionRecepcion = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
+  console.log("Logeado");
+  console.log(idUsuarioLogeado);
+    console.log("Receptor");
+  console.log(ticketRecord.idUsuarioReceptorTicket);
 
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
@@ -249,44 +253,46 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
 
         </td>
             <td class="td-accion">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                    data-bs-target="#atencionModal"
-                    data-ticket-id="${ticketRecord.idTicket}"
-                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
-                    <i class="bi bi-check2-square"></i>
-                </button>
+                <div class="d-flex gap-1 flex-nowrap">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#atencionModal"
+                        data-ticket-id="${ticketRecord.idTicket}"
+                        data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                        data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                        data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                        data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                        data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                        data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        <i class="bi bi-check2-square"></i>
+                    </button>
 
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#esperaModal"
-                    data-ticket-id="${ticketRecord.idTicket}"
-                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
-                    <i class="bi bi-hourglass-top"></i>
-                </button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#esperaModal"
+                        data-ticket-id="${ticketRecord.idTicket}"
+                        data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                        data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                        data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                        data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                        data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                        data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        <i class="bi bi-hourglass-top"></i>
+                    </button>
 
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#desestimacionModal"
-                    data-ticket-id="${ticketRecord.idTicket}"
-                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
-                    <i class="bi bi-trash"></i>
-                </button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#desestimacionModal"
+                        data-ticket-id="${ticketRecord.idTicket}"
+                        data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                        data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                        data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                        data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                        data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                        data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </td>
     `;
   // Insertar la nueva fila al inicio de la tabla
@@ -336,6 +342,10 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
   const newRow = document.createElement("tr");
 
 const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
+  console.log("Logeado");
+  console.log(idUsuarioLogeado);
+    console.log("Receptor");
+  console.log(ticketRecord.idUsuarioReceptorTicket);
 
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
@@ -424,31 +434,33 @@ const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket =
 
 
     <td class="td-accion">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal"
-            data-bs-target="#atencionModal"
-            data-ticket-id="${ticketRecord.idTicket}"
-            data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-            data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-            data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-            data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-            data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-            data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-            ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
-            <i class="bi bi-check2-square"></i>
-        </button>
+        <div class="d-flex gap-1 flex-nowrap">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#atencionModal"
+                data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                <i class="bi bi-check2-square"></i>
+            </button>
 
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-            data-bs-target="#desestimacionModal"
-            data-ticket-id="${ticketRecord.idTicket}"
-            data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-            data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-            data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-            data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-            data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-            data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-            ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
-            <i class="bi bi-trash"></i>
-        </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                data-bs-target="#desestimacionModal"
+                data-ticket-id="${ticketRecord.idTicket}"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
     </td>
     `;
   // Insertar la nueva fila al inicio de la tabla
@@ -960,7 +972,6 @@ export function ActualizaTablaUsuarioEnEspera(ticketRecord) {
             .map(
             (espera, index) => `
             <div>
-                <strong>${espera.clasificacion.nombre}: </strong><br>
                 <span>${espera.fecha} | ${espera.hora}: </span>
                 <span>${
                 espera.descripcion && espera.descripcion.length > 150

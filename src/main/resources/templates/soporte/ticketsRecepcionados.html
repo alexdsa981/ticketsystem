@@ -8,8 +8,8 @@
 <header th:replace="~{common/header :: header}">
 </header>
 <meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
-<script>
-    const idUsuarioLogeado = parseInt(document.querySelector('meta[name="id-usuario-logeado"]').content);
+<script th:inline="javascript">
+    const idUsuarioLogeado = [[${idUsuarioLogeado}]];
 </script>
 <div class="container-fluid  content-wrapper">
     <div class="d-flex justify-content-between align-items-center">
