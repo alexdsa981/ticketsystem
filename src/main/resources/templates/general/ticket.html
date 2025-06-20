@@ -9,17 +9,28 @@
 <body>
 <header th:replace="~{common/header :: header}"></header>
 
+<meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
+<script th:inline="javascript">
+    const idUsuarioLogeado = [[${idUsuarioLogeado}]];
+</script>
 
 <div class="container content-wrapper">
     <!-- Encabezado del ticket -->
     <div class="d-flex justify-content-between align-items-center">
-        <h2 class="text-primary">
+        <h2 class="text-primary" id="titulo-ticket">
             <i class="bi bi-envelope text-info"></i>
-            Ticket Código: <span id="ticketInfo" th:data-codigo="${detalle.ticket.codigoTicket}"
-                                 th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
-
+            Ticket Código:
+            <span id="ticketInfo" th:data-codigo="${detalle.ticket.codigoTicket}" th:text="${detalle.ticket.codigoTicket}">TK-0000</span>
+            <span id="alertaFueraHorario"
+                  class="icono-aviso"
+                  title="Haz clic para ver detalles del aviso"
+                  hidden>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </span>
         </h2>
-        <div id="ticket-data" th:data-fase="${detalle.ticket.faseTicket.nombre}"></div>
+
+
+
     </div>
 
     <!-- Fila de cards -->
@@ -635,6 +646,54 @@
     <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>
     <div th:insert="~{common/footer :: footer}">
     </div>
+
+    <!--datos ocultos desde thymeleaf para usar js-->
+    <div id="ticket-data" th:data-fase="${detalle.ticket.faseTicket.nombre}"></div>
+    <div id="ticket-meta" th:data-fuera-horario="${fueraDeHorario}"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const fueraDeHorario = document.getElementById("ticket-meta")?.dataset.fueraHorario === "true";
+          const alertaIcono = document.getElementById("alertaFueraHorario");
+
+          const mostrarAviso = () => {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Ticket creado fuera del horario de atención',
+                  html: `
+                    <p class="mb-3">Este ticket fue registrado <strong>fuera del horario de atención</strong>.</p>
+                    <p class="mb-2">Si necesitas ayuda urgente, puedes contactar directamente a nuestro personal de soporte:</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-4 text-center" style="font-size: 0.95rem;">
+                      <div>
+                        <i class="bi bi-hdd-network text-primary fs-5"></i><br>
+                        <strong>Soporte Técnico</strong><br>
+                        <small>(Hardware, Red o Internet)</small><br>
+                        <span>📞 999-888-777</span>
+                      </div>
+                      <div>
+                        <i class="bi bi-gear-wide-connected text-success fs-5"></i><br>
+                        <strong>Soporte de Sistemas</strong><br>
+                        <small>(SpringERP)</small><br>
+                        <span>📞 988-777-666</span>
+                      </div>
+                    </div>
+                  `,
+                  confirmButtonText: 'Entendido'
+            });
+          };
+
+          if (fueraDeHorario) {
+            // Mostrar SweetAlert automáticamente al cargar
+            mostrarAviso();
+
+            // Mostrar ícono visible y animado
+            if (alertaIcono) {
+              alertaIcono.hidden = false;
+              alertaIcono.addEventListener("click", mostrarAviso);
+            }
+          }
+        });
+    </script>
 </div>
 
 </body>

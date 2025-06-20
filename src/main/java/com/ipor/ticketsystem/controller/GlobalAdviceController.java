@@ -33,8 +33,8 @@ public class GlobalAdviceController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getPrincipal().equals("anonymousUser")) {
-            Usuario usuario = new Usuario();
-                usuario = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
+            Usuario usuario = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
+            model.addAttribute("idUsuarioLogeado", usuario.getId());
             model.addAttribute("nombreUsuario", usuario.getNombre());
             // Obtener la hora actual del servidor
             LocalDateTime now = LocalDateTime.now(); // Hora actual

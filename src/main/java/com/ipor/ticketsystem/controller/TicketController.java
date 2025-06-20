@@ -185,14 +185,12 @@ public class TicketController {
             LocalTime horaSalida = ultimoHorarioAtencionSoporte.getHoraSalida();
 
             if (horaCreacionTicket.isBefore(horaEntrada) || horaCreacionTicket.isAfter(horaSalida)) {
-                System.out.println("⚠ El ticket fue creado FUERA del horario de atención: " + horaCreacionTicket);
-
                 DetalleEnEspera detalleEnEspera = new DetalleEnEspera();
                 detalleEnEspera.setHoraInicio(horaCreacionTicket);
                 detalleEnEspera.setFechaInicio(LocalDate.now());
                 detalleEnEspera.setClasificacionEspera(clasificacionEsperaRepository.findById(1L).orElseThrow());
                 detalleEnEspera.setTicket(ticket);
-                detalleEnEspera.setDescripcion("El ticket fue enviado fuera del horario habitual.");
+                detalleEnEspera.setDescripcion("El ticket fue enviado fuera del horario de atención.");
                 detalleEnEspera.setUsuario(ticket.getUsuario());
 
                 // Lógica para determinar la fechaFin
@@ -212,7 +210,6 @@ public class TicketController {
                 ticket.setListaDetalleEsperas(listaDetalles);
                 ticketService.saveTicket(ticket);
                 detalleEnEsperaRepository.save(detalleEnEspera);
-                System.out.println("ℹ DetalleEnEspera guardado automáticamente hasta " + fechaFin + " " + horaEntrada);
             }
         }
 

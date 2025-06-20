@@ -43,7 +43,6 @@ public class UsuarioService {
     private AuthenticationManager authenticationManager;
 
     public Long getIDdeUsuarioLogeado() {
-
         String token = jwtAuthenticationFilter.tokenActual;
         String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
         Usuario usuario = usuarioRepository.findByUsername(username).get();

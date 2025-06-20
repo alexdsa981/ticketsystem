@@ -8,6 +8,7 @@ import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
 import com.ipor.ticketsystem.repository.fixed.HorarioAtencionSoporteRepository;
 import com.ipor.ticketsystem.service.TicketService;
+import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -43,6 +45,8 @@ public class WebController {
     private TicketRepository ticketRepository;
     @Autowired
     private TicketService ticketService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     //redirige / a /login
     @GetMapping("/")
@@ -233,15 +237,29 @@ public class WebController {
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaSedesActivos(model);
         clasificadoresController.getListaCatIncidenciaActivos(model);
+        boolean fueraDeHorario = false;
 
 
-        if (ticketOptional.isPresent()){
-            DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticketOptional.get());
+        if (ticketOptional.isPresent()) {
+            Ticket ticket = ticketOptional.get();
+            if (Objects.equals(ticket.getUsuario().getId(), usuarioService.getIDdeUsuarioLogeado())){
+                HorarioAtencionSoporte horarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
+                if (
+                        ticket.getListaDetalleEsperas().get(0).getClasificacionEspera().getId() == 1 &&
+                                horarioAtencionSoporte.getHoraEntrada().equals(ticket.getListaDetalleEsperas().get(0).getHoraFin())
+                ) {
+                    fueraDeHorario = true;
+                }
+            }
+            model.addAttribute("fueraDeHorario", fueraDeHorario);
+
+            DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
             model.addAttribute("detalle", detalleTicketDTO);
             model.addAttribute("Titulo", "HelpDesk | " + detalleTicketDTO.getTicket().getCodigoTicket());
+        }
 
-        }
-            return "general/ticket";
-        }
+        return "general/ticket";
+    }
+
 
 }

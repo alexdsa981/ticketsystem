@@ -246,14 +246,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME))) " +
             "FROM recepcion r " +
             "INNER JOIN ticket t ON t.id = r.id_ticket " +
+            "INNER JOIN atencion a ON a.id_ticket = t.id " +  // Solo tickets que fueron atendidos
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosTicketRecepcionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
-                                                  @Param("fechaFin") LocalDate fechaFin);
-
-
+                                                       @Param("fechaFin") LocalDate fechaFin);
 
 
     @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +

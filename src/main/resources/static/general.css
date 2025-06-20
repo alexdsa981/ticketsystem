@@ -42,7 +42,29 @@ footer {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15) !important;
 }
 
+/*PAG TICKET*/
 
+  .icono-aviso {
+    display: inline-block;
+    font-size: 1.3rem;
+    color: #ffc107;
+    cursor: pointer;
+    animation: rebote 1s infinite;
+    transition: transform 0.2s ease;
+  }
+
+  .icono-aviso:hover {
+    transform: scale(1.2);
+  }
+
+  @keyframes rebote {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+}
 
 /*HEADER*/
 .btn-soft-light {

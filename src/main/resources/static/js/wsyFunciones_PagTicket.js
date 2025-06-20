@@ -42,6 +42,7 @@
                     if (btnDesestimar) btnDesestimar.style.display = 'none';
 
 
+
                     const btnSoporte = document.getElementById('btn-ir-seccion-soporte');
                     const btnUsuario = document.getElementById('btn-ir-seccion-usuario');
                     const rutasSoporte = {
@@ -135,6 +136,30 @@
                             document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
 
 
+
+
+                            const isUsuarioAutorizado = data.idUsuarioReceptorTicket === idUsuarioLogeado;
+                            console.log('idreceptor: ', data.idUsuarioReceptorTicket,' idlogeado: ', idUsuarioLogeado)
+
+                            document.getElementById("btn-espera").disabled = !isUsuarioAutorizado;
+                            document.getElementById("btn-atender").disabled = !isUsuarioAutorizado;
+                            document.getElementById("btn-desestimar").disabled = !isUsuarioAutorizado;
+
+                            // Opcional: mostrar tooltip
+                            const botones = ["btn-espera", "btn-atender", "btn-desestimar"];
+                            botones.forEach(id => {
+                              const btn = document.getElementById(id);
+                              if (!isUsuarioAutorizado) {
+                                btn.setAttribute("title", "Solo el usuario que recepcionó el ticket puede realizar esta acción");
+                              } else {
+                                btn.removeAttribute("title");
+                              }
+                            });
+
+
+
+
+
                             if (btnAtender) btnAtender.style.display = 'inline-block';
                             if (btnEspera) btnEspera.style.display = 'inline-block';
                             if (btnDesestimar) btnDesestimar.style.display = 'inline-block';
@@ -153,6 +178,28 @@
                              document.getElementById("usuario-recepcion").textContent = data.nombreUsuarioRecepcion || "";
                              document.getElementById("fecha-recepcion").textContent = data.fechaFormateadaRecepcion || "";
                              document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
+
+
+
+
+
+                            const isUsuarioAutorizado = data.idUsuarioReceptorTicket === idUsuarioLogeado;
+
+                            document.getElementById("btn-espera").disabled = !isUsuarioAutorizado;
+                            document.getElementById("btn-atender").disabled = !isUsuarioAutorizado;
+                            document.getElementById("btn-desestimar").disabled = !isUsuarioAutorizado;
+
+                            // Opcional: mostrar tooltip
+                            const botones = ["btn-espera", "btn-atender", "btn-desestimar"];
+                            botones.forEach(id => {
+                              const btn = document.getElementById(id);
+                              if (!isUsuarioAutorizado) {
+                                btn.setAttribute("title", "Solo el usuario que recepcionó el ticket puede realizar esta acción");
+                              } else {
+                                btn.removeAttribute("title");
+                              }
+                            });
+
 
 
                              if (btnAtender) btnAtender.style.display = 'inline-block';

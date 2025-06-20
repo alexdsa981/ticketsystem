@@ -128,7 +128,6 @@ public class AtencionController {
                             detalle.setFechaFin(LocalDate.now());
                             detalle.setHoraFin(LocalTime.now());
                             atencionService.saveEspera(detalle);
-                            System.out.println("⚠ detalle espera por fuera de horario terminado: " + detalle.getId());
                         });
             }
 

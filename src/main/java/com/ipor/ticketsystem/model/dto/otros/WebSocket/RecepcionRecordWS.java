@@ -28,7 +28,9 @@ public record RecepcionRecordWS(
         String nombreFaseTicket,
 
         List<ArchivoAdjuntoDTO> listaArchivosAdjuntosEnvio,
-        List<TicketRecordWS.DetalleEsperaDTO> listaDetalleEspera
+        List<TicketRecordWS.DetalleEsperaDTO> listaDetalleEspera,
+
+        Long idUsuarioReceptorTicket
 
 )
 {
@@ -58,7 +60,11 @@ public record RecepcionRecordWS(
                         .collect(Collectors.toList()),
                 detalleDTO.getDetalleEnEspera().stream()
                         .map(TicketRecordWS.DetalleEsperaDTO::new)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+
+
+                detalleDTO.getRecepcion().getUsuario().getId()
+
         );
     }
 

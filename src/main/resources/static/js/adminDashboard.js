@@ -395,7 +395,7 @@ function conectarDashboardWebSocket() {
             wasDisconnected = false;
         }
 
-        stompClient.subscribe('/topic/dashboard', function (mensaje) {
+        stompClient.subscribe('/topic/estadoActual', function (mensaje) {
             if (mensaje.body === 'actualizar') {
                 actualizarDashboardCompleto(fechaInicioGlobal, fechaFinGlobal);
             }

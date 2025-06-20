@@ -8,6 +8,11 @@
 <header th:replace="~{common/header :: header}">
 </header>
 
+<meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
+<script>
+    const idUsuarioLogeado = parseInt(document.querySelector('meta[name="id-usuario-logeado"]').content);
+</script>
+
 <div class="container-fluid  content-wrapper">
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-wrap gap-2 navegacion-desktop">
@@ -119,30 +124,38 @@
 
                 <td class="td-accion">
                     <div class="d-flex gap-1 flex-nowrap">
-                        <!-- Botón de recepción que abre el modal -->
+                        <!-- Botón de atención -->
                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#atencionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                data-bs-target="#atencionModal"
+                                th:data-ticket-id="${detalle.ticket.id}"
                                 th:data-ticket-codigo="${detalle.ticket.codigoTicket}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                                th:disabled="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado}"
+                                th:title="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado} ? 'Solo el usuario que recepcionó el ticket puede realizar esta acción' : ''">
                             <i class="bi bi-check2-square"></i>
                         </button>
 
+                        <!-- Botón de desestimación -->
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#desestimacionModal" th:data-ticket-id="${detalle.ticket.id}"
+                                data-bs-target="#desestimacionModal"
+                                th:data-ticket-id="${detalle.ticket.id}"
                                 th:data-ticket-codigo="${detalle.ticket.codigoTicket}"
                                 th:data-ticket-usuario="${detalle.ticket.usuario.nombre}"
                                 th:data-ticket-descripcion="${detalle.ticket.descripcion}"
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
-                                th:data-ticket-hora="${detalle.horaFormateadaTicket}">
+                                th:data-ticket-hora="${detalle.horaFormateadaTicket}"
+                                th:disabled="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado}"
+                                th:title="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado} ? 'Solo el usuario que recepcionó el ticket puede realizar esta acción' : ''">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 </td>
+
 
             </tr>
             </tbody>

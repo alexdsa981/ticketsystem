@@ -185,6 +185,8 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
   // Crear una nueva fila
   const newRow = document.createElement("tr");
 
+  const isUsuarioAutorizadoAtencionRecepcion = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
+
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
         <td></td> <!-- Este número se actualizará luego -->
@@ -246,44 +248,46 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
             </span>
 
         </td>
-        <td class="td-accion">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                data-bs-target="#atencionModal" data-ticket-id="${
-                  ticketRecord.idTicket
-                }"
-                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
-                <i class="bi bi-check2-square"></i>
-            </button>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                data-bs-target="#esperaModal" data-ticket-id="${
-                  ticketRecord.idTicket
-                }"
-                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
-                <i class="bi bi-hourglass-top"></i>
-            </button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                data-bs-target="#desestimacionModal" data-ticket-id="${
-                  ticketRecord.idTicket
-                }"
-                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
-                <i class="bi bi-trash"></i>
-            </button>
-        </td>
+            <td class="td-accion">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                    data-bs-target="#atencionModal"
+                    data-ticket-id="${ticketRecord.idTicket}"
+                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                    <i class="bi bi-check2-square"></i>
+                </button>
+
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                    data-bs-target="#esperaModal"
+                    data-ticket-id="${ticketRecord.idTicket}"
+                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                    <i class="bi bi-hourglass-top"></i>
+                </button>
+
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#desestimacionModal"
+                    data-ticket-id="${ticketRecord.idTicket}"
+                    data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                    data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                    data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                    data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                    data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                    data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+                    ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
     `;
   // Insertar la nueva fila al inicio de la tabla
   ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
@@ -330,6 +334,8 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
 
   // Crear una nueva fila
   const newRow = document.createElement("tr");
+
+const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
 
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
@@ -417,33 +423,33 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
 
 
 
-        <td class="td-accion">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                data-bs-target="#atencionModal" data-ticket-id="${
-                  ticketRecord.idTicket
-                }"
-                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
-                <i class="bi bi-check2-square"></i>
-            </button>
+    <td class="td-accion">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#atencionModal"
+            data-ticket-id="${ticketRecord.idTicket}"
+            data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+            data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+            data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+            data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+            data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+            data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+            ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+            <i class="bi bi-check2-square"></i>
+        </button>
 
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                data-bs-target="#desestimacionModal" data-ticket-id="${
-                  ticketRecord.idTicket
-                }"
-                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
-                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
-                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
-                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
-                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
-                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
-                <i class="bi bi-trash"></i>
-            </button>
-        </td>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+            data-bs-target="#desestimacionModal"
+            data-ticket-id="${ticketRecord.idTicket}"
+            data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+            data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+            data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+            data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+            data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+            data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
+            ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
     `;
   // Insertar la nueva fila al inicio de la tabla
   ticketTableBody.insertBefore(newRow, ticketTableBody.firstChild);
