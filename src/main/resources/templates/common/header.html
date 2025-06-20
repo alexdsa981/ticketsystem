@@ -63,7 +63,7 @@
                         </ul>
                     </li>
 
-                    <li sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')" class="d-flex">
+                    <li sec:authorize="hasAnyAuthority('Admin','Soporte','Supervisor','Usuario')" class="d-flex">
                         <form id="ticketSearchForm" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
                                 <span class="input-group-text">TK-</span>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="offcanvas-body">
 
-                    <div sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario')">
+                    <div sec:authorize="hasAnyAuthority('Admin','Soporte','Usuario', 'Supervisor')">
                         <form id="ticketSearchFormMobile" action="/buscar-ticket" method="GET" class="d-flex">
                             <div class="input-group">
                                 <span class="input-group-text">TK-</span>

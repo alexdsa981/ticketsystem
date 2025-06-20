@@ -3,7 +3,9 @@ package com.ipor.ticketsystem.controller;
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.model.dynamic.DetalleEnEspera;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.model.fixed.HorarioAtencionSoporte;
+import com.ipor.ticketsystem.model.fixed.RolUsuario;
 import com.ipor.ticketsystem.repository.dynamic.RecepcionRepository;
 import com.ipor.ticketsystem.repository.dynamic.AtencionRepository;
 import com.ipor.ticketsystem.repository.dynamic.TicketRepository;
@@ -239,11 +241,24 @@ public class WebController {
         clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
         clasificadoresController.getListaSedesActivos(model);
         clasificadoresController.getListaCatIncidenciaActivos(model);
-        boolean fueraDeHorario = false;
+        boolean avisoFueraDeHorario = false;
+
 
 
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
+            Usuario usuarioLogeado = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
+            RolUsuario rolUsuarioLogeado = usuarioLogeado.getRolUsuario();
+
+
+
+            if (rolUsuarioLogeado.getId() == 1 && !Objects.equals(ticket.getUsuario().getId(), usuarioLogeado.getId())){
+                return "redirect:/inicio?error=user-without-permissions"; // Redirige a la vista de inicio
+
+            }
+
+
+
             if (Objects.equals(ticket.getUsuario().getId(), usuarioService.getIDdeUsuarioLogeado())) {
                 List<DetalleEnEspera> listaDetalleEsperas = ticket.getListaDetalleEsperas();
 
@@ -251,17 +266,21 @@ public class WebController {
                     DetalleEnEspera primerDetalleEspera = listaDetalleEsperas.get(0);
                     HorarioAtencionSoporte horarioAtencionSoporte = horarioAtencionSoporteRepository.findTopByOrderByIdDesc();
 
-                    if (
-                            primerDetalleEspera.getClasificacionEspera().getId() == 1 &&
-                                    horarioAtencionSoporte.getHoraEntrada().equals(primerDetalleEspera.getHoraFin())
-                    ) {
-                        fueraDeHorario = true;
+                    if (primerDetalleEspera.getClasificacionEspera().getId() == 1 && horarioAtencionSoporte.getHoraEntrada().equals(primerDetalleEspera.getHoraFin())) {
+                        avisoFueraDeHorario = true;
                     }
                 }
             }
 
-            model.addAttribute("fueraDeHorario", fueraDeHorario);
 
+
+
+
+
+
+
+
+            model.addAttribute("fueraDeHorario", avisoFueraDeHorario);
             DetalleTicketDTO detalleTicketDTO = new DetalleTicketDTO(ticket);
             model.addAttribute("detalle", detalleTicketDTO);
             model.addAttribute("Titulo", "HelpDesk | " + detalleTicketDTO.getTicket().getCodigoTicket());

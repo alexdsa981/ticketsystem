@@ -72,7 +72,7 @@ public class TicketController {
         Optional<Ticket> optionalTicket = ticketRepository.findByCodigoTicket(codigo);
 
         Usuario usuarioLogeado = usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado());
-        boolean esSoporteOAdmin = usuarioLogeado.getRolUsuario().getId() == 2 || usuarioLogeado.getRolUsuario().getId() == 3;
+        boolean esSoporteOAdmin = usuarioLogeado.getRolUsuario().getId() == 2 || usuarioLogeado.getRolUsuario().getId() == 3 || usuarioLogeado.getRolUsuario().getId() == 4;
 
         if (optionalTicket.isEmpty()) {
             // Usuarios comunes no deben saber si existe o no

@@ -86,7 +86,7 @@ public class SecurityConfig {
                         //dashboard de soporte visible para supervisor
                         //dahboard de admin visible para supervisor
                         .requestMatchers("/supervisor/**").hasAnyAuthority("Supervisor")
-
+                        .requestMatchers("/admin/exportar-tickets").hasAnyAuthority("Supervisor", "Admin")
 
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         //poner roles más especificos primero para no sobreponer los permisos globales de los admin/soporte
