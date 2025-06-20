@@ -13,11 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
@@ -43,10 +45,14 @@ public class UsuarioService {
     private AuthenticationManager authenticationManager;
 
     public Long getIDdeUsuarioLogeado() {
-        String token = jwtAuthenticationFilter.tokenActual;
-        String username = jwtTokenProvider.obtenerUsernameDeJWT(token);
-        Usuario usuario = usuarioRepository.findByUsername(username).get();
-        return usuario.getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Usuario no autenticado");
+        }
+
+        String username = authentication.getName(); // o ((UserDetails) authentication.getPrincipal()).getUsername();
+        return usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")).getId();
     }
 
     public Usuario getUsuarioPorId(Long id) {

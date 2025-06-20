@@ -29,16 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Getter
-    @Setter
-    public String tokenActual;
+
 
     private String obtenerTokenDeSolicitud(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("JWT")) {
-                    setTokenActual(cookie.getValue());
                     return cookie.getValue();
                 }
             }
