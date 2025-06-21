@@ -45,11 +45,33 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
     // Conteo de tickets por fase con filtro de fechas
-    @Query("SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(ft.nombre, COALESCE(COUNT(t), 0)) " +
-            "FROM FaseTicket ft LEFT JOIN Ticket t ON t.faseTicket = ft AND t.fecha BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY ft.nombre " +
-            "ORDER BY MIN(ft.id)")
-    List<RecordFactorXConteo> findTicketCountByFaseWithDates(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+    @Query("""
+    SELECT new com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo(
+        ft.nombre,
+        COUNT(
+            CASE
+                WHEN ft.nombre = 'Cerrado - Atendido' 
+                     AND a.fecha BETWEEN :fechaInicio AND :fechaFin THEN 1
+                WHEN ft.nombre = 'Desestimado' 
+                     AND d.fecha BETWEEN :fechaInicio AND :fechaFin THEN 1
+                WHEN ft.nombre NOT IN ('Cerrado - Atendido', 'Desestimado') 
+                     AND t.id IS NOT NULL THEN 1
+                ELSE NULL
+            END
+        )
+    )
+    FROM FaseTicket ft
+    LEFT JOIN Ticket t ON t.faseTicket = ft
+    LEFT JOIN t.atencion a
+    LEFT JOIN t.desestimacion d
+    GROUP BY ft.nombre, ft.id
+    ORDER BY ft.id
+    """)
+    List<RecordFactorXConteo> findTicketCountByFaseWithDates(
+            @Param("fechaInicio") LocalDate fechaInicio,
+            @Param("fechaFin") LocalDate fechaFin
+    );
+
 
     /*
     INFORMACION PARA DASHBOARD ADMINISTRADOR

@@ -259,6 +259,18 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
                 <i class="bi bi-check2-square"></i>
             </button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                data-bs-target="#esperaModal" data-ticket-id="${
+                  ticketRecord.idTicket
+                }"
+                data-ticket-codigo="${ticketRecord.idFormateadoTicket}"
+                data-ticket-usuario="${ticketRecord.nombreUsuarioTicket}"
+                data-ticket-descripcion="${ticketRecord.descripcionTicket}"
+                data-ticket-fase="${ticketRecord.nombreFaseTicket}"
+                data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
+                data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
+                <i class="bi bi-hourglass-top"></i>
+            </button>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal" data-ticket-id="${
                   ticketRecord.idTicket
@@ -418,6 +430,7 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}">
                 <i class="bi bi-check2-square"></i>
             </button>
+
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#desestimacionModal" data-ticket-id="${
                   ticketRecord.idTicket

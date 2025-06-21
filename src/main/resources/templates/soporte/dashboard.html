@@ -17,15 +17,30 @@
                 </div>
 
 
-                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm  ">
+                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm position-relative">
                     Recepcionar
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span id="countRecepcionar">3</span>
+                </span>
                 </a>
-                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm">
+
+                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm position-relative">
                     Atender
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                    <span id="countAtender">2</span>
+                </span>
                 </a>
-                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm  ">
+
+                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm position-relative">
                     Atender Espera
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                    <span id="countEspera">1</span>
+                </span>
                 </a>
+
+
+
+
                 <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm ">
                     Historial Atendidos
                 </a>
@@ -84,67 +99,80 @@
         </div>
 
 
-        <div class="container border shadow p-3 px-4 mb-5 bg-body rounded" style="margin-top: 10px">
-            <h2 id="tituloDashboard">SOPORTE<span class="title-text-mobile"></span>:</h2>
-            <div class="row justify-content-center align-items-start">
-                <!-- Contadores (columna izquierda) -->
-                <div class="col-12 col-md-4 mb-4 d-flex flex-column gap-3">
-                    <a href="/soporte/Recepcionar" class="btn-dashboard d-block mb-3">
-                        <div class="rounded text-dark card py-3" style="background-color: #f8d7da;">
-                            <div class="info-container d-flex justify-content-between align-items-center px-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-ticket icon fs-4"></i>
-                                    <p class="mb-0">Tickets Solicitados</p>
-                                </div>
-                                <span id="nRecibidos" class="h4 mb-0">0</span>
-                            </div>
+        <div class="container border shadow p-3 px-4 mb-5 bg-body rounded mt-3">
+
+            <h2 id="tituloDashboard" class="mb-4 text-center">SOPORTE<span class="title-text-mobile"></span>:</h2>
+
+            <!-- 🟡 Estado Actual -->
+            <h6 class="text-secondary mb-2">Estado Actual</h6>
+            <div class="row row-cols-2 row-cols-md-3 g-2 mb-3">
+
+                <div class="col">
+                    <a href="/soporte/Recepcionar" class="btn-dashboard text-decoration-none">
+                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #f8d7da;">
+                            <i class="bi bi-ticket fs-5 mb-1 d-block"></i>
+                            <small>Solicitados</small><br>
+                            <strong id="nRecibidos">0</strong>
                         </div>
                     </a>
-
-                    <a href="/soporte/Atender" class="btn-dashboard d-block mb-3">
-                        <div class="rounded text-dark card py-3" style="background-color: #fff3cd;">
-                            <div class="info-container d-flex justify-content-between align-items-center px-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-check-circle icon fs-4"></i>
-                                    <p class="mb-0">Tickets Recepcionados</p>
-                                </div>
-                                <span id="ntotalRecepcionados" class="h4 mb-0">0</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="/soporte/Tickets-Cerrados" class="btn-dashboard d-block mb-3">
-                        <div class="rounded text-dark card py-3" style="background-color: #d4edda; color: #6c757d;">
-                            <div class="info-container d-flex justify-content-between align-items-center px-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-check2-circle icon fs-4"></i>
-                                    <p class="mb-0">Tickets Atendidos</p>
-                                </div>
-                                <span id="ntotalAtendidos" class="h4 mb-0">0</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="/soporte/Tickets-Desestimados" class="btn-dashboard d-block mb-3">
-                        <div class="rounded text-dark card py-3" style="background-color: #C8C8C8; color: #6c757d;">
-                            <div class="info-container d-flex justify-content-between align-items-center px-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-x-circle icon fs-4"></i>
-                                    <p class="mb-0">Tickets Desestimados</p>
-                                </div>
-                                <span id="ntotalDesestimados" class="h4 mb-0">0</span>
-                            </div>
-                        </div>
-                    </a>
-
                 </div>
 
-                <!-- Gráfico (columna derecha) -->
-                <div class="col-12 col-md-8 d-flex justify-content-center">
-                    <canvas id="graficoEstadoActualTickets" width="500" height="450" style="max-width: 100%;"></canvas>
+                <div class="col">
+                    <a href="/soporte/Atender" class="btn-dashboard text-decoration-none">
+                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #fff3cd;">
+                            <i class="bi bi-check-circle fs-5 mb-1 d-block"></i>
+                            <small>Recepcionados</small><br>
+                            <strong id="ntotalRecepcionados">0</strong>
+                        </div>
+                    </a>
                 </div>
 
+                <div class="col">
+                    <a href="/soporte/Atender-Espera" class="btn-dashboard text-decoration-none">
+                        <div class="rounded text-dark card py-2 px-2 text-center" style="background-color: #b8daff;">
+                            <i class="bi bi-clock fs-5 mb-1 d-block"></i>
+                            <small>En Espera</small><br>
+                            <strong id="ntotalEspera">0</strong>
+                        </div>
+                    </a>
+                </div>
             </div>
+
+            <hr>
+
+            <!-- 🟢 KPIs de Productividad -->
+            <h6 class="text-secondary mb-2">Productividad (según fechas)</h6>
+            <div class="row row-cols-2 row-cols-md-2 g-2 mb-3">
+
+                <div class="col">
+                    <a href="/soporte/Tickets-Cerrados" class="btn-dashboard text-decoration-none">
+                        <div class="rounded card py-2 px-2 text-center" style="background-color: #d4edda; color: #6c757d;">
+                            <i class="bi bi-check2-circle fs-5 mb-1 d-block"></i>
+                            <small>Atendidos</small><br>
+                            <strong id="ntotalAtendidos">0</strong>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col">
+                    <a href="/soporte/Tickets-Desestimados" class="btn-dashboard text-decoration-none">
+                        <div class="rounded card py-2 px-2 text-center" style="background-color: #C8C8C8; color: #6c757d;">
+                            <i class="bi bi-x-circle fs-5 mb-1 d-block"></i>
+                            <small>Desestimados</small><br>
+                            <strong id="ntotalDesestimados">0</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- 🔵 Gráfico -->
+            <h6 class="text-secondary mb-2">Distribución</h6>
+            <div class="d-flex justify-content-center align-items-center">
+                <canvas id="graficoEstadoActualTickets" width="300" height="300" class="mx-auto d-block" style="max-width: 80%;"></canvas>
+            </div>
+
         </div>
 
 

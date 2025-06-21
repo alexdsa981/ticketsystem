@@ -91,13 +91,17 @@ function actualizarDatos(fechaInicio = null, fechaFin = null) {
             etiquetas[1] = "Recepcionados";
             etiquetas[2] = "Atendidos";
             etiquetas[3] = "Desestimados";
+            etiquetas[4] = "Espera";
 
-            const datos = data.datos.slice(0, 4);
+
+            const datos = data.datos.slice(0, 5);
 
             document.getElementById("nRecibidos").textContent = datos[0] || 0;
             document.getElementById("ntotalRecepcionados").textContent = datos[1] || 0;
             document.getElementById("ntotalAtendidos").textContent = datos[2] || 0;
             document.getElementById("ntotalDesestimados").textContent = datos[3] || 0;
+            document.getElementById("ntotalEspera").textContent = datos[4] || 0;
+
 
             crearGrafico(
                 etiquetas,
@@ -109,13 +113,16 @@ function actualizarDatos(fechaInicio = null, fechaFin = null) {
                         'rgba(255, 99, 132, 0.6)',
                         'rgba(255, 206, 86, 0.6)',
                         'rgba(75, 192, 192, 0.6)',
-                        'rgba(200, 200, 200, 0.6)'
+                        'rgba(200, 200, 200, 0.6)',
+                        'rgba(54, 162, 235, 0.6)'
+
                     ],
                     border: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
-                        'rgba(200, 200, 200, 1)'
+                        'rgba(200, 200, 200, 1)',
+                        'rgba(54, 162, 235, 1)'
                     ]
                 }
             );
