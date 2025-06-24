@@ -32,19 +32,32 @@ document.getElementById("btn-aplicar-filtros").addEventListener("click", () => {
 
 
 
-// 🔵 Función que obtiene los datos y llama a crearGrafico()
+
+
+
+
 function fetchDatosDashboard(filtros = {}) {
   const clasificadores = Object.keys(configGraficos);
 
-const fechaInicio = filtros.fechaInicio || (() => {
-  const hoy = new Date();
-  return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-01`;
-})();
-const fechaFin = filtros.fechaFin || (() => {
-  const hoy = new Date();
-  const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-  return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${ultimoDia}`;
-})();
+  const fechaInicio = filtros.fechaInicio || (() => {
+    const hoy = new Date();
+    return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-01`;
+  })();
+  const fechaFin = filtros.fechaFin || (() => {
+    const hoy = new Date();
+    const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+    return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${ultimoDia}`;
+  })();
+
+  const limitesPorClasificador = {
+    sede: 10,
+    areaAtencion: 10,
+    subCategoriaIncidencia: 5,
+    categoriaIncidencia: 10,
+    tipoIncidencia: 10,
+    clasificacionUrgencia: 10,
+  };
+
   const promesas = clasificadores.map(clasificador => {
     const url = new URL("/app/dashboard/grafico/tickets", window.location.origin);
     url.searchParams.append("agruparPor", clasificador);
@@ -57,35 +70,47 @@ const fechaFin = filtros.fechaFin || (() => {
       }
     }
 
-
     return fetch(url)
       .then(res => {
-
         if (!res.ok) throw new Error(`Error en fetch para ${clasificador}`);
         return res.json();
       })
       .then(data => {
-        console.log(`📊 Datos recibidos para ${clasificador}:`, data); // 🔍 LOG AQUÍ
+        const limite = limitesPorClasificador[clasificador] || 10;
+        const etiquetasOriginales = data.etiquetas || [];
+        const valoresOriginales = data.datos || [];
+
+        const total = valoresOriginales.reduce((acc, val) => acc + val, 0);
+        const etiquetasLimitadas = etiquetasOriginales.slice(0, limite);
+        const valoresLimitados = valoresOriginales.slice(0, limite);
 
         return {
           clasificador,
-          etiquetas: data.etiquetas || [],
-          valores: data.datos || [],
-          ids: data.idsFiltrados || []
+          etiquetas: etiquetasLimitadas,
+          valores: valoresLimitados,
+          total: total,
+          ids: data.idsFiltrados || [],
         };
       })
       .catch(error => {
         console.error(error);
-        return { clasificador, etiquetas: [], valores: [] };
+        return { clasificador, etiquetas: [], valores: [], total: 0 };
       });
   });
 
   Promise.all(promesas).then(resultados => {
-    resultados.forEach(({ clasificador, etiquetas, valores }) => {
-      crearGrafico(clasificador, etiquetas, valores, configGraficos[clasificador] || {});
+    resultados.forEach(({ clasificador, etiquetas, valores, total }) => {
+      crearGrafico(clasificador, etiquetas, valores, {
+        ...configGraficos[clasificador],
+        total
+      });
     });
   });
 }
+
+
+
+
 
 
 

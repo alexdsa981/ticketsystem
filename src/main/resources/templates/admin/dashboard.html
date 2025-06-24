@@ -12,12 +12,6 @@
 
     <div class="container-fluid py-4">
 
-        <h3 class="mb-4">
-            <i class="bi bi-graph-up-arrow me-2"></i>
-            Reporte General de Actividades y Tendencias
-        </h3>
-
-
         <div class="row">
 
             <!-- Panel de Filtros -->
@@ -99,7 +93,7 @@
                         </button>
                         <button class="btn btn-primary w-100 mt-2 d-flex justify-content-center align-items-center gap-2" id="btn-exportar">
                             <span class="spinner-border spinner-border-sm d-none" id="spinner-exportar" role="status" aria-hidden="true"></span>
-                            <span id="texto-exportar">Exportar Tickets</span>
+                            <span id="texto-exportar">Exportar Tickets Completos (.xlsx)</span>
                         </button>
 
                     </div>
@@ -107,7 +101,12 @@
             </div>
 
             <!-- Panel de Gráficos -->
-            <div class="col-md-9">
+            <div class="col-md-9 border rounded shadow-sm p-3 mb-4">
+
+                <h3 class="mb-4">
+                    <i class="bi bi-graph-up-arrow me-2"></i>
+                    Reporte General de Actividades y Tendencias
+                </h3>
 
                 <!-- Grupo 1 -->
                 <div class="border rounded shadow-sm p-3 mb-4">
@@ -124,10 +123,10 @@
                 <!-- Grupo 2 -->
                 <div class="border rounded shadow-sm p-3 mb-4">
                     <div class="row g-3">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <canvas id="grafico-categoriaIncidencia" height="280"></canvas>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-8">
                             <canvas id="grafico-subCategoriaIncidencia" height="280"></canvas>
                         </div>
                     </div>
@@ -135,21 +134,17 @@
 
                 <!-- Grupo 3 -->
                 <div class="border rounded shadow-sm p-3 mb-4">
-                    <div class="row">
-                        <div class="col-12">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-4">
+                            <canvas id="grafico-clasificacionUrgencia" height="280"></canvas>
+                        </div>
+                        <div class="col-12 col-md-8">
                             <canvas id="grafico-tipoIncidencia" height="280"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Grupo 4 -->
-                <div class="border rounded shadow-sm p-3 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <div style="max-width: 400px; width: 100%;">
-                            <canvas id="grafico-clasificacionUrgencia" height="280"></canvas>
-                        </div>
-                    </div>
-                </div>
+
 
 
             </div>

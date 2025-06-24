@@ -53,6 +53,7 @@ public class DashboardClasificadoresController {
         );
 
         Map<String, Object> data = mapearDatosFactorxConteo(datos);
+        System.out.println(data);
         return ResponseEntity.ok(data);
     }
 

@@ -122,12 +122,6 @@ public class WebController {
         return "general/desestimados";
     }
 
-    //NO SE UTILIZA MODEL PORQUE LOS DATOS SE OBTIENEN A TRAVÉS DE FETCH CON JS PARA ACTUALIZARLOS AUTOMATICAMENTE CADA X segundos
-//    @GetMapping("/admin/Dashboard")
-//    public String redirigePaginaDashboardAdmin(Model model) {
-//        model.addAttribute("Titulo", "HelpDesk | Admin - Dashboard");
-//        return "admin/dashboard";
-//    }
 
 
     @GetMapping("/admin/Dashboard")
@@ -312,6 +306,9 @@ public class WebController {
     }
     @GetMapping("/supervisor/dashboard-admin")
     public String redirigePaginaDashboardAdminSupervisor(Model model) {
+        clasificadoresController.getListaClasificacionesUrgenciaActivos(model);
+        clasificadoresController.getListaSedesActivos(model);
+        clasificadoresController.getListaCatIncidenciaActivos(model);
         model.addAttribute("Titulo", "HelpDesk | Admin - Dashboard");
         return "admin/dashboard";
     }
