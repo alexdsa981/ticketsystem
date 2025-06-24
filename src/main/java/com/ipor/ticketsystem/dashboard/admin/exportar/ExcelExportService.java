@@ -4,7 +4,10 @@ import com.ipor.ticketsystem.ticket.Ticket;
 import com.ipor.ticketsystem.ticket.dto.DetalleTicketDTO;
 import com.ipor.ticketsystem.ticket.repository.TicketRepository;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.util.AreaReference;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.*;
+
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -29,8 +32,8 @@ public class ExcelExportService {
                 .map(TicketExportDTO::convertirADTOExportacion)
                 .collect(Collectors.toList());
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Tickets");
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Tickets");
 
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFillForegroundColor(IndexedColors.BLUE.getIndex());
@@ -130,6 +133,21 @@ public class ExcelExportService {
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
+
+        // ✅ Crear tabla de Excel
+        AreaReference area = new AreaReference(
+                new CellReference(0, 0),
+                new CellReference(sheet.getLastRowNum(), headers.length - 1),
+                workbook.getSpreadsheetVersion()
+        );
+        XSSFTable table = sheet.createTable(area);
+        table.setName("TablaTickets");
+        table.setDisplayName("TablaTickets");
+        table.getCTTable().addNewTableStyleInfo().setName("TableStyleMedium9");
+        table.setStyleName("TableStyleMedium9");
+        table.getCTTable().setTableStyleInfo(table.getCTTable().getTableStyleInfo());
+        table.getCTTable().addNewAutoFilter();
+
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
