@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:insert="~{common/imports :: headImports}">
     <title>Exportar Tickets</title>
 </head>
@@ -18,26 +19,32 @@
                 </div>
 
 
-                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Recepcionar" class="btn btn-outline-dark btn-sm"
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Recepcionar <small class="">[<span id="countRecepcionar">0</span>]</small>
                 </a>
 
-                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Atender" class="btn btn-outline-dark btn-sm"
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Atender <small class="">[<span id="countAtender">0</span>]</small>
                 </a>
 
-                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Atender-Espera" class="btn btn-outline-dark btn-sm"
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Atender Espera <small class="">[<span id="countEspera">0</span>]</small>
                 </a>
 
 
-                <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm " sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Tickets-Cerrados" class="btn btn-outline-dark btn-sm "
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Historial Atendidos
                 </a>
-                <a href="/soporte/Tickets-Desestimados" class="btn btn-outline-dark btn-sm " sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Tickets-Desestimados" class="btn btn-outline-dark btn-sm "
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Historial Desestimados
                 </a>
-                <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-active btn-dashboard-atencion" sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
+                <a href="/soporte/Dashboard" class="btn btn-dark btn-sm btn-active btn-dashboard-atencion"
+                   sec:authorize="hasAnyAuthority('Admin', 'Soporte')">
                     Dashboard
                 </a>
             </div>
@@ -124,7 +131,8 @@
 
                 <div id="alertaTicketAntiguo" class="alert alert-warning small mb-2">
                     <strong>⚠ Ticket más antiguo sin atender:</strong>
-                    <a class="text-decoration-underline ms-2" data-bs-toggle="collapse" href="#detalleTicketsAntiguos" role="button" aria-expanded="false" aria-controls="detalleTicketsAntiguos">
+                    <a class="text-decoration-underline ms-2" data-bs-toggle="collapse" href="#detalleTicketsAntiguos"
+                       role="button" aria-expanded="false" aria-controls="detalleTicketsAntiguos">
                         Ver más
                     </a>
                 </div>
@@ -152,10 +160,85 @@
             </div>
         </div>
 
-
-
-
     </div>
+
+
+    <div class="container text-center mt-4 border shadow p-3 px-4 mb-5 bg-body rounded contenedor-promedios">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-clock"></i> Promedio de Recepción</h5>
+                        <p class="card-text" id="promedioRecepcion">
+                            Cargando promedio de recepción...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card para Promedio de Atención -->
+            <div class="col-12 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-clock"></i> Promedio de Atención</h5>
+                        <p class="card-text" id="promedioAtencion">
+                            Cargando promedio de atención...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card para Promedio General -->
+            <div class="col-12 col-md-4 justify-content-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-clock"></i> Promedio General</h5>
+                        <p class="card-text" id="promedioInicioFin">
+                            Cargando promedio general...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container mt-2 mb-4">
+                <div class="accordion" id="accordionTiemposUsuarios">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingUsuariosTiempos">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseUsuariosTiempos" aria-expanded="false"
+                                    aria-controls="collapseUsuariosTiempos">
+                                <i class="bi bi-people me-2"></i> Tiempo efectivo de atención por usuario
+                            </button>
+                        </h2>
+                        <div id="collapseUsuariosTiempos" class="accordion-collapse collapse"
+                             aria-labelledby="headingUsuariosTiempos" data-bs-parent="#accordionTiemposUsuarios">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered table-hover text-center align-middle">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Usuario</th>
+                                            <th>Tiempo Promedio <small>(Creación-Atención)</small></th>
+                                            <th>Tickets atendidos</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tablaTiempoPorUsuario">
+                                        <tr>
+                                            <td colspan="4">Cargando datos...</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="/js/soporteDashboard.js"></script>
 </main>
 <div th:insert="~{common/imports :: bodyImportsAndNotification}"></div>

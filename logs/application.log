@@ -183,8 +183,8 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:266) ~[na:na]
 	at java.base/java.util.Objects.checkIndex(Objects.java:359) ~[na:na]
 	at java.base/java.util.ArrayList.get(ArrayList.java:427) ~[na:na]
-	at com.ipor.ticketsystem.WebSocket.WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(WSNotificacionesService.java:44) ~[classes/:na]
-	at com.ipor.ticketsystem.controller.TicketController.crearTicket(TicketController.java:172) ~[classes/:na]
+	at com.ipor.ticketsystem.websocket.WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(WSNotificacionesService.java:44) ~[classes/:na]
+	at com.ipor.ticketsystem.ticket.controller.TicketController.crearTicket(TicketController.java:172) ~[classes/:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
@@ -336,8 +336,8 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 	at java.base/java.util.Objects.checkIndex(Objects.java:359) ~[na:na]
 	at java.base/java.util.ArrayList.get(ArrayList.java:427) ~[na:na]
 	at org.hibernate.collection.spi.PersistentBag.get(PersistentBag.java:535) ~[hibernate-core-6.5.2.Final.jar:6.5.2.Final]
-	at com.ipor.ticketsystem.WebSocket.WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(WSNotificacionesService.java:44) ~[classes/:na]
-	at com.ipor.ticketsystem.controller.TicketController.crearTicket(TicketController.java:172) ~[classes/:na]
+	at com.ipor.ticketsystem.websocket.WSNotificacionesService.enviarTicketAVistaSoporteRecepcion(WSNotificacionesService.java:44) ~[classes/:na]
+	at com.ipor.ticketsystem.ticket.controller.TicketController.crearTicket(TicketController.java:172) ~[classes/:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
@@ -481,12 +481,12 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 2025-02-07T13:18:59.421-05:00  INFO 16588 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-02-07T13:18:59.423-05:00  INFO 16588 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
 2025-02-07T13:19:13.515-05:00  WARN 16588 --- [http-nio-0.0.0.0-8080-exec-4] o.h.a.i.UnresolvedEntityInsertActions    : HHH000437: Attempting to save one or more entities that have a non-nullable association with an unsaved transient entity. The unsaved transient entity must be saved in an operation prior to saving these dependent entities.
-	Unsaved transient entity: ([com.ipor.ticketsystem.model.dynamic.Ticket#<null>])
-	Dependent entities: ([[com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio#<null>]])
-	Non-nullable association(s): ([com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio.ticket])
-2025-02-07T13:19:13.533-05:00 ERROR 16588 --- [http-nio-0.0.0.0-8080-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio.ticket -> com.ipor.ticketsystem.model.dynamic.Ticket] with root cause
+	Unsaved transient entity: ([com.ipor.ticketsystem.ticket.Ticket#<null>])
+	Dependent entities: ([[com.ipor.ticketsystem.archivosadjuntos.archivoadjunto.ArchivoAdjuntoEnvio#<null>]])
+	Non-nullable association(s): ([com.ipor.ticketsystem.archivosadjuntos.archivoadjunto.ArchivoAdjuntoEnvio.ticket])
+2025-02-07T13:19:13.533-05:00 ERROR 16588 --- [http-nio-0.0.0.0-8080-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : com.ipor.ticketsystem.archivosadjuntos.archivoadjunto.ArchivoAdjuntoEnvio.ticket -> com.ipor.ticketsystem.ticket.Ticket] with root cause
 
-org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : com.ipor.ticketsystem.model.dynamic.ArchivoAdjuntoEnvio.ticket -> com.ipor.ticketsystem.model.dynamic.Ticket
+org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : com.ipor.ticketsystem.archivosadjuntos.archivoadjunto.ArchivoAdjuntoEnvio.ticket -> com.ipor.ticketsystem.ticket.Ticket
 	at org.hibernate.action.internal.UnresolvedEntityInsertActions.checkNoUnresolvedActionsAfterOperation(UnresolvedEntityInsertActions.java:123) ~[hibernate-core-6.5.2.Final.jar:6.5.2.Final]
 	at org.hibernate.engine.spi.ActionQueue.checkNoUnresolvedActionsAfterOperation(ActionQueue.java:459) ~[hibernate-core-6.5.2.Final.jar:6.5.2.Final]
 	at org.hibernate.internal.SessionImpl.checkNoUnresolvedActionsAfterOperation(SessionImpl.java:597) ~[hibernate-core-6.5.2.Final.jar:6.5.2.Final]
@@ -533,8 +533,8 @@ org.hibernate.TransientPropertyValueException: Not-null property references a tr
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.12.jar:6.1.12]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.1.12.jar:6.1.12]
 	at jdk.proxy2/jdk.proxy2.$Proxy140.save(Unknown Source) ~[na:na]
-	at com.ipor.ticketsystem.service.TicketService.saveAdjunto(TicketService.java:119) ~[classes/:na]
-	at com.ipor.ticketsystem.controller.TicketController.crearTicket(TicketController.java:141) ~[classes/:na]
+	at com.ipor.ticketsystem.ticket.service.TicketService.saveAdjunto(TicketService.java:119) ~[classes/:na]
+	at com.ipor.ticketsystem.ticket.controller.TicketController.crearTicket(TicketController.java:141) ~[classes/:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]

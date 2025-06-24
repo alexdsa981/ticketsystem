@@ -90,87 +90,84 @@ function crearGrafico(etiquetas, datos, idCanvas, label, colores) {
 
 
 
-// Función para actualizar los datos en el dashboard
-function actualizarDatos(fechaInicio = null, fechaFin = null) {
-    let url = '/app/dashboard/grafico/EstadoActual';
+async function actualizarDatos(fechaInicio = null, fechaFin = null) {
+  let queryParams = "";
+  let url = '/app/dashboard/grafico/EstadoActual';
 
-    // Agregar parámetros si hay fechas
+  if (fechaInicio && fechaFin) {
+    queryParams = `?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+    url += queryParams;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Error en la respuesta del servidor");
+
+    const data = await response.json();
+
+    const etiquetas = data.etiquetas.slice(0, 4);
+    etiquetas[0] = "Solicitados";
+    etiquetas[1] = "Recepcionados";
+    etiquetas[2] = "Atendidos";
+    etiquetas[3] = "Desestimados";
+    etiquetas[4] = "Espera";
+
+    const datos = data.datos.slice(0, 5);
+
+    crearGrafico(
+      etiquetas,
+      datos,
+      'graficoEstadoActualTickets',
+      'Estado actual de los tickets',
+      {
+        background: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(200, 200, 200, 0.6)',
+          'rgba(54, 162, 235, 0.6)'
+        ],
+        border: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(200, 200, 200, 1)',
+          'rgba(54, 162, 235, 1)'
+        ]
+      }
+    );
+
+    // Actualiza el título
+    const tituloDashboard = document.getElementById("tituloDashboard");
+    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+
     if (fechaInicio && fechaFin) {
-        url += `?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+      const hoy = new Date();
+      const hoyStr = formatearFechaLocal(hoy);
+
+      if (fechaInicio === hoyStr && fechaFin === hoyStr) {
+        const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
+        tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
+      } else {
+        const inicio = new Date(fechaInicio + 'T00:00:00');
+        const fin = new Date(fechaFin + 'T23:59:59');
+        tituloDashboard.textContent = `ESTADO: (${inicio.toLocaleDateString('es-ES', opciones)} - ${fin.toLocaleDateString('es-ES', opciones)})`;
+      }
+    } else {
+      const fechaHoy = new Date();
+      const fechaHoyFormateada = fechaHoy.toLocaleDateString('es-ES', opciones);
+      tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
     }
 
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error en la respuesta del servidor");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const etiquetas = data.etiquetas.slice(0, 4);
-            etiquetas[0] = "Solicitados";
-            etiquetas[1] = "Recepcionados";
-            etiquetas[2] = "Atendidos";
-            etiquetas[3] = "Desestimados";
-            etiquetas[4] = "Espera";
+    // ✅ Estas llamadas ahora sí funcionan porque están dentro del async/await
+    await fetchPromedios(queryParams);
+    await cargarTiempoEfectivoUsuarios(queryParams);
 
-
-            const datos = data.datos.slice(0, 5);
-
-
-            crearGrafico(
-                etiquetas,
-                datos,
-                'graficoEstadoActualTickets',
-                'Estado actual de los tickets',
-                {
-                    background: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(200, 200, 200, 0.6)',
-                        'rgba(54, 162, 235, 0.6)'
-
-                    ],
-                    border: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(200, 200, 200, 1)',
-                        'rgba(54, 162, 235, 1)'
-                    ]
-                }
-            );
-
-             const tituloDashboard = document.getElementById("tituloDashboard");
-            if (fechaInicio && fechaFin) {
-                const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-
-                const hoy = new Date();
-                const hoyStr = formatearFechaLocal(hoy);
-
-
-                if (fechaInicio === hoyStr && fechaFin === hoyStr) {
-                    const fechaHoyFormateada = hoy.toLocaleDateString('es-ES', opciones);
-                    tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
-                } else {
-                    const inicio = new Date(fechaInicio + 'T00:00:00');
-                    const fin = new Date(fechaFin + 'T23:59:59');
-                    const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
-                    const finFormateado = fin.toLocaleDateString('es-ES', opciones);
-                    tituloDashboard.textContent = `ESTADO: (${inicioFormateado} - ${finFormateado})`;
-                }
-            } else {
-                const fechaHoy = new Date();
-                const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-                const fechaHoyFormateada = fechaHoy.toLocaleDateString('es-ES', opciones);
-                tituloDashboard.textContent = `ESTADO ACTUAL (Hoy: ${fechaHoyFormateada})`;
-            }
-
-
-        })
-        .catch(error => console.error('Error al obtener los datos:', error));
+  } catch (error) {
+    console.error('Error al obtener los datos:', error);
+  }
 }
+
 
 // Llamar a la función para crear el gráfico al cargar, pasando las fechas predeterminadas (hoy)
 const hoyLocal = formatearFechaLocal(new Date());
@@ -315,13 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
-
-
-
-
-
 function claseFase(fase) {
     switch (fase) {
         case 'Enviado': return 'bg-secondary text-white';
@@ -342,7 +332,70 @@ document.addEventListener('DOMContentLoaded', cargarTicketsRecientes);
 
 
 
+async function cargarTiempoEfectivoUsuarios(queryParams = "") {
+  try {
+    const res = await fetch(`/app/dashboard/tiempo-efectivo-usuario${queryParams}`);
+    const data = await res.json();
 
+    const tbody = document.getElementById('tablaTiempoPorUsuario');
+    tbody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `<td colspan="4" class="text-muted">No hay datos disponibles.</td>`;
+      tbody.appendChild(fila);
+      return;
+    }
+        //<td>${usuario.rol}</td>
+
+    data.forEach(usuario => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${usuario.usuario}</td>
+        <td>${usuario.minutosEfectivos} min</td>
+        <td>${usuario.cantidadTickets}</td> <!-- Nueva celda -->
+      `;
+      tbody.appendChild(fila);
+    });
+
+  } catch (err) {
+    console.error('Error al cargar tiempos efectivos por usuario:', err);
+  }
+}
+
+
+
+async function fetchPromedios(queryParams = "") {
+  const promedios = [
+    {
+      url: "/app/dashboard/promedioRecepcion",
+      id: "promedioRecepcion",
+      msg: "Promedio de Recepción: {data} minutos. Creación hasta Recepción."
+    },
+    {
+      url: "/app/dashboard/promedioAtencion",
+      id: "promedioAtencion",
+      msg: "Promedio de Atención: {data} minutos. Recepción hasta Atención/Cierre."
+    },
+    {
+      url: "/app/dashboard/promedioInicioFin",
+      id: "promedioInicioFin",
+      msg: "Promedio General: {data} minutos. Creación hasta Atención/Cierre."
+    }
+  ];
+
+  for (const { url, id, msg } of promedios) {
+    try {
+      const response = await fetch(`${url}${queryParams}`);
+      if (!response.ok) throw new Error("Error al obtener datos");
+      const data = await response.text();
+      document.getElementById(id).innerText = msg.replace("{data}", data);
+    } catch (error) {
+      document.getElementById(id).innerText = "No disponible.";
+      console.error(`Error cargando ${id}:`, error);
+    }
+  }
+}
 
 
 
