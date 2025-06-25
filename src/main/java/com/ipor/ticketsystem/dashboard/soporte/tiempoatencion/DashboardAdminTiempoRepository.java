@@ -12,8 +12,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
 
     @Query(value = "SELECT COUNT(*) " +
             "FROM atencion a " +
-            "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "WHERE t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            "WHERE a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Long contarTicketsAtendidosEnRango(@Param("fechaInicio") LocalDate fechaInicio,
                                        @Param("fechaFin") LocalDate fechaFin);
@@ -40,7 +39,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND r.id_usuario = a.id_usuario " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosTicketRecepcionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
                                                   @Param("fechaFin") LocalDate fechaFin);
@@ -55,7 +54,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND r.id_usuario = a.id_usuario " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosRecepcionAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
                                                     @Param("fechaFin") LocalDate fechaFin);
@@ -72,7 +71,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND a.id_usuario = r.id_usuario " +
-            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosTicketAtencionConFecha(@Param("fechaInicio") LocalDate fechaInicio,
                                                  @Param("fechaFin") LocalDate fechaFin);
@@ -88,7 +87,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "WHERE de.id_clasificacion_espera = 1 " +
             "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
-            "AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin",
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosEsperaClasificacion1ConFecha(@Param("fechaInicio") LocalDate fechaInicio,
                                                        @Param("fechaFin") LocalDate fechaFin);
@@ -104,7 +103,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "WHERE de.id_clasificacion_espera != 1 " +
             "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
-            "AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin",
+            "AND a.fecha BETWEEN :fechaInicio AND :fechaFin",
             nativeQuery = true)
     Double obtenerSegundosEsperaClasificacionNo1ConFecha(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
@@ -121,13 +120,14 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
                 WHERE r.id_usuario = :idUsuario AND r.id_usuario = a.id_usuario
                 AND TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL
                 AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL
-                AND t.fecha BETWEEN :fechaInicio AND :fechaFin
+                AND a.fecha BETWEEN :fechaInicio AND :fechaFin
             """, nativeQuery = true)
     Double obtenerTiempoAtencionEnSegundosPorUsuario(
             @Param("idUsuario") Long idUsuario,
             @Param("fechaInicio") LocalDate fechaInicio,
             @Param("fechaFin") LocalDate fechaFin
     );
+
 
 
     @Query(value = """
@@ -141,7 +141,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
                 WHERE r.id_usuario = :idUsuario AND r.id_usuario = a.id_usuario
                 AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL
                 AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL
-                AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin
+                AND a.fecha BETWEEN :fechaInicio AND :fechaFin
             """, nativeQuery = true)
     Double obtenerTiempoEsperaEnSegundosPorUsuario(
             @Param("idUsuario") Long idUsuario,
