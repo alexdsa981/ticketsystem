@@ -281,7 +281,7 @@ function cargarTicketsInactivos() {
 
                 fila.innerHTML = `
                     <td class="text-nowrap">
-                        <a href="/ticket/${t.idFormateado}" class="ticket-link" target="_blank" rel="noopener noreferrer">
+                        <a href="/ticket/${t.codigoTicket}" class="ticket-link" target="_blank" rel="noopener noreferrer">
                             ${t.codigoTicket}
                         </a>
                     </td>
