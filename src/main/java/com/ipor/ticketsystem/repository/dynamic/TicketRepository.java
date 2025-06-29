@@ -1,5 +1,6 @@
 package com.ipor.ticketsystem.repository.dynamic;
 
+import com.ipor.ticketsystem.model.dto.otros.TicketInactivoProjection;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -218,6 +219,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                                        @Param("fechaFin") LocalDate fechaFin);
 
 
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "WHERE a.id_usuario = :idUsuario " +
+            "AND t.fecha BETWEEN :fechaInicio AND :fechaFin",
+            nativeQuery = true)
+    Long contarTicketsAtendidosPorUsuarioEnRango(@Param("idUsuario") Long idUsuario,
+                                                 @Param("fechaInicio") LocalDate fechaInicio,
+                                                 @Param("fechaFin") LocalDate fechaFin);
+
 
 
 
@@ -342,10 +353,98 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 
 
+    @Query(value = """
+    SELECT SUM(DATEDIFF(SECOND,
+        TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME),
+        TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME)
+    ))
+    FROM atencion a
+    INNER JOIN ticket t ON t.id = a.id_ticket
+    INNER JOIN recepcion r ON r.id_ticket = a.id_ticket
+    WHERE r.id_usuario = :idUsuario AND r.id_usuario = a.id_usuario
+    AND TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL
+    AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL
+    AND t.fecha BETWEEN :fechaInicio AND :fechaFin
+""", nativeQuery = true)
+    Double obtenerTiempoAtencionEnSegundosPorUsuario(
+            @Param("idUsuario") Long idUsuario,
+            @Param("fechaInicio") LocalDate fechaInicio,
+            @Param("fechaFin") LocalDate fechaFin
+    );
+
+
+
+
+
+
+    @Query(value = """
+    SELECT SUM(DATEDIFF(SECOND,
+        TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME),
+        TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME)
+    ))
+    FROM detalle_en_espera de
+    INNER JOIN atencion a ON a.id_ticket = de.id_ticket
+    INNER JOIN recepcion r ON r.id_ticket = a.id_ticket
+    WHERE r.id_usuario = :idUsuario AND r.id_usuario = a.id_usuario
+    AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL
+    AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL
+    AND de.fecha_inicio BETWEEN :fechaInicio AND :fechaFin
+""", nativeQuery = true)
+    Double obtenerTiempoEsperaEnSegundosPorUsuario(
+            @Param("idUsuario") Long idUsuario,
+            @Param("fechaInicio") LocalDate fechaInicio,
+            @Param("fechaFin") LocalDate fechaFin
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //top 5 tickets que no estan atendidos ni desestimados ordenados por más recientes:
     List<Ticket> findTop5ByFaseTicket_IdNotInOrderByFechaDescHoraDesc(List<Long> ids);
 
+    @Query(
+            value = """
+        SELECT
+            t.id,
+            t.codigo_ticket AS codigoTicket,
+            t.descripcion,
+            ft.nombre AS nombreFase,
+            u.nombre AS nombreUsuario,
+            COALESCE(
+                (SELECT TOP 1 r.fecha FROM recepcion r WHERE r.id_ticket = t.id ORDER BY r.fecha DESC),
+                (SELECT TOP 1 e.fecha_inicio FROM detalle_en_espera e WHERE e.id_ticket = t.id ORDER BY e.fecha_inicio DESC),
+                t.fecha
+            ) AS ultimaFecha
+        FROM ticket t
+        JOIN fase_ticket ft ON ft.id = t.id_fase_ticket
+        JOIN usuario u ON u.id = t.id_usuario
+        WHERE t.id_fase_ticket IN (1, 2, 5)
+        AND DATEDIFF(DAY,
+            COALESCE(
+                (SELECT TOP 1 r.fecha FROM recepcion r WHERE r.id_ticket = t.id ORDER BY r.fecha DESC),
+                (SELECT TOP 1 e.fecha_inicio FROM detalle_en_espera e WHERE e.id_ticket = t.id ORDER BY e.fecha_inicio DESC),
+                t.fecha
+            ),
+            GETDATE()
+        ) >= 3
+        ORDER BY ultimaFecha ASC
+        """,
+            nativeQuery = true
+    )
+    List<TicketInactivoProjection> obtenerTicketsInactivosMasAntiguos();
 
     @Query("SELECT COUNT(t) FROM Ticket t WHERE t.fecha BETWEEN :inicio AND :fin")
     long countTicketsByFechaBetween(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);

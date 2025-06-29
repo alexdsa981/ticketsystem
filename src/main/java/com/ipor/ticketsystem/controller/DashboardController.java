@@ -1,10 +1,14 @@
 package com.ipor.ticketsystem.controller;
 
 import com.ipor.ticketsystem.model.dto.DetalleTicketDTO;
+import com.ipor.ticketsystem.model.dto.otros.TicketInactivoProjection;
 import com.ipor.ticketsystem.model.dto.otros.WebSocket.TicketRecordWS;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
+import com.ipor.ticketsystem.model.dynamic.Notificacion;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
+import com.ipor.ticketsystem.model.dynamic.Usuario;
 import com.ipor.ticketsystem.service.DashboardService;
+import com.ipor.ticketsystem.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 public class DashboardController {
     @Autowired
     DashboardService dashboardService;
+    @Autowired
+    UsuarioService usuarioService;
 
     @GetMapping("/contador/total")
     public ResponseEntity<Long> getTotalTickets(
@@ -151,7 +157,13 @@ public class DashboardController {
     }
 
 
-
+    @GetMapping("/tickets/inactivos")
+    public ResponseEntity<Map<String, Object>> obtenerTicketsInactivos() {
+        List<TicketInactivoProjection> tickets = dashboardService.obtenerTicketsInactivosMasAntiguos();
+        Map<String, Object> response = new HashMap<>();
+        response.put("tickets", tickets);
+        return ResponseEntity.ok(response);
+    }
 
 
 
@@ -189,6 +201,51 @@ public class DashboardController {
         double promedioMinutos = promedioSegundos / 60;
         return String.format("%.2f", promedioMinutos);
     }
+
+
+
+
+    @GetMapping("/tiempo-efectivo-usuario")
+    @ResponseBody
+    public List<Map<String, Object>> obtenerTiempoEfectivoPorUsuario(
+            @RequestParam(value = "fechaInicio", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(value = "fechaFin", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        List<Map<String, Object>> resultado = new ArrayList<>();
+
+        // Soportes (rol 2)
+        List<Usuario> listaSoportes = usuarioService.ListaUsuariosPorRol(2L);
+        for (Usuario soporte : listaSoportes) {
+            Map<String, Object> datos = dashboardService.obtenerTiempoEfectivoYCantidadTicketsPorUsuario(soporte.getId(), fechaInicio, fechaFin);
+
+            Map<String, Object> soporteInfo = Map.of(
+                    "usuario", soporte.getNombre(),
+                    "rol", "Soporte",
+                    "minutosEfectivos", String.format("%.2f", (Double) datos.get("promedioMinutos")),
+                    "cantidadTickets", datos.get("cantidadTickets")
+            );
+            resultado.add(soporteInfo);
+        }
+
+        // Admins (rol 3)
+        List<Usuario> listaAdmins = usuarioService.ListaUsuariosPorRol(3L);
+        for (Usuario admin : listaAdmins) {
+            Map<String, Object> datos = dashboardService.obtenerTiempoEfectivoYCantidadTicketsPorUsuario(admin.getId(), fechaInicio, fechaFin);
+
+            Map<String, Object> adminInfo = Map.of(
+                    "usuario", admin.getNombre(),
+                    "rol", "Admin",
+                    "minutosEfectivos", String.format("%.2f", (Double) datos.get("promedioMinutos")),
+                    "cantidadTickets", datos.get("cantidadTickets")
+            );
+            resultado.add(adminInfo);
+        }
+
+        return resultado;
+    }
+
 
 
 

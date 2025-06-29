@@ -46,7 +46,7 @@
 
         <button type="button" class="btn btn-dark me-2 fixed-filter-button" data-bs-toggle="modal"
                 data-bs-target="#filterModal">
-            <i class="bi bi-filter"></i> Filtrar
+            <i class="bi bi-filter"></i> Filtrar Grafico Atenciones
         </button>
         <button type="button" class="btn btn-outline-danger me-2 fixed-filter-button d-none" id="btnQuitarFiltro">
             <i class="bi bi-x"></i> Eliminar Filtrado
@@ -93,7 +93,7 @@
         <div class="container border shadow p-3 px-4 mb-3 bg-body rounded mt-3">
             <h2 id="tituloDashboard" class="mb-4 text-center">SOPORTE<span class="title-text-mobile"></span>:</h2>
 
-            <div class="row g-4 align-items-center">
+            <div class="row g-3 align-items-center">
                 <!-- 🔹 Distribución de tickets -->
                 <div class="col-md-4">
                     <h6 class="text-secondary mb-2">Distribución de tickets por fase</h6>
@@ -121,6 +121,34 @@
 
                     </div>
                 </div>
+
+                <div id="alertaTicketAntiguo" class="alert alert-warning small mb-2">
+                    <strong>⚠ Ticket más antiguo sin atender:</strong>
+                    <a class="text-decoration-underline ms-2" data-bs-toggle="collapse" href="#detalleTicketsAntiguos" role="button" aria-expanded="false" aria-controls="detalleTicketsAntiguos">
+                        Ver más
+                    </a>
+                </div>
+
+                <div class="collapse" id="detalleTicketsAntiguos">
+                    <h6 class="text-secondary mb-2">Tickets sin movimiento (+3 días)</h6>
+                    <div class="table-responsive small">
+                        <table class="table table-sm table-bordered table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Descripción</th>
+                                <th>Fase</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
 

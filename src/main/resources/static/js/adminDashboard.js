@@ -222,29 +222,34 @@ function actualizarGrafico(etiquetas, datos) {
       document.getElementById(id).innerText = msg.replace("{data}", data);
     }
 
-const tituloDashboard = document.getElementById("tituloDashboard");
+// Tiempo efectivo por usuario
+    await cargarTiempoEfectivoUsuarios(queryParams);
 
-if (fechaInicio && fechaFin) {
-const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
 
-// Convertimos las fechas de cadena a objetos Date, asegurándonos de que no haya alteraciones.
-const inicio = new Date(fechaInicio + 'T00:00:00'); // Forzamos el inicio del día en UTC
-const fin = new Date(fechaFin + 'T23:59:59'); // Forzamos el fin del día en UTC
 
-// Ahora aplicamos el formato
-const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
-const finFormateado = fin.toLocaleDateString('es-ES', opciones);
+    const tituloDashboard = document.getElementById("tituloDashboard");
 
-//console.log("Fecha Inicio:", fechaInicio);
-//console.log("Fecha Fin:", fechaFin);
-//console.log("Fecha Inicio:", inicioFormateado);
-//console.log("Fecha Fin:", finFormateado);
+    if (fechaInicio && fechaFin) {
+    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
 
-tituloDashboard.textContent = `ADMIN: Dashboard (${inicioFormateado} - ${finFormateado})`;
+    // Convertimos las fechas de cadena a objetos Date, asegurándonos de que no haya alteraciones.
+    const inicio = new Date(fechaInicio + 'T00:00:00'); // Forzamos el inicio del día en UTC
+    const fin = new Date(fechaFin + 'T23:59:59'); // Forzamos el fin del día en UTC
 
-} else {
-  tituloDashboard.textContent = "ADMIN: Dashboard (Todos los registros)";
-}
+    // Ahora aplicamos el formato
+    const inicioFormateado = inicio.toLocaleDateString('es-ES', opciones);
+    const finFormateado = fin.toLocaleDateString('es-ES', opciones);
+
+    //console.log("Fecha Inicio:", fechaInicio);
+    //console.log("Fecha Fin:", fechaFin);
+    //console.log("Fecha Inicio:", inicioFormateado);
+    //console.log("Fecha Fin:", finFormateado);
+
+    tituloDashboard.textContent = `ADMIN: Dashboard (${inicioFormateado} - ${finFormateado})`;
+
+    } else {
+      tituloDashboard.textContent = "ADMIN: Dashboard (Todos los registros)";
+    }
 
 
   } catch (error) {
@@ -320,6 +325,58 @@ function formatearFechaLocal(date) {
          String(date.getMonth() + 1).padStart(2, '0') + '-' +
          String(date.getDate()).padStart(2, '0');
 }
+
+
+
+
+
+
+
+
+
+
+
+async function cargarTiempoEfectivoUsuarios(queryParams = "") {
+  try {
+    const res = await fetch(`/app/dashboard/tiempo-efectivo-usuario${queryParams}`);
+    const data = await res.json();
+
+    const tbody = document.getElementById('tablaTiempoPorUsuario');
+    tbody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `<td colspan="4" class="text-muted">No hay datos disponibles.</td>`;
+      tbody.appendChild(fila);
+      return;
+    }
+        //<td>${usuario.rol}</td>
+
+    data.forEach(usuario => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${usuario.usuario}</td>
+        <td>${usuario.minutosEfectivos} min</td>
+        <td>${usuario.cantidadTickets}</td> <!-- Nueva celda -->
+      `;
+      tbody.appendChild(fila);
+    });
+
+  } catch (err) {
+    console.error('Error al cargar tiempos efectivos por usuario:', err);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 let stompClient = null;
 let socket = null;

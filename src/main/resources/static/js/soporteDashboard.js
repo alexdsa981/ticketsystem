@@ -204,8 +204,13 @@ function cargarTicketsRecientes() {
             }
 
 
+
             data.tickets.forEach(ticket => {
                 const fila = document.createElement('tr');
+
+                const descripcionCorta = ticket.descripcion.length > 200
+                    ? ticket.descripcion.substring(0, 200) + '...'
+                    : ticket.descripcion;
 
                 fila.innerHTML = `
                     <td class="text-nowrap">
@@ -215,7 +220,7 @@ function cargarTicketsRecientes() {
                     </td>
                     <td>${ticket.fechaFormateada} ${ticket.horaFormateada}</td>
                     <td>${ticket.nombreUsuario}</td>
-                    <td>${ticket.descripcion}</td>
+                    <td>${descripcionCorta}</td>
                     <td><span class="badge ${claseFase(ticket.nombreFaseTicket)}">${ticket.nombreFaseTicket}</span></td>
                 `;
 
@@ -224,6 +229,97 @@ function cargarTicketsRecientes() {
         })
         .catch(error => console.error('Error al cargar tickets recientes:', error));
 }
+
+function cargarTicketsInactivos() {
+    fetch('/app/dashboard/tickets/inactivos')
+        .then(res => res.json())
+        .then(data => {
+            const tablaInactivos = document.querySelector('#detalleTicketsAntiguos tbody');
+            tablaInactivos.innerHTML = '';
+
+            const contenedorAlerta = document.getElementById('alertaTicketAntiguo');
+
+            if (!data.tickets || data.tickets.length === 0) {
+                // Llenar la alerta vacía
+                if (contenedorAlerta) {
+                    contenedorAlerta.innerHTML = `
+                        <strong>✔ No hay tickets antiguos sin atender.</strong>
+                    `;
+                }
+
+                const filaVacia = document.createElement('tr');
+                filaVacia.innerHTML = `
+                    <td colspan="5" class="text-center text-muted">
+                        <i class="bi bi-check-circle me-2 text-success"></i>
+                        No hay tickets antiguos pendientes.
+                    </td>
+                `;
+                tablaInactivos.appendChild(filaVacia);
+                return;
+            }
+
+            // Mostrar el más antiguo en la alerta
+            const primero = data.tickets[0];
+            if (contenedorAlerta && primero) {
+                const descripcionCorta = primero.descripcion.length > 150
+                    ? primero.descripcion.substring(0, 150) + '...'
+                    : primero.descripcion;
+
+                contenedorAlerta.innerHTML = `
+                    <strong>⚠ Ticket más antiguo sin atender:</strong>
+                    ${primero.codigoTicket} - "${descripcionCorta}" (${primero.ultimaFecha})
+                    <a class="text-decoration-underline ms-2" data-bs-toggle="collapse" href="#detalleTicketsAntiguos" role="button" aria-expanded="false" aria-controls="detalleTicketsAntiguos">
+                        Ver más
+                    </a>
+                `;
+            }
+
+            // Llenar la tabla
+            data.tickets.forEach(t => {
+                const fila = document.createElement('tr');
+
+                const descripcionCorta = t.descripcion.length > 200
+                    ? t.descripcion.substring(0, 200) + '...'
+                    : t.descripcion;
+
+                fila.innerHTML = `
+                    <td class="text-nowrap">
+                        <a href="/ticket/${t.idFormateado}" class="ticket-link" target="_blank" rel="noopener noreferrer">
+                            ${t.codigoTicket}
+                        </a>
+                    </td>
+                    <td>${t.ultimaFecha}</td>
+                    <td>${t.nombreUsuario}</td>
+                    <td>${descripcionCorta}</td>
+                    <td><span class="badge ${claseFase(t.nombreFase)}">${t.nombreFase}</span></td>
+                `;
+                tablaInactivos.appendChild(fila);
+            });
+        })
+        .catch(err => console.error('Error al cargar tickets inactivos:', err));
+}
+
+// Cargar automáticamente al iniciar la página
+document.addEventListener('DOMContentLoaded', () => {
+    cargarTicketsInactivos();
+
+    // También puedes mantener esta lógica si quieres limitar la recarga al expandir
+    const enlaceVerMasInactivos = document.querySelector('[data-bs-toggle="collapse"][href="#detalleTicketsAntiguos"]');
+    let yaSeCargaronInactivos = true;
+    enlaceVerMasInactivos?.addEventListener('click', () => {
+        if (!yaSeCargaronInactivos) {
+            cargarTicketsInactivos();
+            yaSeCargaronInactivos = true;
+        }
+    });
+});
+
+
+
+
+
+
+
 
 
 function claseFase(fase) {
@@ -238,6 +334,22 @@ function claseFase(fase) {
 }
 
 document.addEventListener('DOMContentLoaded', cargarTicketsRecientes);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -260,8 +372,7 @@ function conectarWebSocketDashboard() {
             console.log('Reconectado al WebSocket del dashboard. Actualizando datos...');
             actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
             cargarTicketsRecientes();
-
-
+            cargarTicketsInactivos();
             wasDisconnected = false;
         }
 
@@ -269,8 +380,7 @@ function conectarWebSocketDashboard() {
             if (mensaje.body === 'actualizar') {
                 actualizarDatos(fechaInicioGlobal, fechaFinGlobal);
                 cargarTicketsRecientes();
-
-
+                cargarTicketsInactivos();
             }
         });
     }, (error) => {

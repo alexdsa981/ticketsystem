@@ -1,6 +1,7 @@
 package com.ipor.ticketsystem.service;
 
 
+import com.ipor.ticketsystem.model.dto.otros.TicketInactivoProjection;
 import com.ipor.ticketsystem.model.dto.otros.graficos.RecordFactorXConteo;
 import com.ipor.ticketsystem.model.dynamic.Ticket;
 import com.ipor.ticketsystem.repository.dynamic.DesestimacionRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DashboardService {
@@ -124,6 +126,10 @@ public class DashboardService {
         return ticketRepository.findTop5ByFaseTicket_IdNotInOrderByFechaDescHoraDesc(List.of(3L, 4L));
     }
 
+    public List<TicketInactivoProjection> obtenerTicketsInactivosMasAntiguos() {
+        return ticketRepository.obtenerTicketsInactivosMasAntiguos();
+    }
+
 
 
 
@@ -231,6 +237,34 @@ public class DashboardService {
 
 
 
+
+    public Map<String, Object> obtenerTiempoEfectivoYCantidadTicketsPorUsuario(Long idUsuario, LocalDate fechaInicio, LocalDate fechaFin) {
+        Double tiempoAtencionSegundos = ticketRepository.obtenerTiempoAtencionEnSegundosPorUsuario(idUsuario, fechaInicio, fechaFin);
+        Double tiempoEsperaSegundos = ticketRepository.obtenerTiempoEsperaEnSegundosPorUsuario(idUsuario, fechaInicio, fechaFin);
+        Long cantidadTicketsAtendidos = ticketRepository.contarTicketsAtendidosPorUsuarioEnRango(idUsuario, fechaInicio, fechaFin);
+
+        if (tiempoAtencionSegundos == null) tiempoAtencionSegundos = 0.0;
+        if (tiempoEsperaSegundos == null) tiempoEsperaSegundos = 0.0;
+        if (cantidadTicketsAtendidos == null || cantidadTicketsAtendidos == 0) {
+            return Map.of(
+                    "promedioMinutos", 0.0,
+                    "cantidadTickets", 0
+            );
+        }
+
+        double tiempoEfectivoTotal = tiempoAtencionSegundos - tiempoEsperaSegundos;
+        if (tiempoEfectivoTotal < 0) tiempoEfectivoTotal = 0.0;
+
+        double promedioMinutos = (tiempoEfectivoTotal / cantidadTicketsAtendidos) / 60.0;
+
+        return Map.of(
+                "promedioMinutos", promedioMinutos,
+                "cantidadTickets", cantidadTicketsAtendidos
+        );
+    }
+
+
 }
+
 
 
