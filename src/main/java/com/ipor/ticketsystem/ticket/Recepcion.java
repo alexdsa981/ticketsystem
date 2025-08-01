@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -22,6 +23,7 @@ public class Recepcion {
     private LocalDate fecha;
     @Column(nullable = false)
     private LocalTime hora;
+    private LocalDateTime fechaHora;
 
     @OneToOne
     @JoinColumn(name = "id_ticket", nullable = false)
@@ -40,5 +42,7 @@ public class Recepcion {
     public void prePersist() {
         this.fecha = LocalDate.now();
         this.hora = LocalTime.now();
+        this.fechaHora = LocalDateTime.now();
+
     }
 }

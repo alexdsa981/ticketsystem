@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Desestimacion {
     private LocalDate fecha;
     @Column(nullable = false)
     private LocalTime hora;
+    private LocalDateTime fechaHora;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(MAX)")
     private String descripcion;
@@ -49,5 +51,7 @@ public class Desestimacion {
     public void prePersist() {
         this.fecha = LocalDate.now();
         this.hora = LocalTime.now();
+        this.fechaHora = LocalDateTime.now();
+
     }
 }

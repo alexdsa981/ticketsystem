@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -135,6 +136,7 @@ public class AtencionController {
                         .forEach(detalle -> {
                             detalle.setFechaFin(LocalDate.now());
                             detalle.setHoraFin(LocalTime.now());
+                            detalle.setFechaHoraFin(LocalDateTime.now());
                             atencionService.saveEspera(detalle);
                         });
             }
@@ -222,6 +224,7 @@ public class AtencionController {
                         .forEach(detalle -> {
                             detalle.setFechaFin(LocalDate.now());
                             detalle.setHoraFin(LocalTime.now());
+                            detalle.setFechaHoraFin(LocalDateTime.now());
                             atencionService.saveEspera(detalle);
                         });
             }
@@ -325,6 +328,7 @@ public class AtencionController {
             espera.setUsuario(usuarioService.getUsuarioPorId(usuarioService.getIDdeUsuarioLogeado()));
             espera.setFechaInicio(LocalDate.now());
             espera.setHoraInicio(LocalTime.now());
+            espera.setFechaHoraInicio(LocalDateTime.now());
             atencionService.saveEspera(espera);
 
             List<DetalleEnEspera> listaEsperas = ticket.getListaDetalleEsperas();
@@ -448,6 +452,7 @@ public class AtencionController {
                         .forEach(detalle -> {
                             detalle.setFechaFin(LocalDate.now());
                             detalle.setHoraFin(LocalTime.now());
+                            detalle.setFechaHoraFin(LocalDateTime.now());
                             atencionService.saveEspera(detalle);
                         });
             }

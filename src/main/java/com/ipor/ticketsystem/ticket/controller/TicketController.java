@@ -35,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -195,6 +196,7 @@ public class TicketController {
                 DetalleEnEspera detalleEnEspera = new DetalleEnEspera();
                 detalleEnEspera.setHoraInicio(horaCreacionTicket);
                 detalleEnEspera.setFechaInicio(LocalDate.now());
+                detalleEnEspera.setFechaHoraInicio(LocalDateTime.now());
                 detalleEnEspera.setClasificacionEspera(clasificacionEsperaRepository.findById(1L).orElseThrow());
                 detalleEnEspera.setTicket(ticket);
                 detalleEnEspera.setDescripcion("El ticket fue enviado fuera del horario de atención.");
@@ -212,6 +214,7 @@ public class TicketController {
 
                 detalleEnEspera.setFechaFin(fechaFin);
                 detalleEnEspera.setHoraFin(horaEntrada);
+                detalleEnEspera.setFechaHoraFin(fechaFin.atTime(horaEntrada));
                 List<DetalleEnEspera> listaDetalles = ticket.getListaDetalleEsperas();
                 listaDetalles.add(detalleEnEspera);
                 ticket.setListaDetalleEsperas(listaDetalles);

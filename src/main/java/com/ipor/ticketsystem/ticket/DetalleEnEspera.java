@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,6 +47,12 @@ public class DetalleEnEspera {
     private LocalDate fechaFin;
 
     private LocalTime horaFin;
+
+
+
+    private LocalDateTime fechaHoraInicio;
+    private LocalDateTime fechaHoraFin;
+
 
     @OneToMany(mappedBy = "detalleEnEspera", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ArchivoAdjuntoEspera> listaArchivosAdjuntos = new ArrayList<>();

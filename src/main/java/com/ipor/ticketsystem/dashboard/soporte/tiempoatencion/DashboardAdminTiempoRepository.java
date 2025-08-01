@@ -33,9 +33,9 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
     @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME))) " +
-            "FROM recepcion r " +
-            "INNER JOIN ticket t ON t.id = r.id_ticket " +
-            "INNER JOIN atencion a ON a.id_ticket = t.id " +  // Solo tickets que fueron atendidos
+            "FROM atencion a " +
+            "INNER JOIN recepcion r ON r.id_ticket = a.id_ticket " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND r.id_usuario = a.id_usuario " +
@@ -50,7 +50,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
             "FROM atencion a " +
             "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "INNER JOIN recepcion r ON t.id = r.id_ticket " +
+            "INNER JOIN recepcion r ON r.id_ticket =  a.id_ticket " +
             "WHERE TRY_CAST(CONCAT(r.fecha, ' ', LEFT(r.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND r.id_usuario = a.id_usuario " +
@@ -67,7 +67,7 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
             "TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME))) " +
             "FROM atencion a " +
             "INNER JOIN ticket t ON t.id = a.id_ticket " +
-            "INNER JOIN recepcion r ON r.id_ticket = t.id " +
+            "INNER JOIN recepcion r ON r.id_ticket = a.id_ticket " +
             "WHERE TRY_CAST(CONCAT(t.fecha, ' ', LEFT(t.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(a.fecha, ' ', LEFT(a.hora, 8)) AS DATETIME) IS NOT NULL " +
             "AND a.id_usuario = r.id_usuario " +
@@ -82,8 +82,9 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
     @Query(value = "SELECT SUM(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
-            "FROM detalle_en_espera de " +
-            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "INNER JOIN detalle_en_espera de ON de.id_ticket = a.id_ticket " +
             "WHERE de.id_clasificacion_espera = 1 " +
             "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
@@ -98,8 +99,9 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
     @Query(value = "SELECT AVG(DATEDIFF(SECOND, " +
             "TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME), " +
             "TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME))) " +
-            "FROM detalle_en_espera de " +
-            "INNER JOIN atencion a ON a.id_ticket = de.id_ticket " +
+            "FROM atencion a " +
+            "INNER JOIN ticket t ON t.id = a.id_ticket " +
+            "INNER JOIN detalle_en_espera de ON de.id_ticket = a.id_ticket " +
             "WHERE de.id_clasificacion_espera != 1 " +
             "AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL " +
             "AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL " +
@@ -135,9 +137,10 @@ public interface DashboardAdminTiempoRepository extends JpaRepository<Ticket, Lo
                     TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME),
                     TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME)
                 ))
-                FROM detalle_en_espera de
-                INNER JOIN atencion a ON a.id_ticket = de.id_ticket
+                FROM atencion a
+                INNER JOIN ticket t ON t.id = a.id_ticket
                 INNER JOIN recepcion r ON r.id_ticket = a.id_ticket
+                INNER JOIN detalle_en_espera de ON de.id_ticket = a.id_ticket
                 WHERE r.id_usuario = :idUsuario AND r.id_usuario = a.id_usuario
                 AND TRY_CAST(CONCAT(de.fecha_inicio, ' ', LEFT(de.hora_inicio, 8)) AS DATETIME) IS NOT NULL
                 AND TRY_CAST(CONCAT(de.fecha_fin, ' ', LEFT(de.hora_fin, 8)) AS DATETIME) IS NOT NULL

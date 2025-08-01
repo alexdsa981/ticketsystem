@@ -40,8 +40,8 @@ public class DashboardTiempoService {
             double SE = segundosEsperaNo1 != null ? segundosEsperaNo1 : 0.0;
             long TTA = totalTicketsAtendidos != null ? totalTicketsAtendidos : 0;
 
-            return TTA > 0 ? (SRA - SE) / TTA : 0.0;
 
+            return TTA > 0 ? (SRA - SE) / TTA : 0.0;
 
         } catch (Exception e) {
             return 0.0;
