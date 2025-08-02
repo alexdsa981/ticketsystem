@@ -76,6 +76,7 @@ function fetchDatosDashboard(filtros = {}) {
         return res.json();
       })
       .then(data => {
+        actualizarIndicadorResolucion(data);
         const limite = limitesPorClasificador[clasificador] || 10;
         const etiquetasOriginales = data.etiquetas || [];
         const valoresOriginales = data.datos || [];
@@ -109,7 +110,42 @@ function fetchDatosDashboard(filtros = {}) {
 }
 
 
+function actualizarIndicadorResolucion(data) {
+    const totalCreados = data.total;
+    const numResueltos = data.resueltos;
+    const porcentajeResueltos = data.porcentajeResueltos.toFixed(1);
+    const porcentajeNoResueltos = data.porcentajeNoResueltos.toFixed(1);
+    const porcentajeErrorUsuario = data.porcentajeErrorUsuario.toFixed(1);
+    const errorUsuario = data.errorUsuario;
 
+    // Totales
+    document.getElementById('num-total').textContent = totalCreados;
+    document.getElementById('num-atendidos').textContent = numResueltos;
+    document.getElementById('num-errorusuario').textContent = errorUsuario;
+
+    // Resueltos
+    document.getElementById('porcentaje-resueltos-texto').textContent = `${porcentajeResueltos}%`;
+
+    const barraResueltos = document.getElementById('barra-resueltos');
+    barraResueltos.style.width = `${porcentajeResueltos}%`;
+    barraResueltos.textContent = `${porcentajeResueltos}%`;
+
+    const barraNoResueltos = document.getElementById('barra-no-resueltos');
+    barraNoResueltos.style.width = `${porcentajeNoResueltos}%`;
+    barraNoResueltos.querySelector('span').textContent = `${porcentajeNoResueltos}%`;
+
+    // Error de usuario
+    document.getElementById('porcentaje-error-usuario-texto').textContent = `${porcentajeErrorUsuario}%`;
+
+    const barraErrorUsuario = document.getElementById('barra-error-usuario');
+    barraErrorUsuario.style.width = `${porcentajeErrorUsuario}%`;
+    barraErrorUsuario.textContent = `${porcentajeErrorUsuario}%`;
+
+    const barraNoErrorUsuario = document.getElementById('barra-no-error-usuario');
+    const restanteErrorUsuario = (100 - porcentajeErrorUsuario).toFixed(1);
+    barraNoErrorUsuario.style.width = `${restanteErrorUsuario}%`;
+    barraNoErrorUsuario.querySelector('span').textContent = `${restanteErrorUsuario}%`;
+}
 
 
 

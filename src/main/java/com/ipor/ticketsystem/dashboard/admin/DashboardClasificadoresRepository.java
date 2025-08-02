@@ -11,11 +11,16 @@ public interface DashboardClasificadoresRepository {
                 String agruparPor,
                 LocalDate fechaInicio, LocalDate fechaFin,
                 Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
-                Long idTipoIncidencia, Long idTipoUrgencia,  Long idUsuario
+                Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario
         );
 
-
         List<Long> obtenerIdsTicketsFiltrados(
+                LocalDate fechaInicio, LocalDate fechaFin,
+                Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
+                Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario
+        );
+
+        IndicadorResolucionDTO obtenerIndicadoresResolucion(
                 LocalDate fechaInicio, LocalDate fechaFin,
                 Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
                 Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario

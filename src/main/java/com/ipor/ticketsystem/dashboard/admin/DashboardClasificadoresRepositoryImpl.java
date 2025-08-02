@@ -66,7 +66,7 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
 
         // Filtros por fecha
         if (fechaInicio != null && fechaFin != null) {
-            sb.append("AND a.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            sb.append("AND t.fecha BETWEEN :fechaInicio AND :fechaFin ");
             params.put("fechaInicio", fechaInicio);
             params.put("fechaFin", fechaFin);
         }
@@ -111,8 +111,6 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
         params.forEach(query::setParameter);
 
 
-
-
         return query.getResultList();
     }
 
@@ -130,7 +128,7 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
         Map<String, Object> params = new HashMap<>();
 
         if (fechaInicio != null && fechaFin != null) {
-            sb.append("AND a.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            sb.append("AND t.fecha BETWEEN :fechaInicio AND :fechaFin ");
             params.put("fechaInicio", fechaInicio);
             params.put("fechaFin", fechaFin);
         }
@@ -170,6 +168,96 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
 
         return query.getResultList();
     }
+
+
+
+
+    public IndicadorResolucionDTO obtenerIndicadoresResolucion(
+            LocalDate fechaInicio, LocalDate fechaFin,
+            Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
+            Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario
+    ) {
+        StringBuilder sbTotal = new StringBuilder("SELECT COUNT(t.id) FROM Ticket t JOIN t.faseTicket f WHERE 1=1 ");
+        StringBuilder sbResueltos = new StringBuilder("SELECT COUNT(t.id) FROM Ticket t JOIN t.atencion a WHERE 1=1 ");
+        StringBuilder sbErrorUsuario = new StringBuilder("SELECT COUNT(t.id) FROM Ticket t JOIN t.atencion a WHERE 1=1 ");
+
+        Map<String, Object> params = new HashMap<>();
+
+        // Filtros de fechas y fase
+        if (fechaInicio != null && fechaFin != null) {
+            sbTotal.append("AND t.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            sbTotal.append("AND f.id != 4 "); // fase 4 = eliminado
+
+            sbResueltos.append("AND t.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            sbErrorUsuario.append("AND t.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            params.put("fechaInicio", fechaInicio);
+            params.put("fechaFin", fechaFin);
+        }
+
+        // Filtros comunes a atencion
+        if (idSede != null) {
+            sbResueltos.append("AND a.areaAtencion.sede.id = :idSede ");
+            sbErrorUsuario.append("AND a.areaAtencion.sede.id = :idSede ");
+            params.put("idSede", idSede);
+        }
+        if (idCategoria != null) {
+            sbResueltos.append("AND a.tipoIncidencia.subCategoriaIncidencia.categoriaIncidencia.id = :idCategoria ");
+            sbErrorUsuario.append("AND a.tipoIncidencia.subCategoriaIncidencia.categoriaIncidencia.id = :idCategoria ");
+            params.put("idCategoria", idCategoria);
+        }
+        if (idSubcategoria != null) {
+            sbResueltos.append("AND a.tipoIncidencia.subCategoriaIncidencia.id = :idSubcategoria ");
+            sbErrorUsuario.append("AND a.tipoIncidencia.subCategoriaIncidencia.id = :idSubcategoria ");
+            params.put("idSubcategoria", idSubcategoria);
+        }
+        if (idTipoIncidencia != null) {
+            sbResueltos.append("AND a.tipoIncidencia.id = :idTipoIncidencia ");
+            sbErrorUsuario.append("AND a.tipoIncidencia.id = :idTipoIncidencia ");
+            params.put("idTipoIncidencia", idTipoIncidencia);
+        }
+        if (idTipoUrgencia != null) {
+            sbResueltos.append("AND a.clasificacionUrgencia.id = :idTipoUrgencia ");
+            sbErrorUsuario.append("AND a.clasificacionUrgencia.id = :idTipoUrgencia ");
+            params.put("idTipoUrgencia", idTipoUrgencia);
+        }
+        if (idArea != null) {
+            sbResueltos.append("AND a.areaAtencion.id = :idArea ");
+            sbErrorUsuario.append("AND a.areaAtencion.id = :idArea ");
+            params.put("idArea", idArea);
+        }
+        if (idUsuario != null) {
+            sbResueltos.append("AND a.usuario.id = :idUsuario ");
+            sbErrorUsuario.append("AND a.usuario.id = :idUsuario ");
+            params.put("idUsuario", idUsuario);
+        }
+
+        // Filtro específico para error de usuario
+        sbErrorUsuario.append("AND a.clasificacionAtencion.id = 10004 ");
+
+        // Ejecutar consultas
+        TypedQuery<Long> queryTotal = entityManager.createQuery(sbTotal.toString(), Long.class);
+        queryTotal.setParameter("fechaInicio", fechaInicio);
+        queryTotal.setParameter("fechaFin", fechaFin);
+
+        TypedQuery<Long> queryResueltos = entityManager.createQuery(sbResueltos.toString(), Long.class);
+        TypedQuery<Long> queryErrorUsuario = entityManager.createQuery(sbErrorUsuario.toString(), Long.class);
+        params.forEach((k, v) -> {
+            queryResueltos.setParameter(k, v);
+            queryErrorUsuario.setParameter(k, v);
+        });
+
+        Long total = queryTotal.getSingleResult();
+        Long resueltos = queryResueltos.getSingleResult();
+        Long errorUsuario = queryErrorUsuario.getSingleResult();
+
+        return new IndicadorResolucionDTO(
+                total != null ? total : 0,
+                resueltos != null ? resueltos : 0,
+                errorUsuario != null ? errorUsuario : 0
+        );
+    }
+
+
 
 
 }

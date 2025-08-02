@@ -23,8 +23,7 @@ public class DashboardService {
         return dashboardRepository.obtenerConteoDinamico(
                 agruparPor, fechaInicio, fechaFin,
                 idSede, idArea, idCategoria, idSubcategoria,
-                idTipoIncidencia, idTipoUrgencia, idUsuario
-        );
+                idTipoIncidencia, idTipoUrgencia, idUsuario);
     }
 
     public List<Long> obtenerIdsTicketsFiltrados(
@@ -34,5 +33,18 @@ public class DashboardService {
         return dashboardRepository.obtenerIdsTicketsFiltrados(
                 fechaInicio, fechaFin, idSede, idArea, idCategoria,
                 idSubcategoria, idTipoIncidencia, idTipoUrgencia, idUsuario);
+    }
+
+    // ✅ Nuevo método para calcular indicadores de resolución
+    public IndicadorResolucionDTO obtenerIndicadoresResolucion(
+            LocalDate fechaInicio, LocalDate fechaFin,
+            Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
+            Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario) {
+
+        return dashboardRepository.obtenerIndicadoresResolucion(
+                fechaInicio, fechaFin,
+                idSede, idArea, idCategoria, idSubcategoria,
+                idTipoIncidencia, idTipoUrgencia, idUsuario
+        );
     }
 }

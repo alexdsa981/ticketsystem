@@ -108,6 +108,48 @@
                     Reporte General de Actividades y Tendencias
                 </h3>
 
+                <!-- Grupo 0 - Indicadores visuales de porcentaje -->
+                <div class="border rounded shadow-sm p-4 mb-4 bg-light">
+                    <h5 class="mb-3">Indicador de Resolución de Tickets <small>(Total: <span id="num-total"></span>)</small></h5>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong>Tickets atendidos (<span id="num-atendidos"></span>)</strong>
+                            <span id="porcentaje-resueltos-texto" class="fw-bold text-success">64%</span>
+                        </div>
+                        <div class="progress" style="height: 24px;">
+                            <div id="barra-resueltos" class="progress-bar bg-success" role="progressbar" style="width: 64%;"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                64%
+                            </div>
+                            <div id="barra-no-resueltos" class="progress-bar bg-secondary" role="progressbar" style="width: 36%;"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <span class="text-white small">36%</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong>Atendidos por error de usuario (<span id="num-errorusuario"></span>)</strong>
+                            <span id="porcentaje-error-usuario-texto" class="fw-bold text-danger">0%</span>
+                        </div>
+                        <div class="progress" style="height: 24px;">
+                            <div id="barra-error-usuario" class="progress-bar bg-danger" role="progressbar" style="width: 0%;"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                0%
+                            </div>
+                            <div id="barra-no-error-usuario" class="progress-bar bg-secondary" role="progressbar" style="width: 100%;"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <span class="text-white small">100%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
                 <!-- Grupo 1 -->
                 <div class="border rounded shadow-sm p-3 mb-4">
                     <div class="row g-3">
@@ -145,10 +187,10 @@
                 </div>
 
 
+            </div>
 
 
             </div>
-        </div>
     </div>
 
 </main>

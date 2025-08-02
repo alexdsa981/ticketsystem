@@ -1,4 +1,4 @@
-package com.ipor.ticketsystem.dashboard.admin.otros;
+package com.ipor.ticketsystem.dashboard.admin;
 
 import com.ipor.ticketsystem.ticket.repository.AtencionRepository;
 import com.ipor.ticketsystem.ticket.repository.DesestimacionRepository;

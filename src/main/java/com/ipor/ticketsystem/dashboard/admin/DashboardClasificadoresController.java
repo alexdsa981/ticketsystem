@@ -2,7 +2,6 @@ package com.ipor.ticketsystem.dashboard.admin;
 
 import com.ipor.ticketsystem.dashboard.RecordFactorXConteo;
 import com.ipor.ticketsystem.dashboard.admin.exportar.ExcelExportService;
-import com.ipor.ticketsystem.dashboard.admin.otros.DashboardClasificadoresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +52,22 @@ public class DashboardClasificadoresController {
         );
 
         Map<String, Object> data = mapearDatosFactorxConteo(datos);
-        System.out.println(data);
+
+        // Aquí agregas los indicadores
+        IndicadorResolucionDTO indicador = dashboardService.obtenerIndicadoresResolucion(
+                fechaInicio, fechaFin,
+                idSede, idArea, idCategoria, idSubcategoria,
+                idTipoIncidencia, idTipoUrgencia, idUsuario
+        );
+
+        data.put("porcentajeResueltos", indicador.getPorcentajeResueltos());
+        data.put("porcentajeNoResueltos", indicador.getPorcentajeNoResueltos());
+        data.put("total", indicador.getTotal());
+        data.put("resueltos", indicador.getResueltos());
+
+        data.put("porcentajeErrorUsuario", indicador.getPorcentajeErrorUsuario());
+        data.put("errorUsuario", indicador.getErrorUsuario());
+
         return ResponseEntity.ok(data);
     }
 
