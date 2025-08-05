@@ -136,9 +136,7 @@
                             document.getElementById("hora-recepcion").textContent = data.horaFormateadaRecepcion || "";
 
 
-
-
-                            const isUsuarioAutorizado = data.idUsuarioReceptorTicket === idUsuarioLogeado;
+                            const isUsuarioAutorizado = (data.idUsuarioReceptorTicket === idUsuarioLogeado) || (idRol === 3);
 
 
                             if (btnEspera) {
@@ -197,7 +195,7 @@
 
 
 
-                            const isUsuarioAutorizado = data.idUsuarioReceptorTicket === idUsuarioLogeado;
+                            const isUsuarioAutorizado = (data.idUsuarioReceptorTicket === idUsuarioLogeado) || (idRol === 3);
 
                                 if (btnEspera) {
                                   btnEspera.disabled = !isUsuarioAutorizado;

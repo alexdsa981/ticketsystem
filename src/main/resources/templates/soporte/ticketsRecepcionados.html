@@ -8,8 +8,10 @@
 <header th:replace="~{common/header :: header}">
 </header>
 <meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
+<meta name="id-rol" content="[[${idRol}]]">
 <script th:inline="javascript">
     const idUsuarioLogeado = [[${idUsuarioLogeado}]];
+    const idRol = [[${idRol}]];
 </script>
 <div class="container-fluid  content-wrapper">
     <div class="d-flex justify-content-between align-items-center">
@@ -125,7 +127,7 @@
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                                th:disabled="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado}"
+                                th:disabled="${detalle.recepcion.usuario.id != idUsuarioLogeado and idRol!= 3}"
                                 th:title="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado} ? 'Solo el usuario que recepcionó el ticket puede realizar esta acción' : ''">
                             <i class="bi bi-check2-square"></i>
                         </button>
@@ -140,7 +142,7 @@
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                                th:disabled="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado}"
+                                th:disabled="${detalle.recepcion.usuario.id != idUsuarioLogeado and idRol!= 3}"
                                 th:title="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado} ? 'Solo el usuario que recepcionó el ticket puede realizar esta acción' : ''">
                             <i class="bi bi-hourglass-top"></i>
                         </button>
@@ -155,7 +157,7 @@
                                 th:data-ticket-fase="${detalle.ticket.faseTicket.nombre}"
                                 th:data-ticket-fecha="${detalle.fechaFormateadaTicket}"
                                 th:data-ticket-hora="${detalle.horaFormateadaTicket}"
-                                th:disabled="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado}"
+                                th:disabled="${detalle.recepcion.usuario.id != idUsuarioLogeado and idRol!= 3}"
                                 th:title="${detalle.recepcion.usuario.id} != ${idUsuarioLogeado} ? 'Solo el usuario que recepcionó el ticket puede realizar esta acción' : ''">
                             <i class="bi bi-trash"></i>
                         </button>

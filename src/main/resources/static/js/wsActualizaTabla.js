@@ -185,11 +185,8 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
   // Crear una nueva fila
   const newRow = document.createElement("tr");
 
-  const isUsuarioAutorizadoAtencionRecepcion = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
-  console.log("Logeado");
-  console.log(idUsuarioLogeado);
-    console.log("Receptor");
-  console.log(ticketRecord.idUsuarioReceptorTicket);
+  const isAutorizadoAtencionRecepcion = (ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado) || (idRol === 3);
+
 
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
@@ -263,7 +260,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                         data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                         data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                         data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        ${!isAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
                         <i class="bi bi-check2-square"></i>
                     </button>
 
@@ -276,7 +273,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                         data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                         data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                         data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        ${!isAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
                         <i class="bi bi-hourglass-top"></i>
                     </button>
 
@@ -289,7 +286,7 @@ export function ActualizaTablaAtencionSoporte(ticketRecord) {
                         data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                         data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                         data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                        ${!isUsuarioAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                        ${!isAutorizadoAtencionRecepcion ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -341,11 +338,8 @@ export function ActualizaTablaEsperaSoporte(ticketRecord) {
   // Crear una nueva fila
   const newRow = document.createElement("tr");
 
-const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado;
-  console.log("Logeado");
-  console.log(idUsuarioLogeado);
-    console.log("Receptor");
-  console.log(ticketRecord.idUsuarioReceptorTicket);
+const isAutorizadoAtencionEspera = (ticketRecord.idUsuarioReceptorTicket === idUsuarioLogeado) || (idRol === 3);
+
 
   // Generar las celdas de la fila con los datos del ticket
   newRow.innerHTML = `
@@ -444,7 +438,7 @@ const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket =
                 data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                 data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                ${!isAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
                 <i class="bi bi-check2-square"></i>
             </button>
 
@@ -457,7 +451,7 @@ const isUsuarioAutorizadoAtencionEspera = ticketRecord.idUsuarioReceptorTicket =
                 data-ticket-fase="${ticketRecord.nombreFaseTicket}"
                 data-ticket-fecha="${ticketRecord.fechaFormateadaTicket}"
                 data-ticket-hora="${ticketRecord.horaFormateadaTicket}"
-                ${!isUsuarioAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
+                ${!isAutorizadoAtencionEspera ? 'disabled title="Solo el usuario que recepcionó el ticket puede realizar esta acción"' : ''}>
                 <i class="bi bi-trash"></i>
             </button>
         </div>

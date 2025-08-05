@@ -17,7 +17,7 @@ public interface DashboardClasificadoresRepository {
         List<Long> obtenerIdsTicketsFiltrados(
                 LocalDate fechaInicio, LocalDate fechaFin,
                 Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
-                Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario
+                Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario, Boolean filtrado
         );
 
         IndicadorResolucionDTO obtenerIndicadoresResolucion(

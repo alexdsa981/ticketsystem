@@ -83,17 +83,19 @@ public class DashboardClasificadoresController {
             @RequestParam(required = false) Long idTipoUrgencia,
             @RequestParam(required = false) Long idUsuario
     ) {
+        boolean filtrado = idSede != null || idArea != null || idCategoria != null || idSubcategoria != null || idTipoIncidencia != null || idTipoUrgencia != null || idUsuario != null;
+
         List<Long> idsFiltrados = dashboardService.obtenerIdsTicketsFiltrados(
                 fechaInicio, fechaFin,
                 idSede, idArea, idCategoria, idSubcategoria,
-                idTipoIncidencia, idTipoUrgencia, idUsuario
+                idTipoIncidencia, idTipoUrgencia, idUsuario, filtrado
         );
 
         try {
             ByteArrayOutputStream outputStream = excelExportService.exportToExcel(idsFiltrados);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=tickets_filtrados.xlsx");
+            headers.add("Content-Disposition", "attachment; filename=tickets.xlsx");
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);

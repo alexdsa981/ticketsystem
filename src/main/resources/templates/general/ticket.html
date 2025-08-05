@@ -10,8 +10,10 @@
 <header th:replace="~{common/header :: header}"></header>
 
 <meta name="id-usuario-logeado" content="[[${idUsuarioLogeado}]]">
+<meta name="id-rol" content="[[${idRol}]]">
 <script th:inline="javascript">
     const idUsuarioLogeado = [[${idUsuarioLogeado}]];
+    const idRol = [[${idRol}]];
 </script>
 
 <div class="container content-wrapper">

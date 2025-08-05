@@ -120,10 +120,15 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
     public List<Long> obtenerIdsTicketsFiltrados(
             LocalDate fechaInicio, LocalDate fechaFin,
             Long idSede, Long idArea, Long idCategoria, Long idSubcategoria,
-            Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario) {
+            Long idTipoIncidencia, Long idTipoUrgencia, Long idUsuario, Boolean filtrado) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT t.id FROM Ticket t JOIN t.atencion a WHERE 1=1 ");
+        if (filtrado){
+            sb.append("SELECT t.id FROM Ticket t JOIN t.atencion a WHERE 1=1 ");
+        } else {
+            sb.append("SELECT t.id FROM Ticket t WHERE 1=1 ");
+
+        }
 
         Map<String, Object> params = new HashMap<>();
 
@@ -161,8 +166,8 @@ public class DashboardClasificadoresRepositoryImpl implements DashboardClasifica
             params.put("idUsuario", idUsuario);
         }
 
-        sb.append("ORDER BY a.fecha DESC");
-
+        sb.append("ORDER BY t.fecha DESC");
+        System.out.println(sb.toString());
         TypedQuery<Long> query = entityManager.createQuery(sb.toString(), Long.class);
         params.forEach(query::setParameter);
 
